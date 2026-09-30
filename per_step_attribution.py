@@ -14,8 +14,7 @@ Exports three functions:
   ablations (Δlog p top-k, insertion/deletion AUC, sanity C2 input shuffle).
 - `compute_ig_for_step(...)`: thin wrapper that calls the two above plus the
   shared `integrated_gradients` core and returns the per-modality summary dict
-  per_step_ig.py consumes. API and return shape unchanged from the pre-refactor
-  version so existing callers (per_step_ig.py:249) work without modification.
+  per_step_ig.py consumes, with numerical metadata and the stored initial noise.
 
 Design choices baked in here:
 - The historical `logpi` name denotes an auxiliary quadratic score around one
@@ -50,10 +49,8 @@ Design choices baked in here:
 
 import math
 import torch
-import numpy as np
-from PIL import Image
 
-from integrated_gradients import integrated_gradients
+from integrated_gradients import _require_finite, integrated_gradients
 from rdt_sampling import conditional_sample_with_noise, make_initial_noise, sampler_metadata
 
 #Constants, ManiSkill Panda arm mapping into RDT's 128-dim unified space.
@@ -129,8 +126,8 @@ def prepare_ig_context(
         raise ValueError("sigma_sq must be finite and positive")
     if target not in {"logpi", "l2", "l2sq", "maxdev", "cosine"}:
         raise ValueError(f"unknown target: {target}")
-    device = "cuda"
-    dtype = torch.bfloat16
+    device = action_mask.device
+    dtype = action_mask.dtype
     image_processor = vision_model.image_processor
 
     #Encode the new observation through SigLIP.
@@ -184,11 +181,12 @@ def prepare_ig_context(
     #When frozen_ref_action is provided (frozen-target C1), skip the forward pass
     #and use the caller's ref_action so log_pi targets the original model's action.
     if frozen_ref_action is not None:
-        ref_action = frozen_ref_action.to(device=device, dtype=dtype)
+        ref_action = frozen_ref_action.detach().to(device=device, dtype=dtype)
     else:
         with torch.no_grad():
             ref_action = seeded_conditional_sample(
                 lang_adapted, img_adapted, state_traj_actual).detach()
+    _require_finite(ref_action, "reference_action")
 
     #IG target (scalar function of the predicted action chunk). Five variants,
     #selectable via `target`, all reduced over the 8 MANISKILL_INDICES joints:
