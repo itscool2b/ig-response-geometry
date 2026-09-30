@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/JmlrOrg/tmlr-style-file",
+  "commit": "7bf90efe3a0debbba703c05c43f3ff7e4d4a2992",
+  "retrieved": "2026-09-30",
+  "license": "Apache-2.0",
+  "files": {
+    "tmlr.sty": "a067e8286a3cf8e3ad292e3d8bc5feb4690e62bc100fa6d903a5e22f947ea6cb",
+    "tmlr.bst": "ded3dbf610d9db328c4c1bc07fc24957c034b722de9a663c0350912f044676c8",
+    "tmlr-LICENSE": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+  },
+  "modifications": "None to upstream style, bibliography style or license. System fancyhdr is used."
+}
