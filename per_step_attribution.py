@@ -5,7 +5,7 @@ Exports three functions:
 
 - `prepare_ig_context(...)`: runs all per-step setup (SigLIP-encode the obs,
   stitch the 6-slot image, format proprio, adapt language/image/state through
-  their adaptors under no_grad, define the seeded `conditional_sample` wrapper,
+  their adaptors under no_grad, define the explicit-noise sampler wrapper,
   compute the reference action) and returns a dict of tensors and closures that
   downstream modules consume.
 - `build_forward_fns(ctx)`: returns (forward_fn_vision, forward_fn_language,
@@ -17,11 +17,11 @@ Exports three functions:
   per_step_ig.py consumes. API and return shape unchanged from the pre-refactor
   version so existing callers (per_step_ig.py:249) work without modification.
 
-Design choices baked in here (all decided during the per-step IG planning pass):
-- Target is `log π(a_t | o_t)` under a unit-variance Gaussian around the final
-  denoised mean μ, with the constant entropy term dropped (does not affect IG
-  gradients). RDT has `prediction_type="sample"` so `conditional_sample` output
-  IS the mean μ; the Gaussian variance σ² is a hyperparameter (default 1.0).
+Design choices baked in here:
+- The historical `logpi` name denotes an auxiliary quadratic score around one
+  fixed-noise reference action sample. It is not a policy likelihood, and
+  `prediction_type="sample"` does not make that draw a conditional mean.
+  The score scale σ² is a hyperparameter (default 1.0).
 - Vision baseline holds the five non-camera image slots equal to the input's
   five non-camera slots (both sides of the IG integration see the same
   `bg_image` tokens there); only slot 3 interpolates obs→gray. Completeness
@@ -33,11 +33,11 @@ Design choices baked in here (all decided during the per-step IG planning pass):
   outside MANISKILL_INDICES are identical between input and baseline so their
   attribution is zero by construction; `sum(state_attr_flat)` equals the
   per-joint sum up to float noise.)
-- Seeded wrapper around `conditional_sample` re-seeds the global RNG inside
-  every IG forward so the initial noise in the DPM-Solver++ chain is identical
+- An explicit saved latent tensor makes the initial DPM-Solver++ noise identical
   across all m+1 interpolation steps AND across the three modalities within a
-  single step. This is the invariant that makes ref_action = F(real_input)
-  exactly (f_input = 0) and lets completeness actually pass.
+  single step. Repeated forwards must still be checked for determinism under
+  the actual runtime. Completeness is an accounting diagnostic, not proof of
+  coordinate accuracy. The stabilized L2 target is -1e-6 at the reference.
 - Gradient checkpointing is NOT applied here; the caller applies it once on
   the runner at script start. Applying checkpointing inside this function would
   double-wrap block.forward on repeated calls.
@@ -48,24 +48,20 @@ Design choices baked in here (all decided during the per-step IG planning pass):
   pass.
 """
 
-import sys
-import os
+import math
 import torch
 import numpy as np
 from PIL import Image
 
-sys.path.insert(0, os.path.expanduser("~/rdt-repo"))
-from configs.state_vec import STATE_VEC_IDX_MAPPING
-
 from integrated_gradients import integrated_gradients
+from rdt_sampling import conditional_sample_with_noise, make_initial_noise, sampler_metadata
 
 #Constants, ManiSkill Panda arm mapping into RDT's 128-dim unified space.
 #MANISKILL_INDICES = [0, 1, 2, 3, 4, 5, 6, 10] maps to 7 arm joints + gripper.
 #The 120 dims outside this list stay at zero at both input and baseline, so
 #their attribution is zero by construction (diff=0 along the whole IG path).
-MANISKILL_INDICES = [
-    STATE_VEC_IDX_MAPPING[f"right_arm_joint_{i}_pos"] for i in range(7)
-] + [STATE_VEC_IDX_MAPPING["right_gripper_open"]]
+#Explicit supported mapping, checked against the pinned upstream by the loader.
+MANISKILL_INDICES = [0, 1, 2, 3, 4, 5, 6, 10]
 JOINT_NAMES = [f"joint_{i}" for i in range(7)] + ["gripper"]
 
 #Proprioception normalization bounds (same as ig_rdt.py). These are
@@ -91,6 +87,7 @@ def prepare_ig_context(
     sigma_sq=1.0,
     frozen_ref_action=None,
     target="logpi",
+    initial_noise=None,
 ):
     """
     Run all per-step IG setup and return a context dict.
@@ -104,6 +101,8 @@ def prepare_ig_context(
         frozen_ref_action: if provided, use this as ref_action instead of
             computing it from the model. Used by frozen-target C1 sanity check
             to decouple the IG target from the (re-initialized) model.
+        initial_noise: optional saved latent tensor for exact replay. Omission
+            creates a new explicit draw using a dedicated generator and seed.
 
     Returns dict with keys:
         runner, vision_model
@@ -117,13 +116,19 @@ def prepare_ig_context(
         state_input_baseline         (1, 1, 128) bf16, zeros
         state_traj_actual            (1, 1, H) bf16, POST-adaptor token for
                                      the frozen-state path used in vision/lang IG
-        ref_action                   (1, 64, 128) bf16, seeded conditional_sample
-                                     output on real inputs (the Gaussian's mean μ)
-        seeded_conditional_sample    callable(lang_c, img_c, state_t) -> (1,64,128)
+        ref_action                   (1, 64, 128) bf16, fixed-noise sampler
+                                     output on the actual input
+        seeded_conditional_sample    compatibility alias for the explicit-noise wrapper
+        initial_noise                stored model-representable latent values
+        sampler_metadata             noise hash, adapter and scheduler identity
         log_pi                       callable(pred_action) -> scalar
         action_mask, ctrl_freqs, lang_attn_mask: passthrough
         seed, sigma_sq               ints/floats
     """
+    if not math.isfinite(sigma_sq) or sigma_sq <= 0:
+        raise ValueError("sigma_sq must be finite and positive")
+    if target not in {"logpi", "l2", "l2sq", "maxdev", "cosine"}:
+        raise ValueError(f"unknown target: {target}")
     device = "cuda"
     dtype = torch.bfloat16
     image_processor = vision_model.image_processor
@@ -159,15 +164,23 @@ def prepare_ig_context(
         lang_adapted_bl = runner.lang_adaptor(lang_tokens_baseline)
         img_adapted_bl = runner.img_adaptor(img_tokens_baseline)
 
-    #Seeded wrapper, re-seeds inside each call so diffusion noise is identical
-    #across all m+1 interpolation forwards and across the three modalities.
-    def seeded_conditional_sample(lang_c, img_c, state_t):
-        torch.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
-        return runner.conditional_sample(
-            lang_c, lang_attn_mask, img_c, state_t, action_mask, ctrl_freqs)
+    #Store one exact latent array. This preserves global/environment RNG state,
+    #and the local scheduler in the adapter prevents history leaking into IG.
+    if initial_noise is None:
+        initial_noise = make_initial_noise(runner, state_traj_actual, seed)
+    else:
+        initial_noise = initial_noise.detach().to(device=device).clone()
+    sampling_info = sampler_metadata(runner, initial_noise)
+    sampling_info["noise_seed"] = seed
+    sampling_info["noise_schedule"] = "one_fixed_draw_per_context"
 
-    #Reference action, the Gaussian's mean μ and the chunk the policy would execute.
+    def seeded_conditional_sample(lang_c, img_c, state_t):
+        return conditional_sample_with_noise(
+            runner, lang_c, lang_attn_mask, img_c, state_t, action_mask,
+            ctrl_freqs, initial_noise,
+        )
+
+    #Reference action: one fixed-noise sampler output, also executed by the policy.
     #When frozen_ref_action is provided (frozen-target C1), skip the forward pass
     #and use the caller's ref_action so log_pi targets the original model's action.
     if frozen_ref_action is not None:
@@ -179,22 +192,17 @@ def prepare_ig_context(
 
     #IG target (scalar function of the predicted action chunk). Five variants,
     #selectable via `target`, all reduced over the 8 MANISKILL_INDICES joints:
-    #  logpi   -0.5/σ²·mean((a-μ)²)   Gaussian log-density (default).
-    #          Deletion magnitudes are structurally small under this target: the
-    #          perturbation does move μ (4-8% of the action norm at top-5%
-    #          deletion, Month 5 measurement), but the quadratic per-entry-mean
-    #          readout maps that displacement to ~1e-3 nats (paper Sec. 6.1).
-    #          Kept as the canonical/comparison target.
-    #  l2      -‖a-μ‖₂                 raw L2 distance (not squared); larger
-    #          gradient magnitude away from μ than the squared form.
+    #  logpi   -0.5/σ²·mean((a-μ)²)   auxiliary Gaussian log-kernel per entry.
+    #  l2      -sqrt(‖a-μ‖₂²+1e-12)  stabilized L2 distance, not squared.
     #  l2sq    -‖a-μ‖₂²               squared L2 sum (logpi without the 0.5/σ²/mean
-    #          averaging) — sharper than logpi, same minimum.
+    #          averaging), a positive scalar multiple of logpi.
     #  maxdev  -max_j|a_j-μ_j|        worst-joint deviation; sensitive to the
     #          single most-perturbed joint rather than the average.
     #  cosine  cos(a, μ)              directional similarity of the action chunk,
     #          scale-invariant; tests whether perturbations rotate the action.
-    #All are maximized at a=μ (cosine at 1, the rest at 0) so the reference action
-    #remains F's argmax and completeness still references F(input)-F(baseline).
+    #The deviation targets are maximized at a=μ. Stabilized L2 equals -1e-6
+    #there. Cosine also depends on its norm stabilizer near zero. Always use
+    #evaluated endpoints for completeness instead of assuming their values.
     def _target(pred_action):
         a = pred_action[..., MANISKILL_INDICES].float()
         mu = ref_action[..., MANISKILL_INDICES].float()
@@ -233,6 +241,9 @@ def prepare_ig_context(
         "lang_attn_mask": lang_attn_mask,
         "seed": seed,
         "sigma_sq": sigma_sq,
+        "initial_noise": initial_noise,
+        "initial_noise_sha256": sampling_info["initial_noise_sha256"],
+        "sampler_metadata": sampling_info,
     }
 
 
@@ -283,6 +294,10 @@ def compute_ig_for_step(
     m=64,
     sigma_sq=1.0,
     target="logpi",
+    quadrature="trapezoid",
+    arithmetic_dtype=torch.float32,
+    diagnostic_context=None,
+    initial_noise=None,
 ):
     """
     Run per-modality IG for a single observation.
@@ -303,13 +318,19 @@ def compute_ig_for_step(
         action_mask: (1, 1, 128) bf16 on GPU, 1 at MANISKILL_INDICES else 0
         ctrl_freqs: (1,) bf16 on GPU, RDT control frequency tensor
         seed: int, shared across all forward passes within this step
-        m: int, number of Riemann integration points (m+1 forwards per modality)
-        sigma_sq: float, Gaussian variance for log π target
+        m: int, number of intervals (m+1 forwards per modality)
+        sigma_sq: float, positive scale for the auxiliary quadratic score
+        quadrature: trapezoid or legacy_endpoint_average
+        arithmetic_dtype: float32 by default; float64 for diagnostic arithmetic
+        diagnostic_context: optional run/context IDs for nonfinite failures
+        initial_noise: optional stored latent array for exact replay
 
     Returns:
         dict with keys "ref_action", "ref_norm_maniskill", "vision", "language",
         "state". Each modality dict has "attribution" (torch.Tensor), "ig_sum",
-        "expected_gap", "completeness_err" (decimal, not percent). The "state"
+        "expected_gap", "completeness_err" (decimal, or None for a zero gap),
+        and "numerics" with endpoint scores, absolute residual and precision
+        metadata. The "state"
         dict additionally has "per_joint" (np.ndarray (8,) extracted at
         MANISKILL_INDICES).
     """
@@ -318,48 +339,33 @@ def compute_ig_for_step(
         lang_tokens, lang_attn_mask, lang_tokens_baseline,
         bg_image_encoded, img_tokens_baseline,
         action_mask, ctrl_freqs,
-        seed=seed, sigma_sq=sigma_sq, target=target,
+        seed=seed, sigma_sq=sigma_sq, target=target, initial_noise=initial_noise,
     )
     fwd_vision, fwd_lang, fwd_state = build_forward_fns(ctx)
 
-    #IG per modality (integrated_gradients prints its own completeness check).
-    vision_attr = integrated_gradients(
-        fwd_vision, ctx["img_adapted"], ctx["img_adapted_bl"], m=m)
-    lang_attr = integrated_gradients(
-        fwd_lang, ctx["lang_adapted"], ctx["lang_adapted_bl"], m=m)
-    state_attr = integrated_gradients(
-        fwd_state, ctx["state_input_actual"], ctx["state_input_baseline"], m=m)
-
-    #Per-modality summary stats. For logpi/l2/l2sq/maxdev, f_input is 0 by
-    #construction (target is 0 at a=μ); for cosine it is 1. Compute f_input
-    #explicitly per modality so completeness is correct for every target
-    #(one extra cheap forward per modality).
-    with torch.no_grad():
-        f_in_vision = fwd_vision(ctx["img_adapted"]).item()
-        f_in_lang = fwd_lang(ctx["lang_adapted"]).item()
-        f_in_state = fwd_state(ctx["state_input_actual"]).item()
-        f_base_vision = fwd_vision(ctx["img_adapted_bl"]).item()
-        f_base_lang = fwd_lang(ctx["lang_adapted_bl"]).item()
-        f_base_state = fwd_state(ctx["state_input_baseline"]).item()
-
-    def _stats(attr, f_in, f_base):
-        actual = attr.sum().item()
-        expected = f_in - f_base
-        rel_err = abs(expected - actual) / abs(expected) if expected != 0 else float("inf")
+    def _compute(modality, forward, actual, baseline):
+        result = integrated_gradients(
+            forward, actual, baseline, m=m, quadrature=quadrature,
+            arithmetic_dtype=arithmetic_dtype, return_result=True,
+            diagnostic_context={**(diagnostic_context or {}), "modality": modality},
+        )
         return {
-            "attribution": attr.detach(),
-            "ig_sum": actual,
-            "expected_gap": expected,
-            "completeness_err": rel_err,
+            "attribution": result.attributions,
+            "ig_sum": result.attribution_sum,
+            "expected_gap": result.expected_gap,
+            "completeness_err": result.relative_residual,
+            "numerics": result.diagnostics(),
         }
 
-    vision_stats = _stats(vision_attr, f_in_vision, f_base_vision)
-    lang_stats = _stats(lang_attr, f_in_lang, f_base_lang)
-    state_stats = _stats(state_attr, f_in_state, f_base_state)
+    #Reuse the scores evaluated at the path endpoints. Separate post-hoc
+    #forwards could disagree under a nondeterministic runtime and cost extra.
+    vision_stats = _compute("vision", fwd_vision, ctx["img_adapted"], ctx["img_adapted_bl"])
+    lang_stats = _compute("language", fwd_lang, ctx["lang_adapted"], ctx["lang_adapted_bl"])
+    state_stats = _compute("state", fwd_state, ctx["state_input_actual"], ctx["state_input_baseline"])
 
     #Extract per-joint state attribution at MANISKILL_INDICES (real per-joint
     #values because IG ran on the raw 128-dim input, before state_adaptor).
-    state_flat = state_attr.squeeze(0).squeeze(0).detach().cpu().float()
+    state_flat = state_stats["attribution"].squeeze(0).squeeze(0).detach().cpu()
     state_stats["per_joint"] = state_flat[MANISKILL_INDICES].numpy()
 
     return {
@@ -368,4 +374,7 @@ def compute_ig_for_step(
         "vision": vision_stats,
         "language": lang_stats,
         "state": state_stats,
+        "initial_noise": ctx["initial_noise"],
+        "initial_noise_sha256": ctx["initial_noise_sha256"],
+        "sampler_metadata": ctx["sampler_metadata"],
     }
