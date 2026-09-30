@@ -1,0 +1,3466 @@
+[
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      1,
+      "vision"
+    ],
+    "key_sha256": "766860137c1c9a085bba2d715e91bd5ee57e21fc1270fb04a3027f4b9c20017f",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:3:4c16d893df09fc5498a9e3fd6aa0b4726784d62f3637bad37644205ecbc25ef7",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:19:438c315cc260f9e8d223079502955fb4b26c8ecb790d0d5c7755cc8ac33e6272"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:19:438c315cc260f9e8d223079502955fb4b26c8ecb790d0d5c7755cc8ac33e6272",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:19:438c315cc260f9e8d223079502955fb4b26c8ecb790d0d5c7755cc8ac33e6272"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      1,
+      "language"
+    ],
+    "key_sha256": "d2d4a5233ad9a99967695332709370d64429e2a0216ff895beadc567df7fd711",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:4:83912c4cba2c238182fb8c9c2c122a6aa474b0f04f2225b959417a8fa54be14d",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:20:cd34647c6b85cb0bb1017d4c8fe7aba84c7dae7fd784784a23cd330d1f4db35c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:20:cd34647c6b85cb0bb1017d4c8fe7aba84c7dae7fd784784a23cd330d1f4db35c",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:20:cd34647c6b85cb0bb1017d4c8fe7aba84c7dae7fd784784a23cd330d1f4db35c"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      2,
+      "vision"
+    ],
+    "key_sha256": "7f1765ba9809c84d178361a5625a5f4e1dcc4c448604e96f2b523d2f9d50fa7a",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:103:fc2386611e78307155aaefef0db689c666e2be52ab94187466e11444be415f7e",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:119:263613f7548f00a66287ace7163117e0905b3f88224a987b1b586b705c4d5b9f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:119:263613f7548f00a66287ace7163117e0905b3f88224a987b1b586b705c4d5b9f",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:119:263613f7548f00a66287ace7163117e0905b3f88224a987b1b586b705c4d5b9f"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      2,
+      "language"
+    ],
+    "key_sha256": "97f564a63bfc86f756c637375ed62d615469427b033dbd3826f15ff3fd13eee4",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:104:8a1501149658465f3276f284ae6c457883590f93afbb673276837500f66bde2d",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:120:2ac71cc96b517c879bbf194c4a518d5dca2c8829bc50451f7b1cf5fb3a35ba92"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:120:2ac71cc96b517c879bbf194c4a518d5dca2c8829bc50451f7b1cf5fb3a35ba92",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:120:2ac71cc96b517c879bbf194c4a518d5dca2c8829bc50451f7b1cf5fb3a35ba92"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      3,
+      "vision"
+    ],
+    "key_sha256": "be4a4da0f9d5fd81a1baf5cca6e19ca5cdf2baef6ecdbbc9e2dd3a9547e7d2c9",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:203:32bc620b960fef9b47ec4119b6d950e4040c26c993a56f3ab73c81881186b998",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:219:372aefcf58f2f565d550cf50a5a95301a3dd22b998f82e6aea79780508ee6f39"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:219:372aefcf58f2f565d550cf50a5a95301a3dd22b998f82e6aea79780508ee6f39",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:219:372aefcf58f2f565d550cf50a5a95301a3dd22b998f82e6aea79780508ee6f39"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      3,
+      "language"
+    ],
+    "key_sha256": "e1aa5a6a6a48de86786713b42b0ab1e3889e7fcad5e5402055a801a54b1e6fe9",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:204:7b81662d0a7fcffe4cf6419ad1ccf27df844515b7acaf970c6bc1c8ebce6ed66",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:220:6b10e766b91c069e2de0bfc5487bf4ee4286851eb09c62e0e4b6d8d42de7f428"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:220:6b10e766b91c069e2de0bfc5487bf4ee4286851eb09c62e0e4b6d8d42de7f428",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:220:6b10e766b91c069e2de0bfc5487bf4ee4286851eb09c62e0e4b6d8d42de7f428"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      5,
+      "vision"
+    ],
+    "key_sha256": "74ce0e3f17e14bbe4abd7b38c3309f85d43c4d5ae90419b05b91dbaef9155621",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:303:3d08c2b567f2394ae98abda845819285c3b0c3d957e33df2e150f712d2542bae",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:319:e179a5b3b5320b17d6631256749bc84fe50c36dea77fe532c0dc5e12b6986a56"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:319:e179a5b3b5320b17d6631256749bc84fe50c36dea77fe532c0dc5e12b6986a56",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:319:e179a5b3b5320b17d6631256749bc84fe50c36dea77fe532c0dc5e12b6986a56"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      5,
+      "language"
+    ],
+    "key_sha256": "45d7842637b8bceb1b949a59718a8bf4904d51d6ca1fe15da29274b8192b1fa5",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:304:15629fe44f206e3044a12e53767672f7642d873fe10b0ed753e2f672257d47ae",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:320:a25558d1301bbcceb7b28036621230d9ed120ddb389f75cf0585f607c4cca2a0"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:320:a25558d1301bbcceb7b28036621230d9ed120ddb389f75cf0585f607c4cca2a0",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:320:a25558d1301bbcceb7b28036621230d9ed120ddb389f75cf0585f607c4cca2a0"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      10,
+      "vision"
+    ],
+    "key_sha256": "b0c65850c4640b42cd069b48c6e441a3175c5998323d47886a3abe806060f569",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:403:2bdf662076466c3691f6dab706753a5b88fd9c8e5ffa218648f068a0a6818578",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:419:029f2af57279f7b71cf2395c7f53749c21431ecf1d3ae0768eee63a7a2a2c604"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:419:029f2af57279f7b71cf2395c7f53749c21431ecf1d3ae0768eee63a7a2a2c604",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:419:029f2af57279f7b71cf2395c7f53749c21431ecf1d3ae0768eee63a7a2a2c604"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      10,
+      "language"
+    ],
+    "key_sha256": "1a4574c2267094a44b130e9617c0e96b155561b04a668d614b0f599f59a8bad9",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:404:260464f1a1b22cbc1eec1fcdab05ad3f21d2df525ed76ff29db29ca08e7a7f85",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:420:c40ef674e6caf467d904c9869417447bc563439da2bbb13b8423267dba7edd17"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:420:c40ef674e6caf467d904c9869417447bc563439da2bbb13b8423267dba7edd17",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:420:c40ef674e6caf467d904c9869417447bc563439da2bbb13b8423267dba7edd17"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      20,
+      "vision"
+    ],
+    "key_sha256": "989bf080c722659e9fc20403d212cf6c5cf7d2cf75403c6a8d4dc35e3a45bdcb",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:503:db4a0e4c9a0822afaa5d1561f2ffa50ea486e2fdd6c591519bbec4c7b09991cb",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:519:bbb3630edbf05b6329b9817a722cd2179f6f49b7807a26985ef4ed2c4043c316"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:519:bbb3630edbf05b6329b9817a722cd2179f6f49b7807a26985ef4ed2c4043c316",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:519:bbb3630edbf05b6329b9817a722cd2179f6f49b7807a26985ef4ed2c4043c316"
+  },
+  {
+    "source": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+    "key": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl",
+      "displacement",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      20,
+      "language"
+    ],
+    "key_sha256": "e6f2bc00e10ba45ac3ff406c49a6649ae3f10e6b902a41fbcfa067d37d2683f2",
+    "occurrences": [
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:504:2dcf4d5870fc3434697a09f974a5a37a81c13221779aaf0a20c3938bd671f660",
+      "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:520:44ce3f9078c51d402b9023237055a018503f46fdcd0d08be045d40ab30b431d8"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:520:44ce3f9078c51d402b9023237055a018503f46fdcd0d08be045d40ab30b431d8",
+    "conflict_excluded_selected": "data/m5_metrics_displacement_PickCube-v1_170m.jsonl:520:44ce3f9078c51d402b9023237055a018503f46fdcd0d08be045d40ab30b431d8"
+  },
+  {
+    "source": "data/m5_metrics_PickCube-v1_170m_seed42.jsonl",
+    "key": [
+      "data/m5_metrics_PickCube-v1_170m_seed42.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      43,
+      1,
+      0,
+      5,
+      null
+    ],
+    "key_sha256": "f1783b964c48fa017eb3cb3a54253839b2dd9c453aec8ca2888bcddc7cd1e2d5",
+    "occurrences": [
+      "data/m5_metrics_PickCube-v1_170m_seed42.jsonl:27:4c2be9660183f9df0dd4f7a2ac8577552b6fc261cb2c3d4544d99eca115a2d74",
+      "data/m5_metrics_PickCube-v1_170m_seed42.jsonl:28:e64c223da92d1cfd5a38fd2321c62a847d540bb66e1ee06ee323300e042b4cc2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/m5_metrics_PickCube-v1_170m_seed42.jsonl:28:e64c223da92d1cfd5a38fd2321c62a847d540bb66e1ee06ee323300e042b4cc2",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      0,
+      null,
+      null
+    ],
+    "key_sha256": "52f4c7ddbd2f72b8490d09ab8159cd4cac1cf79a6cf201e61dd030ab2ae5ad95",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:26:43a2f6152c24639a2796cad6376038889eedb6223455d5650a3f9774d583da4f",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:45:dd629e8d7e5a0c87c3930d5717dbc2c1df9347d903cab3a383ff841dec85135a"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:45:dd629e8d7e5a0c87c3930d5717dbc2c1df9347d903cab3a383ff841dec85135a",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:45:dd629e8d7e5a0c87c3930d5717dbc2c1df9347d903cab3a383ff841dec85135a"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "14055c2e846b62d995f782e16e5385a814a0d5f063e4468f6f28bbc450b9913f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:27:49cfb0fba62007f2c5c20c791ff8c8a229897562f7f65ad60646682fc0b75218",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:46:5f47115b34477ba9ada0ab4edef99b28592e8f85111d5ef5a83af733e63968c2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:46:5f47115b34477ba9ada0ab4edef99b28592e8f85111d5ef5a83af733e63968c2",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:46:5f47115b34477ba9ada0ab4edef99b28592e8f85111d5ef5a83af733e63968c2"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "428c355a5de36f5307eaf83e5ae623290835ba832736c47079b2ce9bed93e821",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:28:07e87ff72dc124d6288f991f1f12113b9714ce0e2124cac9dcceb8c10bac08bb",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:47:2c24740ae990d25470a04bf18449db43bbecdfee763ac6f44c843fdc0d139d8a"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:47:2c24740ae990d25470a04bf18449db43bbecdfee763ac6f44c843fdc0d139d8a",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:47:2c24740ae990d25470a04bf18449db43bbecdfee763ac6f44c843fdc0d139d8a"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "b4a3db434f8b6822a4c31f0c0191991d402dbbb2807cbdbb9905d54a9547ea59",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:29:def6c8285dcaf24c5f00fe9e45e91e3029a0928ca0534206cdbc1e4be99240d9",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:48:9a87e58808a4e23a10899a412ed22b8103dbcc11c145040d6edf7bfc5ef0ecbc"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:48:9a87e58808a4e23a10899a412ed22b8103dbcc11c145040d6edf7bfc5ef0ecbc",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:48:9a87e58808a4e23a10899a412ed22b8103dbcc11c145040d6edf7bfc5ef0ecbc"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "a5117378d3e76db50a7ecaa425650a0ba51bf6c0ea64997d59031fea561897b9",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:30:bdc5f8cdca73d843c81620ad23b43bb78e923ce3f045da79c8756305da031c7c",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:49:cc71c73cba8790411cb6e955b886b84deb1328bf685d6c5a339b4afb9d2bdd34"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:49:cc71c73cba8790411cb6e955b886b84deb1328bf685d6c5a339b4afb9d2bdd34",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:49:cc71c73cba8790411cb6e955b886b84deb1328bf685d6c5a339b4afb9d2bdd34"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "aafc5c4a4807c8ca68e3db5b795846408939c0d13f02cf87c2a67b5c62677b22",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:31:feb699a681375916858d0fae3349c35f80e96e5787c9835b33b5cd58c0df5090",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:50:b542ef6b2893b2acb0e82c0d66a171ad50cd123f5ebb65fb0696f27e97ab10a6"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:50:b542ef6b2893b2acb0e82c0d66a171ad50cd123f5ebb65fb0696f27e97ab10a6",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:50:b542ef6b2893b2acb0e82c0d66a171ad50cd123f5ebb65fb0696f27e97ab10a6"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "6b10f3ef27ab8705d3592ec61741d8f467fbd9aec8a6ec7fb84e5b9c16726612",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:32:cc510243a9a00d2280b6d54212c276ddf2bf0f75241e9b6e080b4e1da1325de6",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:51:cd2a696c69ede50139fd9c33cac9d8c2110f80e51ae7fbf323c0f4700a0a8a8f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:51:cd2a696c69ede50139fd9c33cac9d8c2110f80e51ae7fbf323c0f4700a0a8a8f",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:51:cd2a696c69ede50139fd9c33cac9d8c2110f80e51ae7fbf323c0f4700a0a8a8f"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "68fd7dd0773dc350e0bbc3a0464758db038c7ed3c7bf8612be50a93134d196d6",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:33:b59d411faa2c1400210d80df027c73260ea3f0318b988baabf04197c38af1bf4",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:52:ef515f5364e28797cbc19e2f5f70ad563ce82c9a212661aed9217d15c8be3a03"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:52:ef515f5364e28797cbc19e2f5f70ad563ce82c9a212661aed9217d15c8be3a03",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:52:ef515f5364e28797cbc19e2f5f70ad563ce82c9a212661aed9217d15c8be3a03"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "9484600e7d9d6f15a4d939ea0cddb78984cd222c5ad0385095609e69b3aa5fb5",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:34:66c47d1bdefb4c7fee8d0947e51c5926b5647e3b999479b6d67452a4826f9040",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:53:66683e49ec4e30beda3f2a401f76dc76940f0cf2f01c3e3ab54132224cf684d5"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:53:66683e49ec4e30beda3f2a401f76dc76940f0cf2f01c3e3ab54132224cf684d5",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:53:66683e49ec4e30beda3f2a401f76dc76940f0cf2f01c3e3ab54132224cf684d5"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "9bdbd00f340bfb75a9a0eaa3a1d31dda937fa42cb133e7bebd3d726b26a1a947",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:35:814cedd24911eabd9a36237c655ed4ee9641a5327d1b0aa64b65c14113ee4e16",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:54:6b6a44afe3f81da2c004a1114fcf0fe1b33d195d55fd7be17666dede60dc22f8"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:54:6b6a44afe3f81da2c004a1114fcf0fe1b33d195d55fd7be17666dede60dc22f8",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:54:6b6a44afe3f81da2c004a1114fcf0fe1b33d195d55fd7be17666dede60dc22f8"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "b898604cf64711d50709fc419fc2bbda0f5e3b471895f2806ebfc5727098ea82",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:36:6b29dbe1d974bfd64cce0b387dd092d2f3e48f9d423f65e01048b5ce2e6a2caa",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:55:5175c2ba72464d8674199ab16ab7c2c60fc5931dda75ea0aa58fe95d2aa60d5d"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:55:5175c2ba72464d8674199ab16ab7c2c60fc5931dda75ea0aa58fe95d2aa60d5d",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:55:5175c2ba72464d8674199ab16ab7c2c60fc5931dda75ea0aa58fe95d2aa60d5d"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "7f6c9838fc095827a4d157485f66337a60a369a8acd9338b9a1fcc16327a67a5",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:37:7f6d4476682d4c31e4908980b143fef8d8382ac1050e80c76aa344db601f9a81",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:56:55ccaf40a5acb6df296b8dea896173cf4f8c43d89d366bd3751aeed1e6f1845d"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:56:55ccaf40a5acb6df296b8dea896173cf4f8c43d89d366bd3751aeed1e6f1845d",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:56:55ccaf40a5acb6df296b8dea896173cf4f8c43d89d366bd3751aeed1e6f1845d"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "da51ea26deb161de032dc3168b0a4d33f6bb14252aa056562c99291bad0d9bae",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:38:8d5e90c39a7b7361ac7ce6794c4ddf538c0b47bd7db2e65df9b07c87ad8cdeae",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:57:e8d93deee58b2f8ed9d5e1c14567365cd72cfa62fb76aa5a1a6178ef2c930a12"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:57:e8d93deee58b2f8ed9d5e1c14567365cd72cfa62fb76aa5a1a6178ef2c930a12",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:57:e8d93deee58b2f8ed9d5e1c14567365cd72cfa62fb76aa5a1a6178ef2c930a12"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "17b3d6e9d47b2ca3e46b5de9f516df2b281b8fbb719d38c034d7a6598538e5aa",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:39:1e534e9d17bfcc6388b2a80b133e9da29284d33fa5525e4bce1a5fd609902158",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:58:802425905ad6e4505c600783ab86e537ebf4625c310b1830e7aaa9e19332e92c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:58:802425905ad6e4505c600783ab86e537ebf4625c310b1830e7aaa9e19332e92c",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:58:802425905ad6e4505c600783ab86e537ebf4625c310b1830e7aaa9e19332e92c"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "da633d2a0946bd98014b5202798c36f01d2fa200c7b345766632dad311e9fddb",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:40:417eadad033f233d6fe15bec1569366ec255626b2fffb289b534b52728b7b08e",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:59:acf5c8a01e74276978434877ed6ba3ec5de3e3e938e53e49991643d5b5ff57f4"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:59:acf5c8a01e74276978434877ed6ba3ec5de3e3e938e53e49991643d5b5ff57f4",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:59:acf5c8a01e74276978434877ed6ba3ec5de3e3e938e53e49991643d5b5ff57f4"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "960802a23cd4a794cfd8749ae013d76de545e48b6d049bb51ddee20a0d7578bc",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:41:f77691c3aed367abd21c9319cd1d842cac778205df4bb6410c6f087df161103c",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:60:25af2494b8c131507287ac8517fbc9ac42a4ebbda86970263e4a5f280b603dc4"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:60:25af2494b8c131507287ac8517fbc9ac42a4ebbda86970263e4a5f280b603dc4",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:60:25af2494b8c131507287ac8517fbc9ac42a4ebbda86970263e4a5f280b603dc4"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      16,
+      null,
+      null
+    ],
+    "key_sha256": "2fced13994da13482599fb85c3c42278ab0d1c9a2e6359a1541c82aff2801d49",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:42:65fdbf2c989b320d7b585fc76f23d86d5e63bc65b8f34aeedbea54d073e00ecc",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:61:3e733dd565c0527292c56f44c682f81c909457bf36ccad7ccd6d0d46a274a6d4"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:61:3e733dd565c0527292c56f44c682f81c909457bf36ccad7ccd6d0d46a274a6d4",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:61:3e733dd565c0527292c56f44c682f81c909457bf36ccad7ccd6d0d46a274a6d4"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      17,
+      null,
+      null
+    ],
+    "key_sha256": "a52441382143de92b61f1f11176192b068ec9f1dff600a2ec8608bddf64a5f21",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:43:dd08d8d268ac34b76d9e432682e2c1eedbdd2a5b10ce6a2632e43a6a3b9e573d",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:62:990b8a72cb6aa1f46db26f8af4f895652e9f7793c6add2ac75f10ce9e24fbb54"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:62:990b8a72cb6aa1f46db26f8af4f895652e9f7793c6add2ac75f10ce9e24fbb54",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:62:990b8a72cb6aa1f46db26f8af4f895652e9f7793c6add2ac75f10ce9e24fbb54"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "faithfulness",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      18,
+      null,
+      null
+    ],
+    "key_sha256": "34e49d02e855be4ce4b6509f83360dd176966e9cdf454894d7ff079588dce88f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:44:3474aa8d90b1d87768ca07bb56ee964283c120700930895eb60440b22732377e",
+      "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:63:b1ed1fd835d4b2e9dbcb00a2ebf35ff355e42a0668007053c4d1f648de7538b1"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:63:b1ed1fd835d4b2e9dbcb00a2ebf35ff355e42a0668007053c4d1f648de7538b1",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl:63:b1ed1fd835d4b2e9dbcb00a2ebf35ff355e42a0668007053c4d1f648de7538b1"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      0,
+      null,
+      null
+    ],
+    "key_sha256": "186d8fc5e681c020019f3365f25e1fb671abeb3c781d12efd3914893410e561c",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:301:fecf9fbe33c3f2f06c974626198562e848fab71fa5e47be5dead3f11494cb583",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "64bbcf58ad7c228493a5fca27554f6fe46c0f646a7a353a97752f276b721f0f0",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:302:279fe7382b2f9abeb99b087f4b691c68d826e3d6724a6a646d557e8caadd2ec7",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "d9c237249bca3f18b221460cad811d8f0481fb809c8c30422fef8d017f357b8e",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:303:dbcbd6fcf2c21688577a65183d0c7fda312b7863a0fd2c321432f08182e7f72c",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "26d1313288abb68d69054cadc3785773c585dc7ee64eb77440e53b60d69b9cbc",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:304:9e7ca9d0daab2da6150255981670a4f23cf116998257abd08def6f74ec21f21d",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "2505558a505a6b93efda9ebc4cd242226d7dd916db491e980fa543a123369de8",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:305:50d46ef2c6fcc10b1400c1dbcd7c1c066e19cdc6607993391ed00954f4eaed39",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "31cf240643089b8982ee5687b9747d8dcb1a4ea2858bb35ff3dec45e736c87b2",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:306:4a53f1bcf78d6081fe0d5f0a6bffd1e5b61b51a3d439b3e5f89131d492ae77bb",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "5c44193a1e84951687082e36d6ed11f0c10b928ecec3686874666b088da3936b",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:307:be9c06bceb8aeca90d9c73622f5344795ad977683ed50e0afddee97a64773ee3",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "0ad32ff663fbe4a818155f50d4b0c819dad02a2be3a1f77a080dc02ac4a69ad8",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:308:5737ef7dbebaf893c31f3c045bef45db6524bfcd9bba5ae0d23ce984aca852d1",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "7400d873525f6195415a4be943889f9c78c0ef7779512be8ebbb063366c1e10a",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:309:021de31f60c17e2c8b1be861eed46489202f1bc298e95530299c7391fd40aaad",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "d380b05bdd60068d66c1849b0f3539028c86ed06920061ad231934c6649e16d7",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:310:189a1480496cc4df11f1e6817fe3a9650a3049ddc34418efe34a17fda1c21dc7",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "c843c72dfd3292389ec58f61f2a6edaf73cb6cd51ddb7e55bfd3f036d9811470",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:311:0b794159667b2b770c09272a97d8477640cab75dbb7e3f4eac225b87149254a4",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "f59dfb5b7565fe4e66c2d49d15d1291c1944070d9ce76424ac74cb4fcbcf259a",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:312:67f5c1e70e6f7670956bf0417ee09731a4397419f0ee2b97c6dedc994e9686ab",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "d249ca4aa27060c750ebc7ebf648f2ccd9c6fc2b86202c97fefea15cb73f8513",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:313:1b37bd5c229fa356a23b2ab37c19e84ff8235b4e1ba3bf7c0a05a075c68f6cda",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "1559ebf6eadda6061b43e488c89d74880e5d42dc38c496be6fbbf76eb4c29e2f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:314:97fb5a9b3da3cf4a621a9b5ef3bf5ba02615aa25db6761e8abef3476819e0501",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "7140940106991e9e027300c28a17143d61f2dc10b25c072db4bf280faf19bf98",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:315:b965d35cb1f9bc3fe6b647d3bed76691e6f13df387f0c830ecab602eff43b412",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "7c1752ba22dd1fe76e7f4b252b8b0566679b28afba640180c5358632cb7ce613",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:316:aea12fb1f9d23ecbab5789af308f7a6b19e6bfdeacbe36bac05601ac2d6e26c4",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      16,
+      null,
+      null
+    ],
+    "key_sha256": "b811efd86a8137c1a5dc4520c513038c9c544fc946f493bb779ab6b9f370a6a0",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:317:f26907a57a230d83109e13f130fb9628737b55253f746d968c86b6c42ec0d6a1",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      17,
+      null,
+      null
+    ],
+    "key_sha256": "5a076b36496407743f593833364b2ec26784d7955cd1a1629544b10e92ee8877",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:318:17718565dbd2680a545646244f10cc651c1def41a09f21a0588a5ffbf72d731b",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      18,
+      null,
+      null
+    ],
+    "key_sha256": "6c7874bf1a289077707f69c51ebfc0cb4e642225b77b767050a523904ad5079f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:319:ae8076d27257ee741b98d14af34dd888fb4ed6aa6e8b6994f245cb40e6f05c67",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      19,
+      null,
+      null
+    ],
+    "key_sha256": "42bc8329a6705df8242ed472cc32ee24eed999522b27cefd75675def51b06e32",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:320:844fabc78c878a89e645152a4bd5ae3de70611d9192f09e02cf71420ec2ba5ef",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      20,
+      null,
+      null
+    ],
+    "key_sha256": "a1cbcdd9e0d2bd6dc5cd7dffbaa15a01e1d2e2ef400f160176dc8dba2c889a00",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:321:4365c3e42e39522011ad1054b7608c5f5bab4f34eae9c7e6d658cc93663562a0",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      21,
+      null,
+      null
+    ],
+    "key_sha256": "f4608aba5f51ca834a00863afe2abd4668e71a1d8dd55da50f710fc8ec23a0cf",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:322:cd5c2bb752baa8667bed8634d5b07edb43a479be2514979893877f1716b49ef4",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      22,
+      null,
+      null
+    ],
+    "key_sha256": "0be5e2d0e59cb430bfa0e564310b3a128772058ab4cc86c8163080ab2274968b",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:323:3a671b89a76130fc2f4aab47f58a9229d4e79dd795577165f2e183916d5242a0",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      23,
+      null,
+      null
+    ],
+    "key_sha256": "f682a00f80c81222ecfdf692f5a65995327cb18dc399a8c6efdc81c7b79b114d",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:324:46cfc8f160aa6c48d05ad10e446fa4f18e3ab26e8d2f6e068271fefcb146d8ba",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "5d5d30fca619b2cdb5c5604cebe886684ff2f425d0ccffe9b97c3eb9a726e333",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:302:8be332970d7d5c8fba14620c6229a3c02843d4c857c574130e74113def58cd59",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:317:4caeeee6fc86b189103ff05cd3fa119ff3fe1730eb52a70b1dd0a84329afbd99"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:317:4caeeee6fc86b189103ff05cd3fa119ff3fe1730eb52a70b1dd0a84329afbd99",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:317:4caeeee6fc86b189103ff05cd3fa119ff3fe1730eb52a70b1dd0a84329afbd99"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "1c6522200d2f8f7b5f57229979b7d51608c1e7b857c0ee2f2a1a92fbbf33780c",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:303:2f254d2da4ba6e518403f92eb47f49a593407fb2160977ecff4d5c020303d453",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:318:b234bd0e6448b6e4a6e7d97ba51751a17c5667fd94f8706230ac155b68d8db95"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:318:b234bd0e6448b6e4a6e7d97ba51751a17c5667fd94f8706230ac155b68d8db95",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:318:b234bd0e6448b6e4a6e7d97ba51751a17c5667fd94f8706230ac155b68d8db95"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "8b7743b7360a9770f22922465e812e229d6b71c49ab18f96e782fbc0a865ddf3",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:304:8e9bb5807b7b0f37e971de3fe80deee8f1f34a6ddea5855e2ddca2d0260e897c",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:319:285f44fe368ad9d25821fe73fb1666f844a3bcf481869dd6c4fe57be4f379c77"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:319:285f44fe368ad9d25821fe73fb1666f844a3bcf481869dd6c4fe57be4f379c77",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:319:285f44fe368ad9d25821fe73fb1666f844a3bcf481869dd6c4fe57be4f379c77"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "97ca8acab1181b4844950366c0563d542b4a84413edc243e2b65d55ab226b5a5",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:305:ae420f746aaa81a9cab55ad133b0a42d6610d91ceb8deb8a4fb59a6ea1716341",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:320:90f68e4055c93890607865d6747e6b1f444e0329df4f6fccb7e6484caefc2849"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:320:90f68e4055c93890607865d6747e6b1f444e0329df4f6fccb7e6484caefc2849",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:320:90f68e4055c93890607865d6747e6b1f444e0329df4f6fccb7e6484caefc2849"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "c39225b350f6552849bae9ad91f8b324d6bf61e935aa40fb5ac375f452c8657d",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:306:6ee00b1b8e2c4e272aebd3735b7854f91447a1ed91821ecab7dd8540a8e4c488",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:321:d61abadfb80b1e7f92d15c298fa5ee804a49fea693f2908d9a689d0a6f8dc1b0"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:321:d61abadfb80b1e7f92d15c298fa5ee804a49fea693f2908d9a689d0a6f8dc1b0",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:321:d61abadfb80b1e7f92d15c298fa5ee804a49fea693f2908d9a689d0a6f8dc1b0"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "b6ca97feff88a6a24501b6851f35f949b6a271614aea2d3eca449d2110f6cc7f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:307:bc16cc984c7119f87a85d8eb2efdc195d9516a89348bca325e2689c97434c4c4",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:322:1b55f1d89e6949ddc3d8d2a53eefc9e1ee18d341ac5442ecdc01fb94bedddb02"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:322:1b55f1d89e6949ddc3d8d2a53eefc9e1ee18d341ac5442ecdc01fb94bedddb02",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:322:1b55f1d89e6949ddc3d8d2a53eefc9e1ee18d341ac5442ecdc01fb94bedddb02"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "634c615d57e2cbb95ebcca9ff70c8841e796c7bf02a43318a645e53c433221e2",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:308:973a63d1c3579b566485cc2a2722ed158fbae394acda5749294a513c6ab8b61a",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:323:bc86905d44515ba2190e7541b98da1d85c47b1eb9326394e58c2c3027205fee7"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:323:bc86905d44515ba2190e7541b98da1d85c47b1eb9326394e58c2c3027205fee7",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:323:bc86905d44515ba2190e7541b98da1d85c47b1eb9326394e58c2c3027205fee7"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "a67fc940dbfe9611f85cbb4bdd7083698ac280203537d5577c1fce298e62d4cd",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:309:2b6357d62c2a28ea626c65b8b4ffc5909356cf1e7bf7a474441e95475d4012ff",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:324:8e5bcfdeda46bf61baa01ce98c6bec709f1f682bedb6460a55e52f324152a3d1"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:324:8e5bcfdeda46bf61baa01ce98c6bec709f1f682bedb6460a55e52f324152a3d1",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:324:8e5bcfdeda46bf61baa01ce98c6bec709f1f682bedb6460a55e52f324152a3d1"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "ee623b202582eb97876b262b601be70771e2f9f1c2c44a69a3e3b9fde2ffae83",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:310:557cd6214711165d502604bc2b9d04dd8b8d329e870cec71f655011d0dd8b56c",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:325:e530da80425d4f81c636c5e1ca531c657e76a6c2ba6a7355ca9ab69ec5479a4e"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:325:e530da80425d4f81c636c5e1ca531c657e76a6c2ba6a7355ca9ab69ec5479a4e",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:325:e530da80425d4f81c636c5e1ca531c657e76a6c2ba6a7355ca9ab69ec5479a4e"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "0d0052604b1c9c9e5d17896c5eb1a0aadcdd15d0d97303b9f802ba151eb90643",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:311:39c16ba1d9ae8e21cdae330ad7276741b3c862141505266d2adb03a3454f132c",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:326:fa8deb9939b7788fdd6ba4c18b12370597bcc3990ccf3f0eeec287bd81ffd3fe"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:326:fa8deb9939b7788fdd6ba4c18b12370597bcc3990ccf3f0eeec287bd81ffd3fe",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:326:fa8deb9939b7788fdd6ba4c18b12370597bcc3990ccf3f0eeec287bd81ffd3fe"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "03d539efd63e52dcf36e6bebf46703a0296414744171e667492fc747ee71faf8",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:312:888b70d11f27fa1823236169c276113452ad114c003251e71e4a21a7747e92aa",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:327:4b7cc02e5304ce8abe73bf0cacda35263ecc12d776a4e958ed701451115212cd"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:327:4b7cc02e5304ce8abe73bf0cacda35263ecc12d776a4e958ed701451115212cd",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:327:4b7cc02e5304ce8abe73bf0cacda35263ecc12d776a4e958ed701451115212cd"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "6f4cd1775f409107a780a47396c79eae99c2f10aacd90e1bcf4c915a4a398c24",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:313:20b3d9ad15740fe1c540eecb3b5e1e61ea0b95edaba45a13abee49334b5fd173",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:328:abc9bf1dadb446b668797e911672f909d3fb1b2b3f83054e87ec83865468db7c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:328:abc9bf1dadb446b668797e911672f909d3fb1b2b3f83054e87ec83865468db7c",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:328:abc9bf1dadb446b668797e911672f909d3fb1b2b3f83054e87ec83865468db7c"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "ba9f54fdf80b631eeba3985487de33ecabb0492a03893e366c4978019afd25c0",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:314:c718fc512904080f5409c9d936aefd586954cb17d1baf1f8eb1cf68cd182ca9a",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:329:5bdd1f72d9a04637de2844f77d99ae23e7a658906662c92d8f519ed482ac8d9b"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:329:5bdd1f72d9a04637de2844f77d99ae23e7a658906662c92d8f519ed482ac8d9b",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:329:5bdd1f72d9a04637de2844f77d99ae23e7a658906662c92d8f519ed482ac8d9b"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "1b929faf43319025d6f9344ead43e93f73a9b2da499da3fcc25fa20afad91660",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:315:447a1f6b577870dea9a49ca5156bd9514935831019497c128fe9ed6fffd17c88",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:330:cf9ba14321090d6d385a97aad391eeb6c09473b785af39c02d53f109380c4cf6"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:330:cf9ba14321090d6d385a97aad391eeb6c09473b785af39c02d53f109380c4cf6",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:330:cf9ba14321090d6d385a97aad391eeb6c09473b785af39c02d53f109380c4cf6"
+  },
+  {
+    "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+    "key": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+      "faithfulness",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "91a0974f71f60f3d7dbc65205fb51069e5c6a4a533ca802ac32c9103bf56247f",
+    "occurrences": [
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:316:f4f7cefcec945a7f1ee45add76542e826f7b21e8bb5ae49d04a654203617f9b3",
+      "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:331:42707058a74ba09cbfc9225bcbbe98b0a99cdcf3ab15345c591c8be7b5512d0c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:331:42707058a74ba09cbfc9225bcbbe98b0a99cdcf3ab15345c591c8be7b5512d0c",
+    "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl:331:42707058a74ba09cbfc9225bcbbe98b0a99cdcf3ab15345c591c8be7b5512d0c"
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      0,
+      null,
+      null
+    ],
+    "key_sha256": "9fb5bf8fcc467764fbb7c8b7a3d714f70cd355f2c7c1c92c9db327bcda61c83c",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:27:de5097cd69c979d72cb72dccf7e775862c053310287e3672b5b7ba78a7aa5658",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:46:f258b54c467509b22cd67c349bda7a89f0e0ebde1b5009e8cc477c13bb50b1d8"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:46:f258b54c467509b22cd67c349bda7a89f0e0ebde1b5009e8cc477c13bb50b1d8",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "4bc0e8556df1ca7b573d33d9b7f0296bfd596ca2fcd4f2976c02dbba925183ce",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:28:69b2623e0f1ed64ee484a9cef1b87270ddb95d1dac639a374c9e1945330d24e3",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:47:58a370384f886c7800cae2680bcd7112c62c5d604964fe506b68617f65c00d1f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "lang_err",
+      "lang_ig_sum",
+      "state_per_joint",
+      "vision_err",
+      "vision_ig_sum",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:47:58a370384f886c7800cae2680bcd7112c62c5d604964fe506b68617f65c00d1f",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "59d4bf42217741a8dc4e00b745194b9b1252b781052a332f0a9356a4faab6b93",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:29:ca8e41f22586cf7563d8d90853355b4996c7bf86245fca90ce856b334b7c5d7f",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:48:16032147a9477e4accaae2ea802f0cc8288efcdb5b07213fc84dd6403cdb45d2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:48:16032147a9477e4accaae2ea802f0cc8288efcdb5b07213fc84dd6403cdb45d2",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "36e7176a9962b3f40269f50f22aa5d1fe3f3cf8681a7b71d32737594d023f815",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:30:e94c049b5cf80e606317a79c09070a3d7727e620dbe473ae5230f96b075fb819",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:49:268e591279e57bd0e901a7b4de9994ae059428a87fff3db799596d5b738f3434"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:49:268e591279e57bd0e901a7b4de9994ae059428a87fff3db799596d5b738f3434",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "3062563a3130c82a3429755d3fbfdfc7e5d8e32c1c11408f0734f0d15d27d262",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:31:b33e65b2b93b05699146300d639f8b8a1427857d33b50a50a07ef1c25853572f",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:50:6c27478a3708da1f0a8d76f2e788218a81effd60e67b4a2391679b8c6810a780"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:50:6c27478a3708da1f0a8d76f2e788218a81effd60e67b4a2391679b8c6810a780",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "5451c9dde7bcb95e62a797dadd6c623da196b2406a934465fa687325a684a6f4",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:32:8305a40b1ec5e6302d0f19a33a03524d8cce78b2298b5f23f1c97e4fe345ae80",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:51:27e85bf1942b7f29b6748aed0a6972a0e61a1d59928bdb55b393d1b1aa62159d"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:51:27e85bf1942b7f29b6748aed0a6972a0e61a1d59928bdb55b393d1b1aa62159d",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "740c7905fd401009e046cf9114f9b173bc406513a48a30ceeb942e6ee3341dd0",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:33:0ba3781d302cf1caeb64b67e0ccc7db22c56487e2b2edc51375c19bba3c85864",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:52:1f57c0dc1cbc82153db4a7a2515c721663556f8b7600e96765d24aa3518bd05f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:52:1f57c0dc1cbc82153db4a7a2515c721663556f8b7600e96765d24aa3518bd05f",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "494abfec9187e760163360ef2e9217ce609f4b4b7ebdcfff5f89c50f4b738725",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:34:047616ec657a334edb6dfbd081eb17fee3c8edfb775ba13b105a8568862fa3e7",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:53:4e93c5c97875b6f10517596fcc585beda9f87d4fecc47b97ad429cd29e3a2bfa"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:53:4e93c5c97875b6f10517596fcc585beda9f87d4fecc47b97ad429cd29e3a2bfa",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "82b574d1d29de8f5ae1e63a8fe3c29d461319747fc8676aa475a4e5c8935dd78",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:35:23221ecb5456d289a514d97eefbdec2c4e3819fcc42a87dff898c387533b37cf",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:54:38e1dac3dd2bc7410aab70b6af6e6c95e0f27efa56258304bd61fb41ffdd1108"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:54:38e1dac3dd2bc7410aab70b6af6e6c95e0f27efa56258304bd61fb41ffdd1108",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "9aaf8004c68efe49c74c19f12ac60c3e8c6b2c8fb5c6fc9d0ac11820ace382dc",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:36:2f565172a6629fcbb75e76902c48a1496a095f18dba6578d312f8c30613b7e9a",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:55:f5465481afa275a1bf4e3396cfe796b73aab6652d8db87cdb1f61631f04357f0"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:55:f5465481afa275a1bf4e3396cfe796b73aab6652d8db87cdb1f61631f04357f0",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "434c701f5213140180ce5e8b9d4707075eeee117104d05f96fbf2cc8c9a5ad05",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:37:10da35f8d0dee55a7d60c4b549d1d8636e1379b1f2c9612296f82ecb2ec8eec1",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:56:4c1ea404b731c985a7e2aa54c5e78842f372dbae1d7b538dd53b88cca0afb51c"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:56:4c1ea404b731c985a7e2aa54c5e78842f372dbae1d7b538dd53b88cca0afb51c",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "010930794b1c86d84299838ec0a3e9a80f6ac5bb1c0d78975b2dc32d5d928f14",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:38:6460cfbc263be060777db2376d671cd7f010fbde533aefb5eea639a5e5ae0c91",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:57:c7fbefe5696bbf5a008c736bc1e8f3899609e9dc5ba5143fb23ee3a8ad345357"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:57:c7fbefe5696bbf5a008c736bc1e8f3899609e9dc5ba5143fb23ee3a8ad345357",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "6936f84bbcd1a0f5ed7c844e3215e1c0e79a07522b88e1185cd3271011d3feea",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:39:df5c2e16ee861e7ab8cfd8127b08364991a5ea9f1a9a6d4b9bbd85964798dc85",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:58:127da6d00915fefe792e48df37117eb2a2323cf9e01232e3bd2ba64a6858c8ef"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:58:127da6d00915fefe792e48df37117eb2a2323cf9e01232e3bd2ba64a6858c8ef",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "8afa13d0f3c61be41ff9b859b7e4c639c29489988e71fd261bec015fcfc96b96",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:40:bc15095f278ddb97d65735651a849d30fadd53827c0656864d52e0f247b23612",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:59:e72726d0ce9b73277ba0e39070a36e4944c64686c4338df20d9f492f909fb0fc"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:59:e72726d0ce9b73277ba0e39070a36e4944c64686c4338df20d9f492f909fb0fc",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "aa0ed7fcabd86cd81a2b0053a0d30a041930ad58633364490f4422298fdad643",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:41:d0e9dbc077cb5637a94956f5c2f46ad53f069599e9e58c4b075e31096a01e5c7",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:60:d967735ff04db8248d0e878151b0d4708ea6414a6dd2a2e41743776204095f96"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:60:d967735ff04db8248d0e878151b0d4708ea6414a6dd2a2e41743776204095f96",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "55ec94d5b6cb4b4c51f4584085536dea377d971bd8b8cd81582d4455d4f2d02e",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:42:63d2e073bfc552d3088e091cc09abf9c52d1c5a4a0395015cfa314da63b66c31",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:61:2923c901398186081d838c3ce1ea7b6a4a50364d2f4d896b7afb3f39f4d9d4e4"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:61:2923c901398186081d838c3ce1ea7b6a4a50364d2f4d896b7afb3f39f4d9d4e4",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      16,
+      null,
+      null
+    ],
+    "key_sha256": "2ea6f83c3c192900e00cc847d852636343f8166905008f4919edf00a92aa1ad8",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:43:0bdf84a2bacc999b4db469beef07de90af233f4d307743d7e278514447abd624",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:62:9081b5e6c71303a452ead3e99418aa30de4af43196cec33081f770d8f043caa9"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "lang_err",
+      "lang_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:62:9081b5e6c71303a452ead3e99418aa30de4af43196cec33081f770d8f043caa9",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      17,
+      null,
+      null
+    ],
+    "key_sha256": "bf397e280498356ce02a492c208e4eda30023434a4fd7e080dbac2b089709168",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:44:b507770689700047f90dfc11ee317364d7aa74ef7bfbdb066edbb4716a20ab0b",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:63:1a9ab063a4f71d96c03ae8d8bc48318e1b6a223b624f908ea3712440909a8dd2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:63:1a9ab063a4f71d96c03ae8d8bc48318e1b6a223b624f908ea3712440909a8dd2",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+    "key": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "step",
+      "PegInsertionSide-v1",
+      "170m",
+      143,
+      1,
+      18,
+      null,
+      null
+    ],
+    "key_sha256": "a3bd6818141967d78149b98c81f30ff0fb80d68e09793df9e73ce292a76bd454",
+    "occurrences": [
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:45:29682495644a0b6b0a8e50d1bacf4f400ed25297cfecf1626cefb8b36f7db89b",
+      "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:64:c74e222d061e6fbf9d4ea80e3f4d0d161a86b8052c27a9840f22a838ffc896b9"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl:64:c74e222d061e6fbf9d4ea80e3f4d0d161a86b8052c27a9840f22a838ffc896b9",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      0,
+      null,
+      null
+    ],
+    "key_sha256": "3eeed15213e5990118fb3a39dfed7a889243f9765269163da541b32b6a2979bf",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:313:68140bd4eb8f574694a7e8cf6ab887e349a52a5bf54cfe731478910636ef8e1b",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:337:553d010552aa8a4d2b9259b61dc455eede0f7924900660708d38771bf289d80f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:337:553d010552aa8a4d2b9259b61dc455eede0f7924900660708d38771bf289d80f",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "02ab6605ff25ba9575d0af0af344b0ed5f025046145abb52722b13ef8b4075e6",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:314:111e16ea5baf2f3f31c92ec48e06e7fd2477650c36e3ac879270a2d766e6255d",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:338:c38bd00109c6b8c99d2b8608ed38e29b6a962dd0b0728d7453d68e4e71194318"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:338:c38bd00109c6b8c99d2b8608ed38e29b6a962dd0b0728d7453d68e4e71194318",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "eefbc86383473086a67476099d3447c61f1d9e833283e79cfe3b5c18e4343172",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:315:75975dce198406f311cacba3c3c9f680160df71f4d86e6c7a2497f1ea4417898",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:339:ede56dcae88fedb17e5a6afe3f8a2d82b3e6ba4a69f99f7fcfd85b7908117059"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:339:ede56dcae88fedb17e5a6afe3f8a2d82b3e6ba4a69f99f7fcfd85b7908117059",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "608db634792a547144a34ed1c49e02b9d3a086f302c9120a2191545584cf4dd9",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:316:75bd859cc12182d0d92fbef69630b47f3d43b1db6bf2d106620373359cd1b5bf",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:340:73e98aecf2c85806af5b6f9dd30318026166dccf07bcfc99e593fc45eccc0ebd"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:340:73e98aecf2c85806af5b6f9dd30318026166dccf07bcfc99e593fc45eccc0ebd",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "ace902aefcdb15cba93b917cd83f2d8c84a103ccd5376c5297b083dc98235bfd",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:317:c2beab2abd960c9e914d70586ad63ee7df7c67c1c59ab45af2a28264f084d5c5",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:341:8bd95970fb330487ef71db34ca4acafc518351d807ef5598ccdacb6cf9028d0e"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:341:8bd95970fb330487ef71db34ca4acafc518351d807ef5598ccdacb6cf9028d0e",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "ffc3eba917aaa94300b1ed66a7c7751f7e53b6995ab5ffaebee14a06d67e412e",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:318:2e6259880dc1a70b74faac43be1ee2c1a97c0cc5d34f56f0050cd4fb203774e3",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:342:8bd917a2b872373e1ebfc94aa226d868b7a1b6ad5bfb93f8da13cad4b0a48a09"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:342:8bd917a2b872373e1ebfc94aa226d868b7a1b6ad5bfb93f8da13cad4b0a48a09",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "907adf7ed5c3b43c854bcbcd15fe425ea49173aaad946dd05c403574b5dd4fdd",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:319:74db923bfb0e81a9246367cd42fd29b5e7a3ce1fa1587337aa638bde7ea5dc52",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:343:2a21093f775c7f13ebc7830d9aa715a0ade0f9350ced46a8921871e833b07f08"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:343:2a21093f775c7f13ebc7830d9aa715a0ade0f9350ced46a8921871e833b07f08",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "a60c1e4a4d89664788edb74c49078bf4883d53f002b6fce4481996ce7e2c0505",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:320:3c3277d981a74130b409f9b8054ca609dc23a96b379a6437f02fda9fcb7c6973",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:344:1bb87f86f0829d894ccf93c73bab8cf847224735ebc4e72477f2832fa49711fc"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:344:1bb87f86f0829d894ccf93c73bab8cf847224735ebc4e72477f2832fa49711fc",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "3ca7b5c1c34ce35ed740388ad745795a8e5fe5f4b04f76aaec8ad3f90171197b",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:321:418966eb9035734fc7efcc86c3f70a7d895203543469ad3086e1be5e93067a4a",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:345:66b52c3b2cee98c48f0e15177f9e9a6153735a5224a326c0088c8a30e142b5d1"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:345:66b52c3b2cee98c48f0e15177f9e9a6153735a5224a326c0088c8a30e142b5d1",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "18b64d05298ff0ed3ae2eb21560c0a3ec93ed679ecb7d11c43e6cb895f4c7cee",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:322:d2ce9fc2ab6987d3586ddb19c854fafdabc6ca57a16f238f88a8f5eb4794dd73",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:346:4f5533179a3305c448796ba07c8d1a863e77c80d4be5f0c46992a03fb980be68"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:346:4f5533179a3305c448796ba07c8d1a863e77c80d4be5f0c46992a03fb980be68",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "f5a434779316addc3c211d03495ab4126fbcf2eb993ea7860d1d6f42838ebf1b",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:323:41b9109f2dd7eda8e2bbffb799299e11dd9db0027990c0c2e299b5d4210dacb2",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:347:cbdeecd77aee94477d5d41d6763616dc6b434b09f264d99200608c9c4af6b977"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "lang_err",
+      "lang_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:347:cbdeecd77aee94477d5d41d6763616dc6b434b09f264d99200608c9c4af6b977",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "b07fd9729fdffb5723936eb42d5f885d1430798866b33d3e6cd8e1d877012c08",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:324:c461e55f4c0d63a374c5685e34ea6fefdafa34fbc11428f8a01bb8cd0e7ea863",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:348:e5358d4ca30d688ab66bf3eabf33b3a0c98158408f96fc63ac6f2b50874250d4"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:348:e5358d4ca30d688ab66bf3eabf33b3a0c98158408f96fc63ac6f2b50874250d4",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "5bb65db0f8e395c4538d5ba478e9ec0a3218d3bb6c604a860a8454596c0ed5dc",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:325:853c861c2ec79b28e98afdf7e9e402d8de5380eb3551e9078679a8def25c6c5e",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:349:381fe00f8d1c972629eca71a47464c3054553a7e428cb63a5bacea1f63ca702d"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:349:381fe00f8d1c972629eca71a47464c3054553a7e428cb63a5bacea1f63ca702d",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "9eb0d992977004a214aceddb53e033853011e48754aa9e54aeafad9103648a94",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:326:cb51f3993b225389f811826a1bb98d99f9cd98340aec2afd458ff45e9fca9c85",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:350:059a32489aba6140cdba43b48803d45d0684854005a65dad09968e193599d8f8"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:350:059a32489aba6140cdba43b48803d45d0684854005a65dad09968e193599d8f8",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "01452637f01fff14c6547ad67ca98b71626b814c9081a1e3bac4dd6ee6c060a8",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:327:4e19477cf08cc2c98a8129f6ba1875077a6c8d41ce9c40acec0d8cc845c5281e",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:351:7049a54443402394ce6192807702992609c89671848a3172c4af6b01c8122d74"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "vision_err",
+      "vision_ig_sum",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:351:7049a54443402394ce6192807702992609c89671848a3172c4af6b01c8122d74",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "8d1731f56cc0c7d9b6937b5e1b662b305444d672c8b46c7103373335288f6ae0",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:328:99e564a281e8bd7d98e328ecb590f54358efffe71d7a1899e965b0113222bcdb",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:352:dc1df9f3e5a1cce9e865a441294e68592725d49d8ab1c1167e554baa62f7c89a"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:352:dc1df9f3e5a1cce9e865a441294e68592725d49d8ab1c1167e554baa62f7c89a",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      16,
+      null,
+      null
+    ],
+    "key_sha256": "4d305b0f433a07f6013f098ac8ba3d0d57e7a3766a2d7ff7136e0e229d1847f5",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:329:e4d90c9e8e48954b7b8e2cdc3089178b9e42a93efbb68b77c585d3702f08e797",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:353:5f59ee1c07158d557345745c02b3b13b2b54415ed61fcddfd0eac11ee78ea485"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:353:5f59ee1c07158d557345745c02b3b13b2b54415ed61fcddfd0eac11ee78ea485",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      17,
+      null,
+      null
+    ],
+    "key_sha256": "abf81344ec2a841d0b9c261920440ed68f42ce0b229a4bf13f37270b94b7af6b",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:330:a7a5cd1ec9841c10ca3e66aa5d0381055add0f108db40bf2490149ddda734f2c",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:354:0c13fde677a9bb7cdfd5099b50406fd58dc2e705fccc977d040c5227facbb0ae"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:354:0c13fde677a9bb7cdfd5099b50406fd58dc2e705fccc977d040c5227facbb0ae",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      18,
+      null,
+      null
+    ],
+    "key_sha256": "2f03e76d614983ecc72faf105064cdd88029e304f053587f0c7c7eecebb694e2",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:331:5fd71e2fa794aa3defb2f9b977ed55b7cc73cd3e9e85de8f3581447db0f14a45",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:355:aaec0d1ecdc35baf2a7fb499dbdce211d281fa2fbfe3d7d9a5f9ce1b1a0f22b6"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:355:aaec0d1ecdc35baf2a7fb499dbdce211d281fa2fbfe3d7d9a5f9ce1b1a0f22b6",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      19,
+      null,
+      null
+    ],
+    "key_sha256": "5d32321c197a6c42d08313d2dec2045ebf1d018bb9d5c846cf4f009fc75354d0",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:332:2a3acc1552963e6c71aabb855c5fb92061a1200f03430c5dbe34e7d52359f54b",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:356:f8dc2d3eeade2d905e5501d6d5372ad65aa5eb45ee23723a29a23c33f79c8222"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:356:f8dc2d3eeade2d905e5501d6d5372ad65aa5eb45ee23723a29a23c33f79c8222",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      20,
+      null,
+      null
+    ],
+    "key_sha256": "3c93b5d239daf075aa5bff18132239887fb1d3cabf772523fadf90564d4917f7",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:333:3994babd6ff2f21a66cea9980bd63a28eda852de9dfc14e9d735ae4b3774e3c6",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:357:5d871785855275cdd7ee21b3a02ceac3bb2f51197638bc7a987f13164cecdf82"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "wall_seconds"
+    ],
+    "classification": "metadata_only",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:357:5d871785855275cdd7ee21b3a02ceac3bb2f51197638bc7a987f13164cecdf82",
+    "conflict_excluded_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:357:5d871785855275cdd7ee21b3a02ceac3bb2f51197638bc7a987f13164cecdf82"
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      21,
+      null,
+      null
+    ],
+    "key_sha256": "54944a3f2c8b21e5958b459bd549e8f90d0a2a899a9e1ac46c1dc7eba30cf852",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:334:33d8ec97cc92f4b272e4de22bd9a07765167ff544a96a3d7c80e9ceea26cbf88",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:358:7d9dc78f703a73e9cb15f9e35f46fa5fc898a6e33b1a67c5ee102b3a86193f1a"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:358:7d9dc78f703a73e9cb15f9e35f46fa5fc898a6e33b1a67c5ee102b3a86193f1a",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      22,
+      null,
+      null
+    ],
+    "key_sha256": "828521e22ff9b274605123e396fe229db44609a2f007e86e0477c675ca33cd71",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:335:b4f8b2eb9cdc6190eb4633b5262e3be4c3d68fb8057b538d96946cdf15317a52",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:359:2482faf061ff9632b98945b7702bfacac9093306bc1092dbc8846880a815e322"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:359:2482faf061ff9632b98945b7702bfacac9093306bc1092dbc8846880a815e322",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      23,
+      null,
+      null
+    ],
+    "key_sha256": "b0ccd981562c37f131ec6d1182fc33ccdcbba8099dee2c3a4d7e16b0244b9997",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:336:c7f9f465d5a9654e06e503f229403fbf533a310f29e20b95aa9aa90fa727ba8a",
+      "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:360:31f79bcbc81d59982548a9cc769de544d6c354ce1ad795107c2fea004d32aae2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl:360:31f79bcbc81d59982548a9cc769de544d6c354ce1ad795107c2fea004d32aae2",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      1,
+      null,
+      null
+    ],
+    "key_sha256": "aed4920e06c5fc6d8fe17b43e96f0b0ee687d41aab639b1ca278cf7ba1aca118",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:314:02d917c7aaa3760800a6cfd17b71e5b6d9eecc403a88fef926d0b5176937d908",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:330:bab3ba8d783e244da7a1d0ca68984c23713668021326e2fc5d0b27de04297c30"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:330:bab3ba8d783e244da7a1d0ca68984c23713668021326e2fc5d0b27de04297c30",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      2,
+      null,
+      null
+    ],
+    "key_sha256": "c0cada2c8c2db7dc6d1dbe01f68952eece48e960b8c32781857a208af5090e0b",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:315:76d7ebaad71a404627470832c0d95c464896a6690bca5058cf61af869ab121a4",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:331:985aa9bac845d98541cb36e5c5641c1ada20bab1b90a824c9610fde25d7c70b5"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:331:985aa9bac845d98541cb36e5c5641c1ada20bab1b90a824c9610fde25d7c70b5",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      3,
+      null,
+      null
+    ],
+    "key_sha256": "ca02f24824f4d4f25758465ee25a777018e3fdd6fa219f22b31c45bd5ed3d399",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:316:4bdeb0cdaacffe02d03aadd927b0175d8f5f36986655739c63fcf22e5335a107",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:332:369afe3416ead9ae00c908e3588b0ab1711b29f2f9bfa3a8bfe1dba36d8c8a84"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:332:369afe3416ead9ae00c908e3588b0ab1711b29f2f9bfa3a8bfe1dba36d8c8a84",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      4,
+      null,
+      null
+    ],
+    "key_sha256": "cde657a14cda6899e0470dfdcf00fb0330f977db05fe9b52e31e610b155fcf1c",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:317:c53b54ce87839ee28ecc76e31af56be3def7ebbf70a7276c7dc2a1999fad452b",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:333:37ae7c36a42546e101011dfd7bc448ae7afc8c66253700aba82f6308c61d59d1"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:333:37ae7c36a42546e101011dfd7bc448ae7afc8c66253700aba82f6308c61d59d1",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      5,
+      null,
+      null
+    ],
+    "key_sha256": "388ce6810607eec346b1ff00bf51c3211926ecaa7b1e774be4ed960343dfa48f",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:318:dbe3a0d02441516ae98a1989acd9d0790a55747dda771fd0700d04c0d51bb808",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:334:5de2f196eaa5a925d2097760bf83e51a517e44f1cedb80e2875b72f9d67f8419"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "vision_err",
+      "vision_ig_sum",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:334:5de2f196eaa5a925d2097760bf83e51a517e44f1cedb80e2875b72f9d67f8419",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      6,
+      null,
+      null
+    ],
+    "key_sha256": "57d13ccdcd39b017d2e945bb62fc94035814b2b4a654891c874bb46f4d6265da",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:319:d0a93d4306b664cd280cc3a4fe8ca9ffd1a584f28804a228a7c84543689e7fbe",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:335:bfaa8c36441aba7d0949895d1e1d8d43569bc9ec9d9a4f90ad3ea73f5fba7f1f"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:335:bfaa8c36441aba7d0949895d1e1d8d43569bc9ec9d9a4f90ad3ea73f5fba7f1f",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      7,
+      null,
+      null
+    ],
+    "key_sha256": "07f02462b6d2ca763250ec65501a82000ba0ff34204aac06c32273c9ff8175a5",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:320:b54e7ea50b18d6099b70a3d578fdebec8dcdc86412282ee88bfd97b3fc91c536",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:336:cd4e22956e8be628aceda7ec3dd42d7de17b904dfc2ca87d1d5cc9370d3ba2a8"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:336:cd4e22956e8be628aceda7ec3dd42d7de17b904dfc2ca87d1d5cc9370d3ba2a8",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      8,
+      null,
+      null
+    ],
+    "key_sha256": "780f9d7e03653c834d67323b49f91c1725af2db4637c300a180491045eaef7c8",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:321:0612b703a86fba225c46199894b7c18989145cc4d3ad9f57ab79ce06b6564b98",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:337:1db0bfc552e3166234c5e175cc8c5324c3c0010c975958b7992565b0a88dee25"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:337:1db0bfc552e3166234c5e175cc8c5324c3c0010c975958b7992565b0a88dee25",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      9,
+      null,
+      null
+    ],
+    "key_sha256": "11bb04e5f24f424c9890c97fca652b29685f7e349a860b119ba9c9803cdc2e89",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:322:15e99c804577e84e0ae61684c21dee28c411eb44535083f38e00bebe4cfc23e1",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:338:af5218b66dd07e5009c3038a6dabc83131e5c7726e90697e369948b3e148ee56"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:338:af5218b66dd07e5009c3038a6dabc83131e5c7726e90697e369948b3e148ee56",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      10,
+      null,
+      null
+    ],
+    "key_sha256": "d19aaa8ac5e2a11e34b6c99ae3e53ca4690ec9091b325cbef5eb45001af38b80",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:323:4ce87640d87630367b2756ebc9e570ee2d8074eb69f0ecd9c5a9550d5d0e0176",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:339:436a7eddb5e6359e64658d40486805494aaac562502e6acd712cab0d1e145f13"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:339:436a7eddb5e6359e64658d40486805494aaac562502e6acd712cab0d1e145f13",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      11,
+      null,
+      null
+    ],
+    "key_sha256": "d0a12eadb192e6a3452bc19978935a2ef78051975c58362fc4a506bada9a289f",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:324:807adca96d625735f7a3d80850474e8827230640da495fc2de0f104715e1b780",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:340:fb08d49e8d95ff7e20cf35f0b84e76fc41c19e3f146372bd331d6a2831927218"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "vision_err",
+      "vision_ig_sum",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:340:fb08d49e8d95ff7e20cf35f0b84e76fc41c19e3f146372bd331d6a2831927218",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      12,
+      null,
+      null
+    ],
+    "key_sha256": "2e601b20bc33db15036917ef9642106beb77c939fcb634e6d1abda1ec93cf105",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:325:c618babb372226eb708f42ba9f639c9c8ab15865f15cd64f145ade4f5e9f708e",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:341:0f14eb3378d9aac7994e9dfd265405a0076f9d48fd6fe78243b0d1772539d7b2"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:341:0f14eb3378d9aac7994e9dfd265405a0076f9d48fd6fe78243b0d1772539d7b2",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      13,
+      null,
+      null
+    ],
+    "key_sha256": "bd9e42e35a9e14218dc54152c0ffd278497ff22124e016afba5169d3b34d9e90",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:326:a3d72f667a8f2ffc182571630ad01d3ca79bb5aa8a9fec9cce9dc31330ed63d5",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:342:affff3a934b6da91a685be4210a688ed384c5b039346a8f84c72bde05aa411bf"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "vision_err",
+      "vision_ig_sum",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:342:affff3a934b6da91a685be4210a688ed384c5b039346a8f84c72bde05aa411bf",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      14,
+      null,
+      null
+    ],
+    "key_sha256": "2beda3b1b88755e8adb2f073bf5467b80cb45559281c98ee22547afadebbffad",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:327:fc5c920d4bf4fe31e9706ba60472bc965bacca155cc46ef73e29a95b4f85087b",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:343:d46739f3ccc57f7dfef87b313df5dbec46f7500a34cd144815d4b34d38471e57"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:343:d46739f3ccc57f7dfef87b313df5dbec46f7500a34cd144815d4b34d38471e57",
+    "conflict_excluded_selected": null
+  },
+  {
+    "source": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+    "key": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+      "step",
+      "PickCube-v1",
+      "170m",
+      54,
+      12,
+      15,
+      null,
+      null
+    ],
+    "key_sha256": "4ec65ffcc3edc8624d367229dc280c48552bda1e71d48a330f7f83d0f97f593a",
+    "occurrences": [
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:328:c1b6e2520668ccb3c2818ecd1341337e7253e631696fa5888d91fabd76cef6e7",
+      "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:344:a9294b8cd47771151f7caa0958d1fdd066531b29c4bf027c5c373d683122604b"
+    ],
+    "extra_occurrences": 1,
+    "differing_fields": [
+      "state_err",
+      "state_ig_sum",
+      "state_per_joint",
+      "wall_seconds"
+    ],
+    "classification": "conflicting_payload",
+    "retrospective_last_selected": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl:344:a9294b8cd47771151f7caa0958d1fdd066531b29c4bf027c5c373d683122604b",
+    "conflict_excluded_selected": null
+  }
+]

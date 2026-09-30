@@ -1,0 +1,167 @@
+[
+  {
+    "family": "L2_completeness",
+    "occurrence_view": "raw_inclusive",
+    "population_filter": "norm_ge15",
+    "n_rows": 721,
+    "population_sha256": "ed4c5f37060a19bd07c763a73aa459c19ed0ad235c25de6f2eb646f61e5ee7b1",
+    "field": "vision_err",
+    "median": 0.04726633008693267,
+    "pct_le3": 10.679611650485436,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "L2_completeness",
+    "occurrence_view": "retrospective_last",
+    "population_filter": "norm_ge15",
+    "n_rows": 699,
+    "population_sha256": "da4f5effbf889365d9ce781980e87b020887dd65622677af36ce86f8d20005ca",
+    "field": "vision_err",
+    "median": 0.04726633008693267,
+    "pct_le3": 10.586552217453505,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "L2_completeness",
+    "occurrence_view": "conflict_excluded",
+    "population_filter": "norm_ge15",
+    "n_rows": 678,
+    "population_sha256": "08b1e517721c5d5a27f4cf9cf42a573329b5d465d7612ffbb5cc7197fa9dc162",
+    "field": "vision_err",
+    "median": 0.047295528297045655,
+    "pct_le3": 10.471976401179942,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_completeness",
+    "occurrence_view": "raw_inclusive",
+    "population_filter": "norm_ge15",
+    "n_rows": 713,
+    "population_sha256": "8fb4283a059803e92ff071c3d055737d55cc32080c1b74fdb2b5b247141a74ed",
+    "field": "vision_err",
+    "median": 0.06666666666666667,
+    "pct_le3": 10.93969144460028,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_completeness",
+    "occurrence_view": "retrospective_last",
+    "population_filter": "norm_ge15",
+    "n_rows": 699,
+    "population_sha256": "af088305d0cc36df8fc7bfeba255f038be7c7328a1b6d61730df37b79f040426",
+    "field": "vision_err",
+    "median": 0.06666666666666667,
+    "pct_le3": 11.015736766809727,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_completeness",
+    "occurrence_view": "conflict_excluded",
+    "population_filter": "norm_ge15",
+    "n_rows": 685,
+    "population_sha256": "bc1c216b13c1051fbe9c95db4a9673eccef0b1b4a70017257fb0747066777b4e",
+    "field": "vision_err",
+    "median": 0.06666666666666667,
+    "pct_le3": 11.094890510948906,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "L2_faithfulness",
+    "occurrence_view": "raw_inclusive",
+    "population_filter": "all",
+    "n_rows": 774,
+    "population_sha256": "c30266dc2b706ae79e7e8de78a7752dc4f9b1aedae1be06fdda1e1bd9d50c4fe",
+    "field": "vision_deletion_auc",
+    "median": 0.2843228965937419,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "L2_faithfulness",
+    "occurrence_view": "retrospective_last",
+    "population_filter": "all",
+    "n_rows": 750,
+    "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197",
+    "field": "vision_deletion_auc",
+    "median": 0.2830072650413369,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "L2_faithfulness",
+    "occurrence_view": "conflict_excluded",
+    "population_filter": "all",
+    "n_rows": 750,
+    "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197",
+    "field": "vision_deletion_auc",
+    "median": 0.2830072650413369,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_faithfulness",
+    "occurrence_view": "raw_inclusive",
+    "population_filter": "all",
+    "n_rows": 765,
+    "population_sha256": "d670aa89ab07dc46cc50b0319416c3f0a5f939797f33723f1339ba1be1b497bc",
+    "field": "vision_deletion_auc",
+    "median": 0.2730172413793103,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_faithfulness",
+    "occurrence_view": "retrospective_last",
+    "population_filter": "all",
+    "n_rows": 750,
+    "population_sha256": "443f8bef1be46e5df2eb0d9fb69d3c30b0606e7c24b98e7374adc474bd609e90",
+    "field": "vision_deletion_auc",
+    "median": 0.26917467948717944,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "maxdev_faithfulness",
+    "occurrence_view": "conflict_excluded",
+    "population_filter": "all",
+    "n_rows": 750,
+    "population_sha256": "443f8bef1be46e5df2eb0d9fb69d3c30b0606e7c24b98e7374adc474bd609e90",
+    "field": "vision_deletion_auc",
+    "median": 0.26917467948717944,
+    "pct_le3": null,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "PegInsertionSide_m128_seed142",
+    "occurrence_view": "raw_inclusive",
+    "population_filter": "norm_ge15",
+    "n_rows": 178,
+    "population_sha256": "f941a49cbdbafc7b7c6586f8905131f98814322894e1ef5620c000beca73c367",
+    "field": "vision_err",
+    "median": 0.01865087171477392,
+    "pct_le3": 76.96629213483146,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "PegInsertionSide_m128_seed142",
+    "occurrence_view": "retrospective_last",
+    "population_filter": "norm_ge15",
+    "n_rows": 160,
+    "population_sha256": "fe5a7d338b516fc1ed6e1aab2a470358b062b68b03111872c785f15749aee468",
+    "field": "vision_err",
+    "median": 0.01880440219208217,
+    "pct_le3": 76.25,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  },
+  {
+    "family": "PegInsertionSide_m128_seed142",
+    "occurrence_view": "conflict_excluded",
+    "population_filter": "norm_ge15",
+    "n_rows": 142,
+    "population_sha256": "09f94707e65952562dc09d98d24afd4dd184b4d3b08555b51d66103c4c2e8730",
+    "field": "vision_err",
+    "median": 0.019318250923444844,
+    "pct_le3": 75.35211267605634,
+    "interpretation": "Historical replay sensitivity only. Raw-inclusive rows do not represent independent additional policy decisions; no CI is assigned to this view."
+  }
+]

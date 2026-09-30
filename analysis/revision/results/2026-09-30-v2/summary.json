@@ -1,0 +1,39 @@
+{
+  "status": "retrospective_reanalysis_not_submission_readiness",
+  "inputs": 99,
+  "physical_lines": 22967,
+  "valid_records": 22966,
+  "quarantined_lines": 1,
+  "duplicate_extra_occurrences": 129,
+  "duplicate_groups": 129,
+  "duplicate_classes": {
+    "metadata_only": 71,
+    "conflicting_payload": 58
+  },
+  "conflicting_groups": 58,
+  "retrospective_last_records": 22837,
+  "conflict_excluded_records": 22779,
+  "results": 284,
+  "changed_population_sensitivity_results": 9,
+  "strict_arithmetic": {
+    "counts": {
+      "auc_checks": 27740,
+      "deletion_delta_checks": 41610,
+      "completeness_checks": 31098
+    },
+    "maximum_discrepancies": {
+      "auc_absolute_error": 3.637978807091713e-12,
+      "completeness_absolute_error": 3.6211597489455016e-05
+    },
+    "undefined_auc": []
+  },
+  "limitations": [
+    "Raw file/line identities are authenticated to this preserved snapshot. Model checkpoint, raw observation, reference-action tensor and noise identities remain unknown.",
+    "Last occurrence is a declared retrospective selection convention, not evidence that its conflicting attempt is scientifically correct. All conflicting groups and a conflict-excluded sensitivity are retained.",
+    "Cross-target reference norms disagree; no paired ranking improvement claim is supported.",
+    "One known corrupt line is excluded only by exact source and physical-line hashes; no other parse error is skipped.",
+    "The norm>=15 population is a historical sensitivity, not a small-denominator validity criterion.",
+    "No empirical RDT random-ranking control, model rerun, training replication, or missing historical artifact recovery occurs here.",
+    "Episode percentile intervals are conditional descriptive estimates, and do not establish calibration with few clusters or unknown shared contexts."
+  ]
+}

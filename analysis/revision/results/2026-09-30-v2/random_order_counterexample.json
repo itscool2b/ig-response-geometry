@@ -1,0 +1,41 @@
+{
+  "construction": "f(x)=sum_i x_i, x_i=1, baseline=0; every permutation identical",
+  "grid_percent": [
+    0,
+    1,
+    5,
+    10,
+    20,
+    30,
+    50,
+    75,
+    100
+  ],
+  "normalized_insertion": [
+    0.0,
+    0.01990000000000003,
+    0.09750000000000003,
+    0.18999999999999995,
+    0.3599999999999999,
+    0.51,
+    0.75,
+    0.9375,
+    1.0
+  ],
+  "normalized_deletion": [
+    1.0,
+    0.9999,
+    0.9975,
+    0.99,
+    0.96,
+    0.91,
+    0.75,
+    0.4375,
+    0.0
+  ],
+  "quadratic_continuous_integral": 0.6666666666666666,
+  "quadratic_grid_insertion": 0.65976,
+  "quadratic_grid_deletion": 0.65976,
+  "unstabilized_l2_continuous_integral": 0.5,
+  "interpretation": "AUC 0.5 is not a universal random-order reference; this is an analytic control, not an empirical RDT null."
+}
