@@ -29,6 +29,9 @@ ENTRYPOINTS = (
     "scripts/validate_rdt_numerics.py", "scripts/validate_downstream_precision.py",
     "scripts/validate_gradient_repeatability.py", "scripts/validate_fp32_probe.py",
     "scripts/run_numerical_queue.py", "scripts/run_probe_queue.py",
+    # This runner is also opened by path for implementation hashing and runpy;
+    # static import discovery cannot establish that dependency.
+    "scripts/run_weight_arrangement_control.py",
     "scripts/audit_numerical_cohort.py", "scripts/build_revision_assets.py", "scripts/build_paper.py",
 )
 PENDING_ADDITIONS = (

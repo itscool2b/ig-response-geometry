@@ -26,6 +26,26 @@ def test_local_and_relative_dependencies_are_found_without_importing_code():
     assert external=={"numpy"}
 
 
+def test_curated_python_closure_includes_runtime_hashed_implementation_sources():
+    import weight_arrangement_control
+
+    root = Path(__file__).resolve().parents[1]
+    available = set(subprocess.check_output(
+        ["git", "-C", str(root), "ls-files", "*.py"], text=True).splitlines())
+    selected = {path for path in package.ENTRYPOINTS if path.endswith(".py")}
+    selected.update(path for path in available if path.startswith("tests/") and path not in package.OMITTED_TESTS)
+    selected.update(path for path in package.PENDING_ADDITIONS if path.endswith(".py") and path in available)
+    queue = list(selected)
+    while queue:
+        path = queue.pop()
+        dependencies, _ = package.import_dependencies(path, (root / path).read_bytes(), available)
+        queue.extend(dependencies - selected)
+        selected.update(dependencies)
+    # Exercise the actual runtime manifest rather than duplicating its source list.
+    required = set(weight_arrangement_control.implementation_hashes())
+    assert required <= selected, f"Runtime-hashed source omitted from supplement: {sorted(required - selected)}"
+
+
 def test_privacy_scan_expands_gzip_and_distinguishes_examples():
     result=package.privacy_findings({"data.json.gz":gzip.compress(b'{"owner":"Arjun Bajpai"}'),
         "guide.md":b"Use /workspace/example for a new run", "figure.pdf":b"\xff"})
