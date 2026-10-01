@@ -4,7 +4,9 @@ Updated September 30, 2026. The retained research workflow uses explicitly ident
 
 ## Exact source preservation
 
-The [dated archive manifest](../legacy/2026-09-30/manifest.json) records 27 already-public source files, 151,241 bytes, their original paths, source commit and SHA-256 hashes. The copies end in `.txt` to distinguish preserved source from current commands. No private original was added to the public archive. Old data, notebooks, photographs, figures and report artifacts remain historical assets. Rights exceptions in `NOTICE` still apply.
+In the full repository, `legacy/2026-09-30/manifest.json` records 27 already-public source files, 151,241 bytes, their original paths, source commit and SHA-256 hashes. The copies end in `.txt` to distinguish preserved source from current commands. No private original was added to the public archive. Old data, notebooks, photographs, figures and report artifacts remain historical assets. Rights exceptions in `NOTICE` still apply.
+
+The anonymous CPU research supplement excludes this historical archive and the retired workflow entrypoints. This page records their disposition; the commands and archive paths below describe the full repository, not additional files bundled in that supplement. Use the supplement's reproduction guide for its supported saved-data and CPU commands.
 
 | Files | Current disposition |
 |---|---|
