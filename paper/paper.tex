@@ -46,7 +46,7 @@
 % TMLR author separator and algorithmic boolean operator share this name.
 \let\AND\relax
 
-\noindent\textbf{Revision status (September 30, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports a canonical retrospective reanalysis. Actual-model numerical validation and a prospective paired ranking/control study remain in progress. It is not submission-ready.
+\noindent\textbf{Revision status (October 1, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports analytic results and a canonical retrospective reanalysis. Actual-model numerical validation and prospective paired ranking and weight-arrangement controls remain in progress. It is not submission-ready.
 
 \begin{abstract}
 We study how scalar response choices affect the evaluation of Integrated Gradients (IG) for diffusion-policy vision-language-action models.
@@ -57,6 +57,7 @@ For the same recorded quadratic-target rankings, changing only the response to n
 Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from \RescoreLDeletionL{} to \RescoreLDeletionQ{}.
 An equal-feature example also shows that random-order normalized AUC need not be 0.5.
 These results identify response geometry as a confound in cross-target attribution comparisons.
+We derive the exact relation between the responses and their path gradients, and construct a nonlinear policy whose IG feature ordering reverses even though the two nonzero gradients are pointwise collinear.
 Historical RDT experiments additionally report nonzero action displacement, persistent correlations after backbone randomization, and finite completeness residuals.
 They do not isolate denoiser contraction, establish the dominance of input anchoring, or certify ranking efficacy without matched controls.
 We distinguish reproducible saved-record analyses from historical summaries whose original inputs are unavailable, and identify numerical and provenance requirements for a controlled comparison.
@@ -94,7 +95,7 @@ Likewise, a small scalar discrepancy does not imply that the predicted action is
 Our contributions are as follows.
 \begin{enumerate}
 \item \textbf{Application.} A per-policy-call, per-modality IG construction for a fixed-noise diffusion sampler, with an explicit auxiliary action-discrepancy target and modality-specific feature baselines.
-\item \textbf{Response-geometry analysis.} Exact within-ranking rescoring of recorded perturbation curves, showing that deletion AUC changes without a change in feature ordering.
+\item \textbf{Response-geometry analysis.} Exact within-ranking rescoring of recorded perturbation curves, together with a normalized-response identity and a constructive IG rank reversal that separates evaluation geometry from attribution path weighting.
 \item \textbf{Calibration counterexample.} An equal-contribution policy for which every ranking has continuous quadratic-response insertion and deletion AUC of $2/3$, establishing that 0.5 is not a universal chance reference.
 \item \textbf{Empirical diagnostic record.} Historical completeness, perturbation, displacement, and randomization measurements, with explicit distinctions between reconstructible records, missing original artifacts, and unsupported causal interpretations.
 \end{enumerate}
@@ -105,17 +106,17 @@ A controlled comparison of attribution rankings remains necessary to establish t
 
 \subsection{Attribution Methods}
 
-Sundararajan et al.~\citep{sundararajan2017axiomatic} introduced IG with the sensitivity and implementation-invariance axioms and showed that straight-line path integration satisfies both.
+\citet{sundararajan2017axiomatic} introduced IG with the sensitivity and implementation-invariance axioms and showed that straight-line path integration satisfies both.
 Later work has addressed limitations of the vanilla method.
-Jha et al.~\citep{jha2021smoother} computed attributions over neural stochastic differential equation models to produce smoother attribution maps, and later showed that shaping the injected noise further improves robustness~\citep{jha2022shaping}.
-Walker et al.~\citep{walker2024idg} observed that gradients from saturation regions contribute noise and proposed Integrated Decision Gradients, which concentrates integration on the decision-relevant portion of the path.
+\citet{jha2021smoother} computed attributions over neural stochastic differential equation models to produce smoother attribution maps, and later showed that shaping the injected noise further improves robustness~\citep{jha2022shaping}.
+\citet{walker2024idg} observed that gradients from saturation regions contribute noise and proposed Integrated Decision Gradients, which concentrates integration on the decision-relevant portion of the path.
 For vision transformers, metric-driven attributions~\citep{walker2025metric} and information-flow decompositions~\citep{walker2025infoflow} improve patch-level explanations. Guided IG~\citep{kapishnikov2021guided} adapts the integration path to reduce pixel-level noise.
-Petsiuk et al.~\citep{petsiuk2018rise} introduced the insertion and deletion curves we adopt as ranking-based faithfulness metrics.
+\citet{petsiuk2018rise} introduced the insertion and deletion curves we adopt as ranking-based faithfulness metrics.
 The reliability of perturbation metrics is itself an active concern.
-Hooker et al.~\citep{hooker2019roar} evaluate attributions by retraining on ablated inputs.
-Rong et al.~\citep{rong2022road} show that deletion without retraining leaks information through the shape of the mask itself, and Tomsett et al.~\citep{tomsett2020sanity} find that common saliency metrics are themselves unreliable.
+\citet{hooker2019roar} evaluate attributions by retraining on ablated inputs.
+\citet{rong2022road} show that deletion without retraining leaks information through the shape of the mask itself, and \citet{tomsett2020sanity} find that common saliency metrics are themselves unreliable.
 Our response-geometry analysis adds a diffusion-policy instance of that caution: changing the readout convention changes AUC while the recorded ranking stays fixed.
-Adebayo et al.~\citep{adebayo2018sanity} proposed model and data randomization tests to assess whether saliency maps depend on learned parameters and training data.
+\citet{adebayo2018sanity} proposed model and data randomization tests to assess whether saliency maps depend on learned parameters and training data.
 Their results caution against interpreting visually plausible maps as evidence of that dependence.
 Our backbone randomizations are limited tests because learned encoders and adaptors remain in place.
 For diffusion generative models in the image domain, cross-attention maps relate generated pixels to prompt tokens~\citep{tang2023daam}.
@@ -139,11 +140,11 @@ This multimodal, multi-step architecture makes RDT a compelling but challenging 
 \subsection{Interpretability in Robotics}
 
 Prior work on explaining robotic policies has focused on reinforcement learning agents in discrete-action settings.
-Greydanus et al.~\citep{greydanus2018visualizing} applied perturbation-based saliency to Atari agents, and counterfactual methods~\citep{amitai2024explaining} contrast the outcomes of executed and alternative actions for policy explanation.
+\citet{greydanus2018visualizing} applied perturbation-based saliency to Atari agents, and counterfactual methods~\citep{amitai2024explaining} contrast the outcomes of executed and alternative actions for policy explanation.
 In continuous control, VisualBackProp~\citep{bojarski2018visualbackprop} visualizes convolutional neural network (CNN) saliency for end-to-end driving policies.
 That work addresses convolutional driving models rather than a multimodal diffusion sampler.
 Recent VLA studies examine different explanation targets.
-Zhang et al.~\citep{zhang2026embodied} estimate visual influence using randomized perturbations and action-discrepancy responses, with explicit assumptions for relating mean-squared error to distributional divergence.
+\citet{zhang2026embodied} estimate visual influence using randomized perturbations and action-discrepancy responses, with explicit assumptions for relating mean-squared error to distributional divergence.
 VLA-Trace~\citep{shi2026vlatrace} combines representation comparisons, attention interventions and behavioral probes.
 IMPACT-VLA~\citep{kim2026impact} attributes phase-modality interventions to downstream task success through counterfactual closed-loop execution.
 Our estimand is the discrepancy of a fixed-noise predicted action chunk at a fixed context, not an explanation of eventual task success.
@@ -206,6 +207,40 @@ The quadratic and stabilized $\ell_2$ responses are algebraically related for a 
 Their units and scales differ, so a larger magnitude alone does not demonstrate greater information or operational usefulness.
 Section~\ref{sec:targets-results} isolates response changes for the quadratic and stabilized $\ell_2$ targets. The maximum-deviation records remain an auxiliary diagnostic in the released analysis.
 
+\subsection{Response Transforms and Attribution Path Weights}
+\label{sec:path-weights}
+
+Fix the reference action, active coordinates, model, noise and other modalities, and write $r(x)=\lVert a-\mu(x)\rVert_2^2$ and $L(x)=-\sqrt{r(x)+\epsilon}$.
+Where the gradients exist, the chain rule gives the exact identity
+\begin{equation}
+\nabla Q(x)=\frac{\sqrt{r(x)+\epsilon}}{D\sigma^2}\nabla L(x).
+\label{eq:gradient-weight}
+\end{equation}
+Thus nonzero pointwise gradients have the same direction.
+At exact self-reference both vanish.
+Along $x(\alpha)=x'+\alpha(x-x')$, however,
+\begin{equation}
+\mathrm{IG}^{Q}_i=(x_i-x_i')\int_0^1
+\frac{\sqrt{r(x(\alpha))+\epsilon}}{D\sigma^2}
+\partial_i L(x(\alpha))\,d\alpha.
+\label{eq:weighted-ig}
+\end{equation}
+The positive weight generally varies with $\alpha$.
+When coordinate contributions vary differently along the path, their integrated rankings can therefore change.
+This does not contradict IG implementation invariance, which compares implementations of the same scalar function~\citep{sundararajan2017axiomatic}.
+
+A concrete example uses the scalar action $\mu(x_1,x_2)=x_1^2+\tfrac45x_2$, baseline $(0,0)$, actual input $(1,1)$, detached reference $a=\tfrac95$, and $D=\sigma^2=1$.
+On the same straight path, exact quadratic-target integration yields
+\begin{equation}
+\mathrm{IG}^{Q}=\left(\frac{23}{30},\frac{64}{75}\right),
+\qquad
+\lim_{\epsilon\downarrow0}\mathrm{IG}^{L}=\left(1,\frac45\right).
+\label{eq:rank-reversal}
+\end{equation}
+Quadratic IG ranks feature 2 first, whereas stabilized $L$ with the implemented $\epsilon=10^{-12}$ ranks feature 1 first with a margin at least $0.1999975$.
+Appendix~\ref{sec:geometry-proofs} proves the finite-stabilizer bound, so the reversal does not rely on replacing the implemented response by its limit.
+This establishes existence in a smooth nonlinear policy, not a universal rank change or an empirical RDT effect.
+
 \subsection{Per-Step Episode Attribution}
 
 RDT outputs action chunks of 64 steps, subsampled $4\times$ to 16 environment steps.
@@ -237,7 +272,7 @@ Algorithm~\ref{alg:perstep} summarizes the procedure.
         \STATE $A_t^M \leftarrow \text{IG}(F_M, x_M, x'_M, m)$ \hfill Eq.~\ref{eq:riemann}
     \ENDFOR
     \STATE Record $A_t^V, A_t^L, A_t^S$ and completeness errors
-    \STATE Apply action chunk and advance $\mathcal{E}$ by 16 steps
+    \STATE Apply action chunk and advance $\mathcal{E}$ by up to 16 steps, stopping on termination
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -285,7 +320,7 @@ C1 reinitializes model parameters and correlates the resulting attributions with
 The standard variant changes the final action-output projection and recomputes its reference action; frozen-reference and backbone-cascade variants retain the original reference.
 The historical cascade simultaneously reinitializes all backbone parameter matrices of rank at least two; it retains one-dimensional parameters, encoders and adaptors. It is not a progressive layerwise cascade.
 C2 shuffles both external-camera pixels and language. The historical implementation uses a pre-T5 shuffled-language cache when available and otherwise permutes post-T5 embeddings; the saved records do not authenticate which mode each call used.
-These are different dependence tests, and C2 is not the label-randomization experiment of Adebayo et al.~\citep{adebayo2018sanity}.
+These are different dependence tests, and C2 is not the label-randomization experiment of \citet{adebayo2018sanity}.
 Historical perturbed maps use $m=16$ and original maps nominally use $m=64$, so C1 also changes the numerical approximation.
 A baseline sensitivity compares black, gray and blurred observation features.
 
@@ -364,6 +399,19 @@ Then
 L=-\sqrt{-1024Q+\epsilon},\qquad Q=-\frac{L^2-\epsilon}{1024}.
 \label{eq:rescore}
 \end{equation}
+For an exact self-reference actual endpoint and an all-baseline squared residual $R>0$, the normalized responses satisfy
+\begin{equation}
+\begin{aligned}
+N_Q(r)&=1-\frac rR,\qquad
+N_L(r)=\frac{\sqrt{R+\epsilon}-\sqrt{r+\epsilon}}{\sqrt{R+\epsilon}-\sqrt\epsilon},\\
+N_Q(r)-N_L(r)&=\frac{(\sqrt{r+\epsilon}-\sqrt\epsilon)(\sqrt{R+\epsilon}-\sqrt{r+\epsilon})}{R}.
+\end{aligned}
+\label{eq:normalized-geometry}
+\end{equation}
+Consequently $N_Q>N_L$ for $0<r<R$, with equality at both endpoints and reversed ordering for $r>R$.
+Integration with nonnegative weights preserves the weak ordering if every intervention remains in range, even for a nonmonotone curve; strict area inequality requires positive integration weight on an interior residual.
+Overshooting points can change the area ordering and must not be clipped; if $R=0$, both normalizations are undefined.
+The retrospective computation below transforms the recorded endpoints directly and does not assume exact historical self-reference.
 We transform every recorded curve ordinate, evaluate its endpoints under the transformed response, and reintegrate on the same saved grid.
 Each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes after duplicate handling.
 For quadratic-target vision rankings, median deletion AUC changes from \RescoreQDeletionQ{} under $Q$ to \RescoreQDeletionL{} under $L$.
@@ -445,13 +493,27 @@ It separates accumulation arithmetic, master-path/product arithmetic, quadrature
 A downstream fp32 control lifts the same bf16-rounded parameters and cached adapted representations, explicitly converts non-parameter dtype attributes, and holds the original reference action fixed.
 This tests downstream arithmetic on fixed numeric inputs; it is not an end-to-end fp32 encoder study or recovery of unrounded checkpoint parameters.
 Repeated endpoints alone do not certify gradient/path repeatability, so the validity assessment must also inspect attribution repeats and failures.
+The prospective function is a separately specified deterministic fp32 probe: it re-adapts the raw state, computes its own fp32 reference, and evaluates saved contexts visited by the bf16 policy.
+It is an offline intervention function, rather than an exact explanation of the bf16 policy's executed commands.
+Its integration procedure requires separate engineering selection and verification on fresh episodes with uniformly sampled policy calls over the complete trajectory.
 
 After numerical settings are independently validated, a prospective study must generate Q-IG, L2-IG, random, input-difference-magnitude and path-gradient-only rankings on the same contexts and stored noise.
-All rankings must use common intervention masks, realized fractions and evaluation responses.
+Rankings select their own masks under common eligible groups, baselines and realized-fraction grids; every selected mask is evaluated with the same action function, reference and noise.
+The primary response is raw positive root-mean-square action discrepancy, integrated without endpoint normalization over realized fractions; normalized quadratic and negative-norm responses are secondary geometry diagnostics.
 The path-gradient-only control omits the input multiplier; the gradient at the self-reference endpoint alone is uninformative because both discrepancy gradients vanish there.
 Paired effects must be summarized at the episode unit, with task/checkpoint strata, declared failure denominators and precision-based sample planning.
-A blinded variance pilot can select the episode budget before comparative effects are inspected.
+A variance-only pilot can select the episode budget without using signed comparative means for allocation; this is not a claim that the pilot is blinded.
 Both informative negative and positive results are relevant; neither a favorable threshold crossing nor a single engineering context is a stopping criterion for the scientific study.
+
+A selected additional control permutes entries independently within each backbone linear weight tensor while preserving its learned value multiset.
+Biases, normalization parameters, positional structure, encoders and adaptors remain fixed, so this tests dependence on learned weight arrangement conditional on those retained structures.
+Each permuted function supplies its own action reference for attribution, and the resulting rankings are transferred to the unchanged trained fp32 response.
+Native initialization is a different control: the pinned RDT constructor initializes its final output head to zero, making its finite fixed-noise output independent of conditioning and its own-reference gradients uninformative.
+Permutation draws will be independent across reset episodes and coherent across selected calls and modalities within an episode.
+The base comparison and this control retain separate joint-complete episode populations; failures in the control do not remove episodes from the base analysis.
+Numerical validation, parameter Monte Carlo uncertainty, simultaneous inference and precision-based allocation remain prerequisites for reporting this study's results.
+An additional descriptive sensitivity will compare the full predicted chunk with its positions corresponding to commands submitted in the source bf16 rollout before replanning or termination, using the same saved fp32 intervention actions and preserving the primary population.
+Those counterfactual actions were not themselves submitted to the environment.
 
 \section{Discussion and Limitations}
 
@@ -508,6 +570,38 @@ I am sincerely grateful to Professor Sumit K.\ Jha, Department of Computer and I
 \bibliography{references}
 \clearpage
 \appendix
+\section{Response-Geometry Derivations}
+\label{sec:geometry-proofs}
+
+The identities in Section~\ref{sec:path-weights} assume that the relevant path gradients are integrable and hold the action reference fixed.
+Differentiating $Q=-r/(2D\sigma^2)$ and $L=-\sqrt{r+\epsilon}$ gives Equation~\ref{eq:gradient-weight} immediately.
+For Equation~\ref{eq:normalized-geometry}, set $a_0=\sqrt\epsilon$, $b=\sqrt{R+\epsilon}$ and $z=\sqrt{r+\epsilon}$.
+Since $R=b^2-a_0^2$ and $r=z^2-a_0^2$, rationalization gives
+\begin{equation}
+\frac{b^2-z^2}{R}-\frac{b-z}{b-a_0}
+=\frac{(z-a_0)(b-z)}{R}.
+\end{equation}
+For in-range residuals the maximum difference is $(b-a_0)^2/(4R)\le1/4$.
+These pointwise statements concern a fixed ranking's interventions; they neither order different rankings nor establish task-success improvements.
+
+For the rank-reversal example, let $c=4/5$ and parameterize the path by $(t,t)$.
+The scalar residual is $d(t)=1+c-t^2-ct=(1-t)(1+t+c)\ge0$.
+The quadratic path integrands are $2td(t)$ and $cd(t)$, yielding
+\begin{equation}
+\mathrm{IG}^{Q}=\left(\frac12+\frac c3,\frac{2c}3+\frac{c^2}2\right)
+=\left(\frac{23}{30},\frac{64}{75}\right).
+\end{equation}
+For the stabilized negative norm the respective integrands are $2t\,d(t)/\sqrt{d(t)^2+\epsilon}$ and $c\,d(t)/\sqrt{d(t)^2+\epsilon}$.
+Using $d(t)\ge c(1-t)$ and monotonicity of $1-d/\sqrt{d^2+\epsilon}$ gives
+\begin{equation}
+\int_0^1\left(1-\frac{d(t)}{\sqrt{d(t)^2+\epsilon}}\right)dt
+\le1-\frac{\sqrt{c^2+\epsilon}-\sqrt\epsilon}{c}
+\le\frac{\sqrt\epsilon}{c}.
+\end{equation}
+Therefore $0\le1-\mathrm{IG}^{L}_1\le2\sqrt\epsilon/c=2.5\times10^{-6}$ and $0\le c-\mathrm{IG}^{L}_2\le\sqrt\epsilon=10^{-6}$ at the implemented stabilizer.
+All coordinates are positive and the stabilized $L$ margin is at least $0.1999975$, while $Q$ has the opposite ordering with exact margin $13/150$.
+The artifact includes independent differentiation, integration and normalization checks for these identities, including overshoots, zero gaps and a policy example without rank reversal.
+
 \section{Additional Retrospective Diagnostics}
 \label{sec:appendix-diagnostics}
 The frozen-reference and backbone-cascade analyses retain learned encoders/adaptors and historical context uncertainty.

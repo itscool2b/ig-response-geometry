@@ -8,7 +8,7 @@
     "valid_physical_records": 22966
   },
   "builder_sha256": "68e2c0f28fd5f86ce18e336af3bf81b2c8abd211073b3a99393cd637218ba9f7",
-  "manuscript_source_sha256": "a72a80adfa641e145b60eaa7ed79d70c7e8afde023394de202d5aae0191b1e32",
+  "manuscript_source_sha256": "3e3cd6e09e484831c17f170436e73cd375492682d4bab502095ad0e69e778723",
   "input_sha256": {
     "results.csv": "fce8a00b8aba8e00653ca5c2176002f1ceb8dd7da5aff1881f4cfcf8864dbdfb",
     "summary.json": "bec54e8baf80c98f8687c25a236ffa891413c91668d48f8d7f501dad2892f8d0",
@@ -5346,7 +5346,7 @@
     }
   ],
   "generated_sha256": {
-    "paper/arxiv_abstract.txt": "719f910445fc893a09d9fc3b13484f9b35a7397882ee8deba2ecb10b95576464",
+    "paper/arxiv_abstract.txt": "25a1a7483d50e7f863e33fec635b57068eb34b5dba7724cb7ac108a14a5d8b49",
     "paper/tables_revision/baseline.tex": "a984247caf85de9dbe35f5777742568ef1d1ec5eceacc65e87b1bfc2dd690d9c",
     "paper/tables_revision/budget.tex": "f4f76b228bdcc1f250f744f3ad9e43615a93e7db7fc5066e16b2161b2dd0f738",
     "paper/tables_revision/completeness.tex": "b390a6210484b362b0f99cc6732328b5bf8f22231a2907ee5c9edb9cee65f79a",
