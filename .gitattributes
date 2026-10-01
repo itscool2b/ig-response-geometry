@@ -1,6 +1,8 @@
 # These immutable analysis artifacts carry byte-level hashes. Git must not
 # translate their line endings when checking out on Windows.
 analysis/revision/results/** -text
+# Saved numerical projections and their reproducer use exact-byte manifests.
+analysis/numerical_case/** -text
 # Manuscript lineage authenticates exact generated and source bytes too.
 paper/paper.tex -text
 paper/arxiv_abstract.txt -text

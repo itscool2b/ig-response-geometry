@@ -1,0 +1,7 @@
+stratum,planned_contexts,completed_contexts,source_unavailable_contexts,unsealed_contexts,planned_cells,completed_cells,source_unavailable_cells,unsealed_cells
+peginsertionside-170m,4,2,0,2,24,12,0,12
+pickcube-170m,4,4,0,0,24,24,0,0
+pickcube-1b,4,0,2,2,24,0,12,12
+picksingleycb-170m,4,2,0,2,24,12,0,12
+stackcube-170m,4,4,0,0,24,24,0,0
+stackcube-1b,4,0,1,3,24,0,6,18

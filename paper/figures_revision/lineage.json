@@ -7,8 +7,24 @@
     "populations": 57,
     "valid_physical_records": 22966
   },
-  "builder_sha256": "68e2c0f28fd5f86ce18e336af3bf81b2c8abd211073b3a99393cd637218ba9f7",
-  "manuscript_source_sha256": "3e3cd6e09e484831c17f170436e73cd375492682d4bab502095ad0e69e778723",
+  "builder_sha256": "628e600020cf2abf18c648c8ca54f58401efe21a2f1af971e0dbf997222324c8",
+  "manuscript_source_sha256": "1179df7099d31f173b6d1126f5f6859c8bcd58d7974dcdd0dda60c49a91aa3b0",
+  "numerical_case_inputs_sha256": {
+    "analysis/numerical_case/2026-10-01-v1/summarize.py": "ddd65fabcf3e6f955ea64c704fed1fd29c5f1ad5dcec613f5638a15f2352286f",
+    "analysis/numerical_case/2026-10-01-v1/inputs/sealed_v6.json": "c5c265b3cfaf38d76d3de99c4db1b57b6177f74cfbaa5131b8bf9e49ed117098",
+    "analysis/numerical_case/2026-10-01-v1/outputs/manifest.json": "2281e90618d998ddfab5365f009a71c96946b0d767c7c57059cfedae35e457c0",
+    "analysis/numerical_case/2026-10-01-v1/outputs/modality_target.csv": "12e542e9a41d4c5fcb4f9b9e0f7f68298df480f81b67b19bebe8624556991bf1",
+    "analysis/numerical_case/2026-10-01-v1/outputs/numerical_diagnostics.tex": "0395203dc1f42a8747dd8c5e49245e462d1674c12f0b2cf1f5790432eeb05324",
+    "analysis/numerical_case/2026-10-01-v1/outputs/numerical_roster.tex": "c8ed663d488cdf73e549eadc6b6e587c95a2d208ddf75c7eefc590e070ae448a",
+    "analysis/numerical_case/2026-10-01-v1/outputs/per_cell.csv": "c4d4ccbc8738ca33a67ccaa0556bb3c3ede2c9a87773a3b829ff33be7b21359a",
+    "analysis/numerical_case/2026-10-01-v1/outputs/review.md": "df9bc2f40c999e1b0f2cebae26e475f90f93d5fbf29515648dd56a351325c875",
+    "analysis/numerical_case/2026-10-01-v1/outputs/roster.csv": "37495d09e52ccbcbfae24a29ca061c2a67746e28e71c8d348b7ec13dbb695ab5",
+    "analysis/numerical_case/2026-10-01-v1/outputs/strata.csv": "7c20eb5005abfab27d25b4689d98b9ab0dfd3bafc5eb0bd669e9264b9e5a0fe1",
+    "analysis/numerical_case/2026-10-01-v1/outputs/summary.json": "1006158c51366b590f2295800a70adeeb10ae339872a579cccb95e1827a7295f",
+    "analysis/numerical_case/2026-10-01-v1/outputs/ycb_budgets.csv": "ffa57c459b9dfbcc4d85d56e6dc1d3576bb3477ec1404822af521e524f92c47c",
+    "analysis/numerical_case/2026-10-01-v1/outputs/ycb_diagnosis.json": "d65fe42f581acf66b4d6503c2da6f30b74f4cc25612610b5f663ae552ea57e48",
+    "analysis/numerical_case/2026-10-01-v1/outputs/ycb_probes.csv": "ba5aca6e08638b81936b19b9649582a5dad82b911ff0b823408ed851ceadcb60"
+  },
   "input_sha256": {
     "results.csv": "fce8a00b8aba8e00653ca5c2176002f1ceb8dd7da5aff1881f4cfcf8864dbdfb",
     "summary.json": "bec54e8baf80c98f8687c25a236ffa891413c91668d48f8d7f501dad2892f8d0",
@@ -5346,12 +5362,14 @@
     }
   ],
   "generated_sha256": {
-    "paper/arxiv_abstract.txt": "25a1a7483d50e7f863e33fec635b57068eb34b5dba7724cb7ac108a14a5d8b49",
+    "paper/arxiv_abstract.txt": "8c151e615fe057f361c7ae94b303e6589249a0d804bdd2346673014e923e9ce1",
     "paper/tables_revision/baseline.tex": "a984247caf85de9dbe35f5777742568ef1d1ec5eceacc65e87b1bfc2dd690d9c",
     "paper/tables_revision/budget.tex": "f4f76b228bdcc1f250f744f3ad9e43615a93e7db7fc5066e16b2161b2dd0f738",
     "paper/tables_revision/completeness.tex": "b390a6210484b362b0f99cc6732328b5bf8f22231a2907ee5c9edb9cee65f79a",
     "paper/tables_revision/faithfulness.tex": "ad90f4cac86ca666e7e09f1932149792a8fc246459c8c27dbe2a522b9a14064d",
     "paper/tables_revision/macros.tex": "89738ef34bd1ec37a7d7b97e410dafb18206bc718ed08a1ac190d29b62c36a6b",
+    "paper/tables_revision/numerical_diagnostics.tex": "0395203dc1f42a8747dd8c5e49245e462d1674c12f0b2cf1f5790432eeb05324",
+    "paper/tables_revision/numerical_roster.tex": "c8ed663d488cdf73e549eadc6b6e587c95a2d208ddf75c7eefc590e070ae448a",
     "paper/tables_revision/oneb.tex": "6290ce5331b3bb63210100c4764944f838dd45860d60ec2045729d4d35a4983e",
     "paper/tables_revision/rescore.tex": "9ac7c89136cff66ab3544309864f3dd895bb12dc18afe9c538cbc6b65f5900e3",
     "paper/tables_revision/sanity.tex": "eec5da727ed692a139688a46a4f81f698b16f8b6141227954580d59d6f71bad7",

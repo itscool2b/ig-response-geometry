@@ -16,6 +16,7 @@ def validate_revision_assets(root: Path) -> None:
     registry_path = root / "paper/figures_revision/lineage.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     expected = dict(registry["generated_sha256"])
+    expected.update(registry.get("numerical_case_inputs_sha256", {}))
     expected["paper/paper.tex"] = registry["manuscript_source_sha256"]
     mismatches = [name for name, digest in expected.items()
                   if not (root / name).is_file()

@@ -10,6 +10,8 @@ import hashlib
 import json
 import re
 import sys
+import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -18,6 +20,29 @@ from analysis.revision.verify import verify
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def numerical_case_assets(tables):
+    """Reproduce the frozen partial case before including its two displays."""
+    directory = ROOT / "analysis/numerical_case/2026-10-01-v1"
+    script = directory / "summarize.py"
+    source = directory / "inputs/sealed_v6.json"
+    manifest_path = directory / "outputs/manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if sha(source) != manifest["input_sha256"] or sha(script) != manifest["source_sha256"]:
+        raise ValueError("Numerical case input or reproducer differs from the recorded manifest")
+    with tempfile.TemporaryDirectory(prefix="tmlr-numerical-display-") as scratch:
+        output = Path(scratch)
+        subprocess.run([sys.executable, str(script), "--input", str(source), "--output", str(output)], check=True)
+        for name, expected in manifest["outputs"].items():
+            if Path(name).name != name or sha(directory / "outputs" / name) != expected or sha(output / name) != expected:
+                raise ValueError("Numerical case output does not reproduce: " + name)
+        for name in ("numerical_roster.tex", "numerical_diagnostics.tex"):
+            if name not in manifest["outputs"]:
+                raise ValueError("Numerical case table lacks a manifest entry: " + name)
+            (tables / name).write_bytes((output / name).read_bytes())
+    inputs = [script, source, manifest_path, *(directory / "outputs" / name for name in manifest["outputs"])]
+    return {path.relative_to(ROOT).as_posix(): sha(path) for path in inputs}
 
 
 def main():
@@ -34,6 +59,7 @@ def main():
     tables = ROOT / "paper/tables_revision"
     figures.mkdir(exist_ok=True)
     tables.mkdir(exist_ok=True)
+    numerical_inputs = numerical_case_assets(tables)
     lineage, macros, macro_displays = [], [], {}
 
     def result(key, location, view="retrospective_last"):
@@ -241,6 +267,7 @@ def main():
                 "analysis_directory": source.relative_to(ROOT).as_posix(), "analysis_verification": verification,
                 "builder_sha256": sha(Path(__file__)),
                 "manuscript_source_sha256": sha(manuscript),
+                "numerical_case_inputs_sha256": numerical_inputs,
                 "input_sha256": {name: sha(source / name) for name in ("results.csv", "summary.json", "diagnostics.json", "random_order_counterexample.json", "solver_endpoint_sensitivity.json", "population_membership.json.gz", "raw_line_ledger.csv.gz", "provenance.json")},
                 "entries": lineage,
                 "generated_sha256": {p.relative_to(ROOT).as_posix(): sha(p) for p in [abstract_path, *tables.glob("*.tex"), *figures.glob("*.png"), *figures.glob("*.pdf")]}}

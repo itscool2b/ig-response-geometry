@@ -57,7 +57,7 @@ RESULT_FILES = ("diagnostics.json", "duplicate_population_sensitivity.json", "du
     "population_membership.json.gz", "provenance.json", "random_order_counterexample.json",
     "raw_line_ledger.csv.gz", "reconciliation.json", "results.csv", "solver_endpoint_sensitivity.json", "summary.json")
 PAPER_ASSETS = tuple("paper/tables_revision/" + name + ".tex" for name in
-    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants")) + (
+    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants", "numerical_roster", "numerical_diagnostics")) + (
     "paper/figures_revision/lineage.json", "paper/figures_revision/response_geometry.pdf",
     "paper/figures_revision/response_geometry.png", "paper/figures_revision/solver_endpoint.pdf",
     "paper/figures_revision/solver_endpoint.png")
@@ -172,6 +172,7 @@ def collect(root, revision, extra_identifiers=()):
     manifest_path = "analysis/revision/input_manifest.json"
     manifest = json.loads(read(manifest_path))
     selected = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | {manifest_path}
+    selected.update(p for p in index if p.startswith("analysis/numerical_case/"))
     selected.update(OUTPUT_PREFIX + name for name in RESULT_FILES)
     selected.update(p for p in index if p.startswith("tests/") and p.endswith(".py") and p not in OMITTED_TESTS)
     selected.update(p for p in PENDING_ADDITIONS if p in index)
@@ -235,8 +236,10 @@ Runtime code and targeted tests are supplied, with separate GPU requirements.
 External upstream source, weights, simulator assets, and newly encoded language
 inputs must be acquired under their respective terms. See README.md for the
 pinned upstream revision and bounded engineering example. No scientific budget
-or future experiment is authorized by this package. GPU numerical acceptance,
-completed prospective evidence, and the final manuscript remain separate gates.
+or future experiment is authorized by this package. The numerical case reproduces
+saved diagnostics from a frozen partial snapshot; no production setting is approved.
+Prospective comparisons are deferred and their broader claims are excluded.
+See analysis/numerical_case/README.md for the CPU reproducer and evidence limits.
 
 Historical legacy executables and their tests are intentionally omitted. Tests
 in this package concern retained code. Archive-only documentation links may
@@ -279,8 +282,11 @@ Exported code is committed Git-blob bytes. A modern saved model run checks exact
 source hashes and may require its separate frozen source bytes, including line
 endings. This candidate includes no such model bank and claims no replay match.
 The included CPU demonstrations establish bounded execution only, not accuracy
-or GPU validation. Future numerical/scientific evidence and final review remain
-separate gates. Archive-only links may refer to omitted historical files.
+or GPU validation. The included numerical case reproduces a frozen partial audit
+and selected saved tensors; it does not repeat model evaluation or approve a
+production setting. Prospective comparisons and their broader claims are deferred.
+See analysis/numerical_case/README.md. Final manuscript/package review remains open.
+Archive-only links may refer to omitted historical files.
 """
 
 

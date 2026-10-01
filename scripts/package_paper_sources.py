@@ -24,7 +24,7 @@ IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                         ('baseline', 'budget', 'completeness', 'faithfulness', 'macros',
-                         'oneb', 'rescore', 'sanity', 'variants'))
+                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
                           'figures_revision/solver_endpoint.pdf'})
 TEX_PACKAGES = frozenset({'tmlr', 'url', 'hyperref', 'inputenc', 'caption', 'graphicx',
