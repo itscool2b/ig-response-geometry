@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "analysis_version": "2026-10-01-v1",
+  "recorded_before_outcome_computation": true,
+  "question": "How much does changing only the response normalization from stabilized L2 to Q change the saved-grid normalized AUC within each historical saved ranking and policy call?",
+  "input_manifest": "analysis/revision/input_manifest.json",
+  "canonical_results": "analysis/revision/results/2026-09-30-v2",
+  "cohorts": {
+    "Q": "metrics_faithfulness_metrics_PickCube-v1_170m_seed*_logpi_*.jsonl",
+    "L2": "metrics_faithfulness_metrics_PickCube-v1_170m_seed*_l2_*.jsonl"
+  },
+  "event": "faithfulness",
+  "modalities": ["vision", "lang"],
+  "directions": ["insertion", "deletion"],
+  "occurrence_rule": "last physical occurrence within canonical source namespace; independently verify conflict-excluded membership",
+  "action_norm_filter": "none",
+  "dimension": 512,
+  "stabilizer_epsilon": 1e-12,
+  "paired_difference": "AUC_Q minus AUC_stabilized_L2 on the same saved curve and endpoints",
+  "primary": "mean across recorded episodes of the within-episode mean paired call difference",
+  "primary_rationale": "An equally weighted recorded episode is the analysis unit; a longer recorded episode does not receive more primary weight. This is a new paired estimand, distinct from the canonical marginal call medians.",
+  "secondary": "median of the paired call differences, retaining every defined call; not a difference of marginal medians",
+  "episode_key": ["source", "task", "model", "seed", "episode"],
+  "undefined_policy": "Retain raw membership and reason. If either response endpoint gap is exactly zero, the paired effect is undefined. Nonfinite or malformed input fails authentication. Summaries condition on paired-defined calls, with full raw and defined episode/call counts reported. No clipping or finite replacement.",
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 0,
+    "rng": "numpy.PCG64",
+    "unit": "whole recorded episode within one ranking arm; keep all retained calls together",
+    "confidence_level": 0.95,
+    "interval": "percentile with linear quantiles",
+    "interpretation": "descriptive conditional empirical episode intervals, not independently calibrated coverage",
+    "multiplicity": "8 cases and 2 summaries per case; no multiplicity adjustment, no global significance or superiority claim"
+  },
+  "geometry": {
+    "actual_endpoint": "the stored endpoint, never assumed to be exact self-reference",
+    "residual": "r is the implied squared action discrepancy recovered from the native response; retain conversion roundoff diagnostics",
+    "in_range": "min(r_actual,r_baseline) <= r_point <= max(r_actual,r_baseline)",
+    "high_distance_overshoot": "r_point > max(r_actual,r_baseline)",
+    "low_distance_undershoot": "r_point < min(r_actual,r_baseline)",
+    "orientation": "baseline farther, baseline nearer, or equal; in-range paired ordinate sign depends on orientation",
+    "exact_decomposition": "sum trapezoid node-weight contributions to AUC_Q minus AUC_L2 by the exact saved-node categories",
+    "segments": "classify sampled endpoint pairs only: both inside, both outside, or one each; do not infer an unobserved continuous crossing",
+    "boundary_sensitivity": "repeat labels with tolerance 1e-6 times max(1,abs(r_actual),abs(r_baseline)); values, AUCs and defined-population membership remain unchanged"
+  },
+  "scope_limits": [
+    "No cross-ranking-arm pairing, even for matching legacy keys",
+    "No new masks, rankings, model calls, GPU work, environment execution or efficacy evidence",
+    "Historical nominal percentage grid is retained; realized mask identities/counts are unavailable",
+    "Checkpoint, observation, reference action tensor and noise identity remain unauthenticated",
+    "Recorded episodes are legacy group labels, not independently authenticated random experimental units",
+    "Finite saved-grid interpolation is an analysis convention, not observed intermediate interventions"
+  ]
+}

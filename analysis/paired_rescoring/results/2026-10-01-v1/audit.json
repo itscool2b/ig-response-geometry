@@ -1,0 +1,818 @@
+{
+  "canonical_verification": {
+    "artifact_hashes": 10,
+    "results": 284,
+    "populations": 57,
+    "valid_physical_records": 22966
+  },
+  "inputs": [
+    {
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+      "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+      "git_crlf_checkout_sha256": "f8e7ea8a48235351fce5859af66845951c2dbfc45d35e307c0ef2e53ded37f3a",
+      "bytes": 665552,
+      "physical_lines": 375,
+      "valid_records": 375,
+      "quarantine": []
+    },
+    {
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+      "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+      "git_crlf_checkout_sha256": "d8dc1d4d2d9a0869a8c97fcdb0481c86948e067c6735a7d98a48b07ba687d9d1",
+      "bytes": 665638,
+      "physical_lines": 375,
+      "valid_records": 375,
+      "quarantine": []
+    },
+    {
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+      "git_crlf_checkout_sha256": "dc00a17c5b33d8b6323e348baff34eceb20e84ec74044affb6224b95268cb35b",
+      "bytes": 706356,
+      "physical_lines": 399,
+      "valid_records": 399,
+      "quarantine": []
+    },
+    {
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+      "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+      "git_crlf_checkout_sha256": "301832c6829466656fdf785bb138c951ef4502a15ab17962fe1e4dbc3a4d591e",
+      "bytes": 663256,
+      "physical_lines": 375,
+      "valid_records": 375,
+      "quarantine": []
+    }
+  ],
+  "n_raw_occurrences": 1524,
+  "n_selected_occurrences": 1500,
+  "duplicates": [
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        0,
+        null,
+        null
+      ],
+      "key_sha256": "186d8fc5e681c020019f3365f25e1fb671abeb3c781d12efd3914893410e561c",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:301:fecf9fbe33c3f2f06c974626198562e848fab71fa5e47be5dead3f11494cb583",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        1,
+        null,
+        null
+      ],
+      "key_sha256": "64bbcf58ad7c228493a5fca27554f6fe46c0f646a7a353a97752f276b721f0f0",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:302:279fe7382b2f9abeb99b087f4b691c68d826e3d6724a6a646d557e8caadd2ec7",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:326:6f6a65ad276f7ce196449c05459f52f37a1d54c00947a5dac7b4c20949e127e1"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        2,
+        null,
+        null
+      ],
+      "key_sha256": "d9c237249bca3f18b221460cad811d8f0481fb809c8c30422fef8d017f357b8e",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:303:dbcbd6fcf2c21688577a65183d0c7fda312b7863a0fd2c321432f08182e7f72c",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:327:b12f70118a6080e84d7030777a593648b04aa59f79df060b64e171acab514bf3"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        3,
+        null,
+        null
+      ],
+      "key_sha256": "26d1313288abb68d69054cadc3785773c585dc7ee64eb77440e53b60d69b9cbc",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:304:9e7ca9d0daab2da6150255981670a4f23cf116998257abd08def6f74ec21f21d",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:328:a730e0da28fa56116c7823e075afa4ce02ab16449b738a469ad3c474499ea749"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        4,
+        null,
+        null
+      ],
+      "key_sha256": "2505558a505a6b93efda9ebc4cd242226d7dd916db491e980fa543a123369de8",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:305:50d46ef2c6fcc10b1400c1dbcd7c1c066e19cdc6607993391ed00954f4eaed39",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:329:6dec0ecb8617a784698fc768f02aa988a07bea7556572ed807a4814e0c54c87c"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        5,
+        null,
+        null
+      ],
+      "key_sha256": "31cf240643089b8982ee5687b9747d8dcb1a4ea2858bb35ff3dec45e736c87b2",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:306:4a53f1bcf78d6081fe0d5f0a6bffd1e5b61b51a3d439b3e5f89131d492ae77bb",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:330:20dfb05b114eaabe5553c035e3b66f9c1f2c28d547ed23fb59ffdc15abcff0ea"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        6,
+        null,
+        null
+      ],
+      "key_sha256": "5c44193a1e84951687082e36d6ed11f0c10b928ecec3686874666b088da3936b",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:307:be9c06bceb8aeca90d9c73622f5344795ad977683ed50e0afddee97a64773ee3",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:331:54d0b35281c2424fcdd0515ad16262cf4f12e25f4668d7313b433ecc6b982d95"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        7,
+        null,
+        null
+      ],
+      "key_sha256": "0ad32ff663fbe4a818155f50d4b0c819dad02a2be3a1f77a080dc02ac4a69ad8",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:308:5737ef7dbebaf893c31f3c045bef45db6524bfcd9bba5ae0d23ce984aca852d1",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:332:98defe3995f4d5ffb638bfdd1a4f07a1b36f69b62d3225500885f0b48715f6da"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        8,
+        null,
+        null
+      ],
+      "key_sha256": "7400d873525f6195415a4be943889f9c78c0ef7779512be8ebbb063366c1e10a",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:309:021de31f60c17e2c8b1be861eed46489202f1bc298e95530299c7391fd40aaad",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:333:b9154ed6056609db964cfa2e78e22cc0b4e9a544da69ebf73ac705eca377e44e"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        9,
+        null,
+        null
+      ],
+      "key_sha256": "d380b05bdd60068d66c1849b0f3539028c86ed06920061ad231934c6649e16d7",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:310:189a1480496cc4df11f1e6817fe3a9650a3049ddc34418efe34a17fda1c21dc7",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:334:538dc8c1c8c52597bd53c8f0c4dd6b9e505a2c819b9c60f787b63a20aa9489f5"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        10,
+        null,
+        null
+      ],
+      "key_sha256": "c843c72dfd3292389ec58f61f2a6edaf73cb6cd51ddb7e55bfd3f036d9811470",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:311:0b794159667b2b770c09272a97d8477640cab75dbb7e3f4eac225b87149254a4",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:335:85799e67f94d5b85660768164791e7bbaabb84a7011aa7f74f2a871769c58717"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        11,
+        null,
+        null
+      ],
+      "key_sha256": "f59dfb5b7565fe4e66c2d49d15d1291c1944070d9ce76424ac74cb4fcbcf259a",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:312:67f5c1e70e6f7670956bf0417ee09731a4397419f0ee2b97c6dedc994e9686ab",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:336:aa8908a44ebcdf92e3af394544971d2b9b7a8266ca1f39a74ca70417c76f637f"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        12,
+        null,
+        null
+      ],
+      "key_sha256": "d249ca4aa27060c750ebc7ebf648f2ccd9c6fc2b86202c97fefea15cb73f8513",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:313:1b37bd5c229fa356a23b2ab37c19e84ff8235b4e1ba3bf7c0a05a075c68f6cda",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:337:ff7cdf7dbb22211ed5bbcce66125ad85863850b05e693b9465dac651101eb475"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        13,
+        null,
+        null
+      ],
+      "key_sha256": "1559ebf6eadda6061b43e488c89d74880e5d42dc38c496be6fbbf76eb4c29e2f",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:314:97fb5a9b3da3cf4a621a9b5ef3bf5ba02615aa25db6761e8abef3476819e0501",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:338:a47b452bdfb385e9f8d6d26e18cfa902d628a3dc846fdba41b5f5e3e0884488b"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        14,
+        null,
+        null
+      ],
+      "key_sha256": "7140940106991e9e027300c28a17143d61f2dc10b25c072db4bf280faf19bf98",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:315:b965d35cb1f9bc3fe6b647d3bed76691e6f13df387f0c830ecab602eff43b412",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:339:c2839f5262e2514c55d2d6c2bf665c3507fdbf616952f6abfa3ef206687f735b"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        15,
+        null,
+        null
+      ],
+      "key_sha256": "7c1752ba22dd1fe76e7f4b252b8b0566679b28afba640180c5358632cb7ce613",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:316:aea12fb1f9d23ecbab5789af308f7a6b19e6bfdeacbe36bac05601ac2d6e26c4",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:340:2391352864a5965bfdadc05a05950d4cb8d4a9a01f42b79f8d389942c14cd81e"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        16,
+        null,
+        null
+      ],
+      "key_sha256": "b811efd86a8137c1a5dc4520c513038c9c544fc946f493bb779ab6b9f370a6a0",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:317:f26907a57a230d83109e13f130fb9628737b55253f746d968c86b6c42ec0d6a1",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:341:11640e06d2a9c4e7fb53ab2f12c8aaac313e0c5050a37a5920614f5042ac6caa"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        17,
+        null,
+        null
+      ],
+      "key_sha256": "5a076b36496407743f593833364b2ec26784d7955cd1a1629544b10e92ee8877",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:318:17718565dbd2680a545646244f10cc651c1def41a09f21a0588a5ffbf72d731b",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:342:ae6baee27618f912f2d9023b5a89d0228117c0453329bc30223c133b621881ee"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        18,
+        null,
+        null
+      ],
+      "key_sha256": "6c7874bf1a289077707f69c51ebfc0cb4e642225b77b767050a523904ad5079f",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:319:ae8076d27257ee741b98d14af34dd888fb4ed6aa6e8b6994f245cb40e6f05c67",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:343:9a3985399d0592568536f5be94be23bf030681756f2cd3fb692cecf4a1269354"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        19,
+        null,
+        null
+      ],
+      "key_sha256": "42bc8329a6705df8242ed472cc32ee24eed999522b27cefd75675def51b06e32",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:320:844fabc78c878a89e645152a4bd5ae3de70611d9192f09e02cf71420ec2ba5ef",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:344:1e773b7384aa94574ae3298b538097a4484c75c75e8a6c250f39ad3da20d2f02"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        20,
+        null,
+        null
+      ],
+      "key_sha256": "a1cbcdd9e0d2bd6dc5cd7dffbaa15a01e1d2e2ef400f160176dc8dba2c889a00",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:321:4365c3e42e39522011ad1054b7608c5f5bab4f34eae9c7e6d658cc93663562a0",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:345:beea8dc6e2b76444af24c84020ed2ace336f86b7e9343dc13b34cd0f2e756d78"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        21,
+        null,
+        null
+      ],
+      "key_sha256": "f4608aba5f51ca834a00863afe2abd4668e71a1d8dd55da50f710fc8ec23a0cf",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:322:cd5c2bb752baa8667bed8634d5b07edb43a479be2514979893877f1716b49ef4",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:346:375b86256521d582629e8b5028fccf063110b77e2c71c1c6e26725672af7838d"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        22,
+        null,
+        null
+      ],
+      "key_sha256": "0be5e2d0e59cb430bfa0e564310b3a128772058ab4cc86c8163080ab2274968b",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:323:3a671b89a76130fc2f4aab47f58a9229d4e79dd795577165f2e183916d5242a0",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:347:b1fae0bedae4fbd9232bea5f4b6a21684dcd867d0e90a54996bc70e11ce03a01"
+    },
+    {
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "faithfulness",
+        "PickCube-v1",
+        "170m",
+        54,
+        12,
+        23,
+        null,
+        null
+      ],
+      "key_sha256": "f682a00f80c81222ecfdf692f5a65995327cb18dc399a8c6efdc81c7b79b114d",
+      "occurrences": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:324:46cfc8f160aa6c48d05ad10e446fa4f18e3ab26e8d2f6e068271fefcb146d8ba",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057"
+      ],
+      "extra_occurrences": 1,
+      "differing_fields": [
+        "wall_seconds"
+      ],
+      "classification": "metadata_only",
+      "retrospective_last_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057",
+      "conflict_excluded_selected": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:348:2c0e3347a0613e33f1f20b504d7deaf78f463dba6d0cfe4f15667390706e0057"
+    }
+  ],
+  "native_arithmetic": {
+    "counts": {
+      "auc_checks": 6096,
+      "deletion_delta_checks": 9144
+    },
+    "maximum_discrepancies": {
+      "auc_absolute_error": 4.547473508864641e-13
+    },
+    "undefined_auc": []
+  },
+  "unknown_identities": [
+    "checkpoint weights",
+    "raw observation tensors",
+    "reference action tensor",
+    "noise tensor",
+    "historical environment/runtime revisions"
+  ],
+  "cohorts": {
+    "Q": {
+      "n_calls": 750,
+      "n_episodes": 30,
+      "n_legacy_episode_keys": 30,
+      "source_namespace_changes_group_count": false,
+      "selected_population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869",
+      "conflict_excluded_population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869",
+      "conflict_excluded_membership_identical": true,
+      "calls_per_episode_histogram": {
+        "25": 30
+      }
+    },
+    "L2": {
+      "n_calls": 750,
+      "n_episodes": 30,
+      "n_legacy_episode_keys": 30,
+      "source_namespace_changes_group_count": false,
+      "selected_population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197",
+      "conflict_excluded_population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197",
+      "conflict_excluded_membership_identical": true,
+      "calls_per_episode_histogram": {
+        "25": 30
+      }
+    }
+  },
+  "canonical_marginal_reproduction": [
+    {
+      "result_id": "rescore/ranking_Q/response_Q/vision_insertion",
+      "median": 0.8834416169441944,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_L2/vision_insertion",
+      "median": 0.7556794629881077,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_Q/vision_deletion",
+      "median": 0.4479032072092785,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_L2/vision_deletion",
+      "median": 0.29075937221063786,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_Q/lang_insertion",
+      "median": 0.5799000149957394,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_L2/lang_insertion",
+      "median": 0.46858491236206834,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_Q/lang_deletion",
+      "median": 0.3717863960899924,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_Q/response_L2/lang_deletion",
+      "median": 0.25672365630831195,
+      "absolute_error": 0.0,
+      "population_sha256": "911501259de06df66ae52eb6eac2368cde3bd57b241f87b3af12f6f476243869"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_Q/vision_insertion",
+      "median": 0.8840701042245038,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_L2/vision_insertion",
+      "median": 0.7564904598101228,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_Q/vision_deletion",
+      "median": 0.4403761942226958,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_L2/vision_deletion",
+      "median": 0.28300726504133694,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_Q/lang_insertion",
+      "median": 0.6347441971709666,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_L2/lang_insertion",
+      "median": 0.5074800936514182,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_Q/lang_deletion",
+      "median": 0.3676008423713577,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    },
+    {
+      "result_id": "rescore/ranking_L2/response_L2/lang_deletion",
+      "median": 0.24907561518574198,
+      "absolute_error": 0.0,
+      "population_sha256": "68ddb8f43bd752327b068d15656b2b7a224c20085fdc8529b270db2b870fd197"
+    }
+  ],
+  "max_generalized_identity_error": 7.275957614183426e-12,
+  "max_decomposition_residual": 9.094947017729282e-13,
+  "n_undefined_paired_case_calls": 0
+}

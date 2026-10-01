@@ -1,0 +1,24 @@
+\begin{tabular}{lllrr}
+\toprule
+Ranking & Modality & Curve & Mean paired $\Delta$ & 95\% interval \\
+\midrule
+Q & vision & insertion & -17.0966 & [-33.8210, -3.9746] \\
+Q & vision & deletion & 0.1227 & [0.1059, 0.1382] \\
+Q & lang & insertion & -0.1819 & [-0.4051, -0.0277] \\
+Q & lang & deletion & -0.0095 & [-0.1022, 0.0631] \\
+L2 & vision & insertion & -18.5620 & [-37.8672, -3.1731] \\
+L2 & vision & deletion & 0.0184 & [-0.2037, 0.1378] \\
+L2 & lang & insertion & -0.0329 & [-0.0963, 0.0266] \\
+L2 & lang & deletion & -1.3710 & [-4.2081, 0.0780] \\
+\bottomrule
+\end{tabular}
+% Delta = AUC_Q - AUC_stabilized_L2; equal-episode mean of within-call differences.
+% Conditional descriptive 95% episode bootstrap intervals, B=10000, seed=0; unadjusted.
+% Q:vision:insertion: 750/750 calls; 30/30 recorded episodes.
+% Q:vision:deletion: 750/750 calls; 30/30 recorded episodes.
+% Q:lang:insertion: 750/750 calls; 30/30 recorded episodes.
+% Q:lang:deletion: 750/750 calls; 30/30 recorded episodes.
+% L2:vision:insertion: 750/750 calls; 30/30 recorded episodes.
+% L2:vision:deletion: 750/750 calls; 30/30 recorded episodes.
+% L2:lang:insertion: 750/750 calls; 30/30 recorded episodes.
+% L2:lang:deletion: 750/750 calls; 30/30 recorded episodes.

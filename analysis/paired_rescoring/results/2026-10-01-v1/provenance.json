@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "analysis_version": "2026-10-01-v1",
+  "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+  "protocol_sha256": "eb7008b23a0638a0a5dfac4653c45145715e0dcde20b3d4ea2e579d5eea1ec6f",
+  "source_sha256": {
+    "__init__.py": "ed8e7079f68ed6ec2c2575b37b9cf41dd1ccbc48f72905973042b1f290fc2efa",
+    "analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61"
+  },
+  "canonical_code_sha256": {
+    "__init__.py": "9588d08c51ccf324e2759d0d1c7e89d710726352a98a08b77ed879ac99f7efbb",
+    "analyze.py": "b24a8c5da3b5aeb90064bffe71a4a53063073a45ecaf2feb792f28dc3af2059a",
+    "core.py": "f8c7a2ca6e50fb780c105f0d2dccb8576c3e19b90fe91ef9dd22ee6abb734f80",
+    "verify.py": "10e0bef246eeddab8d5b2aa0777dbefdf1ab7310cf0cac189c62da7c59527fcd"
+  },
+  "artifacts_sha256": {
+    "audit.json": "be0342044d47df0b272497bbfaf6069f7df2b79d1bdfc8c9fa399314329dd7fe",
+    "calls.csv.gz": "bcf06c972db579805b06f6050de3a74141b0c84bfaebb691656186eaf6a4a2ae",
+    "episodes.csv": "717b4d0e293f4fcf21ba1a1c996e6277aa7faad6c704cf3f94ee7bf817914d86",
+    "geometry.csv": "7125cd1d82186820814c533b4f88ea2c71c1ff47d8e674b4a34e1397c9724e57",
+    "membership.json.gz": "b47df3d1410afd18daf63655e3f5ab24ad2f17db9323e611fdbbc2f20d764cd6",
+    "methods_results.md": "d5e4f6f9588e69d9ac4358043d630f86ce2da98575ff805e6106174f4a63008a",
+    "paired_rescoring.tex": "93f606d9bb8b4f5d116fd8bf8f6d5a84d0393682b20c4e295c42c469c71a2908",
+    "summary.csv": "aa8657ffdadd7e19f6ce450c9c9cbcc57e09ac88757cbdb3fb8a3b2d26363521"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.5.3"
+  },
+  "command": "python -m analysis.paired_rescoring.analyze --output <new-empty-directory>",
+  "units": "dimensionless saved-grid normalized response AUC difference",
+  "interpretation": "retrospective_descriptive_no_efficacy_claim"
+}
