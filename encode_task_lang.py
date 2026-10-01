@@ -57,8 +57,9 @@ def encode_one(task_id, instruction, sp, model, output_dir, shuffle_seed=None):
     if shuffle_seed is not None:
         #Shuffle the SentencePiece token ids (not the embeddings) and re-encode
         #through T5. This changes the syntactic order but preserves the set of
-        #tokens, which is what the C2 "input randomization" semantics
-        #requires (attributions should not survive a destroyed word order).
+        #tokens. This tests sensitivity to the specified input intervention;
+        #there is no universal expected attribution correlation or grounding
+        #guarantee for a shuffled instruction.
         rng = random.Random(shuffle_seed)
         content_ids = token_ids[:-1]
         rng.shuffle(content_ids)

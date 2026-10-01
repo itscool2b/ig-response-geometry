@@ -1,6 +1,6 @@
 # Legacy workflow disposition
 
-Updated September 30, 2026. The retained research workflow uses explicitly identified published pretrained or authors' checkpoints. Project retraining is not required for that scope. Earlier evaluation, replay and local LoRA results do not acquire valid provenance because current loading and storage were repaired.
+Updated October 1, 2026. The retained research workflow uses explicitly identified published pretrained or authors' checkpoints. Project retraining is not required for that scope. Earlier evaluation, replay and local LoRA results do not acquire valid provenance because current loading and storage were repaired.
 
 ## Exact source preservation
 
@@ -8,10 +8,13 @@ In the full repository, `legacy/2026-09-30/manifest.json` records 27 already-pub
 
 The anonymous CPU research supplement excludes this historical archive and the retired workflow entrypoints. This page records their disposition; the commands and archive paths below describe the full repository, not additional files bundled in that supplement. Use the supplement's reproduction guide for its supported saved-data and CPU commands.
 
+The separate `legacy/2026-10-01/manifest.json` preserves the exact historical `ig_rdt.py` demonstration. Its fixed output destinations and outdated model/runtime calls are not supported current commands. The original September 30 archive and manifest remain unchanged. Historical notebook cells that import this demonstration document the earlier workflow and are not current reproduction instructions.
+
 | Files | Current disposition |
 |---|---|
 | `eval_maniskill.py`, `finetune_rdt.py`, `generate_demos.py` | Execution retired; exact sources preserved. The evaluator did not apply the intended PEFT adapters, replay provenance is incomplete, and training checkpoint/accounting support was insufficient. |
 | `ig_llava.py`, `verify_models.py` | Execution retired. The quantized image-feature API and checkpointing contract were not validated; a model-loading smoke is not research verification. |
+| `ig_rdt.py` | Execution retired; exact source preserved in the separate October 1 archive. Use the explicitly configured current per-step workflow. |
 | `analyze_month4.py`, `bootstrap_ci.py` | Historical entrypoints retired. Use the strict `analysis.revision` analyzer and verifier. |
 | `make_month4_figs.py`, `make_month5_figs.py`, `make_paper_figs.py` | Historical figure generators retired. Their fixed destinations and historical populations/constants are preserved; current assets use `scripts/build_revision_assets.py`. |
 | `patch_nb_alttarget.py` | One-off historical notebook mutation retired. |
@@ -77,4 +80,4 @@ python ig_tinyllama.py --prompt "The capital of France is" --m 64 --out /fresh/l
 
 These programs use the revised IG core and its trapezoidal default. Vision figures now display the actual normalized model input after inversion, preserving the model's resize/crop geometry; ViT labels describe pixel coordinates. The language example uses explicit evaluation mode and checks the PAD reference. Historical residuals and figure files were not regenerated. The original photograph's rights provenance remains unresolved; supply an image you are authorized to use.
 
-Eleven CPU tests cover archive verification and exit semantics, coordinate geometry, masked positions, signed cancellation/nonfinite display failures, synthetic authenticated rendering, annotation identity, malformed inputs, overwrite protection, protocol arguments and paths with spaces. The read-only audit of `analysis/revision/results/2026-09-30-v2` checked 10 artifact hashes, 284 results, 57 populations and 22,966 valid physical records. These checks do not establish real-model primitive runtime, new training quality, recovered historical provenance, behavioral faithfulness or completion of every research gate.
+The earlier eleven-test CPU check covered archive verification and exit semantics, coordinate geometry, masked positions, signed cancellation/nonfinite display failures, synthetic authenticated rendering, annotation identity, malformed inputs, overwrite protection, protocol arguments and paths with spaces. The read-only audit of `analysis/revision/results/2026-09-30-v2` checked 10 artifact hashes, 284 results, 57 populations and 22,966 valid physical records. These checks do not establish real-model primitive runtime, new training quality, recovered historical provenance, behavioral faithfulness or completion of every research gate.

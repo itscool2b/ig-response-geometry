@@ -126,14 +126,14 @@ def main():
     #in the RDT repo explicitly sets pd_joint_pos. ManiSkill's default for PickCube-v1 is
     #pd_joint_delta_pos with action space [-1,1]; ACTION_MIN/ACTION_MAX in this file are
     #for pd_joint_pos (absolute joint positions, ~[-2.9, 2.9]). Without this control_mode
-    #override the env silently clips + reinterprets each RDT action as a tiny delta,
-    #which drives 1B+LoRA from 76% success down to 0%.
+    #override the env can clip and reinterpret joint-position predictions as
+    #joint deltas. Matching this interface does not establish task success.
     #
     #max_episode_steps must also be set: ManiSkill wraps PickCube-v1 in a TimeLimitWrapper
     #that truncates at 50 env steps by default (one chunk of policy actions barely fits).
     #RDT's official eval (eval_rdt_maniskill.py) uses MAX_EPISODE_STEPS=400. Without this,
-    #the policy is truncated before it can grasp; this is the second of two bugs that
-    #stopped 1B+LoRA from succeeding.
+    #a rollout can stop before the configured evaluation horizon. Matching the
+    #horizon is a runtime contract, not evidence of policy competence.
     env = gym.make(args.task, obs_mode="state_dict", num_envs=1,
                    control_mode="pd_joint_pos", render_mode="rgb_array",
                    max_episode_steps=400)

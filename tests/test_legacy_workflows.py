@@ -61,6 +61,33 @@ def test_historical_archives_are_byte_verified_and_not_silent_success():
     assert result.returncode == 0 and json.loads(result.stdout)["entrypoint"] == "finetune_rdt.py"
 
 
+def test_retired_rdt_demo_needs_no_model_packages_and_writes_nothing(tmp_path):
+    # -S removes site packages: status and retirement must work without torch,
+    # simulator, checkpoint downloads, or any model initialization.
+    command = [sys.executable, "-S", str(ROOT / "ig_rdt.py")]
+    result = subprocess.run(command + ["--status"], cwd=tmp_path, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    report = json.loads(result.stdout)
+    assert report["entrypoint"] == "ig_rdt.py"
+    assert report["archive"]["archive"] == "legacy/2026-10-01/ig_rdt.py.txt"
+    result = subprocess.run(command, cwd=tmp_path, capture_output=True, text=True)
+    assert result.returncode == 2 and "retired" in result.stderr
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_new_archive_tampering_is_rejected(tmp_path, monkeypatch):
+    import legacy_status
+    original = status("ig_rdt.py")["archive"]
+    archive = tmp_path / "legacy/2026-10-01"
+    archive.mkdir(parents=True)
+    (archive / "manifest.json").write_text(json.dumps({"files": [original]}))
+    (tmp_path / original["archive"]).write_text("modified historical source")
+    monkeypatch.setattr(legacy_status, "ROOT", tmp_path)
+    monkeypatch.setattr(legacy_status, "ENTRY_ARCHIVES", {"ig_rdt.py": archive})
+    with pytest.raises(ValueError, match="Historical archive hash mismatch"):
+        status("ig_rdt.py")
+
+
 def test_exact_model_coordinates_invert_normalization_without_uncropping():
     rgb = torch.zeros(3, 8, 5)
     rgb[0, 1, 4] = 1

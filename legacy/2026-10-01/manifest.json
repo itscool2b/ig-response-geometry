@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-01",
+  "source_repository": "public canonical repository only",
+  "source_head": "0e3ea58551421dcfb778e8bdc5025373c1f93e83",
+  "files": [
+    {
+      "source": "ig_rdt.py",
+      "archive": "legacy/2026-10-01/ig_rdt.py.txt",
+      "sha256": "afafdb05a63926b6e794c35f906d834c90fa29d05ed1d0f03069309fba59a013",
+      "bytes": 18155,
+      "source_git_blob_sha256": "391f78e8454e259a1fd636889fd27efa43ac47ae20d3a4ca620fb121a0fa8194",
+      "archived_representation": "exact_working_copy_bytes_before_retirement"
+    }
+  ],
+  "preservation_scope": "Exact already-public working-copy bytes before retirement; original Git blob SHA-256 recorded independently. The sealed 2026-09-30 archive is unchanged."
+}

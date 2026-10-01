@@ -116,8 +116,13 @@ gives the same normalized quadratic insertion/deletion values,
 which is also the limit as `n` increases, not the exact finite-grid area.
 Choosing `n=100` realizes every fraction on the released nine-point grid exactly;
 that grid gives trapezoidal AUC 0.65976 for every ordering. This finite example
-refutes a universal 0.5 reference. It is not an empirical RDT random-ranking
-baseline. The frozen artifact's `quadratic_continuous_integral` field records
+illustrates the established dependence of random-order AUC on response
+interactions studied by [Hama, Mase and Owen (2023), Section 3.3](https://jmlr.org/papers/volume24/22-0560/22-0560.pdf#page=11).
+The policy is additive, but its quadratic discrepancy response contains
+interactions between features. The example is a calibration calculation for
+these responses and grids, not an empirical RDT random-ranking baseline or a
+new general rejection of a universal 0.5 reference.
+The frozen artifact's `quadratic_continuous_integral` field records
 the polynomial extension, while its grid fields record the finite-grid areas.
 
 The saved solver endpoint analysis reports T20/T2 relative-displacement median

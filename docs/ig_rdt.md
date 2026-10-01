@@ -1,6 +1,6 @@
 # RDT attribution: scalar target and representation
 
-Updated September 30, 2026. The active path uses `pipeline.py`, `per_step_attribution.py`, `rdt_sampling.py` and `per_step_ig.py`. `ig_rdt.py` is a historical one-observation demonstration; its original plots and timings do not validate the revised runtime.
+Updated October 1, 2026. The active path uses `pipeline.py`, `per_step_attribution.py`, `rdt_sampling.py` and `per_step_ig.py`. Execution of the historical one-observation demonstration `ig_rdt.py` is retired. Its exact source is preserved in `legacy/2026-10-01/ig_rdt.py.txt`, with a separate dated manifest. The root entrypoint's `--status` verifies that preserved source without loading a model. Its original plots and timings do not validate the revised runtime. Notebook cells that call the old demonstration remain historical examples.
 
 ## What is attributed
 

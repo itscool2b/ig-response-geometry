@@ -8,9 +8,9 @@
     "valid_physical_records": 22966
   },
   "builder_sha256": "01848a919fca4f897ff164854ce10efaf73213e26fcb9d0cc2e5da2555fe9c7f",
-  "manuscript_source_sha256": "20727242d016843eb85b3eddb6876c93b29c5cb8e5627943d66ea3620fed60bc",
+  "manuscript_source_sha256": "ba47f296554f121dd70c4a6ed88b307bb75445699b7e7b0f05e1ac8681cd11e3",
   "manuscript_inputs_sha256": {
-    "paper/references.bib": "bc341847d9766e0dd50bc1fe57dba06a2e0d76fdbe840133376e0954b6a2590e"
+    "paper/references.bib": "cd480e47b072300cb373ed4f76cc897e4af446d508e86619a4585a653c73ccf6"
   },
   "numerical_case_inputs_sha256": {
     "analysis/numerical_case/2026-10-01-v1/summarize.py": "ddd65fabcf3e6f955ea64c704fed1fd29c5f1ad5dcec613f5638a15f2352286f",
@@ -6340,7 +6340,7 @@
     }
   ],
   "generated_sha256": {
-    "paper/arxiv_abstract.txt": "367fa145bc862e0f7099cd4af42770a61c02f539c09ba900dbac0d58a720d293",
+    "paper/arxiv_abstract.txt": "93c27690bf87c1f44464c636902ea3ed45c0942a984d15d5c89ff6607c5ff542",
     "paper/tables_revision/baseline.tex": "db6ad428e021f29e58f7a52f2d8b602b6e8c165f1ac5622682c9054491d0c759",
     "paper/tables_revision/budget.tex": "8285048cd88dbe2ee1a3df7d263e1ab9af293f22f27cc0c4b8f5bdc5bd8b2ecd",
     "paper/tables_revision/completeness.tex": "c8ecef9dbeda556fe044b0452d6b63ca98699158e8873b9491c8443d275b284e",

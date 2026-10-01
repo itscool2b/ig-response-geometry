@@ -34,7 +34,7 @@ from experiment_io import (RunStore, atomic_bytes, canonical_json, file_hash,
 
 #k-grid for B2 AUC (percent). 0 and 100 are the endpoints of the sweep.
 AUC_K_GRID = [0, 1, 5, 10, 20, 30, 50, 75, 100]
-#k values at which B1 Δlog p is reported.
+#k values at which B1 response changes are reported; dlogp is a legacy field name.
 B1_K = [1, 5, 10]
 #slot 3 of the 6-slot image condition = external camera at time t; indices 2187..2915.
 #Only this slot has a non-trivial IG path, the other 5 slots have input == baseline.
@@ -273,7 +273,7 @@ def compute_modality_metrics(
     f_input = evaluate(input_tensor)
     f_baseline = evaluate(baseline_tensor)
 
-    #B1: Δlog p at k in {1, 5, 10}.
+    #B1: response changes at k in {1, 5, 10}; dlogp retains its legacy name.
     dlogp = {}
     for k in B1_K:
         ranked_mask = topk_mask(ranked_scores, k, n_ranked)

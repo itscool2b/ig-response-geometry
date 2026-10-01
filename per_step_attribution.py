@@ -11,7 +11,7 @@ Exports three functions:
 - `build_forward_fns(ctx)`: returns (forward_fn_vision, forward_fn_language,
   forward_fn_state) from a prepared context. Each is a scalar function of its
   one free modality used by `integrated_gradients` and by perturbation
-  ablations (Δlog p top-k, insertion/deletion AUC, sanity C2 input shuffle).
+  ablations (top-k response changes, insertion/deletion AUC, sanity C2 input shuffle).
 - `compute_ig_for_step(...)`: thin wrapper that calls the two above plus the
   shared `integrated_gradients` core and returns the per-modality summary dict
   per_step_ig.py consumes, with numerical metadata and the stored initial noise.
@@ -252,7 +252,7 @@ def build_forward_fns(ctx):
     two frozen, used both by `integrated_gradients` during IG and by
     perturbation studies (e.g. faithfulness.py replaces the top-|IG| tokens
     with baseline embeddings and re-evaluates forward_fn_vision to get
-    Δlog π).
+    the change in the selected scalar response).
     """
     runner = ctx["runner"]
     lang_adapted = ctx["lang_adapted"]

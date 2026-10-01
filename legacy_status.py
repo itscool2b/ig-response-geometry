@@ -6,7 +6,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 ARCHIVE = ROOT / "legacy/2026-09-30"
+ENTRY_ARCHIVES = {"ig_rdt.py": ROOT / "legacy/2026-10-01"}
 DISPOSITIONS = {
+    "ig_rdt.py": ("The historical single-observation demo ran model loading on import, relied on file-presence checkpoint fallback, called a reconstruction response a policy log-likelihood, and overwrote a fixed historical figure path.", "Use pipeline.py, per_step_attribution.py and per_step_ig.py as documented in docs/per_step_ig.md; saved responses are not a calibrated policy likelihood."),
     "eval_maniskill.py": ("The old evaluator constructed an unloaded backbone and did not apply PEFT adapters. Its success message was not a loading check.", "Use the identified pipeline and collector described in docs/per_step_ig.md; this is a new observation protocol."),
     "finetune_rdt.py": ("Training consumed replay data with unverified controller/state/success identity and saved incomplete adapter-only checkpoints. The retained study uses published checkpoints, not project retraining.", "See docs/legacy_workflows.md for loss/update accounting and requirements before any future training support."),
     "generate_demos.py": ("The historical replay did not bind controller metadata or compare replay success/states with the source trajectory. The original HDF5 identity is unavailable.", "Use the original source only as a historical record; authenticated replay needs a separately validated protocol."),
@@ -27,7 +29,8 @@ DISPOSITIONS = {
 
 def status(entrypoint):
     reason, replacement = DISPOSITIONS[entrypoint]
-    manifest = json.loads((ARCHIVE / "manifest.json").read_text())
+    archive = ENTRY_ARCHIVES.get(entrypoint, ARCHIVE)
+    manifest = json.loads((archive / "manifest.json").read_text())
     item = next(row for row in manifest["files"] if row["source"] == entrypoint)
     archived = ROOT / item["archive"]
     if hashlib.sha256(archived.read_bytes()).hexdigest() != item["sha256"]:

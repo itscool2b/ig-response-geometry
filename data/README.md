@@ -55,8 +55,12 @@ transformation. It does not measure whether one attribution target produces a
 better ranking. The current registry records exact membership, filters,
 denominator behavior, units, source hashes, and explicit result identifiers.
 Zero endpoint gaps are undefined; negative AUCs are retained. The equal-feature
-quadratic example has continuous AUC 2/3 and sampled-grid AUC 0.65976, so 0.5 is
-not a general random-order null. Empirical random rankings require measurement.
+quadratic example has continuous AUC 2/3 and sampled-grid AUC 0.65976. It
+illustrates the established dependence of random-order AUC on response
+interactions, discussed by [Hama, Mase and Owen (2023)](https://jmlr.org/papers/v24/22-0560.html),
+for these responses and grids. The policy is additive, but its squared
+discrepancy response contains feature interactions. AUC 0.5 is not a general
+random-order null. Empirical random rankings require measurement.
 
 The released solver results remain descriptive comparisons under their
 recorded keys. Unrecovered contexts and varying reference actions prevent them

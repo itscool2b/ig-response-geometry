@@ -46,8 +46,9 @@ def load_pipeline(model="170m", enable_checkpoint=True, solver_steps=None, *,
         model: "170m" or "1b". The 1B path requires an explicit pretrained,
             authors or lora checkpoint mode. File existence never chooses it.
         enable_checkpoint: wrap every RDT DiT block forward in
-            torch.utils.checkpoint.checkpoint(use_reentrant=False). Required
-            on 12 GB cards; 24 GB can run with it off for ~1.4x speedup.
+            torch.utils.checkpoint.checkpoint(use_reentrant=False). This trades
+            recomputation for activation memory; requirements depend on the
+            model, integration path, device and runtime.
         solver_steps: Month 5 override of the DPM-Solver++ step count
             (num_inference_timesteps). None keeps the config value (5). Used by
             displacement.py to measure the action displacement as a function of
@@ -224,8 +225,9 @@ def load_lang(task, lang_dir="data/lang_embeds", *, device="cuda", dtype=torch.b
     if not os.path.exists(baseline_path):
         raise FileNotFoundError(
             f"no language baseline at {baseline_path}. "
-            f"Run: .venv/bin/python encode_task_lang.py (the no-argument "
-            f"all-tasks run is the invocation that writes the baseline file)")
+            f"Re-encode with encode_task_lang.py --task {task} --output-dir "
+            f"<fresh-directory>, then pass that directory as --lang-dir. "
+            f"Task encoding also writes a missing baseline file.")
     baseline = torch.load(baseline_path, weights_only=True)
     lang_tokens_baseline = baseline["embeds"].to(device, dtype=dtype)
 

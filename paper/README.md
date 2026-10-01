@@ -1,6 +1,6 @@
 # Current paper
 
-Read [paper.pdf](paper.pdf): **Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study**, the current 24-page general preprint by Arjun Bajpai.
+Read [paper.pdf](paper.pdf): **Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study**, the current 25-page general preprint by Arjun Bajpai.
 
 - [paper.tex](paper.tex) is its identified source.
 - [paper-revision.pdf](paper-revision.pdf) is a byte-identical compatibility copy of the current paper.

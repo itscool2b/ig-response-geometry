@@ -54,7 +54,7 @@ Attribution evaluation depends on the ranking that selects interventions and the
 We study this distinction for Integrated Gradients (IG) of a fixed-noise diffusion policy's predicted action chunk.
 For quadratic and stabilized negative-$\ell_2$ action-discrepancy targets, we derive an exact relation between the normalized responses and a positive, path-dependent factor between their gradients.
 A smooth construction shows that the IG rankings can reverse even when the nonzero gradients are pointwise collinear.
-A finite-grid counterexample also shows why 0.5 cannot serve as a universal random-ranking AUC reference.
+A finite-grid example illustrates the response dependence of random-ranking AUC.
 We examine the practical effect by reanalyzing \ArchiveFiles{} preserved Robotics Diffusion Transformer files.
 Changing only the response changes median vision deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} while the recorded quadratic-target rankings stay the same.
 Across eight paired rescoring cases, every median response change is positive, but overshooting tails make six means negative.
@@ -97,10 +97,11 @@ Successful checks from part of this roster do not certify the implementation.
 The intended attribution measures action discrepancy at a fixed context.
 It does not explain eventual task success or establish safe robot behavior.
 
-We make four contributions.
+Prior work already shows that random-order AUC depends on interactions and that an attribution ordering need not optimize a perturbation score~\citep{hama2023deletion}.
+We examine these concerns for quadratic and stabilized negative-norm action discrepancies.
+We make three contributions.
 \begin{enumerate}
-\item \textbf{Response and path-weight analysis.} We derive an exact normalized-response identity and state its overshoot and zero-gap qualifications. We also construct a finite-stabilizer example in which the quadratic and negative-norm targets reverse IG feature order.
-\item \textbf{A finite-grid calibration counterexample.} A 100-feature equal-contribution policy has quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering on the historical grid. This shows why 0.5 is not a universal chance reference.
+\item \textbf{Response and path-weight analysis.} We derive an exact normalized-response identity and state its overshoot and zero-gap qualifications. We also construct a finite-stabilizer example in which the quadratic and negative-norm targets reverse IG feature order. A 100-feature equal-contribution policy provides a calibration example for these responses on the historical evaluation grid.
 \item \textbf{An authenticated retrospective case study.} We rescore preserved RDT perturbation curves while keeping each recorded ranking fixed. The analysis records the occurrence rules, episode grouping and links from results to source records. Unknown historical context identities prevent a paired comparison of ranking quality.
 \item \textbf{Numerical diagnostic limits.} We give a smooth counterexample to certification by finite-grid agreement and report fixed-input repeatability and integration-budget checks from a partially completed campaign. Failures and incomplete coverage remain visible, and no production setting is approved.
 \end{enumerate}
@@ -136,6 +137,16 @@ Several studies examine the reliability of perturbation metrics.
 \citet{tomsett2020sanity} also find that common saliency metrics are unreliable.
 This literature already establishes that evaluation depends on the metric.
 Our case study examines that dependence for action-discrepancy responses by relating their normalized curves algebraically and rescoring preserved interventions while holding the feature ordering fixed.
+
+\citet{hama2023deletion} analyze insertion and deletion scores through an anchored decomposition of the response.
+Their Section~3.3 derives random-order expectations and shows that interactions can move the expected curve area away from its straight-line reference.
+Their Section~3.4 also gives a case in which Shapley ordering does not maximize AUC.
+Appendix~B.2 gives sufficient conditions for optimal ordering under increasing transformations of additive scores on the intervention vertices.
+Its IG argument uses a linear score along the continuous path, whose gradients remain proportional to a fixed coefficient vector.
+Our nonlinear construction allows the coordinate gradient proportions to vary along that path.
+We examine the specific quadratic and stabilized negative-norm responses, their finite-stabilizer rank reversal and their overshoot behavior in saved RDT interventions.
+The finite-grid calibration example illustrates the established random-reference concern in this setting.
+
 \citet{adebayo2018sanity} proposed model and data randomization tests to assess whether saliency maps depend on learned parameters and training data.
 Their results show why visually plausible maps do not establish this dependence.
 Our backbone randomizations are limited because the learned encoders and adaptors remain in place.
@@ -523,9 +534,11 @@ The L2-ranking vision-insertion cohort has the same qualitative disagreement bet
 Node categories and segment endpoint labels describe only sampled interventions. They do not establish how the continuous curve behaves between those points.
 The in-range ordering in Equation~\ref{eq:normalized-geometry} therefore does not imply that a response change moves every curve in an empirical population in the same direction.
 
-\subsection{An Analytic Random-Order Counterexample}
+\subsection{An Analytic Random-Order Calibration Example}
 \label{sec:random-null}
 
+Random-order AUC need not match a straight-line reference when the scored response contains interactions~\citep{hama2023deletion}.
+The following example gives the exact areas for our quadratic response and finite evaluation grids.
 Consider the finite additive scalar policy $f(x)=\sum_{i=1}^{n}x_i$, with an all-one input, a zero baseline and the self-reference $f(x)=n$.
 Every feature ordering produces the same perturbation values.
 Interventions on whole-feature prefixes realize only the fractions $q=k/n$, with $k=0,\ldots,n$. At those fractions, the normalized quadratic deletion and insertion values are $1-q^2$ and $1-(1-q)^2$.
@@ -536,7 +549,8 @@ Trapezoidal integration over all $n+1$ prefix fractions gives
 for either curve.
 Integrating the polynomial extensions over continuous $q\in[0,1]$ instead gives $2/3$. This is also the limit as $n\to\infty$, but it is not the exact finite-grid area.
 With $n=100$, every fraction on the historical nine-point requested grid is realized exactly. Trapezoidal integration on that grid gives \RandomGridAUC{} for both curves and every ordering.
-This finite example rules out a universal random-order AUC of 0.5.
+The policy is additive, but its quadratic discrepancy response contains interactions between features.
+This finite example illustrates why a universal random-order AUC of 0.5 does not apply to that response.
 For comparison, an unstabilized negative-norm response is linear on the same fractions and has trapezoidal AUC 0.5.
 A fixed AUC reference such as 0.5 must therefore be justified for the particular policy, response and intervention protocol.
 This construction is an analytic control. It is not an empirical measurement of random-ranking performance on RDT.
@@ -653,6 +667,8 @@ This operation alone cannot answer the other two questions.
 Our claims therefore concern exact relationships and measurements reconstructed from the records, with numerical diagnostics limited to their stated coverage.
 Establishing ranking efficacy would require a new paired study with common responses and informative controls. The present results do not establish it.
 The elementary identities identify which operation changes a reported evaluation. This helps prevent a response change from being interpreted as an empirical improvement in ranking, without proposing a new general theory of attribution.
+The random-reference and attribution-versus-AUC distinctions have direct precedent in \citet{hama2023deletion}.
+Our contribution concerns the specified action-discrepancy responses, constructive examples and retrospective measurements within the stated limits.
 A common response defines the quantity being compared. It does not provide a universal measure of explanation quality.
 Its action coordinates, units, baselines, perturbation groups and aggregation need to be justified for the intended use.
 Matched random, input-difference and path-gradient controls would help address the unresolved ranking question by separating information in the attribution from simple input structure and the IG multiplier.
@@ -685,7 +701,7 @@ Appendix~\ref{sec:appendix-budget} reports only later budget cohorts that can be
 An explicit auxiliary action-discrepancy score defines per-policy-call IG for a fixed-noise diffusion sampler.
 For the saved RDT perturbation curves, changing only the evaluation response changes normalized AUC while leaving the selected features fixed.
 All eight reported paired cases have positive median changes. At the same time, overshooting tails make six means negative, which shows why the summary statistic and endpoint geometry both affect the conclusion.
-A finite-grid analytic example also rules out a universal random-ranking AUC of 0.5.
+A finite-grid calibration example illustrates the response dependence of the random-ranking reference for the same evaluation protocol.
 The canonical retrospective tables retain the measurements supported by the available records and exclude primary constants that could not be recovered.
 The actual-model diagnostics preserve unresolved numerical failures and incomplete coverage.
 The smooth aliasing construction shows a further limit: finite grids can agree while producing an ordering different from exact IG.
