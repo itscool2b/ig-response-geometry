@@ -18,6 +18,8 @@ paper/tmlr.bst -text
 paper/tmlr-LICENSE -text
 paper/tmlr-source.json -text
 scripts/build_revision_assets.py -text
+# The aliasing/manuscript lineage also authenticates this shared core's bytes.
+integrated_gradients.py -text
 # Preserved source files have an exact-byte archive manifest.
 legacy/** -text
 # Shell entrypoints must remain executable after a Windows checkout/upload.
