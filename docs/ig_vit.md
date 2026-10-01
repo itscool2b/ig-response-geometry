@@ -18,7 +18,7 @@ The ViT residual decreased at these three budgets. Smooth GELU does not guarante
 
 For an independent mathematical example, `cos(128*pi*alpha)` is smooth and integrates to zero on `[0,1]`. Its historical endpoint averages at m=63,64,128 are approximately 0.015625,1,0.007752. A finite grid can poorly resolve a smooth function.
 
-The old classifier output was German shepherd with logit 9.15 and probability 89.7%. These values and `output/ig_vit.png` were not regenerated with the [revised core](integrated_gradients.md).
+The old classifier output was German shepherd with logit 9.15 and probability 89.7%. These values and `output/ig_vit.png` were not regenerated with the [revised core](integrated_gradients.md). The figure and source photograph have been removed from the current public tree because their redistribution provenance is unresolved. Supply an image you are authorized to process.
 
 ## Display limitations
 

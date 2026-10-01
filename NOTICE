@@ -1,11 +1,13 @@
 The code and records in this repository are covered by the MIT license in
 LICENSE.
 
-Exception: image.jpg is a third-party demonstration photograph retained for
-the Month 2 study record. The Month 2 attribution figures output/ig_resnet50.png,
+Exception: image.jpg is a third-party demonstration photograph formerly used
+for the Month 2 study record. The Month 2 attribution figures output/ig_resnet50.png,
 output/ig_vit.png, and output/ig_llava.png each reproduce that same photograph.
 None of these four files are covered by the MIT license or relicensed by this
-repository. The root README records the same exception.
+repository. These four files have been removed from the current public tree.
+Existing public Git history is preserved and may contain earlier copies.
+The root README records the same exception.
 
 Exception: paper/ijcai26.sty and paper/named.bst are the IJCAI conference
 LaTeX template and bibliography style files, included only to build the paper.
@@ -22,7 +24,7 @@ exact upstream byte hashes, and separately labeled historical CRLF hashes.
 
 The redistribution provenance of the demonstration photograph and derivative
 figures listed above has not been established. They are historical artifacts,
-excluded from the new submission package. Their presence is not a grant of
+excluded from current distribution and research packages. Prior publication is not a grant of
 permission to reuse them.
 
 rdt_sampling.py contains an adaptation of the pinned upstream RDT sampler.

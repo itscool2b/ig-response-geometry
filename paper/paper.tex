@@ -50,133 +50,130 @@
 \let\AND\relax
 
 \begin{abstract}
-Attribution rankings select inputs for interventions, and their evaluations also need responses that score those interventions.
-We study this distinction for Integrated Gradients (IG) attributions of an action chunk predicted by a diffusion policy with fixed noise.
-For quadratic and stabilized negative-$\ell_2$ action-discrepancy targets, we give an exact relation between their normalized responses.
-We also derive a positive, path-dependent factor between their gradients.
-Using a smooth construction, we show that IG rankings can reverse while the nonzero gradients remain pointwise collinear.
-A finite-grid counterexample shows that 0.5 cannot serve as a universal random-ranking AUC reference.
-Reanalyzing \ArchiveFiles{} preserved Robotics Diffusion Transformer files, we find that changing only the evaluation response changes median vision deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} although the recorded quadratic-target rankings stay the same.
-In all eight paired rescoring cases, every median response change is positive although six means are negative because of overshooting tails.
-Exploratory episode-omission results retain insertion-mean signs but can reverse language-deletion signs.
-Another smooth construction gives several integration grids with the same completeness, ranking and perturbation curves but an ordering that reverses the exact IG order.
-In this example, the inaccurate ordering scores better on both perturbation metrics.
-Diagnostics on the actual model separate repeatability from unresolved integration-budget sensitivity in an incomplete cohort.
-Together, the results separate response-geometry effects from attribution-ranking quality and numerical-integration accuracy.
-They do not qualify a production numerical setting, demonstrate better attribution rankings, or explain task success or dependence on learned weights.
-The artifact retains raw-record lineage, analytic checks, adverse results and provenance limits.
+Attribution evaluation depends on the ranking that selects interventions and the response used to score them.
+We study this distinction for Integrated Gradients (IG) of a fixed-noise diffusion policy's predicted action chunk.
+For quadratic and stabilized negative-$\ell_2$ action-discrepancy targets, we derive an exact relation between the normalized responses and a positive, path-dependent factor between their gradients.
+A smooth construction shows that the IG rankings can reverse even when the nonzero gradients are pointwise collinear.
+A finite-grid counterexample also shows why 0.5 cannot serve as a universal random-ranking AUC reference.
+We examine the practical effect by reanalyzing \ArchiveFiles{} preserved Robotics Diffusion Transformer files.
+Changing only the response changes median vision deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} while the recorded quadratic-target rankings stay the same.
+Across eight paired rescoring cases, every median response change is positive, but overshooting tails make six means negative.
+Exploratory episode-omission checks leave the insertion-mean signs unchanged, although the language-deletion signs can reverse.
+A second smooth construction shows that several integration grids can agree in completeness, ranking and perturbation curves while reversing the exact IG order.
+In this example, the inaccurate order even scores better on both perturbation metrics.
+Existing actual-model diagnostics also show why repeatability and integration-budget sensitivity must be considered separately, although the cohort is incomplete and the sensitivity remains unresolved.
+These results separate the roles of response geometry, numerical accuracy and ranking quality.
+They do not qualify a production numerical setting, demonstrate superior attribution rankings, or explain task success or learned-weight dependence.
+The artifact preserves the raw-record lineage, analytic checks, adverse results and provenance limits.
 \end{abstract}
 
 %% ================================================================
-
 \section{Introduction}
 
-Vision-language-action (VLA) models like RT-2~\citep{zitkovich2023rt2}, Octo~\citep{team2024octo}, and the Robotics Diffusion Transformer (RDT)~\citep{liu2024rdt} use robot observations along with language instructions to predict robot actions.
-Diffusion policies~\citep{chi2023diffusion} iteratively remove noise~\citep{ho2020ddpm} to produce action chunks.
-Applying a scalar attribution method to this vector output requires deciding which aspect of the action prediction to explain.
-This decision also affects how the explanation is evaluated.
+Vision-language-action (VLA) models such as RT-2~\citep{zitkovich2023rt2}, Octo~\citep{team2024octo}, and the Robotics Diffusion Transformer (RDT)~\citep{liu2024rdt} use sensory observations and instructions to predict robot actions.
+Diffusion policies~\citep{chi2023diffusion} produce action chunks through iterative denoising~\citep{ho2020ddpm}.
+The resulting output is a vector, so applying a scalar attribution method requires choosing which aspect of the action prediction to explain.
+This choice also affects how the explanation is evaluated.
 
-Integrated Gradients (IG) integrates the gradient of a scalar output along a path between a baseline and an input~\citep{sundararajan2017axiomatic}.
-For a fixed-noise action sample, the action chunk's discrepancy from a detached reference can define this scalar function.
-A quadratic discrepancy and a negative norm both measure change, but they are different scalar functions.
-Evaluating the attribution also requires a response that scores interventions.
-The ranking selects which features to remove or insert, while the response measures the effect of those changes.
-If both the scalar target and evaluation response change, native-response AUC alone cannot determine whether the ranking has improved.
+Integrated Gradients (IG)~\citep{sundararajan2017axiomatic} integrates the gradients of a scalar output along a path from a baseline to an input.
+For a fixed-noise action sample, this scalar can measure the discrepancy from a detached reference action.
+A quadratic discrepancy and a negative norm both measure change, but they define different scalar functions.
+Evaluating the attribution requires a second choice.
+The attribution ranking selects which features to remove or insert, and a response scores those interventions.
+If a comparison changes both the scalar target and the response, its native-response AUC alone cannot identify an improvement in the ranking.
 
-We analyze these issues through exact derivations, constructive examples and a retrospective RDT case study.
-For fixed selected features and perturbed outputs, changing the response from a quadratic discrepancy to a stabilized negative $\ell_2$ discrepancy changes normalized AUC.
-At the same time, the positive scaling factor between the targets' gradients varies along the path, which allows their IG rankings to differ.
-Rescoring interventions is therefore a distinct analysis from recomputing attributions.
-Neither result shows which ranking is more useful when the response is held fixed.
+We study this problem using exact derivations, constructive examples and a retrospective RDT case study.
+Changing the response from a quadratic discrepancy to a stabilized negative $\ell_2$ discrepancy changes normalized AUC even when the selected features and perturbed outputs stay fixed.
+At the same time, the positive factor relating the targets' gradients varies along the path, which allows their IG rankings to differ.
+The first operation rescores existing interventions, while the second recomputes the attributions.
+Neither result establishes which ranking is more useful under a common response.
 
-We also ask whether the computed attribution accurately approximates the specified mathematical quantity.
-Small scalar completeness residuals can hide errors in individual input coordinates.
-The same inaccurate IG approximation can also appear when a finite-precision calculation is repeated.
-The smooth construction in Appendix~\ref{sec:appendix-aliasing} gives nested grids that agree exactly on completeness, ranking and perturbation responses while exact IG has the reversed ranking.
-Our diagnostics report the checks already collected together with the full planned roster and its unfinished cells.
-Passing checks in part of this roster does not certify the implementation.
-The intended attributions measure action discrepancy at a fixed context.
-They do not explain eventual task success or ensure safe robot behavior.
+A separate question is whether the computed attribution accurately approximates the specified mathematical quantity.
+Small scalar completeness residuals can hide errors in individual coordinates.
+Repeating the same finite-precision calculation can also reproduce the same inaccurate approximation.
+The smooth construction in Appendix~\ref{sec:appendix-aliasing} shows that several nested grids can agree exactly in completeness, ranking and perturbation responses while reversing the exact IG ranking.
+We therefore report the numerical diagnostics already collected together with the full planned roster and its unfinished cells.
+Successful checks from part of this roster do not certify the implementation.
+The intended attribution measures action discrepancy at a fixed context.
+It does not explain eventual task success or establish safe robot behavior.
 
 We make four contributions.
 \begin{enumerate}
-\item \textbf{Response and path-weight analysis.} We derive an identity for normalized responses with precise qualifications for overshoot and zero-gap cases. We also give a constructive example with a finite stabilizer in which the quadratic and negative-norm targets reverse IG feature order.
-\item \textbf{A finite-grid calibration counterexample.} A policy with 100 equally contributing features has quadratic-response insertion and deletion AUC equal to \RandomGridAUC{} for all orderings on the historical evaluation grid. This shows why 0.5 is not a universal chance reference.
-\item \textbf{An authenticated retrospective case study.} We rescore saved RDT perturbation curves while holding feature rankings fixed. The analysis records the occurrence rules, episode grouping and links to the underlying source records. Unknown historical context identities prevent a paired comparison of ranking quality.
-\item \textbf{Numerical diagnostic limits.} We give a smooth counterexample to certification by finite-grid agreement and report an incomplete campaign of fixed-input repeatability and integration-budget checks. Check failures and incomplete coverage remain visible. We do not certify settings for production use.
+\item \textbf{Response and path-weight analysis.} We derive an exact normalized-response identity and state its overshoot and zero-gap qualifications. We also construct a finite-stabilizer example in which the quadratic and negative-norm targets reverse IG feature order.
+\item \textbf{A finite-grid calibration counterexample.} A 100-feature equal-contribution policy has quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering on the historical grid. This shows why 0.5 is not a universal chance reference.
+\item \textbf{An authenticated retrospective case study.} We rescore preserved RDT perturbation curves while keeping each recorded ranking fixed. The analysis records the occurrence rules, episode grouping and links from results to source records. Unknown historical context identities prevent a paired comparison of ranking quality.
+\item \textbf{Numerical diagnostic limits.} We give a smooth counterexample to certification by finite-grid agreement and report fixed-input repeatability and integration-budget checks from a partially completed campaign. Failures and incomplete coverage remain visible, and no production setting is approved.
 \end{enumerate}
-Together, these contributions separate the issues and document their consequences in one diffusion-policy family.
-A ranking study that holds the response fixed would address the additional question of ranking efficacy.
-The absence of that study limits what we can conclude about efficacy, but it does not invalidate the analysis that holds rankings fixed.
+These contributions separate the issues and document their consequences in one diffusion-policy family.
+A common-response ranking study would answer the additional question of ranking efficacy.
+Its absence limits that conclusion without invalidating the analysis that holds rankings fixed.
 
 %% ================================================================
-
 \section{Related Work}
 
 \subsection{Attribution Methods}
 
-\citet{sundararajan2017axiomatic} introduced IG with the sensitivity and implementation-invariance axioms, demonstrating that straight-line path integration satisfies both.
-Subsequent work addresses limitations of the original method.
-\citet{jha2021smoother} computed attributions over neural stochastic differential equation models for smoother maps.
-Their later work improved robustness by shaping the injected noise~\citep{jha2022shaping}.
-\citet{walker2024idg} showed that gradients in saturation regions add noise and proposed Integrated Decision Gradients, which puts more of the integration on the part of the path relevant to the model's decision.
+\citet{sundararajan2017axiomatic} introduced IG with the sensitivity and implementation-invariance axioms and showed that straight-line path integration satisfies both.
+Later studies address limitations of the original method.
+\citet{jha2021smoother} computed attributions over neural stochastic differential equation models to produce smoother attribution maps.
+Their later work showed that shaping the injected noise further improves robustness~\citep{jha2022shaping}.
+\citet{walker2024idg} found that gradients from saturation regions contribute noise and proposed Integrated Decision Gradients, which concentrates integration on the decision-relevant portion of the path.
 For vision transformers, metric-driven attributions~\citep{walker2025metric} and information-flow decompositions~\citep{walker2025infoflow} improve patch-level explanations.
-Guided IG~\citep{kapishnikov2021guided} changes the integration path to reduce noise in pixel-level attributions.
+Guided IG~\citep{kapishnikov2021guided} changes the integration path to reduce pixel-level noise.
 
-Several works analyze sensitivity to the integration budget.
-\citet{makino2024integration} examine instance-varying completeness residuals, nonmonotone changes with step count and unresolved gradients along the IG path.
-\citet{singhi2024strengthening} analyze step-count sensitivity in IG variants and the Important Direction Gradient Integration (IDGI) framework.
+Other work directly examines sensitivity to the integration budget.
+\citet{makino2024integration} study completeness residuals that vary across instances, nonmonotone changes with step count and unresolved path gradients.
+\citet{singhi2024strengthening} examine step-count sensitivity in IG variants and the Important Direction Gradient Integration (IDGI) framework.
 Their reported stability experiment compares JPEG-compressed and uncompressed inputs.
-Our diagnostics instead keep the context fixed and analyze repeatability separately from changes in attribution coordinates across integration budgets.
-Appendix~\ref{sec:appendix-aliasing} gives a smooth construction that shows a limit of these checks.
-Agreement on finitely many integration grids together with exact scalar completeness does not imply accurate coordinate integrals.
+Our diagnostics hold the context fixed and examine repeatability separately from coordinate changes across budgets.
+The smooth construction in Appendix~\ref{sec:appendix-aliasing} shows a limit of these checks.
+Agreement on finitely many grids and exact scalar completeness do not establish accurate coordinate integrals.
 
-\citet{petsiuk2018rise} proposed the insertion and deletion curves that we use as ranking-based faithfulness metrics.
-Several works analyze the reliability of perturbation metrics.
-\citet{hooker2019roar} evaluate attributions by ablating inputs and retraining the model.
-\citet{rong2022road} identify information leakage through the shape of the mask when deletion is performed without retraining.
-\citet{tomsett2020sanity} find common saliency metrics to be unreliable.
-This literature already establishes that the evaluation depends on the metric.
-Our case study examines this dependence for action-discrepancy responses through an algebraic relationship between normalized curves and by rescoring preserved interventions with their feature ordering fixed.
-\citet{adebayo2018sanity} introduced model and data randomization tests to check whether saliency maps depend on the model's trained parameters and training data.
-These checks show that even visually plausible attributions do not establish that dependence.
-Our backbone randomizations are limited because the learned encoders and adaptors are kept in place.
-For image diffusion models, cross-attention maps relate generated pixels to specific prompt tokens~\citep{tang2023daam}.
-This is different from attributing the scalar discrepancy of a predicted control chunk.
+\citet{petsiuk2018rise} introduced the insertion and deletion curves that we use as ranking-based faithfulness metrics.
+Several studies examine the reliability of perturbation metrics.
+\citet{hooker2019roar} evaluate attributions by retraining on ablated inputs.
+\citet{rong2022road} show that deletion without retraining leaks information through the shape of the mask itself.
+\citet{tomsett2020sanity} also find that common saliency metrics are unreliable.
+This literature already establishes that evaluation depends on the metric.
+Our case study examines that dependence for action-discrepancy responses by relating their normalized curves algebraically and rescoring preserved interventions while holding the feature ordering fixed.
+\citet{adebayo2018sanity} proposed model and data randomization tests to assess whether saliency maps depend on learned parameters and training data.
+Their results show why visually plausible maps do not establish this dependence.
+Our backbone randomizations are limited because the learned encoders and adaptors remain in place.
+For diffusion generative models in the image domain, cross-attention maps relate generated pixels to prompt tokens~\citep{tang2023daam}.
+This differs from attributing the scalar discrepancy of a predicted control chunk.
 
-Our implementation uses IG with modality-specific baselines to attribute a fixed-noise action-discrepancy function.
-Path weighting is already used in methods such as IDG~\citep{walker2024idg}.
-The factor we derive follows specifically from changing the scalar discrepancy target.
-We apply these established concerns to quadratic and stabilized negative-norm action-discrepancy functions and examine their separate effects on fixed interventions and integrated rankings.
+Our implementation applies IG to a fixed-noise action-discrepancy function with modality-specific baselines.
+Path weighting is already used in attribution methods such as IDG~\citep{walker2024idg}.
+The factor derived here follows specifically from changing the scalar discrepancy target.
+We apply these established concerns to quadratic and stabilized negative-norm action discrepancies and examine their separate effects on fixed interventions and integrated rankings.
 
 \subsection{Vision-Language-Action Models}
 
 VLA models combine perception, language understanding and action generation.
-RT-2~\citep{zitkovich2023rt2} fine-tunes a vision-language model to predict actions that are discretized and represented as token sequences.
-Octo~\citep{team2024octo} is a transformer-based generalist policy trained on a large multi-robot dataset.
-Diffusion Policy~\citep{chi2023diffusion} formulates robot action generation as conditional denoising diffusion~\citep{ho2020ddpm}.
-Action chunks are generated through iterative refinement instead of single-step regression.
-RDT~\citep{liu2024rdt} scales this diffusion-based action prediction using a Diffusion Transformer (DiT) backbone, a SigLIP image encoder~\citep{zhai2023siglip}, and a T5-XXL text encoder~\citep{raffel2020t5}.
-Each frame from three cameras is encoded through SigLIP.
-A history of two frames gives six camera slots and produces 4{,}374 vision tokens.
-These are combined with up to 1{,}024 language tokens and a 128-dimensional unified state vector.
-The model then generates chunks of 64 action steps with a five-step denoising schedule using DPM-Solver++~\citep{lu2022dpm}.
-The multiple modalities and repeated denoising steps make RDT an interesting but challenging model for attribution.
+RT-2~\citep{zitkovich2023rt2} fine-tunes a vision-language model to produce discretized actions as token sequences.
+Octo~\citep{team2024octo} trains a generalist policy on a large multi-robot dataset using a transformer backbone.
+Diffusion Policy~\citep{chi2023diffusion} treats action generation as conditional denoising diffusion~\citep{ho2020ddpm}.
+It produces action chunks through iterative refinement rather than single-step regression.
+RDT~\citep{liu2024rdt} scales this approach using a Diffusion Transformer (DiT) backbone, a SigLIP vision encoder~\citep{zhai2023siglip}, and a T5-XXL language encoder~\citep{raffel2020t5}.
+RDT processes six camera slots, consisting of three camera views over a two-frame history, through SigLIP to produce 4{,}374 vision tokens.
+It combines these with up to 1{,}024 language tokens and a 128-dimensional unified state vector.
+It then generates 64-step action chunks through a five-step DPM-Solver++~\citep{lu2022dpm} denoising schedule.
+The combination of modalities and repeated denoising steps makes RDT an interesting but challenging model for attribution.
 
 \subsection{Interpretability in Robotics}
 
-Earlier work on robot-policy explanations focused on reinforcement learning agents in discrete-action settings.
-\citet{greydanus2018visualizing} studied perturbation-based saliency in the Atari domain.
-Counterfactual methods~\citep{amitai2024explaining} explain policies by comparing what happens under executed actions with what would happen under alternatives.
-VisualBackProp~\citep{bojarski2018visualbackprop} visualizes convolutional neural network (CNN) saliency for end-to-end driving policies in continuous control.
+Earlier work on explaining robotic policies focused on reinforcement learning agents in discrete-action settings.
+\citet{greydanus2018visualizing} applied perturbation-based saliency to Atari agents.
+Counterfactual methods~\citep{amitai2024explaining} explain policies by comparing the outcomes of executed and alternative actions.
+In continuous control, VisualBackProp~\citep{bojarski2018visualbackprop} visualizes convolutional neural network (CNN) saliency for end-to-end driving policies.
 These are convolutional driving models rather than multimodal diffusion samplers.
-Recent VLA methods examine different quantities to explain.
-\citet{zhang2026embodied} estimate visual influence through randomized perturbations and action-discrepancy responses, with explicit assumptions relating mean-squared error to distributional divergence.
-VLA-Trace~\citep{shi2026vlatrace} combines representation-level comparisons, attention interventions and behavioral probes.
+Recent VLA studies examine different quantities to explain.
+\citet{zhang2026embodied} estimate visual influence using randomized perturbations and action-discrepancy responses, with explicit assumptions that relate mean-squared error to distributional divergence.
+VLA-Trace~\citep{shi2026vlatrace} combines representation comparisons, attention interventions and behavioral probes.
 IMPACT-VLA~\citep{kim2026impact} attributes phase-modality interventions to downstream task success through counterfactual closed-loop execution.
-Our estimand is the discrepancy of a predicted action chunk under fixed noise and at a fixed context.
+Our estimand is the discrepancy of a fixed-noise predicted action chunk at a fixed context.
 It does not explain eventual task success.
-We focus on how response geometry affects the evaluation of IG rankings for this estimand and make no claim to originate VLA interpretability.
+We examine how response geometry affects the evaluation of IG rankings for this estimand and do not claim to originate VLA interpretability.
 
 %% ================================================================
 
@@ -184,130 +181,134 @@ We focus on how response geometry affects the evaluation of IG rankings for this
 
 \subsection{How Integrated Gradients Is Computed}
 
-For a differentiable function $F \!:\! \mathbb{R}^n \!\to\! \mathbb{R}$, input $x \in \mathbb{R}^n$, and baseline $x' \in \mathbb{R}^n$, Integrated Gradients follows the straight-line path from the baseline to the input.
-The contribution of dimension $i$ is computed by integrating the gradient with respect to that dimension,
+We start with a differentiable function $F \!:\! \mathbb{R}^n \!\to\! \mathbb{R}$, an input $x \in \mathbb{R}^n$, and a baseline $x' \in \mathbb{R}^n$.
+Integrated Gradients measures each input dimension's contribution by following the straight path from the baseline to the input.
+For dimension $i$, this gives
 \begin{equation}
 \mathrm{IG}_i(x, x') = (x_i - x'_i) \int_0^1 \frac{\partial F}{\partial x_i}\bigg|_{x' + \alpha(x - x')} d\alpha .
 \label{eq:ig}
 \end{equation}
-Under conditions where the fundamental theorem of calculus and the chain rule apply along the path, IG obeys \emph{completeness}.
+IG satisfies \emph{completeness} when the fundamental theorem of calculus and the chain rule apply along this path.
 This means that $\sum_i \mathrm{IG}_i(x, x') = F(x) - F(x')$.
-We approximate the integral as a uniform Riemann sum with $m$ steps,
+We approximate the integral using a uniform Riemann sum with $m$ steps, which gives
 \begin{equation}
 \mathrm{IG}_i \approx \frac{x_i - x'_i}{m+1} \sum_{r=0}^{m} \frac{\partial F}{\partial x_i}\bigg|_{x' + \frac{r}{m}(x - x')} .
 \label{eq:riemann}
 \end{equation}
-In the historical implementation, all terms receive equal weight, including both endpoints of the integration path.
-Convergence of this approximation to exact IG depends on how well-behaved the function being integrated is along the path.
-Summation with finite numerical precision creates an additional source of error.
-Increasing $m$ does not distinguish this error from integration error or necessarily make it smaller.
+The historical implementation gives equal weight to every sampled point, including both endpoints.
+Convergence depends on the regularity of the function being integrated along the path.
+At the same time, adding values in finite precision creates another source of error.
+Increasing $m$ does not separate this error from integration error and does not necessarily reduce it.
 
 \subsection{Keeping the Target Fixed Through Denoising}
 \label{sec:target}
 
-At policy call $t$, the diffusion sampler output is $g_\theta(o_t,z_t)$, a function of the observation $o_t$ and fixed diffusion noise $z_t$.
-We write this predicted action chunk as $\mu_t$ to maintain consistency with historical records.
-It is a sample obtained with fixed diffusion noise.
-This notation alone does not identify it as a conditional mean.
-We compute the reference $a_t=g_\theta(o_t,z_t)$ once without gradients.
-Under an intervention, we use the auxiliary attribution target
+At policy call $t$, we write the sampler output as $g_\theta(o_t,z_t)$, where $o_t$ is the observation and $z_t$ is the fixed diffusion noise.
+We call this predicted action chunk $\mu_t$ to keep the notation consistent with the historical records.
+It is a sample produced with fixed noise.
+The notation does not establish that it is a conditional mean.
+We compute the reference chunk $a_t=g_\theta(o_t,z_t)$ once without gradients.
+For an input changed by an intervention, the main attribution target is the auxiliary score
 \begin{equation}
 Q_t=-\frac{1}{2\sigma^2D}\lVert a_t-\mu_t\rVert^2,
 \label{eq:target}
 \end{equation}
 where $\sigma^2=1$ and $D=512$ active entries cover 64 predicted time steps over eight active dimensions.
-The score is the portion of a Gaussian log kernel that depends on the action difference, averaged over entries and excluding the log-normalizing constant.
-It has not been derived as the conditional log likelihood of the diffusion policy.
-Historical code and files refer to this target as \texttt{logpi}, and its change is written as $\Delta Q$.
-While the execution loop acts only on a subsampled prefix of the chunk before stopping or calling the policy again, we compute attributions for the whole predicted chunk.
+This score is the part of a Gaussian log kernel that changes with the action difference, averaged over entries.
+The log-normalizing constant is left out.
+It has not been derived as the diffusion policy's conditional log likelihood.
+The historical code and files call this target \texttt{logpi}.
+We use $\Delta Q$ for its change.
+Attribution covers the complete predicted chunk, while the execution loop applies a subsampled prefix before replanning or stopping.
 
-We keep the noise realization fixed across points along the integration path so that the target remains a deterministic function of the input.
-An expectation over noise would be a different quantity to attribute.
-Explaining it would require justification for switching the order of the gradient and expectation, along with a Monte Carlo treatment.
-Using a new independent noise sample at every path point does not compute the fixed-noise quantity studied here.
-In the historical implementation, nonfinite gradient components were replaced by zeros.
-This could make individual IG coordinates wrong even when their errors cancel in the sum.
-That cancellation can leave the scalar completeness residual small or zero.
-Passing a completeness check therefore does not mean that each coordinate is correct.
+We use the same noise realization at every point on the interpolation path.
+This keeps the scalar function deterministic throughout the calculation.
+Explaining an expectation over noise would measure a different quantity.
+It would require justification for interchanging the gradient and expectation, along with a Monte Carlo treatment.
+Drawing independent noise at every path point does not compute the fixed-noise quantity studied here.
+The historical implementation replaced nonfinite gradient entries with zero.
+This can change individual coordinates even when their errors cancel in the sum.
+As a result, the scalar completeness residual can be small or even zero while the coordinates remain wrong.
+Completeness alone cannot establish coordinate accuracy.
 
 \subsection{Other Scalar Targets}
 \label{sec:targets}
 
-We compare the quadratic target with two other targets for the action difference, given by
+We compare the quadratic target with two other ways to measure the action difference,
 \begin{equation}
 y_t^{\ell_2}=-\sqrt{\lVert a_t-\mu_t\rVert_2^2+\epsilon},
 \qquad y_t^{\mathrm{max}}=-\max_j|a_{t,j}-\mu_{t,j}|,
 \end{equation}
-For our analyses, the stabilizer used in the implementation is $\epsilon=10^{-12}$.
+where $\epsilon=10^{-12}$ is the stabilizer used in the implementation.
 Both targets use the same $D$ active entries.
-The stabilized $\ell_2$ target is a smooth function of the residual and has zero gradient where the predicted and reference actions are identical.
-Away from the stabilizer scale, its gradient with respect to the actions approaches unit norm.
-The maximum-deviation target, which we call maxdev, measures the action difference using a different norm.
-It is not generally a monotone transformation of $\ell_2$.
-For example, the residual vectors $(1,1)$ and $(1.1,0)$ reverse order under these norms.
-For a fixed perturbation, the quadratic and stabilized $\ell_2$ responses have an algebraic relationship, but their gradients can still give different attribution rankings.
-Differences in scale or units do not imply that a target with a larger magnitude contains more information or is more useful.
-Section~\ref{sec:targets-results} focuses on response changes between the quadratic and stabilized $\ell_2$ targets.
-Records for maxdev remain available in the released analysis as an additional diagnostic.
+The stabilized $\ell_2$ target is smooth in the residual and has zero gradient when the actions agree exactly.
+Away from the stabilizer scale, its gradient in action space approaches unit norm.
+The maximum-deviation target, called maxdev, uses a different norm.
+It is not generally a monotone transform of $\ell_2$.
+For example, the residuals $(1,1)$ and $(1.1,0)$ reverse order under these norms.
+For a fixed perturbation, the quadratic and stabilized $\ell_2$ responses have an algebraic relationship.
+However, their gradients can still produce different attribution rankings.
+Their units and scales also differ, so a larger magnitude alone does not show that a target provides more information or is more useful.
+Section~\ref{sec:targets-results} separates the response changes for the quadratic and stabilized $\ell_2$ targets.
+The maximum-deviation records remain an additional diagnostic in the released analysis.
 
 \subsection{How the Response Changes the Weight Along the Path}
 \label{sec:path-weights}
 
-We fix the reference action, active coordinates, model, noise and other modalities.
-We then define $r(x)=\lVert a-\mu(x)\rVert_2^2$ and $L(x)=-\sqrt{r(x)+\epsilon}$.
-By the chain rule, wherever the gradients exist,
+We hold the reference action, active coordinates, model, noise and other modalities fixed.
+We then write $r(x)=\lVert a-\mu(x)\rVert_2^2$ and $L(x)=-\sqrt{r(x)+\epsilon}$.
+Where the gradients exist, the chain rule gives the exact relationship
 \begin{equation}
 \nabla Q(x)=\frac{\sqrt{r(x)+\epsilon}}{D\sigma^2}\nabla L(x).
 \label{eq:gradient-weight}
 \end{equation}
-The nonzero gradients of the quadratic and stabilized targets therefore have the same direction at each point.
-Both targets' gradients are zero when the prediction exactly matches its own reference.
-These facts alone do not determine what happens when the gradients are integrated.
-Along a straight-line path $x(\alpha)=x'+\alpha(x-x')$, the integrated gradient is
+This means that the nonzero gradients point in the same direction at each point.
+Both gradients are zero when the prediction exactly matches its own reference.
+Along the path $x(\alpha)=x'+\alpha(x-x')$, the integrated gradient becomes
 \begin{equation}
 \mathrm{IG}^{Q}_i=(x_i-x_i')\int_0^1
 \frac{\sqrt{r(x(\alpha))+\epsilon}}{D\sigma^2}
 \partial_i L(x(\alpha))\,d\alpha.
 \label{eq:weighted-ig}
 \end{equation}
-The weights are positive but generally vary with $\alpha$.
-Different coordinates can contribute more in different regions of the path.
-The change in weighting can therefore change the ranking after integration.
-This does not conflict with IG implementation invariance, which compares different implementations of the same scalar function~\citep{sundararajan2017axiomatic}.
+The positive weight generally changes with $\alpha$.
+Different coordinates can contribute at different parts of the path.
+Changing the weight on those parts can therefore change the final ranking after integration.
+This is consistent with IG implementation invariance, which compares different implementations of the same scalar function~\citep{sundararajan2017axiomatic}.
 
-For an example, consider the policy with scalar output $\mu(x_1,x_2)=x_1^2+\tfrac45x_2$, baseline $(0,0)$, actual input $(1,1)$, detached reference $a=\tfrac95$, and $D=\sigma^2=1$.
-Performing the integration exactly along the same straight-line path gives
+For a concrete example, take the scalar action $\mu(x_1,x_2)=x_1^2+\tfrac45x_2$, baseline $(0,0)$, actual input $(1,1)$, detached reference $a=\tfrac95$, and $D=\sigma^2=1$.
+Exact integration along the same straight path gives
 \begin{equation}
 \mathrm{IG}^{Q}=\left(\frac{23}{30},\frac{64}{75}\right),
 \qquad
 \lim_{\epsilon\downarrow0}\mathrm{IG}^{L}=\left(1,\frac45\right).
 \label{eq:rank-reversal}
 \end{equation}
-The quadratic target ranks feature 2 first.
-The stabilized $L$ target with $\epsilon=10^{-12}$ ranks feature 1 first, by a margin of at least $0.1999975$.
-Appendix~\ref{sec:geometry-proofs} proves this bound using the finite stabilizer.
-The reversal therefore holds for the implemented response and does not rely on replacing it with an idealized limiting value.
-This shows that rankings can reverse in a smooth nonlinear policy.
-It does not show that this happens for all such policies or that it occurs empirically in RDT.
+Quadratic IG puts feature 2 first.
+The stabilized $L$ target with the implemented $\epsilon=10^{-12}$ puts feature 1 first, with a margin of at least $0.1999975$.
+Appendix~\ref{sec:geometry-proofs} proves this bound with the finite stabilizer.
+The reversal therefore does not depend on replacing the implemented response with its limiting value.
+This example shows that a reversal can occur in a smooth nonlinear policy.
+It does not show that rankings always change or that this effect occurs empirically in RDT.
 
 \subsection{Attribution at Each Policy Call}
 
-RDT predicts a chunk of 64 action steps at a time, subsampled $4\times$ to 16 steps in the environment.
-IG is performed once per \emph{policy call}, since all actions in the chunk result from a single decision.
-We attribute one policy query rather than each environment step.
-The wall-clock runtime of IG depends on implementation details, hardware, numerical precision and the integration budget.
-We do not use the earlier timing summaries as a performance result.
+RDT outputs chunks of 64 action steps, which are subsampled $4\times$ to 16 environment steps.
+We run IG once per \emph{policy call} because the chunk is produced as one decision.
+We therefore attribute one policy query at a time rather than each environment step.
+Runtime depends on the implementation, hardware, precision and integration budget.
+The earlier timing summaries are not used as a performance result.
 
-At each policy call, we perform attribution separately on each set of modality inputs, using a corresponding forward function that fixes the remaining inputs.
+At each policy call, we compute attribution separately for each modality using its own forward function.
 \begin{itemize}
-\item \textbf{Vision.} Adapted vision tokens are interpolated from baseline to real representations while language and state inputs are fixed.
-\item \textbf{Language.} Adapted language tokens are interpolated from a minimal two-token baseline encoded through T5-XXL to the real instruction embedding, while vision and state inputs are fixed.
-\item \textbf{State.} The 128-dimensional unified state vector is interpolated from zeros to its real value while vision and language inputs are fixed. For the Franka arm, only eight dimensions are active, covering the seven joints and the gripper. We include the state-adaptor multilayer perceptron (MLP) inside the forward function to preserve the joint structure.
+\item \textbf{Vision.} We keep language and state fixed and interpolate the adapted image tokens from the baseline to the real observation.
+\item \textbf{Language.} We keep vision and state fixed and interpolate the adapted language tokens from a minimal two-token baseline, encoded through T5-XXL, to the real instruction embedding.
+\item \textbf{State.} We keep vision and language fixed and interpolate the 128-dimensional unified state vector from zeros to its real value. For the Franka arm, eight dimensions are active. These represent seven joints and the gripper. The state-adaptor multilayer perceptron (MLP) stays inside the forward function so that the calculation preserves the structure of each joint.
 \end{itemize}
-Algorithm~\ref{alg:perstep} summarizes how these attributions are computed.
+Algorithm~\ref{alg:perstep} shows this procedure.
 
 \begin{algorithm}[t]
-\caption{IG at each policy call with fixed noise. In Section~\ref{sec:setup}, we describe which historical artifacts are available and their limits.}
+\caption{IG at each policy call with fixed noise. Section~\ref{sec:setup} explains which historical artifacts are available and their limits.}
 \label{alg:perstep}
 \textbf{Input.} Policy $\pi_\theta$, environment $\mathcal{E}$, integration steps $m$, target $y \in \{Q, \ell_2, \mathrm{maxdev}\}$\\
 \textbf{Output.} Attributions $\{A_t^V, A_t^L, A_t^S\}$ at every policy call.
@@ -329,74 +330,73 @@ Algorithm~\ref{alg:perstep} summarizes how these attributions are computed.
 \end{algorithm}
 
 \paragraph{Choosing the baseline.}
-The vision baseline is a gray image in the external-camera slot, with a uniform value.
-The remaining five camera slots contain constant background images and stay fixed at their real values.
-IG therefore attributes only to the slot that contains information about the scene.
-The language baseline is a minimal two-token representation using the tokenizer's padding and end-of-sequence tokens.
-There is no beginning-of-sequence token in T5.
-Rather than taking a zero vector as the baseline, we encode these tokens through T5-XXL.
-The encoder output is then padded with zeros to the stored embedding length.
-The language forward passes attend to the real token span for the task.
-This gives an attended baseline consisting of the encoded token pair, with zeros in the remaining positions being attended to.
-The GELU-based language adaptor allows a zero vector as an input, but that would be a different representation baseline.
-The preliminary effectiveness comparisons cannot be independently reconstructed.
-For state, the baseline is a zero vector in normalized joint space.
-This choice does not establish that it represents a physically supported state or is useful as an explanation reference.
+The vision baseline is a uniform gray image in the external-camera slot.
+The other five camera slots contain constant background images and remain fixed at their real values.
+This means that IG attributes only to the slot that contains information about the scene.
+The language baseline is a minimal two-token sequence made from the tokenizer's padding and end-of-sequence tokens.
+T5 has no beginning-of-sequence token.
+We encode this sequence through T5-XXL instead of using a zero vector.
+We then add zeros to the encoder output until it reaches the stored embedding length.
+The language forward passes attend over the real token span for the task.
+As a result, the attended baseline contains the encoded token pair followed by zero vectors at the remaining attended positions.
+The GELU-based language adaptor can accept a zero vector numerically, but that would define a different representation baseline.
+The preliminary comparisons of effectiveness cannot be independently reconstructed.
+The state baseline is a zero vector in normalized joint space.
+This choice does not establish that it represents a physically supported state or a useful reference for an explanation.
 Appendix~\ref{sec:anchoring} reports the available checks of sensitivity to the vision baseline.
 
 \subsection{How We Evaluate the Attributions}
 \label{sec:metrics}
 
 \paragraph{Completeness.}
-For each modality, we hold the other inputs fixed and compute the absolute residual
-$|\sum_i\mathrm{IG}_i-(F(x)-F(x'))|$.
-We also compute its relative version by dividing by the magnitude of the scalar endpoint gap,
+For each modality, we keep the other inputs fixed and report the absolute residual
+$|\sum_i\mathrm{IG}_i-(F(x)-F(x'))|$ and its relative version
 \begin{equation}
 \mathrm{Err}=\frac{|\sum_i\mathrm{IG}_i-(F(x)-F(x'))|}{|F(x)-F(x')|}.
 \end{equation}
-This relative value is undefined when the signed gap is exactly zero.
-If the gap is small but nonzero, division can amplify numerical error.
-The historical action-norm filter $\|a_t\|\geq15$ does not bound this denominator.
-We retain the filter only to show how changing the included population affects the results.
-A small residual indicates agreement in the scalar accounting identity.
-It does not rule out errors in individual coordinates that cancel in the sum but still change the attribution map or feature ranking.
+The relative quantity is undefined when the signed gap is exactly zero.
+A small nonzero gap can make numerical error appear large after division.
+The historical action-norm filter $\|a_t\|\geq15$ does not place a bound on this denominator.
+We retain it only to check how changing the included population affects the results.
+A low residual shows agreement in a scalar accounting identity.
+Errors in individual coordinates can still cancel in the sum while changing the attribution map or ranking.
 
 \paragraph{Perturbation curves.}
-We sum the absolute coordinate attributions within each eligible feature group and rank the groups by these sums.
+We rank eligible feature groups by adding the absolute coordinate attributions within each group.
 For vision, the groups are patch tokens from the external camera.
 For language, they are the attended instruction tokens.
-Deletion sets the features of the first groups in the ranking to their baseline values.
-Insertion starts from the baseline input and inserts the original features for the first groups in that ranking.
-For a scalar response $R$, the normalized value is
+Deletion replaces the first groups in the ranking with their baseline features.
+Insertion starts from the baseline input and replaces the first groups with their original features.
+For a scalar response $R$, the normalized value at each point is
 \begin{equation}
 \widetilde R(x_k)=\frac{R(x_k)-R(x')}{R(x)-R(x')}.
 \label{eq:normalization}
 \end{equation}
-We integrate on the fraction grid stored in each record.
-The normalized curves and their AUCs are not necessarily within $[0,1]$.
-The historical grid requests $\{0,1,5,10,20,30,50,75,100\}\%$ of the eligible feature groups.
-For language, rounding the token counts changes the fractions actually used.
-The saved curves should therefore not be interpreted as continuous functions sampled at evenly spaced points.
-Top-$k$ score changes are $R(x_k)-R(x)$, so they have the units of the scalar response $R$.
-We distinguish the attribution target used for ranking from the response used to score the interventions.
+We integrate using the fraction grid stored in each record.
+The curve and its AUC can both fall outside $[0,1]$.
+The historical grid requests $\{0,1,5,10,20,30,50,75,100\}\%$ of the groups.
+Rounding changes the actual fractions of language tokens.
+The saved curves therefore cannot be treated as continuous functions sampled at uniform intervals.
+Top-$k$ score changes are $R(x_k)-R(x)$, with units determined by $R$.
+We keep the attribution target that produces the ranking separate from the response that scores its interventions.
 The revised tables do not use the earlier study-specific thresholds as tests of effectiveness.
 
 \paragraph{Randomization and baseline checks.}
-For C1, we reinitialize model parameters, compute attributions again and correlate them with the originals.
-The standard version changes the final action-output projection and recomputes the reference action.
-The frozen-reference and backbone-cascade versions instead retain the original reference.
-The historical cascade randomly reinitializes all backbone parameter matrices of rank at least two simultaneously.
-It retains one-dimensional parameters, encoders and adaptors.
-It does not randomize the layers progressively in a cascade.
-For C2, we shuffle external-camera pixels as well as language.
-If a cache of shuffled pre-T5 language is available, the historical implementation uses it.
+C1 reinitializes model parameters and measures the correlation between the resulting attributions and the originals.
+The standard version changes the final action-output projection and recomputes its reference action.
+The frozen-reference and backbone-cascade versions keep the original reference.
+The historical cascade reinitializes all backbone parameter matrices of rank at least two at the same time.
+It keeps one-dimensional parameters, encoders and adaptors.
+It therefore does not progressively randomize one layer at a time.
+C2 shuffles both the external-camera pixels and the language.
+The historical implementation uses a pre-T5 shuffled-language cache when one is available.
 Otherwise, it permutes the post-T5 embeddings.
-The saved records do not establish which mode was used for a given attribution call.
+The saved records do not establish which mode was used for each call.
 These tests measure different forms of dependence.
-C2 is not the label-randomization test proposed by \citet{adebayo2018sanity}.
-The historical implementation computes perturbed maps at $m=16$, while the original maps nominally use $m=64$.
-C1 therefore affects the numerical approximation as well as the model weights.
-To check baseline sensitivity, we compare black, gray and blurred observation features.
+C2 is not the label-randomization experiment of \citet{adebayo2018sanity}.
+Historical perturbed maps use $m=16$, while original maps nominally use $m=64$.
+C1 therefore changes the numerical approximation as well as the model weights.
+We also compare black, gray and blurred observation features to check baseline sensitivity.
 
 %% ================================================================
 
@@ -404,49 +404,49 @@ To check baseline sensitivity, we compare black, gray and blurred observation fe
 \label{sec:setup}
 
 \paragraph{Scope and traceability.}
-The revised analysis checks \ArchiveFiles{} preserved files containing \ArchiveValidRecords{} valid records and \ArchiveQuarantined{} specifically identified corrupt line.
-The released inventory identifies each valid physical record by source path, original line number and byte hash.
-Some recorded keys occur more than once. There are \ArchiveDuplicateGroups{} such groups, and \ArchiveConflictingGroups{} differ in scientific fields as well as, or instead of, timing metadata.
-The last occurrence is used as a declared rule for this retrospective analysis. When records conflict, this rule does not establish that the selected attempt is correct.
-A separate sensitivity analysis excludes every key with a conflicting payload to show how those conflicts affect the results.
-The released lineage registry maps records and occurrence decisions to population membership, result identifiers and generated manuscript cells.
-These links support checks of the preserved bytes. They cannot recover missing checkpoints, observations, action tensors or noise.
+The revised analysis checks the bytes of \ArchiveFiles{} preserved files containing \ArchiveValidRecords{} valid records and \ArchiveQuarantined{} specifically identified corrupt line.
+Each valid physical record is identified by its source path, original line number and byte hash.
+Some recorded keys occur more than once. The inventory contains \ArchiveDuplicateGroups{} such groups, and \ArchiveConflictingGroups{} of them differ in scientific fields as well as, or instead of, timing metadata.
+We use the last occurrence as a declared rule for this retrospective analysis. This rule does not establish that the selected attempt is correct when the records conflict.
+To show how those conflicts affect the results, a separate sensitivity analysis removes every key with a conflicting payload.
+The released lineage registry links the records and occurrence decisions to population membership, result identifiers and generated manuscript cells.
+These links allow the preserved bytes to be checked. They cannot recover missing checkpoints, observations, action tensors or noise.
 
 \paragraph{Campaigns and models.}
-The main reconstructed RDT-170M tables come from the saved Month 7 verification campaign at $m=64$, covering PickCube, StackCube, PegInsertionSide and PickSingleYCB in ManiSkill3~\citep{tao2024maniskill3}.
+The main reconstructed RDT-170M tables use the saved Month 7 verification campaign at $m=64$. That campaign covers PickCube, StackCube, PegInsertionSide and PickSingleYCB in ManiSkill3~\citep{tao2024maniskill3}.
 These experiments are separate from the original main pass, whose inputs are unavailable.
 The verification campaign used pretrained RDT-170M, while the saved RDT-1B PickCube campaign used a task-finetuned checkpoint.
-The comparison therefore mixes changes in training, trajectories, historical preprocessing and parameter count. It cannot isolate the effect of model scale or competence.
-Appendix~\ref{sec:secondary-historical} consequently reports the 1B cohort separately.
-The primary tables exclude missing original completeness and standard-sanity results, along with missing early PickCube/StackCube integration-budget results.
+The comparison therefore changes training, trajectories and historical preprocessing along with parameter count. It cannot isolate the effect of model scale or competence.
+For this reason, Appendix~\ref{sec:secondary-historical} reports the 1B cohort separately.
+The primary tables do not include missing original completeness or standard-sanity results, or missing early PickCube/StackCube integration-budget results.
 
 \paragraph{Known protocol limits.}
-Historical attribution covers the full predicted action chunk, although the simulator executes only a subsampled chunk.
-The four-task selection also reflects historical implementation decisions. An attempted TurnFaucet run used the wrong controller and has no documented corrected rerun. Its unsuccessful outcomes therefore do not establish that the model lacked the capability for that task.
-Early follow-up jobs replaced encoded padding/end tokens with a zero language baseline, and the PickSingleYCB follow-up used a proxy PickCube instruction embedding.
-The pooled 1B language cohort consequently mixes the early baseline with later encoded baselines.
-Earlier sidecar filenames omitted seed and integration-budget fields, allowing files to be overwritten and possibly reused across nominal runs.
-The seed-tagged Month 7 records reduce this filename problem but cannot recover the old contexts.
-Matching scalar fingerprints alone therefore cannot establish exact context equality.
+The historical attribution covers the full predicted action chunk, although the simulator executes a subsampled chunk.
+The choice of four tasks also reflects historical implementation decisions. An attempted TurnFaucet run used an incorrect controller, and no corrected rerun is documented. Its unsuccessful outcomes cannot establish that the model lacked the capability for that task.
+Early follow-up jobs replaced encoded padding/end tokens with a zero language baseline. The PickSingleYCB follow-up also used a proxy PickCube instruction embedding.
+As a result, the pooled 1B language cohort contains both the early baseline and later encoded baselines.
+Early sidecar filenames omitted the seed and integration budget. This allowed files to be overwritten and possibly reused across nominal runs.
+The seed-tagged Month 7 records reduce that filename problem, but they do not recover the old contexts.
+Matching scalar fingerprints alone therefore do not establish exact context equality.
 
 \paragraph{Estimands and uncertainty.}
-The primary population includes all valid saved calls after the declared occurrence rule is applied.
-Continuous call-level quantities are summarized by medians over calls. Residual pass rates are proportions over the stated call population. Solver contrasts give relative changes between endpoint medians, while the separately named equal-episode analysis uses episode medians.
-Uncertainty summaries resample whole recorded episode groups, formed from task, model, recorded seed and episode, with $B=10{,}000$ draws and seed zero.
+The primary population contains all valid saved calls after applying the declared occurrence rule.
+We summarize continuous call-level quantities by their medians over calls. Residual pass rates are proportions over the stated call population. Solver contrasts report relative changes between endpoint medians, while the separately named equal-episode analysis uses episode medians.
+For uncertainty, we resample whole recorded episode groups, identified by task, model, recorded seed and episode, with $B=10{,}000$ draws and seed zero.
 Each point estimate and its interval use exactly the same source-record population.
-The percentile intervals describe the released empirical mixture of episodes. Longer episodes contribute more calls to that mixture. These intervals do not measure variability across independently trained checkpoints.
-The separately named 1B sensitivity instead gives each episode equal weight through the median of episode medians.
-For the old randomization variants, we also join nominal task/episode keys across recorded seeds when reuse is possible. This checks conditional sensitivity to dependence between those records.
-Neither grouping recovers unobserved context identity.
-Very small cluster counts are stated explicitly. Resampling two baseline groups, in particular, is not evidence of calibrated interval coverage.
-All unfiltered results and the historical norm-selected sensitivity remain available. Tails are not removed to obtain a favorable threshold verdict.
+The resulting percentile intervals describe the released empirical mixture of episodes. Longer episodes contribute more calls to that mixture, and the intervals do not measure variability across independently trained checkpoints.
+A separately named 1B sensitivity gives each episode equal weight by reporting the median of episode medians.
+For the old randomization variants, we also group nominal task/episode keys across seeds when they may have been reused. This is a conditional sensitivity to dependence between those records.
+Neither grouping can recover unobserved context identity.
+We report very small cluster counts explicitly. In particular, resampling two baseline groups is not evidence of calibrated interval coverage.
+All unfiltered results and the historical norm-selected sensitivity remain available. We do not remove a tail to obtain a favorable threshold verdict.
 
-The paired rescoring analysis keeps each call's ranking and interventions fixed. It defines $\Delta_{ej}=\operatorname{AUC}_{Q,ej}-\operatorname{AUC}_{L,ej}$ for call $j$ in recorded episode $e$.
-The primary estimand is $E^{-1}\sum_{e=1}^E n_e^{-1}\sum_{j=1}^{n_e}\Delta_{ej}$, giving every episode equal weight. A prespecified descriptive sensitivity uses the median of paired call differences.
-Both summarize within-call changes. Neither is the difference between the marginal medians reported above.
-The protocol specified all eight ranking/modality/direction combinations and the same $10{,}000$-draw episode-bootstrap convention before these summaries were computed.
-Its intervals are conditional descriptions without a multiplicity adjustment. They do not establish calibrated joint coverage or global significance.
-If either response has a zero endpoint gap, the paired difference remains undefined and stays in the accounting. All 750 calls in each ranking cohort have defined paired differences, and each of the 30 recorded episodes contributes 25 calls. The equal-episode and equal-call means therefore coincide here.
+The additional paired rescoring analysis holds each call's ranking and interventions fixed. It defines $\Delta_{ej}=\operatorname{AUC}_{Q,ej}-\operatorname{AUC}_{L,ej}$ within call $j$ of recorded episode $e$.
+Its primary estimand is $E^{-1}\sum_{e=1}^E n_e^{-1}\sum_{j=1}^{n_e}\Delta_{ej}$, which gives episodes equal weight. The median of paired call differences is a prespecified descriptive sensitivity.
+Both summarize changes within calls, so neither is the difference between the marginal medians reported above.
+Before computing these summaries, the protocol specified all eight ranking/modality/direction combinations and the same $10{,}000$-draw episode-bootstrap convention.
+The intervals are conditional descriptions without a multiplicity adjustment. We do not claim calibrated joint coverage or global significance.
+If either response has a zero endpoint gap, the paired difference remains undefined and stays in the accounting. All 750 calls in each ranking cohort have defined paired differences. Each of the 30 recorded episodes contains 25 calls, so the equal-episode and equal-call means coincide here.
 
 \section{Response Geometry and Retrospective Results}
 \label{sec:results}
@@ -454,14 +454,14 @@ If either response has a zero endpoint gap, the paired difference remains undefi
 \subsection{Separating Attribution Target from Evaluation Response}
 \label{sec:targets-results}
 
-A recorded intervention can be scored under another response without recomputing IG or changing any selected feature.
-Write the recorded active-action discrepancy as $d$, with $Q=-d^2/1024$, and $L=-\sqrt{d^2+\epsilon}$ with $\epsilon=10^{-12}$.
-The two responses are related by
+We can change the response used to score a recorded intervention without recomputing IG or changing any selected feature.
+Let $d$ be the recorded active-action discrepancy, $Q=-d^2/1024$, and $L=-\sqrt{d^2+\epsilon}$ with $\epsilon=10^{-12}$.
+The responses are related by
 \begin{equation}
 L=-\sqrt{-1024Q+\epsilon},\qquad Q=-\frac{L^2-\epsilon}{1024}.
 \label{eq:rescore}
 \end{equation}
-Under exact self-reference at the actual endpoint, if the all-baseline squared residual is $R>0$, the normalized values satisfy
+When the actual endpoint is an exact self-reference and the all-baseline squared residual is $R>0$, their normalized values satisfy
 \begin{equation}
 \begin{aligned}
 N_Q(r)&=1-\frac rR,\qquad
@@ -470,242 +470,242 @@ N_Q(r)-N_L(r)&=\frac{(\sqrt{r+\epsilon}-\sqrt\epsilon)(\sqrt{R+\epsilon}-\sqrt{r
 \end{aligned}
 \label{eq:normalized-geometry}
 \end{equation}
-Thus $N_Q>N_L$ for $0<r<R$, with equality at both endpoints and the order reversed for $r>R$.
-For any curve whose interventions all stay in range, nonnegative integration weights preserve this weak ordering. Monotonicity is unnecessary. The area inequality is strict only when an interior residual receives positive integration weight.
-Overshoots can reverse the area ordering and must be retained rather than clipped. When $R=0$, neither normalization is defined.
-Changing from $Q$ to $L$ therefore lowers both insertion and deletion AUC for an in-range curve.
-Larger insertion AUC and smaller deletion AUC are often taken to indicate better ranking quality. Under those conventions, the same response change suggests opposite changes in quality even though the interventions are identical.
-The historical calculation does not require the recorded actual endpoint to be an exact self-reference.
-Instead, every saved curve ordinate is transformed, its endpoints are recomputed under the new response, and it is integrated again on the same saved grid.
-Duplicate handling leaves \RescoreCalls{} calls in \RescoreEpisodes{} episodes for each ranking cohort.
-For quadratic-target vision rankings, the median deletion AUC drops from \RescoreQDeletionQ{} under $Q$ to \RescoreQDeletionL{} under $L$.
-For stabilized-$\ell_2$ rankings, it rises from \RescoreLDeletionL{} under $L$ to \RescoreLDeletionQ{} under $Q$.
-Table~\ref{tab:targets} and Figure~\ref{fig:response-geometry} report both modalities and both perturbation directions.
+Thus $N_Q>N_L$ for $0<r<R$. The responses are equal at both endpoints, and their order reverses for $r>R$.
+If every intervention stays in range, integration with nonnegative weights preserves this weak ordering even when the curve is not monotone. The area inequality is strict only if an interior residual receives positive integration weight.
+Overshoots can reverse the area ordering, so they must be retained rather than clipped. If $R=0$, neither normalization is defined.
+For an in-range curve, changing from $Q$ to $L$ therefore lowers both insertion and deletion AUC.
+Larger insertion AUC and smaller deletion AUC are often interpreted as better ranking quality. Under that interpretation, this response change points to opposite changes in quality even though the interventions stay the same.
+The historical computation does not assume that the recorded actual endpoint is an exact self-reference.
+Instead, we transform every saved curve ordinate, compute its endpoints under the transformed response, and integrate again on the same saved grid.
+After duplicate handling, each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes.
+For quadratic-target vision rankings, the median deletion AUC changes from \RescoreQDeletionQ{} under $Q$ to \RescoreQDeletionL{} under $L$.
+For stabilized-$\ell_2$ rankings, it changes from \RescoreLDeletionL{} under $L$ to \RescoreLDeletionQ{} under $Q$.
+Table~\ref{tab:targets} and Figure~\ref{fig:response-geometry} show both modalities and both perturbation directions.
 \input{tables_revision/rescore.tex}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.97\linewidth]{figures_revision/response_geometry.pdf}
-\caption{Changing the evaluation response while keeping each recorded ranking and its interventions fixed. Error bars show conditional episode-bootstrap intervals for each median. Lines connect responses within one ranking cohort. The two ranking cohorts are not authenticated pairs, and no universal chance reference line is supplied.}
+\caption{Changing the evaluation response while holding each recorded ranking and its interventions fixed. Error bars give conditional episode-bootstrap intervals for each median. Each line connects responses within one ranking cohort. The two ranking cohorts are not authenticated pairs, and there is no universal chance reference line.}
 \label{fig:response-geometry}
 \end{figure}
 
-The scores within each saved ranking cohort therefore depend on response geometry.
-This does not show that Q-IG and L2-IG select the same features, give equivalent rankings or provide effective rankings.
-The attempted join found different reference-action norms at every nominal key. Exact raw contexts and noise are unavailable as well.
-Agreement after common rescoring cannot therefore replace a prospective paired comparison of rankings.
-A larger native L2 score also does not by itself show that information was recovered. Stabilized L2 has no square-root kink at exact agreement.
+These results show that scores within each saved ranking cohort depend on response geometry.
+They do not show that Q-IG and L2-IG select the same features, produce equivalent rankings, or provide effective rankings.
+The attempted join between cohorts found different reference-action norms at every nominal key. Exact raw contexts and noise are also unavailable.
+Apparent agreement after common rescoring therefore cannot take the place of a prospective paired comparison of rankings.
+A larger native L2 score likewise does not by itself represent recovered information. Stabilized L2 has no square-root kink at exact agreement.
 
 \paragraph{Paired changes and overshooting tails.}
-Table~\ref{tab:paired-rescoring} shows why the summary must be specified.
-Every one of the eight paired-call medians is positive, from $0.1041$ to $0.1590$, but six equal-episode means are negative.
-For Q-ranking vision insertion, the paired-call median is $0.1042$, while the equal-episode mean is $-17.0966$ with conditional interval $[-33.8210,-3.9746]$.
-The most negative paired change in this case is $-4438.8386$. These finite extremes remain in the analysis without clipping or trimming.
-Appendix~\ref{sec:episode-influence} gives an exploratory omission check for all eight cases. All four negative insertion means remain negative after any one recorded episode is omitted.
-The two negative language-deletion means can change sign under these omissions, consistent with their conditional intervals already crossing zero.
-This shows how the results are concentrated within the recorded cohort. It does not establish population robustness or replace the full untrimmed primary estimands.
+Table~\ref{tab:paired-rescoring} shows why the choice of summary matters.
+All eight paired-call medians are positive, ranging from $0.1041$ to $0.1590$. At the same time, six equal-episode means are negative.
+For Q-ranking vision insertion, the median paired change is $0.1042$, while the mean is $-17.0966$ with conditional interval $[-33.8210,-3.9746]$.
+The most negative paired change in that case is $-4438.8386$. These finite extremes remain in the analysis without clipping or trimming.
+Appendix~\ref{sec:episode-influence} reports an exploratory influence check for all eight cases. All four negative insertion means stay negative when any one recorded episode is omitted.
+The two negative language-deletion means can change sign under these omissions, which is consistent with their conditional intervals already crossing zero.
+This check shows how the results are concentrated in the recorded cohort. It does not establish population robustness or replace the untrimmed primary estimands.
 
 \begin{table}[htbp]
 \centering\small
-\caption{Paired response differences $\Delta=\operatorname{AUC}_{Q}-\operatorname{AUC}_{L}$ within the same saved curve. Every row uses 750 calls from 30 recorded episodes, and rows within a ranking cohort reuse those calls. The primary mean gives episodes equal weight. Its 95\% interval is a conditional, unadjusted episode-bootstrap description. The paired-call median is also included because overshooting tails can reverse the mean's sign. Neither summary compares the quality of Q and L2 rankings.}
+\caption{Paired response differences $\Delta=\operatorname{AUC}_{Q}-\operatorname{AUC}_{L}$ within the same saved curve. Each row uses 750 calls from 30 recorded episodes. Rows within a ranking cohort reuse those calls. The primary mean gives episodes equal weight, and its 95\% interval is a conditional, unadjusted episode-bootstrap description. The paired-call median is also shown because overshooting tails can reverse the mean's sign. Neither summary compares the quality of Q and L2 rankings.}
 \label{tab:paired-rescoring}
 \setlength{\tabcolsep}{4pt}
 \input{tables_revision/paired_rescoring.tex}
 \end{table}
 
-To examine the tails, each saved squared-discrepancy value is classified relative to the interval between its stored actual and baseline endpoint discrepancies. This does not assume exact self-reference.
-A high-distance overshoot exceeds both endpoints, while a low-distance undershoot falls below both.
-The artifact records which endpoint is larger and retains both departures, undefined gaps and a prespecified sensitivity to boundary labels.
-In Q-ranking vision insertion, 312 of 750 calls have at least one high-distance overshoot, and 89 have a negative paired AUC change.
-Decomposing the trapezoidal difference by saved-node category gives mean contributions of $0.1144$ from in-range nodes and $-17.2111$ from high-distance overshoots. There is no low-distance contribution in this case.
-The contributions sum to the reported mean. The negative contribution from recorded overshoots is therefore large enough to reverse its sign.
-The L2-ranking vision-insertion cohort shows the same qualitative disagreement between mean and median within its own records.
-Node categories and segment endpoint labels describe sampled interventions only. They do not establish how the continuous curve behaves between those points.
-The in-range ordering in Equation~\ref{eq:normalized-geometry} therefore does not mean that changing the response moves every curve in an empirical population in the same direction.
+To examine those tails, we classify each saved squared-discrepancy value relative to the interval between its stored actual and baseline endpoint discrepancies. This classification does not assume exact self-reference.
+A high-distance overshoot exceeds both endpoints. A low-distance undershoot falls below both.
+The artifact records which endpoint is larger and retains both kinds of departure, undefined gaps and a prespecified sensitivity to boundary labels.
+In Q-ranking vision insertion, 312 of 750 calls contain at least one high-distance overshoot, and 89 have a negative paired AUC change.
+Breaking down the trapezoidal difference by saved-node category gives mean contributions of $0.1144$ from in-range nodes and $-17.2111$ from high-distance overshoots. There is no low-distance contribution in that case.
+These contributions sum to the reported mean. They show that the negative contribution from the recorded overshoots is large enough to reverse its sign.
+The L2-ranking vision-insertion cohort has the same qualitative disagreement between its mean and median in its own records.
+Node categories and segment endpoint labels describe only sampled interventions. They do not establish how the continuous curve behaves between those points.
+The in-range ordering in Equation~\ref{eq:normalized-geometry} therefore does not imply that a response change moves every curve in an empirical population in the same direction.
 
 \subsection{An Analytic Random-Order Counterexample}
 \label{sec:random-null}
 
-As an analytic control, consider the finite additive scalar policy $f(x)=\sum_{i=1}^{n}x_i$ at an all-one input, a zero baseline and the self-reference $f(x)=n$.
-Every feature ordering gives the same perturbation values.
-Whole-feature prefix interventions realize only the fractions $q=k/n$, with $k=0,\ldots,n$. The normalized quadratic deletion and insertion responses at those fractions are $1-q^2$ and $1-(1-q)^2$.
+Consider the finite additive scalar policy $f(x)=\sum_{i=1}^{n}x_i$, with an all-one input, a zero baseline and the self-reference $f(x)=n$.
+Every feature ordering produces the same perturbation values.
+Interventions on whole-feature prefixes realize only the fractions $q=k/n$, with $k=0,\ldots,n$. At those fractions, the normalized quadratic deletion and insertion values are $1-q^2$ and $1-(1-q)^2$.
 Trapezoidal integration over all $n+1$ prefix fractions gives
 \[
 \operatorname{AUC}_{n}=\frac23-\frac{1}{6n^2}
 \]
 for either curve.
-Extending these values as polynomials and integrating continuously over $q\in[0,1]$ gives $2/3$. This is also the $n\to\infty$ limit, but it is not the exact finite-grid area.
-With $n=100$, every fraction on the historical nine-point requested grid is realized exactly. Trapezoidal integration gives \RandomGridAUC{} for both curves under every ordering.
-This finite construction rules out a universal random-order AUC of 0.5.
-For comparison, the unstabilized negative-norm response is linear on the same fractions and has trapezoidal AUC 0.5.
-A fixed reference such as 0.5 therefore needs justification for the particular policy, response and intervention protocol.
-This is an analytic construction, not an empirical measurement of random-ranking performance on RDT.
+Integrating the polynomial extensions over continuous $q\in[0,1]$ instead gives $2/3$. This is also the limit as $n\to\infty$, but it is not the exact finite-grid area.
+With $n=100$, every fraction on the historical nine-point requested grid is realized exactly. Trapezoidal integration on that grid gives \RandomGridAUC{} for both curves and every ordering.
+This finite example rules out a universal random-order AUC of 0.5.
+For comparison, an unstabilized negative-norm response is linear on the same fractions and has trapezoidal AUC 0.5.
+A fixed AUC reference such as 0.5 must therefore be justified for the particular policy, response and intervention protocol.
+This construction is an analytic control. It is not an empirical measurement of random-ranking performance on RDT.
 
 \subsection{Completeness and Perturbation Summaries}
 
 Table~\ref{tab:correctness} reports completeness residuals from the saved verification campaign.
-Within these cohorts, vision and language have smaller median relative residuals than state. This summary does not establish that their coordinates are more accurate or that dimension count causes the difference.
+Vision and language have smaller median relative residuals than state in these cohorts. This does not establish that their coordinates are more accurate or that dimension count causes the difference.
 The historical integrator combines errors from the model forward pass, path arithmetic, summation and quadrature.
-Actual-model validation must separate these factors on identical inputs before production settings are chosen.
+Before choosing production settings, actual-model validation must separate these factors using identical inputs.
 \input{tables_revision/completeness.tex}
 
-Table~\ref{tab:faithfulness} reports native quadratic-response insertion and deletion AUCs from the same verification campaign.
-The scores describe recorded perturbations. Without matched random and simple ranking controls, their magnitudes do not establish attribution efficacy.
-Normalization can produce extreme negative AUCs. The minimum saved PickCube vision insertion AUC in the all-valid population is \PickCubeInsertionMinimum{}.
-We keep this observation and its endpoint denominator. Neither clipping the value nor applying the action-norm filter would establish its validity.
-The released diagnostics include denominator and tail information alongside the medians because a central summary cannot describe the whole curve population.
+Table~\ref{tab:faithfulness} reports native quadratic-response insertion and deletion AUCs for the same verification campaign.
+These scores describe the recorded perturbations. Without matched random and simple ranking controls, their magnitudes do not establish attribution efficacy.
+Normalization can also produce extreme negative values. The smallest saved PickCube vision insertion AUC in the all-valid population is \PickCubeInsertionMinimum{}.
+We retain that observation and its endpoint denominator. Neither clipping the value nor applying the action-norm filter would establish its validity.
+The released denominator and tail diagnostics therefore accompany the medians, since a central summary cannot describe the whole curve population.
 \input{tables_revision/faithfulness.tex}
 
 \section{Numerical Diagnostics from an Incomplete Campaign}
 \label{sec:numerical-validation}
 
-The later campaign checks identified current computations separately from the historical records above.
-Historical runs were rescored arithmetically using saved curves, but their original contexts could not be recovered. The later probe instead evaluates a separately identified offline fp32 function on authenticated contexts with its own reference actions.
-This function cannot validate the historical attribution maps or provide a paired comparison with them.
-The campaign was limited by compute cost and stopped before its planned numerical coverage and independent verification were complete.
-The analysis uses a fixed, authenticated snapshot of sealed results. Entries that were incomplete at the snapshot are neither successful nor failed calculations.
-The stopping decision supplied no statistical sampling rule for the completed subset. Passed and violated criteria therefore describe only that subset, not population failure rates.
+The later diagnostic campaign tests identified current computations, separately from the historical records above.
+Historical rescoring applies arithmetic to saved curves whose original contexts cannot be recovered. The later probe instead evaluates a separately identified offline fp32 function on newly authenticated contexts, using its own reference actions.
+It cannot validate the historical attribution maps or provide a paired comparison with them.
+The campaign stopped because of compute cost before its planned numerical coverage and independent verification were complete.
+We analyze a fixed, authenticated snapshot of sealed results. Entries that were unfinished at that point are not classified as successful or failed calculations.
+The stopping decision gives no statistical sampling rule for the completed subset. Counts of passed or violated criteria therefore describe that subset, rather than estimate population failure rates.
 
 \paragraph{Functions and precision controls.}
-Stored observations, masks, reference actions and exact noise arrays provide fixed, authenticated inputs for comparison.
+Stored observations, masks, reference actions and exact noise arrays allow comparisons on fixed, authenticated inputs.
 The diagnostic implementation separates accumulation arithmetic, master-path and final-product arithmetic, quadrature, and downstream model precision.
 It compares full coordinate arrays, ranks over eligible groups, selected groups and perturbation responses.
-The earlier downstream-fp32 factor control lifts the same bf16-rounded parameters and cached adapted representations. It also converts non-parameter dtype attributes explicitly while holding the original reference action fixed.
-This changes downstream arithmetic while preserving the numeric inputs. It does not recover unrounded checkpoint parameters or test fp32 encoders.
-Reusing the original reference also distinguishes this control from the later probe.
-These earlier comparisons preceded the full repeated-gradient checks, so they cannot by themselves establish a globally repeatable precision contrast.
+An earlier downstream-fp32 factor control lifts the same bf16-rounded parameters and cached adapted representations. It also explicitly converts non-parameter dtype attributes and keeps the original reference action fixed.
+This changes downstream arithmetic while keeping the numeric inputs fixed. It does not recover unrounded checkpoint parameters or test fp32 encoders.
+Keeping the original reference also makes this control different from the later probe.
+The earlier comparisons came before the full repeated-gradient checks, so they cannot alone establish a globally repeatable precision contrast.
 
-The later engineering campaign defines its own deterministic fp32 function. Image and language representations retain cached bf16 values lifted to fp32, raw state is re-adapted in fp32, and the reference action is the function's own fp32 prediction.
-The function uses contexts visited by the bf16 policy and the stored source noise.
-It is an offline intervention function, not the bf16 behavior policy or a derivative of that policy's executed commands.
-Repeating endpoint outputs checks a different property from repeating path gradients and attribution maps.
-Differences caused by changing the function or its reference therefore cannot be attributed to quadrature alone.
+The later engineering campaign defines a separate deterministic fp32 function. Image and language representations keep their cached bf16 values lifted to fp32, raw state is re-adapted in fp32, and the function generates its own fp32 action reference.
+It uses contexts visited by the bf16 policy and the stored source noise.
+This is an offline intervention function. It is neither the bf16 behavior policy nor a derivative of that policy's executed commands.
+Repeating its endpoints checks a different property from repeating its path gradients and attribution maps.
+Changing the function or its reference therefore cannot be interpreted as changing quadrature alone.
 
 \paragraph{Engineering design and interpretation.}
-The predeclared engineering bank includes four RDT-170M tasks and two tasks on an independently identified authors' 1B checkpoint.
-Identifying this checkpoint does not recover or authenticate the historical task-finetuned 1B checkpoint used in Appendix~\ref{sec:secondary-historical}.
-Source collection allowed at most 13 policy calls, with a further cap of 400 environment steps and possible earlier termination. Call indices 0 and 12 were selected in advance.
-The analysis therefore uses fixed engineering call indices rather than a uniform sample of calls from complete trajectories.
-Episodes were not selected by success or action norm.
+The predeclared engineering bank covers four RDT-170M tasks and two tasks using an independently identified authors' 1B checkpoint.
+That identity does not recover or authenticate the checkpoint used for the historical task-finetuned 1B cohort in Appendix~\ref{sec:secondary-historical}.
+Source collection allowed at most 13 policy calls, with a further cap of 400 environment steps and possible earlier termination. Call indices 0 and 12 were chosen in advance.
+These are engineering contexts at fixed call indices, rather than uniformly sampled calls from complete trajectories.
+Collection did not choose episodes by success or action norm.
 The integration ladders use trapezoidal quadrature with fp32 path and accumulation arithmetic.
-The same gradient stream produces a mean path-gradient map without IG's input-difference multiplier. This is a numerical diagnostic, not an evaluated efficacy baseline.
+The same gradient stream also gives a mean path-gradient map without the IG input-difference multiplier. This map is part of the numerical checks, not an evaluated efficacy baseline.
 The protocol compares coordinates, ranks, completeness and common perturbation responses across integration budgets and repeated calculations.
-Its tolerances diagnose changes in the tested approximation. They are neither efficacy margins nor calibrated error bounds relative to an exact attribution.
-The finest-budget map is a comparator, not ground truth.
-The cohort analysis retains every planned context, including source-rollout calls that were never reached and entries with no sealed result.
+Its tolerances diagnose changes in the tested approximation. They are neither efficacy margins nor calibrated bounds on error relative to an exact attribution.
+The finest available map is therefore a comparator, not ground truth.
+The preserved cohort analysis includes every planned context, including calls that the source rollout did not reach and entries with no sealed result.
 
 \paragraph{Preserved coverage.}
 % Numerical source: analysis/numerical_case/2026-10-01-v1/outputs/strata.csv and roster.csv; sum of all six strata.
-The retained snapshot is labeled October 1, 2026, 03:36 UTC, before the later compute stop.
-Table~\ref{tab:numerical-roster} covers all 24 planned contexts and 144 target/modality cells.
-Twelve contexts have all six diagnostics complete. These represent six episodes across the four 170M tasks and contribute 72 complete cells.
-Three planned calls were never reached by their source rollouts, accounting for 18 cells.
-The remaining nine available contexts, or 54 cells, have no sealed diagnostics at this cutoff.
-No 1B numerical context is complete in the snapshot.
-These are snapshot statuses. They do not claim the final outcome of work that was later interrupted.
+The retained snapshot is labeled October 1, 2026, 03:36 UTC and precedes the later compute stop.
+Table~\ref{tab:numerical-roster} includes all 24 planned contexts and 144 target/modality cells.
+Twelve contexts have all six diagnostics complete. They come from six episodes across the four 170M tasks and account for 72 complete cells.
+Three planned calls were not reached by their source rollouts, accounting for 18 cells.
+The other nine available contexts, or 54 cells, have no sealed diagnostics at this cutoff.
+No 1B numerical context is complete in this snapshot.
+These statuses describe the snapshot. They do not assert the final state of work that was later interrupted.
 \begin{table}[htbp]
 \centering\small
-\caption{The full planned engineering roster at the authenticated 03:36 UTC snapshot. The first four numerical columns count contexts, and the last gives complete/planned target-modality cells. Each context has six cells. Source-rollout calls that were not reached remain separate from available contexts with unsealed results. Complete does not imply numerical qualification.}
+\caption{The full planned engineering roster at the authenticated 03:36 UTC snapshot. The first four numerical columns count contexts, while the last gives complete/planned target-modality cells. Each context has six cells. Calls not reached by the source rollout remain separate from available contexts with unsealed results. A complete entry does not imply numerical qualification.}
 \label{tab:numerical-roster}
 \setlength{\tabcolsep}{4pt}
 \input{tables_revision/numerical_roster.tex}
 \end{table}
 
 \paragraph{Repeatability and budget sensitivity.}
-The image and language ladders use $m=128,256,512$, and the state ladder uses $m=256,512,1024$.
+The image and language ladders use $m=128,256,512$, while the state ladder uses $m=256,512,1024$.
 The finest maps were repeated twice, and seven fixed path locations were probed three times each.
-Every recorded repeated-condition equality and coverage check met its conditions.
-These checks use the same finite contexts. They are not independent replications and do not estimate a population reliability rate.
+All recorded repeated-condition equality and coverage checks met their conditions.
+These checks depend on the same finite set of contexts. They are not independent replications and do not estimate a population reliability rate.
 
-Table~\ref{tab:numerical-diagnostics} reports every completed target/modality group at its two finest recorded budgets.
-For maps $A_{m}$ and $A_{2m}$, the coordinate discrepancy is $\lVert A_m-A_{2m}\rVert_1/\lVert A_{2m}\rVert_1$. This quantity is undefined when its denominator is zero.
-The predeclared relative-coordinate and completeness thresholds are both 1\%. Other checks cover group ordering and sensitivity of the common responses.
-The table counts a violation when a context/target/modality arm exceeds at least one pairwise threshold in this finer-budget comparison, including mean path-gradient diagnostics. Finest-budget completeness is summarized separately.
-All lower-budget comparisons, raw denominators and individual checks are retained in the artifact.
-The maxima describe only these recorded cases. They have no intervals and do not support population generalization.
+Table~\ref{tab:numerical-diagnostics} reports every completed target/modality group using its two finest recorded budgets.
+For maps $A_{m}$ and $A_{2m}$, the coordinate discrepancy is $\lVert A_m-A_{2m}\rVert_1/\lVert A_{2m}\rVert_1$. It is undefined when the denominator is zero.
+The predeclared relative-coordinate and completeness thresholds are each 1\%. Further checks cover group ordering and sensitivity of the common responses.
+The table counts a violation when a context/target/modality arm exceeds at least one pairwise threshold in this finer-budget comparison. This count includes the mean path-gradient diagnostics. Finest-budget completeness is summarized separately.
+All lower-budget comparisons, raw denominators and individual check results remain in the artifact.
+The reported maxima summarize only these recorded cases, without intervals or population generalization.
 \begin{table}[htbp]
 \centering\small
-\caption{Diagnostics on all 12 completed contexts per target/modality arm. \(n\) counts contexts, and ``Viol.'' counts arms with at least one recorded pairwise-threshold violation between the two finest budgets. The remaining columns give maxima across those contexts: relative IG coordinate \(L_1\) difference, finest-budget relative completeness residual, and maximum raw RMS response-curve change divided by the all-baseline RMS displacement, all in percent. RMS maxima include IG and mean-path-gradient rankings in both perturbation directions. Coordinate differences use the finer map's \(L_1\) norm. Comparators are 256 versus 512 for vision/language and 512 versus 1024 for state. These dependent checks neither estimate population error rates nor certify the accuracy of the finest maps. No setting or subset is approved.}
+\caption{Diagnostics on all 12 completed contexts per target/modality arm. \(n\) counts contexts, and ``Viol.'' counts arms with at least one recorded pairwise-threshold violation between the two finest budgets. The remaining columns give maxima across those contexts: relative IG coordinate \(L_1\) difference, finest-budget relative completeness residual, and maximum raw RMS response-curve change divided by the all-baseline RMS displacement, all in percent. RMS maxima include IG and mean-path-gradient rankings in both perturbation directions. Coordinate differences use the finer map's \(L_1\) norm. Comparators are 256 versus 512 for vision/language and 512 versus 1024 for state. These dependent checks neither estimate population error rates nor prove that the finest maps are accurate. No setting or subset is approved.}
 \label{tab:numerical-diagnostics}
 \setlength{\tabcolsep}{3.5pt}
 \input{tables_revision/numerical_diagnostics.tex}
 \end{table}
 
-At both recorded PickSingleYCB episode-1 contexts, both targets violate the state completeness threshold at the finest budget, and their two finest maps differ substantially.
-The scalar gaps exceed the declared near-zero cutoffs. The artifact also retains their signed gaps and absolute residuals.
-Division by an almost-zero scalar gap therefore cannot explain these discrepancies.
-In a state case, intervention response curves remain unchanged despite a substantial coordinate change. Response stability alone therefore cannot qualify the integral.
-The quadratic target also fails, so endpoint behavior of the stabilized negative-norm target cannot explain all failures.
-Sparse stored path probes do not isolate a single numerical cause.
+At both recorded PickSingleYCB episode-1 contexts, both targets still violate the state completeness threshold at the finest budget. Their two finest maps also differ substantially.
+The scalar gaps exceed the declared near-zero cutoffs, and the artifact retains their signed gaps and absolute residuals.
+These discrepancies therefore cannot be explained away by division by an almost-zero scalar gap.
+In a state case, the intervention response curves also stay unchanged despite a substantial coordinate change. This shows why stable responses alone cannot qualify the integral.
+The quadratic target fails as well, so the stabilized negative-norm target's endpoint behavior cannot explain all the failures.
+The sparse stored path probes do not identify a single numerical cause.
 
-Repeatability and integration-budget sensitivity can occur together.
-A deterministic calculation can reproduce the same approximation at one budget and a different approximation at another. At the same time, coordinate errors can cancel when summed, leaving a small completeness residual.
-Neither repeatability nor one completeness statistic is enough to qualify a production setting.
-Appendix~\ref{sec:appendix-aliasing} shows why agreement across several budgets is also insufficient in general. Equal and opposite coordinate errors can preserve exact completeness while every selected coarse grid gives the same ranking and response curves, even though the ordering differs from exact IG.
-Correctness here means recovering the specified IG integral. Ranking quality under perturbations is a separate question, and this analytic possibility does not identify the cause of the observed RDT failures.
-The failures support a numerical diagnostic conclusion within the tested scope. Because the campaign is incomplete, they do not establish accuracy across modalities, tasks, checkpoints or future contexts.
+Repeatability and integration-budget sensitivity can therefore occur together.
+A deterministic calculation can reproduce the same approximation at one budget even though that approximation changes at another budget. At the same time, coordinate errors can cancel in their sum and leave a small completeness residual.
+Neither repeatability nor one completeness statistic is enough to qualify the production setting.
+Appendix~\ref{sec:appendix-aliasing} explains why agreement across several budgets is also insufficient in general. Equal and opposite coordinate errors can preserve exact completeness while all selected coarse grids produce the same ranking and response curves, even though their ordering differs from exact IG.
+Correctness here means recovering the specified IG integral. The quality of a perturbation ranking is a separate question, and this analytic possibility does not identify the cause of the observed RDT failures.
+The failures support a numerical diagnostic conclusion within the tested scope. The incomplete campaign does not establish accuracy across modalities, tasks, checkpoints or future contexts.
 
 \section{Discussion and Limitations}
 
-We separate three questions: what the chosen scalar response measures, whether a numerical attribution is reliable, and whether its ranking contains useful information that depends on the model.
-Rescoring fixed recorded interventions addresses the first question because the response changes while the selected features stay fixed.
-It does not by itself establish numerical reliability or a useful model-dependent ranking.
-Our claims concern exact relationships and measurements reconstructed from the records. The numerical diagnostics apply only to their stated coverage.
-Establishing ranking efficacy would require a new paired study under common responses with informative controls. The present results do not establish it.
-The elementary identities show which operation changes a reported evaluation. They help avoid interpreting a response change as an empirical improvement in ranking, without proposing a new general theory of attribution.
-A common evaluation response defines the quantity being compared, but it is not a universal measure of explanation quality.
-Its action coordinates, units, baselines, perturbation groups and aggregation must be justified for the intended use.
-Matched random, input-difference and path-gradient controls would help separate information in the attribution from simple input structure and the IG multiplier.
-The protocols for these comparisons are deferred. They provide no comparative or learned-weight-specific result in this paper.
+The saved records let us separate three questions: what a scalar response measures, whether a numerical attribution is reliable, and whether its ranking contains useful information that depends on the model.
+Rescoring fixed recorded interventions answers the first question because it changes the response while keeping the selected features fixed.
+This operation alone cannot answer the other two questions.
+Our claims therefore concern exact relationships and measurements reconstructed from the records, with numerical diagnostics limited to their stated coverage.
+Establishing ranking efficacy would require a new paired study with common responses and informative controls. The present results do not establish it.
+The elementary identities identify which operation changes a reported evaluation. This helps prevent a response change from being interpreted as an empirical improvement in ranking, without proposing a new general theory of attribution.
+A common response defines the quantity being compared. It does not provide a universal measure of explanation quality.
+Its action coordinates, units, baselines, perturbation groups and aggregation need to be justified for the intended use.
+Matched random, input-difference and path-gradient controls would help address the unresolved ranking question by separating information in the attribution from simple input structure and the IG multiplier.
+The deferred protocols provide no comparative or learned-weight-specific result in this paper.
 
 \paragraph{A practical evaluation procedure.}
-We recommend four steps when reporting action-discrepancy attributions.
+These distinctions suggest four steps when reporting action-discrepancy attributions.
 \begin{enumerate}
-\item State the scalar attribution target and evaluation response separately. Also specify the reference action, fixed noise, feature representation, baseline, intervention groups and schedule.
-\item Compare rankings on authenticated matched contexts under each common response. Claims of efficacy need matched random and simple ranking controls. To assess a response change, rescore the same interventions, recompute the endpoint normalization and retain overshoots and undefined gaps.
-\item Assess repeatability and sensitivity of coordinates, rankings and responses across numerical settings on a declared context roster. Report failures and incomplete cases. Completeness and agreement on finitely many grids are numerical checks. They do not certify exact IG.
-\item Declare the unit of analysis and dependence grouping. Keep response sensitivity, numerical reliability and ranking quality distinct, because none alone establishes improved closed-loop behavior.
+\item Specify the scalar attribution target and evaluation response separately. Also state the reference action, fixed noise, feature representation, baseline, intervention groups and schedule.
+\item Compare rankings on authenticated matched contexts under each common response. Claims of efficacy need matched random and simple ranking controls. To examine a response change, rescore the same interventions, recompute the endpoint normalization and retain overshoots and undefined gaps.
+\item Check repeatability and sensitivity of coordinates, rankings and responses across numerical settings on a declared context roster. Retain failures and incomplete cases. Completeness and agreement on finitely many grids help diagnose numerical behavior, but they do not certify exact IG.
+\item Report the unit of analysis and dependence grouping. Distinguish response sensitivity from numerical reliability and ranking quality, because none of these alone establishes improved closed-loop behavior.
 \end{enumerate}
-These steps make clear what each comparison identifies. They do not determine a universally adequate integration budget or evaluation response.
+This procedure clarifies what each comparison identifies. It does not determine a universally adequate integration budget or evaluation response.
 
-The historical records contain several sources of uncertainty, and each needs different treatment.
-Source-record hashes verify the released bytes, but exact checkpoint and context identities can remain unknown.
-Resampling whole episodes addresses dependence within episodes conditional on the recorded empirical mixture. It cannot repair shared or overwritten contexts, preprocessing confounds or missing training replicates.
-The released 1B results come from one checkpoint. The solver and alternative-target analyses cover fewer tasks than the verification campaign.
-Endpoint normalization permits unbounded response curves, so the results can be sensitive to endpoint gaps.
+The historical records also contain several sources of uncertainty that require different treatment.
+Source-record hashes can authenticate the released bytes, but checkpoint and context identities can remain unknown.
+Episode resampling addresses dependence within episodes conditional on a particular empirical mixture. It cannot repair shared or overwritten contexts, preprocessing confounds or missing training replicates.
+The 1B results come from one checkpoint. The solver and alternative-target analyses also cover narrower task populations than the verification campaign.
+Endpoint normalization can produce unbounded response curves, making the results sensitive to endpoint gaps.
 Camera-token and language-token interventions differ in their group counts and meaning. Their AUCs therefore cannot be used interchangeably as measures of modality importance.
 
-The overlay panels are retained as historical artifacts, not as evidence of successful grounding or as diagnoses of behavioral failure.
-The groups previously named from completeness residuals also describe numerical diagnostics. They are not independently validated labels for outcomes such as misgrounding or delayed credit.
-The original main-pass and early budget-extension numbers could not be recovered and are therefore absent from the revised primary tables.
+We preserve historical overlay panels as artifacts, but they do not establish successful grounding or diagnose behavioral failure.
+Groups previously named from completeness residuals likewise describe numerical diagnostics. They are not independently validated labels for outcomes such as misgrounding or delayed credit.
+The original main-pass and early budget-extension numbers could not be recovered, so the revised primary tables exclude them.
 Appendix~\ref{sec:appendix-budget} reports only later budget cohorts that can be reconstructed. Those cohorts do not establish convergence.
 
 \section{Conclusion}
 
 An explicit auxiliary action-discrepancy score defines per-policy-call IG for a fixed-noise diffusion sampler.
-Across the saved RDT perturbation curves, changing only the evaluation response changes normalized AUC while keeping the selected features fixed.
-All eight reported paired cases have positive median changes, whereas overshooting tails make six means negative. Both the summary statistic and endpoint geometry therefore shape the conclusion.
-The finite-grid analytic counterexample rules out a universal random-ranking AUC of 0.5.
-The canonical retrospective tables keep measurements supported by the available records and exclude primary constants that could not be recovered.
-The actual-model diagnostics retain unresolved numerical failures and incomplete coverage.
-The smooth aliasing construction shows that finite grids can agree while producing an ordering different from exact IG.
-A common evaluation response is needed to interpret a comparison of ranking quality. These results do not show that one target or attribution method performs better under that response.
+For the saved RDT perturbation curves, changing only the evaluation response changes normalized AUC while leaving the selected features fixed.
+All eight reported paired cases have positive median changes. At the same time, overshooting tails make six means negative, which shows why the summary statistic and endpoint geometry both affect the conclusion.
+A finite-grid analytic example also rules out a universal random-ranking AUC of 0.5.
+The canonical retrospective tables retain the measurements supported by the available records and exclude primary constants that could not be recovered.
+The actual-model diagnostics preserve unresolved numerical failures and incomplete coverage.
+The smooth aliasing construction shows a further limit: finite grids can agree while producing an ordering different from exact IG.
+A common response is needed to interpret a comparison of ranking quality. Our results do not establish that one target or attribution method performs better under that response.
 
 \section*{Ethical Statement}
-This research analyzes pretrained robotic manipulation policies in simulation. No human subjects were involved.
-Attribution is a diagnostic tool here, not a guarantee of safe robot deployment.
-Attractive maps, low completeness residuals or uncalibrated AUCs can create unjustified confidence if they are misinterpreted. The stated limits and controls are intended to prevent that inference.
+This work analyzes pretrained robotic manipulation policies in simulation. No human subjects were involved.
+Attribution serves as a diagnostic tool here and does not guarantee safe robot deployment.
+Attractive maps, low completeness residuals or uncalibrated AUCs can create unjustified confidence when they are misinterpreted. The stated limits and controls are intended to prevent that inference.
 
 \section*{Reproducibility Statement}
-The retrospective analysis parses a raw inventory authenticated by hashes, records decisions about repeated occurrences, and ties each result to physical source records.
-Revised tables and figures come from the same canonical artifact. Their points and intervals use identical populations, and a manuscript lineage registry identifies their sources.
+The retrospective analysis parses a raw inventory authenticated by hashes, records decisions about repeated occurrences, and links each result to physical source records.
+The revised tables and figures come from the same canonical artifact. Their points and intervals use identical populations, and a manuscript lineage registry records their sources.
 The artifact retains exclusions for conflicting keys, action-norm strata, endpoint and tail diagnostics, alternative episode weightings and conditional grouping sensitivities.
-The separate paired rescoring artifact includes its pre-computation analysis protocol, all eight cases, paired call and episode summaries, bootstrap membership, and an exact decomposition by saved-node geometry. A separately versioned exploratory supplement records every single-episode omission and its source identities without changing those primary results. The smooth nested-grid example separates its analytic proof from repeated FP32/FP64 CPU checks through the unchanged trapezoidal kernel.
+The separate paired rescoring artifact includes its pre-computation analysis protocol, all eight cases, paired call and episode summaries, bootstrap membership, and an exact decomposition by saved-node geometry. A separately versioned exploratory supplement records every single-episode omission and its source identities while leaving those primary results unchanged. The smooth nested-grid example includes an analytic proof and repeated FP32/FP64 CPU checks through the unchanged trapezoidal kernel.
 These operations reproduce arithmetic over saved records. They do not recover missing models, sidecars or original observations.
-The portable numerical projection contains the full planned roster, recorded checks and metrics, report hashes, and selected YCB FP32 tensors with their tensor hashes. It does not contain all raw artifacts for the 72 completed target-modality cells.
-Its CPU reproducer recomputes the reported diagnostics and saved-tensor checks from that projection. It does not repeat the complete original raw-artifact audit or execute the model again.
-Separately, the new runtime records immutable context, source, checkpoint, language, environment and noise identities. It fails explicitly on nonfinite attributions instead of sanitizing their coordinates.
-Neither a candidate PDF nor a successful script run alone establishes an authenticated scientific replication.
+The portable numerical projection retains the full planned roster, recorded checks and metrics, report hashes, and selected YCB FP32 tensors with their tensor hashes. It does not contain all raw artifacts for the 72 completed target-modality cells.
+Its CPU reproducer uses this projection to recompute the reported diagnostics and saved-tensor checks. It does not repeat the complete original raw-artifact audit or execute the model again.
+The new runtime separately records immutable context, source, checkpoint, language, environment and noise identities. It fails explicitly when an attribution is nonfinite instead of sanitizing its coordinates.
+A candidate PDF or successful script run alone cannot establish an authenticated scientific replication.
 \ifanonymous
 Anonymous manuscript sources and a research supplement accompany this audit copy. The identified repository URL is omitted to support independent review.
 \else
@@ -722,51 +722,50 @@ I am sincerely grateful to Professor Sumit K.\ Jha, Department of Computer and I
 \bibliography{references}
 \clearpage
 \appendix
-
 \section{Response-Geometry Derivations}
 \label{sec:geometry-proofs}
 
-The identities in Section~\ref{sec:path-weights} keep the action reference fixed and assume that the relevant path gradients are integrable.
-Differentiating $Q=-r/(2D\sigma^2)$ and $L=-\sqrt{r+\epsilon}$ gives Equation~\ref{eq:gradient-weight}.
-To obtain Equation~\ref{eq:normalized-geometry}, set $a_0=\sqrt\epsilon$, $b=\sqrt{R+\epsilon}$ and $z=\sqrt{r+\epsilon}$.
-Then $R=b^2-a_0^2$ and $r=z^2-a_0^2$, so rationalization gives
+The identities in Section~\ref{sec:path-weights} hold the action reference fixed and assume that the relevant path gradients are integrable.
+Differentiating $Q=-r/(2D\sigma^2)$ and $L=-\sqrt{r+\epsilon}$ gives Equation~\ref{eq:gradient-weight} directly.
+For Equation~\ref{eq:normalized-geometry}, set $a_0=\sqrt\epsilon$, $b=\sqrt{R+\epsilon}$ and $z=\sqrt{r+\epsilon}$.
+Because $R=b^2-a_0^2$ and $r=z^2-a_0^2$, rationalization gives
 \begin{equation}
 \frac{b^2-z^2}{R}-\frac{b-z}{b-a_0}
 =\frac{(z-a_0)(b-z)}{R}.
 \end{equation}
 For in-range residuals, the maximum difference is $(b-a_0)^2/(4R)\le1/4$.
-This pointwise derivation applies to interventions from a fixed ranking. It does not order different rankings or establish improvements in task success.
+These pointwise statements apply to interventions from a fixed ranking. They do not order different rankings or establish improvements in task success.
 
-For the rank-reversal example, take $c=4/5$ and parameterize the path by $(t,t)$.
+For the rank-reversal example, let $c=4/5$ and parameterize the path by $(t,t)$.
 The scalar residual is $d(t)=1+c-t^2-ct=(1-t)(1+t+c)\ge0$.
-The quadratic path integrands are $2td(t)$ and $cd(t)$, giving
+The quadratic path integrands are $2td(t)$ and $cd(t)$, which give
 \begin{equation}
 \mathrm{IG}^{Q}=\left(\frac12+\frac c3,\frac{2c}3+\frac{c^2}2\right)
 =\left(\frac{23}{30},\frac{64}{75}\right).
 \end{equation}
-For the stabilized negative norm, the path integrands are $2t\,d(t)/\sqrt{d(t)^2+\epsilon}$ and $c\,d(t)/\sqrt{d(t)^2+\epsilon}$.
-Using the bound $d(t)\ge c(1-t)$ and monotonicity of $1-d/\sqrt{d^2+\epsilon}$ gives
+For the stabilized negative norm, the corresponding integrands are $2t\,d(t)/\sqrt{d(t)^2+\epsilon}$ and $c\,d(t)/\sqrt{d(t)^2+\epsilon}$.
+The bound $d(t)\ge c(1-t)$ and monotonicity of $1-d/\sqrt{d^2+\epsilon}$ give
 \begin{equation}
 \int_0^1\left(1-\frac{d(t)}{\sqrt{d(t)^2+\epsilon}}\right)dt
 \le1-\frac{\sqrt{c^2+\epsilon}-\sqrt\epsilon}{c}
 \le\frac{\sqrt\epsilon}{c}.
 \end{equation}
-At the implemented stabilizer, this gives $0\le1-\mathrm{IG}^{L}_1\le2\sqrt\epsilon/c=2.5\times10^{-6}$ and $0\le c-\mathrm{IG}^{L}_2\le\sqrt\epsilon=10^{-6}$.
-All coordinates are positive. The stabilized $L$ margin is at least $0.1999975$, while $Q$ has the reverse ordering with exact margin $13/150$.
-The artifact checks these identities through independent differentiation, integration and normalization. The checks include overshoots, zero gaps and a policy example without rank reversal.
+Therefore $0\le1-\mathrm{IG}^{L}_1\le2\sqrt\epsilon/c=2.5\times10^{-6}$ and $0\le c-\mathrm{IG}^{L}_2\le\sqrt\epsilon=10^{-6}$ at the implemented stabilizer.
+All coordinates are positive. The stabilized $L$ margin is at least $0.1999975$, while $Q$ gives the opposite ordering with exact margin $13/150$.
+The artifact checks these identities through independent differentiation, integration and normalization. Those checks include overshoots, zero gaps and a policy example without rank reversal.
 
 \input{appendix_aliasing.tex}
 
 \section{Secondary Historical Results}
 \label{sec:secondary-historical}
-These analyses preserve additional observations from the saved campaigns.
-Limits on training, reference, context and preprocessing prevent conclusions about model-scale effects, learned-weight-specific efficacy or a causal effect of denoiser contraction.
+These analyses retain additional observations from the saved campaigns.
+Their limits on training, reference, context and preprocessing prevent conclusions about model-scale effects, learned-weight-specific efficacy or a causal effect of denoiser contraction.
 
 \subsection{The Separately Recorded 1B Cohort}
-The saved 1B campaign shows why episode weighting matters. Changing the weights changes the quantity being estimated.
+The saved 1B analysis shows why episode weighting matters: changing the weights changes the quantity being estimated.
 Table~\ref{tab:oneb} uses the same \OneBCalls{} calls from \OneBEpisodes{} episodes for both summaries.
-Weighting affects the language summaries more than the vision summaries in this cohort. The cohort also mixes language-baseline provenance.
-Neither estimate comes from replicated training, and neither establishes a controlled improvement over 170M.
+Within this cohort, the weighting changes the language summaries more than the vision summaries. The cohort also mixes language-baseline provenance.
+Neither estimate comes from replicated training or establishes a controlled improvement over 170M.
 \input{tables_revision/oneb.tex}
 
 \subsection{Randomization and Baseline Diagnostics}
@@ -774,36 +773,36 @@ Neither estimate comes from replicated training, and neither establishes a contr
 \label{sec:anchoring}
 
 Table~\ref{tab:sanity} reconstructs the standard verification-campaign correlations.
-Substantial rank association persists after model randomization, while input shuffling changes the maps more strongly.
-This contrast does not show that model dependence is unnecessary or establish semantic grounding.
-A map based entirely on input magnitude can change under input shuffling while ignoring learned policy weights.
-Appendix~\ref{sec:appendix-diagnostics} reports the saved frozen-reference and cascade variants, along with a sensitivity analysis of dependence grouping.
+Substantial rank association remains after model randomization, while input shuffling changes the maps more strongly.
+This contrast does not show that model dependence is unnecessary, and it does not certify semantic grounding.
+A map based only on input magnitude can also change under input shuffling while ignoring learned policy weights.
+Appendix~\ref{sec:appendix-diagnostics} reports the saved frozen-reference and cascade variants, including a sensitivity analysis of dependence grouping.
 \input{tables_revision/sanity.tex}
 
-The IG multiplier $(x_i-x_i')$ can create shared structure, but it does not determine a particular ranking.
-Gradients along the path can dominate. The input features also come from retained learned encoders/adaptors.
-Persistent correlations therefore motivate input-only and path-gradient-only controls, but do not establish that the IG multiplier dominates.
-Spearman correlation cannot be read as the fraction of model-independent information.
-The baseline comparisons in Appendix~\ref{sec:appendix-diagnostics} show imperfect agreement. Too few groups are available to establish equivalence.
+The IG multiplier $(x_i-x_i')$ allows shared structure, but it does not force a particular ranking.
+Path gradients can dominate the result. At the same time, the input features themselves come from retained learned encoders/adaptors.
+Persistent correlations therefore motivate input-only and path-gradient-only controls. They do not establish that the multiplier dominates the result.
+Spearman correlation cannot be interpreted as a fraction of model-independent information.
+The baseline comparisons in Appendix~\ref{sec:appendix-diagnostics} show imperfect agreement. Their small number of groups is insufficient to establish equivalence.
 
 \subsection{Action Displacement and Solver Resolution}
 \label{sec:contraction}
 
 The quadratic score is a normalized squared displacement, so its numerical magnitude depends directly on the chosen convention.
-Dropping $1/D$ scales exact scores and attributions by $D$, while exact ranks, normalized AUC and relative completeness remain unchanged.
-Whether an action change matters operationally requires action units and a justified behavioral criterion. The algebra alone cannot answer that question.
+Removing $1/D$ multiplies exact scores and attributions by $D$, while exact ranks, normalized AUC and relative completeness remain unchanged.
+This algebra does not determine whether an action change matters operationally. That judgment requires action units and a justified behavioral criterion.
 
 The saved solver analysis compares median relative action displacement under top-5\% vision deletion between $T=2$ and $T=20$.
-Figure~\ref{fig:displacement} reports this endpoint contrast by conditionally resampling nominal episode pairs.
-Reference actions vary across solver settings, and exact contexts/noise cannot be authenticated.
+Figure~\ref{fig:displacement} reports the endpoint contrast using conditional resampling of nominal episode pairs.
+The reference actions vary across solver settings, and exact contexts/noise cannot be authenticated.
 The intervals allow appreciable increases as well as decreases.
 Changing $T$ changes the discretization of the full denoising horizon. It does not add steps along one fixed trajectory.
-These observations therefore neither establish a causal contraction mechanism nor rule one out.
+These observations therefore establish neither a causal contraction mechanism nor its absence.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.95\linewidth]{figures_revision/solver_endpoint.pdf}
-\caption{Retrospective change in median relative displacement under top-5\% vision deletion. The intervals conditionally resample nominal episode pairs across solver resolutions and apply to the released records and grouping. The vertical reference marks no endpoint change. It is neither a contraction test nor an equivalence margin. Raw context/noise identity remains unknown.}
+\caption{Retrospective change in median relative displacement under top-5\% vision deletion. The intervals use nominal episode pairing across solver resolutions and are conditional on the released records and grouping. The vertical reference marks no endpoint change. It is neither a contraction test nor an equivalence margin. Raw context/noise identity remains unknown.}
 \label{fig:displacement}
 \end{figure}
 
@@ -811,10 +810,10 @@ These observations therefore neither establish a causal contraction mechanism no
 \label{sec:episode-influence}
 
 Large finite response changes affect the paired summaries in Table~\ref{tab:paired-rescoring}.
-To identify this sensitivity, we omit each of the 30 recorded episodes in turn,
-use all calls from the other 29 episodes, and recompute their equally
-weighted episode mean. Table~\ref{tab:episode-influence} gives every case.
-The analysis followed an exploratory audit of the same records. Its separately
+To locate this sensitivity, we omit each of the 30 recorded episodes in turn,
+retain all calls from the other 29 episodes, and recompute their equally
+weighted episode mean. Table~\ref{tab:episode-influence} reports every case.
+This analysis followed an exploratory audit of the same records. Its separately
 saved protocol is therefore not an outcome-blind preregistration.
 The omission ranges describe deterministic influence. They are not confidence
 intervals and do not establish that the recorded episodes form an independent sample.
@@ -825,7 +824,7 @@ The full untrimmed means, medians and conditional intervals remain unchanged.
 \caption{Exploratory omissions of one complete recorded episode. The range covers
 all 30 omission means. ``Same sign'' counts agreement with the full-cohort mean.
 Each case starts with 750 calls in 30 episodes, and rows within a ranking
-cohort reuse calls. These ranges are not confidence intervals. The separate
+cohort reuse calls. The ranges are not confidence intervals. The separate
 influence artifact supplies all 240 omission records and their
 retained-population hashes.}
 \label{tab:episode-influence}
@@ -833,31 +832,31 @@ retained-population hashes.}
 \input{tables_revision/episode_influence.tex}
 \end{table}
 
-All four negative insertion means stay negative under every individual
+All four negative insertion means remain negative after every individual
 omission. The Q language-deletion mean changes sign in 3 of 30 omissions,
 and the L2 language-deletion mean changes sign in 1 of 30. Both already have
 conditional bootstrap intervals spanning zero. In the latter case, the most
-negative episode accounts for $97.29\%$ of the sum of magnitudes of negative
-episode means. This describes concentration among negative episode means,
+negative episode contributes $97.29\%$ of the sum of magnitudes of negative
+episode means. This measures concentration among negative episode means,
 not a share of the signed net mean. It does not justify excluding that episode.
 
-Endpoint normalization helps explain the extreme vision-insertion changes.
+Endpoint normalization also helps explain the extreme vision-insertion changes.
 For the most negative Q-ranking call, the baseline squared residual is
-$0.0174195$, the smallest value among its 750-call cohort. The same call's
-maximum saved perturbed residual is $653.053$, a ratio of about $37{,}490$.
+$0.0174195$, the smallest in its 750-call cohort. At the same time, the
+maximum saved perturbed residual is $653.053$, giving a ratio of about $37{,}490$.
 The finite Q endpoint gap is $1.7011\times10^{-5}$, above the historical
-$10^{-9}$ cutoff. Its native Q AUC is $-4464.9082$, while its L2 rescore is
-$-26.0696$. The call therefore combines a small baseline discrepancy with a large
+$10^{-9}$ cutoff. The native Q AUC is $-4464.9082$, while its L2 rescore is
+$-26.0696$. This call combines a small baseline discrepancy with a large
 intervention response. The division is neither undefined nor by a machine-zero
-value. These quantities do not calibrate physical importance in action units.
-The artifact supplies the same diagnostics within each separate ranking cohort.
+value. These quantities also do not calibrate physical importance in action units.
+The artifact provides the same diagnostics within each separate ranking cohort.
 Matching nominal episode labels cannot authenticate a cross-arm pair.
 
 \section{Additional Retrospective Diagnostics}
 \label{sec:appendix-diagnostics}
-Both the frozen-reference and backbone-cascade analyses retain learned encoders/adaptors. Their historical context identities remain uncertain.
-Table~\ref{tab:variants} reports recorded-episode grouping and conditional shared-context grouping. Comparing them measures sensitivity to grouping, but does not establish that either grouping is independent.
-Table~\ref{tab:baseline} gives point summaries of the baseline rankings. The small number of groups prevents an equivalence conclusion.
+The frozen-reference and backbone-cascade analyses retain learned encoders/adaptors, and their historical context identities remain uncertain.
+Table~\ref{tab:variants} reports recorded-episode grouping and conditional shared-context grouping. Comparing them measures sensitivity to grouping, but does not prove that either grouping is independent.
+Table~\ref{tab:baseline} reports baseline-ranking point summaries. Their small group count prevents an equivalence conclusion.
 \input{tables_revision/variants.tex}
 \input{tables_revision/baseline.tex}
 \FloatBarrier
@@ -869,8 +868,8 @@ Table~\ref{tab:baseline} gives point summaries of the baseline rankings. The sma
 Table~\ref{tab:m128} replaces the earlier table of unrecovered and duplicated constants with later cohorts that can be reconstructed.
 This historical sensitivity analysis explicitly retains the norm-selected population and occurrence rule.
 These calls are not paired with the earlier $m=64$ main pass on identical observations, baselines, runtime and noise.
-Truncating trajectories to match call depth does not create such pairs.
-Assessing an integration-budget effect therefore requires authenticated fixed contexts, with precision and quadrature controlled.
+Truncating trajectories to the same call depth does not create such pairs.
+An integration-budget effect therefore needs to be evaluated on authenticated fixed contexts, with precision and quadrature controlled.
 \input{tables_revision/budget.tex}
 
 \end{document}

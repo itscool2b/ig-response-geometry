@@ -1,8 +1,10 @@
 # Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study
 
-This repository contains the active TMLR revision, preserved historical records, and reproducible analysis of those records. The current paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. Local reproduction and scientific checks are documented; human author review and external publication decisions remain pending.
+This repository contains the current general research preprint, preserved historical records, and reproducible analysis of those records. The paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. The preprint is not a journal acceptance or a completed journal submission.
 
-The sole current author is Arjun Bajpai. The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and `paper/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. Current source is `paper/paper.tex`; `paper/paper-revision.pdf` and `paper/paper-anonymous-draft.pdf` are explicitly provisional candidates.
+The sole current author is Arjun Bajpai. Read the [current paper](paper/paper-revision.pdf), its [LaTeX source](paper/paper.tex), or the [anonymous audit copy](paper/paper-anonymous-draft.pdf). The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and `paper/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. The current paper is a 24-page general preprint. Its historical filenames and template do not imply submission to TMLR.
+
+See [current verification and scope](docs/preprint_status.md) for the CPU checks, manuscript consistency review and public-artifact boundaries.
 
 ## What the evidence establishes
 
@@ -96,14 +98,14 @@ Vision attribution is post-image-adaptor, language attribution is post-language-
 - `pipeline.py`, `per_step_attribution.py`, `rdt_sampling.py`, `experiment_io.py`: revised loading, attribution, sampling and storage.
 - `faithfulness.py`, `sanity.py`, `baseline_sensitivity.py`, `displacement.py`: controlled replay/evaluation entrypoints. Check each current `--help`; historical shell wrappers are not an execution specification for the revised protocol.
 - `scripts/validate_*.py`: targeted numerical diagnostics requiring recorded decisions and authenticated contexts.
-- `paper/`: current source, official TMLR style/license, provisional builds and preserved historical assets.
+- `paper/`: current preprint source and PDFs, official TMLR style/license, and preserved historical assets.
 - `docs/`: current contracts and explicitly bounded historical demonstrations.
 
 See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymous builds. The historical PDF is protected from replacement. Final paper and supplement checks include source provenance, anonymity, rights, numerical/statistical validity and full rendered inspection. This repository does not claim journal acceptance or completed submission.
 
 ## Citation and licenses
 
-`CITATION.cff` identifies the existing released code/records and historical deposit. Cite that exact version when referring to those released artifacts; the provisional revision has no newly assigned DOI or release version.
+`CITATION.cff` identifies the current manuscript and repository. The current revision has no newly assigned DOI or release version. When referring specifically to the earlier released paper or records, cite [the historical Zenodo version](https://doi.org/10.5281/zenodo.22133507) and its original title instead.
 
-Code and original project records are MIT licensed. `image.jpg` and the three Month 2 figures reproducing it have unresolved third-party redistribution provenance and are excluded from new submission packaging. They remain in repository history/current archival files and are not relicensed here. The official TMLR style/bibliography files carry their upstream Apache 2.0 license. The historical IJCAI template has its own provenance. See `NOTICE` and `paper/tmlr-source.json`.
+Code and original project records are MIT licensed. The third-party demonstration photograph `image.jpg` and its three Month 2 derivative figures have unresolved redistribution provenance. They have been removed from the current public tree and are excluded from research packages. Existing repository history has not been rewritten and does not grant permission to reuse them. The TMLR template repository's Apache 2.0 license and the bibliography file's separate LPPL notice are both retained. The historical IJCAI template has its own provenance. See [NOTICE](NOTICE) and [template provenance](paper/tmlr-source.json).
 

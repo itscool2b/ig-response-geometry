@@ -29,6 +29,6 @@ The historical account reports about 4.4 GB model storage in 4-bit and an 8-bit 
 
 ## Visualization and status
 
-`output/ig_llava.png` displays a 24 by 24 representation map and text bars. Correctly locating tokens on the source photograph depends on the processor's actual crop/resize geometry. A stretched-image overlay alone does not establish alignment. The photograph and figure retain the rights exception in `NOTICE`.
+The historical `output/ig_llava.png` displayed a 24 by 24 representation map and text bars. Correctly locating tokens on the source photograph depends on the processor's actual crop/resize geometry. A stretched-image overlay alone does not establish alignment. The photograph and figure have been removed from the current public tree because their redistribution provenance is unresolved. Earlier Git history retains the rights exception in `NOTICE`.
 
 The current `ig_llava.py` entrypoint is retired and exits 2; `--status` reports the exact preserved source and reasons without running the model. See [legacy workflow disposition](legacy_workflows.md). This page does not certify the legacy quantized runtime. Current research and numerical validation are described in [ig_rdt.md](ig_rdt.md) and [integrated_gradients.md](integrated_gradients.md).

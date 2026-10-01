@@ -1,0 +1,13 @@
+# Current preprint and verification
+
+The current paper is *Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study*, by Arjun Bajpai. The identified and anonymous PDFs each have 24 pages. The source, abstract, generated tables and figures belong to this revision. The eight-month acknowledgment appears in the identified version. The older `paper/paper.pdf` and Zenodo deposit retain their original title and historical scope.
+
+On October 1, 2026, the complete current repository CPU suite passed with **695 tests** and six dependency deprecation warnings. It ran in the isolated Python 3.12.14 environment documented in [CPU reproduction](cpu_reproduction.md), with Torch 2.14.1+cpu, network-dependent model access disabled and no GPU inference. Dependency consistency and pinned-template validation passed. Tests establish the behavior covered by their assertions, not model efficacy or journal acceptance.
+
+The manuscript's 178 scientific lineage entries are unchanged from the scientifically checked author-style version. The restored prose, separate appendix, table captions and plain-text abstract are mutually consistent. Both rendered PDFs have been reviewed for layout, figures, tables, equations and references. Exact source and PDF identities are checked when assembling the matching research and manuscript-source packages.
+
+The scientific scope remains exact response-geometry results, descriptive reanalysis of 99 preserved inputs, finite-grid examples and an explicitly incomplete numerical diagnostic case. There is no claim of a production integration budget, superior attribution rankings, learned-weight specificity or task-success improvement. The original artifact-provenance limits remain in the paper and data guide.
+
+The current public tree excludes the four historical photograph-containing assets with unresolved redistribution provenance. Their earlier public history has not been erased, and no new reuse rights are asserted. Required source and template notices remain in place. Private notebooks, internal audit records, credentials, external-service records and model binaries are not part of this public artifact.
+
+This is a general research preprint, not a completed journal submission. Venue-specific presentation and author statements remain the author's responsibility. The repository can be reproduced with the commands in the [main README](../README.md), [saved-data guide](../analysis/revision/README.md) and [paper build guide](../scripts/build_paper.md). No new GPU campaign is needed to reproduce the retained CPU evidence.

@@ -22,4 +22,4 @@ The record reports 13.13% relative completeness residual at m=300 for log-softma
 
 ResNet and ViT differ in architecture, learned parameters, preprocessing and score response. Their measured residual difference cannot be assigned entirely to activation choice. Larger budgets and small scalar residuals do not guarantee accurate coordinates.
 
-Current calls use the [revised core](integrated_gradients.md), including a trapezoidal default. The named legacy rule preserves historical quadrature only. Historical output: `output/ig_resnet50.png`. The photograph and photo-containing figures retain the third-party exception in `NOTICE`; this edit does not resolve their missing rights provenance.
+Current calls use the [revised core](integrated_gradients.md), including a trapezoidal default. The named legacy rule preserves historical quadrature only. The historical output `output/ig_resnet50.png` and source photograph have been removed from the current public tree because their redistribution provenance is unresolved. Use an image you are authorized to process with the documented `--image` argument. Earlier Git history retains the rights exception in `NOTICE`.

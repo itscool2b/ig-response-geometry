@@ -1,17 +1,15 @@
 cff-version: 1.2.0
-message: "If you use this code or the released records, please cite the paper below."
-title: "The Readout, Not the Denoiser: Per-Step Integrated Gradients for Diffusion-Policy Vision-Language-Action Models (code and records)"
+message: "If you use the revised code or analysis, cite the current manuscript below. For the historical release, use DOI 10.5281/zenodo.22133507 and its original title."
+title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study (code and records)"
 authors:
   - family-names: Bajpai
     given-names: Arjun
 repository-code: "https://github.com/itscool2b/the-readout-not-the-denoiser-repo"
 license: MIT
-version: 1.1.0
-date-released: "2026-08-26"
 preferred-citation:
   type: article
-  title: "The Readout, Not the Denoiser: Per-Step Integrated Gradients for Diffusion-Policy Vision-Language-Action Models"
-  doi: "10.5281/zenodo.22133507"
+  title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study"
+  url: "https://github.com/itscool2b/the-readout-not-the-denoiser-repo/blob/main/paper/paper-revision.pdf"
   year: 2026
   authors:
     - family-names: Bajpai
