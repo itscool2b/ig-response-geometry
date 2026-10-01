@@ -283,10 +283,14 @@ def bootstrap_summary(values, groups, *, statistic="median", draws=10000, seed=0
 def random_order_counterexample(grid=(0, 1, 5, 10, 20, 30, 50, 75, 100)):
     """Equal additive features make every ordering random-equivalent.
 
-    With f(x)=sum(x_i), x_i=1, baseline=0 and self-reference f(x),
-    Q on insertion yields 1-(1-k)^2, and deletion yields 1-k^2.
-    Both continuous integrals are 2/3. Trapezoidal saved-grid values differ
-    from that integral, and are reported rather than silently conflated.
+    For n finite features, f(x)=sum(x_i), x_i=1, baseline=0 and
+    self-reference f(x)=n, prefix interventions realize only q=k/n.
+    Q normalization gives 1-(1-q)^2 on insertion and 1-q^2 on deletion.
+    Their polynomial continuous-fraction extensions integrate to 2/3;
+    the all-prefix trapezoid is instead 2/3 - 1/(6*n**2). With n=100,
+    every fraction on the default integer-percent grid is realized exactly.
+    The returned continuous-integral field describes the extension; the
+    grid fields give finite-grid areas. Returned historical data is unchanged.
     """
     x = np.asarray(grid, dtype=float) / 100
     ins = (1 - (1 - x) ** 2).tolist()

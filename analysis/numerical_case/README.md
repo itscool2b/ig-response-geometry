@@ -6,6 +6,11 @@ Reproduce the tables and saved-tensor diagnostics from the repository root, with
 
 ```text
 python analysis/numerical_case/2026-10-01-v1/summarize.py --output runs/numerical-case-reproduction
+```
+
+With pytest installed, run the separate verification tests from the repository root:
+
+```text
 python -m pytest tests/test_numerical_case.py -q
 ```
 

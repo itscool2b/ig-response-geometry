@@ -10,7 +10,12 @@ From this directory, reproduce all JSON, CSV, Markdown and TeX outputs with Pyth
 
 ```text
 python summarize.py --input inputs/sealed_v6.json --output reproduced
-python -m pytest test_summary.py -q
+```
+
+The separate verification tests require pytest. From the repository root, run:
+
+```text
+python -m pytest tests/test_numerical_case.py -q
 ```
 
 `extract_local.py` is the optional provenance bridge from the original preserved evidence. It requires CPU Torch to decode already-saved tensors, hides CUDA, and neither imports a model nor accesses a network. Re-extraction requires the original archive and protocol files; public table regeneration does not.

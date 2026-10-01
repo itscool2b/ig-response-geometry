@@ -8,7 +8,7 @@ The sole current author is Arjun Bajpai. The existing [Zenodo deposit](https://d
 
 The historical `logpi` target is an auxiliary quadratic discrepancy from one fixed-noise predicted action chunk. It is not the diffusion policy's log likelihood. Rescoring the same recorded ranking and interventions changes median vision deletion AUC from 0.447903 under Q to 0.290759 under stabilized L2. This demonstrates response-geometry sensitivity; it does not establish a better ranking.
 
-Normalized random-order AUC is not universally 0.5. The equal-feature quadratic counterexample gives 2/3 for the continuous integral and 0.65976 on the historical sampled grid. Actual efficacy comparisons need matched empirical controls. Changing solver step count measures solver-resolution sensitivity and does not exclude denoiser contraction.
+Normalized random-order AUC is not universally 0.5. A finite quadratic counterexample with 100 equal additive features gives 0.65976 for every ordering on the historical nine-point grid. Evaluating all feature prefixes instead gives `2/3 - 1/(6n^2)` for `n` features; 2/3 is the continuous-fraction idealization and the limit as `n` increases, not the exact finite-grid area. Actual efficacy comparisons need matched empirical controls. Changing solver step count measures solver-resolution sensitivity and does not exclude denoiser contraction.
 
 The exact Q/L2 gradient relation has a positive, path-dependent scale factor. A smooth two-feature construction shows that this factor can reverse the integrated feature ranking, including at the implemented L2 stabilizer. This is an analytic existence result, not an observed RDT ranking improvement.
 

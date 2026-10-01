@@ -46,14 +46,14 @@
 % TMLR author separator and algorithmic boolean operator share this name.
 \let\AND\relax
 
-\noindent\textbf{Revision status (October 1, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports analytic results, a canonical retrospective reanalysis and an incomplete numerical diagnostic campaign. Comparative ranking efficacy and learned-weight dependence are outside its empirical claims. Final evidence integration and independent review remain open; it is not submission-ready.
+\noindent\textbf{Revision status (October 1, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports analytic results, a canonical retrospective reanalysis and an incomplete numerical diagnostic campaign. Comparative ranking efficacy and learned-weight dependence are outside its empirical claims. Author review and submission checks remain pending.
 
 \begin{abstract}
 Attribution evaluation depends on both the ranking that selects interventions and the response that scores them.
 We analyze this distinction for Integrated Gradients (IG) of a fixed-noise diffusion policy's predicted action chunk.
 For quadratic and stabilized negative-$\ell_2$ action-discrepancy targets, we derive an exact normalized-response relation and the positive, path-dependent factor relating their gradients.
 A smooth two-feature construction reverses the IG ranking despite pointwise collinearity of the nonzero gradients, including at the implemented stabilizer.
-An equal-feature construction gives continuous quadratic-response insertion and deletion AUC of 2/3 for every ordering, ruling out a universal random-ranking reference of 0.5.
+On the historical nine-point grid, a 100-feature equal-contribution policy gives quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering, ruling out a universal random-ranking reference of 0.5.
 A canonical reanalysis of \ArchiveFiles{} saved Robotics Diffusion Transformer files then separates fixed-ranking response changes from unauthenticated cross-target comparisons.
 For the same recorded quadratic-target rankings, changing only the response changes median deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} without changing a selected feature.
 Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from \RescoreLDeletionL{} to \RescoreLDeletionQ{}.
@@ -92,7 +92,7 @@ The intended attribution is a fixed-context action-discrepancy quantity; it does
 Our contributions are as follows.
 \begin{enumerate}
 \item \textbf{Response and path-weight analysis.} An exact normalized-response identity, its overshoot and zero-gap qualifications, and a finite-stabilizer construction in which the quadratic and negative-norm targets reverse IG feature order.
-\item \textbf{A calibration counterexample.} An equal-contribution policy for which every ordering has continuous quadratic-response insertion and deletion AUC of $2/3$, so 0.5 is not a universal chance reference.
+\item \textbf{A finite-grid calibration counterexample.} A 100-feature equal-contribution policy has quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering on the historical grid, so 0.5 is not a universal chance reference.
 \item \textbf{An authenticated retrospective case study.} Within-ranking rescoring of preserved RDT perturbation curves, with explicit occurrence rules, episode grouping and result-to-record lineage. Unknown historical context identities prevent a paired comparison of ranking quality.
 \item \textbf{Numerical diagnostic evidence.} Fixed-input repeatability and integration-budget checks from a partially completed campaign, with failures and incomplete coverage retained. These diagnose limitations of the tested calculations without approving a production setting.
 \end{enumerate}
@@ -415,12 +415,18 @@ Likewise, the larger native L2 score is not by itself recovered information, and
 \subsection{An Analytic Random-Order Counterexample}
 \label{sec:random-null}
 
-For an additive scalar policy with equal feature contributions, an all-one input and a zero baseline, every feature ordering is identical for perturbation evaluation.
-At deleted fraction $q$, quadratic-response normalization gives $1-q^2$; insertion gives $1-(1-q)^2$.
-Both continuous AUCs are $2/3$, despite the absence of ranking information.
-Trapezoidal integration on the historical requested grid gives \RandomGridAUC{} for both curves.
-The continuous integral and sampled-grid statistic are distinct quantities.
-An unstabilized negative-norm response instead produces linear normalized curves in this example.
+Consider the finite additive scalar policy $f(x)=\sum_{i=1}^{n}x_i$, an all-one input, a zero baseline and the self-reference $f(x)=n$.
+Every feature ordering gives the same perturbation values.
+Whole-feature prefix interventions realize only fractions $q=k/n$, with $k=0,\ldots,n$; at these fractions, the normalized quadratic deletion and insertion values are $1-q^2$ and $1-(1-q)^2$.
+Trapezoidal integration over all $n+1$ prefix fractions gives
+\[
+\operatorname{AUC}_{n}=\frac23-\frac{1}{6n^2}
+\]
+for either curve.
+Integrating their polynomial extensions over continuous $q\in[0,1]$ instead gives $2/3$, also the limit as $n\to\infty$; it is not the exact finite-grid area.
+With $n=100$, every fraction on the historical nine-point requested grid is realized exactly, and trapezoidal integration gives \RandomGridAUC{} for both curves and every ordering.
+This finite example suffices to refute a universal random-order AUC of 0.5.
+An unstabilized negative-norm response instead has linear values on the same fractions and trapezoidal AUC of 0.5.
 Consequently, a fixed AUC reference such as 0.5 requires justification for the policy, response and intervention protocol; it is not universal.
 This construction is an analytic control, not an empirical random-ranking measurement on RDT.
 
@@ -554,7 +560,7 @@ Appendix~\ref{sec:appendix-budget} reports only reconstructible later budget coh
 
 Per-policy-call IG for a fixed-noise diffusion sampler can be defined using an explicit auxiliary action-discrepancy score.
 For saved RDT perturbation curves, changing only the evaluation response changes normalized AUC without changing the selected features.
-An analytic example rules out a universal random-ranking AUC of 0.5.
+A finite-grid analytic example rules out a universal random-ranking AUC of 0.5.
 The canonical retrospective tables preserve what the available records support and exclude unrecovered primary constants.
 The actual-model diagnostics retain unresolved numerical failures and incomplete coverage.
 A common response is necessary for an interpretable comparison of ranking quality, but our results do not establish that one target or attribution method is superior under it.

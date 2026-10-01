@@ -101,12 +101,17 @@ has zero exact reference-norm matches among 750 nominal keys against the earlier
 regeneration population; L2 and maxdev each match all 750 norms. Exact raw
 contexts cannot be inferred from either agreement or disagreement.
 
-The analytic random-order control uses equal additive features. Every feature
-ordering yields the same normalized quadratic insertion/deletion curves,
-`1-(1-k)^2` and `1-k^2`. Their continuous AUC is 2/3, and trapezoidal integration
-on the released nine-point grid yields 0.65976. Neither is 0.5. The distinction between
-the continuous integral and sampled-grid AUC is explicit. This is not a new
-empirical RDT random-ranking baseline.
+The analytic random-order control uses a finite policy with `n` equal additive
+features. Whole-feature prefixes realize only fractions `q=k/n`; every ordering
+gives the same normalized quadratic insertion/deletion values,
+`1-(1-q)^2` and `1-q^2`. Trapezoidal integration over all `n+1` prefixes gives
+`2/3 - 1/(6n^2)`. The polynomial extensions have continuous integral 2/3,
+which is also the limit as `n` increases, not the exact finite-grid area.
+Choosing `n=100` realizes every fraction on the released nine-point grid exactly;
+that grid gives trapezoidal AUC 0.65976 for every ordering. This finite example
+refutes a universal 0.5 reference. It is not an empirical RDT random-ranking
+baseline. The frozen artifact's `quadratic_continuous_integral` field records
+the polynomial extension, while its grid fields record the finite-grid areas.
 
 The saved solver endpoint analysis reports T20/T2 relative-displacement median
 ratios at k=5, with paired nominal-episode resampling. Reference actions vary
