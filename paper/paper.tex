@@ -57,6 +57,7 @@ On the historical nine-point grid, a 100-feature equal-contribution policy gives
 A canonical reanalysis of \ArchiveFiles{} saved Robotics Diffusion Transformer files then separates fixed-ranking response changes from unauthenticated cross-target comparisons.
 For the same recorded quadratic-target rankings, changing only the response changes median deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} without changing a selected feature.
 Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from \RescoreLDeletionL{} to \RescoreLDeletionQ{}.
+Paired response changes reveal a further distinction: their medians are positive in all eight reported cases, while overshooting tails make their means negative in six.
 Existing actual-model diagnostics additionally show repeatable computations with unresolved integration-budget sensitivity in an explicitly incomplete cohort.
 They do not qualify a production numerical setting.
 Together these results distinguish response geometry, numerical reliability and ranking quality.
@@ -86,6 +87,7 @@ Neither establishes which ranking is more useful under a common response.
 
 A third issue is whether a computed attribution accurately approximates the specified mathematical quantity.
 Small scalar completeness residuals can conceal coordinate errors, and repeated finite-precision calculations can reproduce the same inaccurate approximation.
+A smooth construction in Appendix~\ref{sec:appendix-aliasing} strengthens this point: several nested grids can agree exactly in completeness, ranking and perturbation responses while reversing the exact IG ranking.
 We report already collected numerical diagnostics with their full planned roster and unfinished cells, rather than using a subset of successful checks to certify the implementation.
 The intended attribution is a fixed-context action-discrepancy quantity; it does not explain eventual task success or establish safe robot behavior.
 
@@ -94,7 +96,7 @@ Our contributions are as follows.
 \item \textbf{Response and path-weight analysis.} An exact normalized-response identity, its overshoot and zero-gap qualifications, and a finite-stabilizer construction in which the quadratic and negative-norm targets reverse IG feature order.
 \item \textbf{A finite-grid calibration counterexample.} A 100-feature equal-contribution policy has quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering on the historical grid, so 0.5 is not a universal chance reference.
 \item \textbf{An authenticated retrospective case study.} Within-ranking rescoring of preserved RDT perturbation curves, with explicit occurrence rules, episode grouping and result-to-record lineage. Unknown historical context identities prevent a paired comparison of ranking quality.
-\item \textbf{Numerical diagnostic evidence.} Fixed-input repeatability and integration-budget checks from a partially completed campaign, with failures and incomplete coverage retained. These diagnose limitations of the tested calculations without approving a production setting.
+\item \textbf{Numerical diagnostic limits.} A smooth counterexample to certification by finite-grid agreement, together with fixed-input repeatability and integration-budget checks from a partially completed campaign. Failures and incomplete coverage remain visible; no production setting is approved.
 \end{enumerate}
 The contribution is the concrete separation of these issues and its documented consequences in one diffusion-policy family.
 A common-response ranking study would answer an additional efficacy question; its absence limits that conclusion without invalidating the fixed-ranking analysis.
@@ -364,6 +366,13 @@ Neither grouping repairs unobserved context identity.
 Very small cluster counts are explicitly disclosed, and two-group baseline resampling is not presented as calibrated interval coverage.
 All unfiltered results and the historical norm-selected sensitivity remain available; no favorable tail is removed to obtain a threshold verdict.
 
+The additional paired rescoring analysis defines $\Delta_{ej}=\operatorname{AUC}_{Q,ej}-\operatorname{AUC}_{L,ej}$ within call $j$ of recorded episode $e$, holding that call's ranking and interventions fixed.
+Its primary estimand is $E^{-1}\sum_{e=1}^E n_e^{-1}\sum_{j=1}^{n_e}\Delta_{ej}$, with equal episode weights; the median of paired call differences is a prespecified descriptive sensitivity.
+These are distinct from the difference of the marginal medians above.
+The protocol specifies all eight ranking/modality/direction combinations before computing the additional summaries, with the same $10{,}000$-draw episode-bootstrap convention.
+Their intervals are conditional, unadjusted descriptions; no calibrated joint coverage or global significance claim is made.
+A zero endpoint gap under either response is retained as undefined in the accounting. All 750 calls per ranking cohort have defined paired differences, with 25 calls in each of 30 recorded episodes, so equal-episode and equal-call means coincide here.
+
 \section{Response Geometry and Retrospective Results}
 \label{sec:results}
 
@@ -412,6 +421,30 @@ The attempted cross-cohort join has different reference-action norms at every no
 Apparent agreement after common rescoring therefore cannot replace a prospective paired ranking comparison.
 Likewise, the larger native L2 score is not by itself recovered information, and stabilized L2 has no square-root kink at exact agreement.
 
+\paragraph{Paired changes and overshooting tails.}
+Table~\ref{tab:paired-rescoring} shows why a central summary alone is insufficient.
+All eight paired-call medians are positive, ranging from $0.1041$ to $0.1590$, whereas six equal-episode means are negative.
+For Q-ranking vision insertion, the median paired change is $0.1042$ but the mean is $-17.0966$, with conditional interval $[-33.8210,-3.9746]$.
+The most negative paired change in that case is $-4438.8386$; these finite extremes are retained without clipping or trimming.
+
+\begin{table}[htbp]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\input{tables_revision/paired_rescoring.tex}
+\caption{Paired response differences $\Delta=\operatorname{AUC}_{Q}-\operatorname{AUC}_{L}$ within the same saved curve. Each row uses 750 calls from 30 recorded episodes; rows within a ranking cohort reuse those calls. The primary mean weights episodes equally. Its 95\% interval is a conditional, unadjusted episode-bootstrap description. The paired-call median is shown alongside it because overshooting tails can reverse the sign of the mean. Neither summary is a comparison of Q and L2 ranking quality.}
+\label{tab:paired-rescoring}
+\end{table}
+
+We classify each saved squared-discrepancy ordinate relative to the interval between its stored actual and baseline endpoint discrepancies, without assuming exact self-reference.
+High-distance overshoots exceed both endpoints; low-distance undershoots fall below both.
+The artifact records endpoint orientation and retains both kinds of departure, undefined gaps and a prespecified boundary-label sensitivity.
+In Q-ranking vision insertion, 312 of 750 calls contain at least one high-distance overshoot, and 89 have a negative paired AUC change.
+Decomposing the trapezoidal difference by saved-node category gives mean contributions of $0.1144$ from in-range nodes and $-17.2111$ from high-distance overshoots, with no low-distance contribution in that case.
+These add to the reported mean and locate the sign reversal in the recorded out-of-range tail.
+The L2-ranking vision-insertion cohort shows the same qualitative mean/median disagreement in its own records.
+Node categories and segment endpoint labels describe only sampled interventions; they do not establish unobserved continuous curve behavior.
+The result qualifies the in-range ordering in Equation~\ref{eq:normalized-geometry}: response changes need not move a whole empirical curve population in one direction.
+
 \subsection{An Analytic Random-Order Counterexample}
 \label{sec:random-null}
 
@@ -449,6 +482,7 @@ Medians are consequently accompanied by the released denominator/tail diagnostic
 \label{sec:numerical-validation}
 
 The new diagnostic campaign concerns identified current computations, separately from the historical records above.
+Historical rescoring evaluates arithmetic on saved curves whose original contexts cannot be recovered. The later probe evaluates a separately identified offline fp32 function on newly authenticated contexts, with its own reference actions. It neither validates the historical attribution maps nor supplies a paired comparison with them.
 It was stopped for compute cost before its planned numerical coverage and independent verification were complete.
 The analysis uses a fixed, authenticated snapshot of sealed results; unfinished entries are not classified as successful or failed calculations.
 This stopping decision provides no statistical sampling rule for the completed subset, so its criterion counts are descriptive rather than estimates of population failure rates.
@@ -529,6 +563,7 @@ The sparse stored path probes do not identify an exclusive numerical cause.
 Repeated equality can coexist with integration-budget sensitivity.
 A deterministic calculation can reproduce an approximation whose value changes with the integration budget, while a small completeness residual can conceal coordinate errors through cancellation.
 Accordingly, neither repeatability nor a single completeness statistic qualifies the production setting.
+Appendix~\ref{sec:appendix-aliasing} shows why even agreement across several budgets is insufficient in general: equal and opposite coordinate errors can preserve exact completeness while all selected coarse grids give the same ranking and response curves, with an ordering different from exact IG. Correctness here means recovery of the specified IG integral; perturbation-ranking quality remains a separate question. This analytic possibility does not identify the cause of the observed RDT failures.
 The observed failures support a bounded numerical diagnostic conclusion; the incomplete campaign does not establish accuracy across modalities, tasks, checkpoints or future contexts.
 
 \section{Discussion and Limitations}
@@ -543,6 +578,16 @@ A common response itself defines the comparison's estimand, rather than a univer
 Its action coordinates, units, baselines, perturbation groups and aggregation require justification for the intended use.
 For the unresolved ranking question, matched random, input-difference and path-gradient controls would help distinguish information in the attribution from simple input structure and the IG multiplier.
 No comparative or learned-weight-specific result from the deferred protocols is claimed in this paper.
+
+\paragraph{A practical evaluation procedure.}
+The results suggest four steps when reporting action-discrepancy attributions.
+\begin{enumerate}
+\item Specify the scalar attribution target and evaluation response separately, together with the reference action, fixed noise, feature representation, baseline, intervention groups and schedule.
+\item Compare rankings on authenticated matched contexts under each common response. Include matched random and simple ranking controls when claiming efficacy. Analyze a response change separately by rescoring the same interventions, recomputing the endpoint normalization and retaining overshoots and undefined gaps.
+\item Check repeatability and coordinate, ranking and response sensitivity across numerical settings on a declared context roster, retaining failures and incomplete cases. Completeness and agreement on finitely many grids are diagnostics, not certificates of exact IG.
+\item Report the unit of analysis and dependence grouping, and distinguish conclusions about response sensitivity, numerical reliability and ranking quality. None of these alone establishes improved closed-loop behavior.
+\end{enumerate}
+This procedure states what comparisons identify; it does not supply a universally adequate integration budget or evaluation response.
 
 Historical uncertainty also has several distinct sources.
 Source-record hashing can authenticate released bytes while checkpoint and context identities remain unknown.
@@ -560,9 +605,11 @@ Appendix~\ref{sec:appendix-budget} reports only reconstructible later budget coh
 
 Per-policy-call IG for a fixed-noise diffusion sampler can be defined using an explicit auxiliary action-discrepancy score.
 For saved RDT perturbation curves, changing only the evaluation response changes normalized AUC without changing the selected features.
+Paired changes have positive medians in all eight reported cases, but overshooting tails make six means negative, showing why both the summary statistic and the endpoint geometry matter.
 A finite-grid analytic example rules out a universal random-ranking AUC of 0.5.
 The canonical retrospective tables preserve what the available records support and exclude unrecovered primary constants.
 The actual-model diagnostics retain unresolved numerical failures and incomplete coverage.
+The smooth aliasing construction further shows that finite-grid agreement can coexist with an ordering different from exact IG.
 A common response is necessary for an interpretable comparison of ranking quality, but our results do not establish that one target or attribution method is superior under it.
 
 \section*{Ethical Statement}
@@ -574,6 +621,7 @@ Misinterpreting attractive maps, low completeness residuals or uncalibrated AUCs
 The retrospective analysis parses a hash-authenticated raw inventory, records occurrence decisions, and links each result to physical source records.
 The revised tables and figures are generated from the same canonical artifact, with identical point/interval populations and a manuscript lineage registry.
 It retains conflicting-key exclusions, action-norm strata, endpoint/tail diagnostics, alternative episode weightings and conditional grouping sensitivities.
+The separate paired rescoring artifact provides its pre-computation analysis protocol, all eight cases, paired call and episode summaries, bootstrap membership, and an exact decomposition by saved-node geometry. The smooth nested-grid example includes an analytic proof and repeated FP32/FP64 CPU checks through the unchanged trapezoidal kernel.
 These operations reproduce arithmetic over saved records; they do not recover missing models, sidecars or original observations.
 The portable numerical projection retains the full planned roster, recorded checks and metrics, report hashes, and selected YCB FP32 tensors with their tensor hashes; it does not include all raw artifacts for the 72 completed target-modality cells.
 Its CPU reproducer recomputes the reported diagnostics and saved-tensor checks from this projection, not the complete original raw-artifact audit or a new model execution.
@@ -626,6 +674,8 @@ Using $d(t)\ge c(1-t)$ and monotonicity of $1-d/\sqrt{d^2+\epsilon}$ gives
 Therefore $0\le1-\mathrm{IG}^{L}_1\le2\sqrt\epsilon/c=2.5\times10^{-6}$ and $0\le c-\mathrm{IG}^{L}_2\le\sqrt\epsilon=10^{-6}$ at the implemented stabilizer.
 All coordinates are positive and the stabilized $L$ margin is at least $0.1999975$, while $Q$ has the opposite ordering with exact margin $13/150$.
 The artifact includes independent differentiation, integration and normalization checks for these identities, including overshoots, zero gaps and a policy example without rank reversal.
+
+\input{appendix_aliasing.tex}
 
 \section{Secondary Historical Results}
 \label{sec:secondary-historical}

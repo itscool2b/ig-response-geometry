@@ -1,6 +1,6 @@
 # Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study
 
-This repository contains the active TMLR revision, preserved historical records, and reproducible analysis of those records. The current paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. Evidence integration, independent reproduction and publication checks remain in progress.
+This repository contains the active TMLR revision, preserved historical records, and reproducible analysis of those records. The current paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. Local reproduction and scientific checks are documented; human author review and external publication decisions remain pending.
 
 The sole current author is Arjun Bajpai. The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and `paper/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. Current source is `paper/paper.tex`; `paper/paper-revision.pdf` and `paper/paper-anonymous-draft.pdf` are explicitly provisional candidates.
 
@@ -11,6 +11,8 @@ The historical `logpi` target is an auxiliary quadratic discrepancy from one fix
 Normalized random-order AUC is not universally 0.5. A finite quadratic counterexample with 100 equal additive features gives 0.65976 for every ordering on the historical nine-point grid. Evaluating all feature prefixes instead gives `2/3 - 1/(6n^2)` for `n` features; 2/3 is the continuous-fraction idealization and the limit as `n` increases, not the exact finite-grid area. Actual efficacy comparisons need matched empirical controls. Changing solver step count measures solver-resolution sensitivity and does not exclude denoiser contraction.
 
 The exact Q/L2 gradient relation has a positive, path-dependent scale factor. A smooth two-feature construction shows that this factor can reverse the integrated feature ranking, including at the implemented L2 stabilizer. This is an analytic existence result, not an observed RDT ranking improvement.
+
+A separate smooth construction shows that perfect completeness, identical rankings and identical response curves across several nested integration grids can still disagree with the exact IG ranking. Its coordinate error is 40% in relative L1 despite zero exact completeness error. The CPU example isolates a limitation of finite-grid checks; it does not diagnose the cause of the RDT failures or establish which ranking has better perturbation performance.
 
 The last fully audited numerical snapshot covers 12 completed 170M contexts out of 21 available and 24 planned contexts. All 2,880 repeat-related equality and coverage checks pass, including 1,800 equality checks, while 302 dependent numerical criteria violate their predeclared tolerances. The incomplete roster and failed checks are retained. Repeatability does not establish convergence, and no production integration setting is approved. Broader numerical qualification and prospective ranking/control studies are deferred; their source code and protocols do not constitute experimental results.
 
@@ -30,6 +32,15 @@ python -m analysis.revision.verify runs/saved-data-reanalysis
 ```
 
 The output directory must be new. The canonical registry contains 284 results and 57 source populations. A clean-input rerun reproduced all ten scientific/lineage artifacts byte-for-byte; environment/checkout provenance describes the actual execution. Git preserves hashed output bytes across platforms.
+
+The separate [paired rescoring analysis](analysis/paired_rescoring/README.md) measures `AUC_Q - AUC_L2` within each saved curve, with equal-episode mean effects and a paired-call median sensitivity. It retains all eight ranking/modality/direction cases, endpoint orientation, undefined gaps and sampled overshoots. Its conditional episode-bootstrap intervals do not compare the two unauthenticated ranking cohorts or test ranking superiority.
+All eight paired medians are positive, while six means are negative because extreme overshooting interventions dominate those means. The paper reports both summaries and traces their disagreement to the saved curves, without trimming the tail.
+
+```bash
+python -m analysis.revision.nested_grid_aliasing --output runs/nested-grid-aliasing.json
+```
+
+The paper's practical evaluation procedure separates attribution target, evaluation response, matched ranking controls, numerical checks and the unit of statistical analysis. A chosen response defines the comparison; passing finite numerical checks does not universally certify an integration budget.
 
 The CPU revision environment used Python 3.12.14. `requirements-cpu-lock.txt` records its full installed package set, including CPU Torch and test dependencies. `requirements.txt` is the smaller pinned analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
 

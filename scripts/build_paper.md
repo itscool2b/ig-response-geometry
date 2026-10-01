@@ -15,6 +15,8 @@ Outputs are `paper/paper-revision.pdf` and `paper/paper-anonymous-draft.pdf`, wi
 
 The two numerical tables are regenerated from the frozen partial snapshot in `analysis/numerical_case/2026-10-01-v1`. The asset builder runs its CPU-only reproducer, checks every recorded output hash, and copies the resulting TeX fragments. Manuscript lineage also binds the numerical input projection, reproducer and derived files. This checks the saved-data reporting; it does not rerun the GPU model, recover missing historical artifacts, or certify numerical accuracy.
 
+The additional paired rescoring table and nested-grid counterexample are separate CPU artifacts. Their source, declared protocol, results and the appendix fragment are included in the manuscript lineage. They leave the canonical retrospective v2 outputs and the partial numerical snapshot unchanged. The curated source archive includes the appendix explicitly and rejects nested file-loading directives inside it.
+
 The official TMLR style and bibliography files are unchanged copies from the commit recorded in `paper/tmlr-source.json`. Their upstream Apache 2.0 license is `paper/tmlr-LICENSE`. The source uses the TeX distribution's `fancyhdr` dependency. The official template requires the anonymous option for review and the `preprint` option for identified preprints. The FAQ's first-page AI-assistance disclosure is present in both versions.
 
 The anonymous PDF alone does not make the repository or a source archive anonymous. A future review supplement must be separately assembled and inspected for identities, paths, asset metadata and links. No accepted-paper flag or fabricated OpenReview identifier is used.

@@ -17,6 +17,7 @@ def validate_revision_assets(root: Path) -> None:
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     expected = dict(registry["generated_sha256"])
     expected.update(registry.get("numerical_case_inputs_sha256", {}))
+    expected.update(registry.get("strengthening_inputs_sha256", {}))
     expected["paper/paper.tex"] = registry["manuscript_source_sha256"]
     mismatches = [name for name, digest in expected.items()
                   if not (root / name).is_file()
@@ -43,7 +44,7 @@ def main() -> None:
 
     with tempfile.TemporaryDirectory(prefix="tmlr-paper-") as scratch:
         work = Path(scratch)
-        for name in ("paper.tex", "references.bib", "tmlr.sty", "tmlr.bst"):
+        for name in ("paper.tex", "appendix_aliasing.tex", "references.bib", "tmlr.sty", "tmlr.bst"):
             shutil.copyfile(paper / name, work / name)
         for directory in ("figures", "figures_revision", "tables_revision"):
             if (paper / directory).exists():

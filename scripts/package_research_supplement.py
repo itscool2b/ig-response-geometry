@@ -38,6 +38,8 @@ PENDING_ADDITIONS = (
     "paired_study_analysis.py", "scripts/calibrate_paired_intervals.py",
     "analysis/revision/response_geometry_theory.py",
     "analysis/revision/response_geometry_theory.md",
+    "analysis/revision/nested_grid_aliasing.py",
+    "analysis/revision/examples/nested_grid_aliasing.json",
     "tests/test_paired_study_analysis.py", "tests/test_calibrate_paired_intervals.py",
     "tests/test_response_geometry_theory.py",
 )
@@ -50,7 +52,7 @@ DOCUMENTS = (
     "docs/legacy_workflows.md", "scripts/build_paper.md", "paper/arxiv_abstract.txt",
     "scripts/setup_runtime.sh", "scripts/run_full_pass.sh", "scripts/run_faithfulness.sh",
     "scripts/run_sanity.sh", "scripts/run_displacement.sh", "scripts/run_overlays.sh",
-    "paper/paper.tex", "paper/references.bib", "paper/tmlr.sty", "paper/tmlr.bst",
+    "paper/paper.tex", "paper/appendix_aliasing.tex", "paper/references.bib", "paper/tmlr.sty", "paper/tmlr.bst",
     "paper/tmlr-LICENSE", "paper/tmlr-source.json",
 )
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
@@ -60,7 +62,7 @@ RESULT_FILES = ("diagnostics.json", "duplicate_population_sensitivity.json", "du
     "population_membership.json.gz", "provenance.json", "random_order_counterexample.json",
     "raw_line_ledger.csv.gz", "reconciliation.json", "results.csv", "solver_endpoint_sensitivity.json", "summary.json")
 PAPER_ASSETS = tuple("paper/tables_revision/" + name + ".tex" for name in
-    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants", "numerical_roster", "numerical_diagnostics")) + (
+    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants", "numerical_roster", "numerical_diagnostics", "paired_rescoring")) + (
     "paper/figures_revision/lineage.json", "paper/figures_revision/response_geometry.pdf",
     "paper/figures_revision/response_geometry.png", "paper/figures_revision/solver_endpoint.pdf",
     "paper/figures_revision/solver_endpoint.png")
@@ -176,6 +178,7 @@ def collect(root, revision, extra_identifiers=()):
     manifest = json.loads(read(manifest_path))
     selected = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | {manifest_path}
     selected.update(p for p in index if p.startswith("analysis/numerical_case/"))
+    selected.update(p for p in index if p.startswith("analysis/paired_rescoring/"))
     selected.update(OUTPUT_PREFIX + name for name in RESULT_FILES)
     selected.update(p for p in index if p.startswith("tests/") and p.endswith(".py") and p not in OMITTED_TESTS)
     selected.update(p for p in PENDING_ADDITIONS if p in index)
@@ -244,6 +247,15 @@ saved diagnostics from a frozen partial snapshot; no production setting is appro
 Prospective comparisons are deferred and their broader claims are excluded.
 See analysis/numerical_case/README.md for the CPU reproducer and evidence limits.
 
+Additional CPU evidence is documented in analysis/paired_rescoring/README.md:
+
+    python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+    python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
+
+The paired analysis retains all eight cases and reports conditional episode
+intervals. The toy aliasing example concerns recovery of exact IG, not ranking
+efficacy or the cause of actual-model failures. Both leave canonical v2 intact.
+
 Historical legacy executables and their tests are intentionally omitted. Tests
 in this package concern retained code. Archive-only documentation links may
 refer to the full repository and do not authorize absent legacy workflows.
@@ -289,6 +301,13 @@ or GPU validation. The included numerical case reproduces a frozen partial audit
 and selected saved tensors; it does not repeat model evaluation or approve a
 production setting. Prospective comparisons and their broader claims are deferred.
 See analysis/numerical_case/README.md. Final manuscript/package review remains open.
+The additional paired response analysis and smooth aliasing toy run on CPU:
+
+    python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+    python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
+
+See analysis/paired_rescoring/README.md for all cases, endpoint rules and interval
+limitations. These additions do not approve a production budget or ranking method.
 Archive-only links may refer to omitted historical files.
 """
 

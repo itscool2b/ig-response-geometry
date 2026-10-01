@@ -45,6 +45,53 @@ def numerical_case_assets(tables):
     return {path.relative_to(ROOT).as_posix(): sha(path) for path in inputs}
 
 
+def strengthening_assets(tables):
+    """Bind the additional CPU evidence without altering historical artifacts."""
+    from analysis.revision.nested_grid_aliasing import run_example
+    report = ROOT / "analysis/revision/examples/nested_grid_aliasing.json"
+    expected = json.loads(report.read_text(encoding="utf-8"))
+    if run_example() != expected:
+        raise ValueError("Nested-grid example differs from the checked CPU report")
+    paths = [report, ROOT / "analysis/revision/nested_grid_aliasing.py",
+             ROOT / "integrated_gradients.py", ROOT / "paper/appendix_aliasing.tex"]
+    from analysis.paired_rescoring.analyze import run as paired_run
+    directory = ROOT / "analysis/paired_rescoring"
+    results = directory / "results/2026-10-01-v1"
+    provenance_path = results / "provenance.json"
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    for name, expected_digest in provenance["source_sha256"].items():
+        if Path(name).name != name or sha(directory / name) != expected_digest:
+            raise ValueError("Paired rescoring source changed: " + name)
+    if sha(directory / "protocol.json") != provenance["protocol_sha256"]:
+        raise ValueError("Paired rescoring protocol changed")
+    with tempfile.TemporaryDirectory(prefix="tmlr-paired-display-") as scratch:
+        reproduced = Path(scratch) / "results"
+        paired_run(reproduced, root=ROOT)
+        for name, expected_digest in provenance["artifacts_sha256"].items():
+            if (Path(name).name != name or sha(results / name) != expected_digest
+                    or sha(reproduced / name) != expected_digest):
+                raise ValueError("Paired rescoring output does not reproduce: " + name)
+        with (reproduced / "summary.csv").open(encoding="utf-8", newline="") as stream:
+            paired_rows = list(csv.DictReader(stream))
+        # Show the prespecified median sensitivity beside the primary mean so
+        # the tail-driven sign differences remain visible in the main table.
+        table = [r"\begin{tabular}{lllrrr}", r"\toprule",
+                 r"Ranking & Modality & Curve & Mean $\Delta$ & 95\% interval & Median $\Delta$ \\",
+                 r"\midrule"]
+        for row in paired_rows:
+            mean = float(row["equal_episode_mean_point"])
+            lo, hi = (float(row["equal_episode_mean_" + key]) for key in ("ci_lo", "ci_hi"))
+            median = float(row["paired_call_median_point"])
+            table.append(f"{row['ranking']} & {row['modality']} & {row['direction']} & "
+                         f"{mean:.4f} & [{lo:.4f}, {hi:.4f}] & {median:.4f} " + r"\\")
+        table.extend([r"\bottomrule", r"\end{tabular}"])
+        (tables / "paired_rescoring.tex").write_text("\n".join(table) + "\n", encoding="utf-8", newline="\n")
+    paths.extend([provenance_path, directory / "protocol.json",
+                  *(directory / name for name in provenance["source_sha256"]),
+                  *(results / name for name in provenance["artifacts_sha256"])])
+    return {path.relative_to(ROOT).as_posix(): sha(path) for path in paths}
+
+
 def main():
     import matplotlib
     matplotlib.use("Agg")
@@ -60,7 +107,18 @@ def main():
     figures.mkdir(exist_ok=True)
     tables.mkdir(exist_ok=True)
     numerical_inputs = numerical_case_assets(tables)
+    strengthening_inputs = strengthening_assets(tables)
     lineage, macros, macro_displays = [], [], {}
+    paired_results = ROOT / "analysis/paired_rescoring/results/2026-10-01-v1"
+    for filename, location in (("summary.csv", "table:paired-rescoring"),
+                               ("geometry.csv", "text:paired-rescoring-geometry")):
+        with (paired_results / filename).open(encoding="utf-8", newline="") as stream:
+            for row in csv.DictReader(stream):
+                lineage.append({"location": location,
+                                "source": (paired_results / filename).relative_to(ROOT).as_posix(),
+                                "result": row,
+                                "membership_source": "analysis/paired_rescoring/results/2026-10-01-v1/membership.json.gz",
+                                "protocol_source": "analysis/paired_rescoring/protocol.json"})
 
     def result(key, location, view="retrospective_last"):
         row = index[key, view]
@@ -268,6 +326,7 @@ def main():
                 "builder_sha256": sha(Path(__file__)),
                 "manuscript_source_sha256": sha(manuscript),
                 "numerical_case_inputs_sha256": numerical_inputs,
+                "strengthening_inputs_sha256": strengthening_inputs,
                 "input_sha256": {name: sha(source / name) for name in ("results.csv", "summary.json", "diagnostics.json", "random_order_counterexample.json", "solver_endpoint_sensitivity.json", "population_membership.json.gz", "raw_line_ledger.csv.gz", "provenance.json")},
                 "entries": lineage,
                 "generated_sha256": {p.relative_to(ROOT).as_posix(): sha(p) for p in [abstract_path, *tables.glob("*.tex"), *figures.glob("*.png"), *figures.glob("*.pdf")]}}

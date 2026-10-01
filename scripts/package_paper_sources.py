@@ -24,9 +24,10 @@ IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                         ('baseline', 'budget', 'completeness', 'faithfulness', 'macros',
-                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics'))
+                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
                           'figures_revision/solver_endpoint.pdf'})
+FRAGMENT_FILES = TABLE_FILES | frozenset({'appendix_aliasing.tex'})
 TEX_PACKAGES = frozenset({'tmlr', 'url', 'hyperref', 'inputenc', 'caption', 'graphicx',
                           'placeins', 'amsmath', 'amssymb', 'amsthm', 'booktabs',
                           'algorithm', 'algorithmic', 'microtype', 'xcolor'})
@@ -137,7 +138,7 @@ def manuscript_dependencies(text, *, top_level):
     for name in found['input']:
         name = member_name(name)
         name = name if Path(name).suffix else name + '.tex'
-        if name not in TABLE_FILES:
+        if name not in FRAGMENT_FILES:
             raise ValueError('Unreviewed manuscript input: ' + name)
         names.add(name)
     for name in found['includegraphics']:
@@ -166,7 +167,7 @@ def build(root, output):
         data = path.read_bytes()
         if path.suffix != '.pdf':
             assert_anonymous(data.decode('utf-8'), name)
-        if name in TABLE_FILES:
+        if name in FRAGMENT_FILES:
             manuscript_dependencies(data.decode('utf-8'), top_level=False)
         files[name] = data
         inputs['paper/' + name] = digest(data)
