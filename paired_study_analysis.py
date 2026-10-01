@@ -2,7 +2,8 @@
 
 This CPU module never collects contexts or runs a model. A prospective design
 and an independently sealed artifact registry are separate inputs. There are
-60 primary contrasts, not six independently corrected bank analyses. Bootstrap
+60 primary contrasts, not six independently corrected bank analyses. The optional
+weight-arrangement family adds 24 contrasts with a separate correction. Bootstrap
 replicates resample complete episode vectors within strata. Nominal Bonferroni
 coverage is not a claim of small-sample bootstrap validity: coverage calibration
 and bootstrap endpoint Monte Carlo precision are separate reported gates.

@@ -16,6 +16,12 @@ and the old AUC thresholds are descriptive conventions, not universal
 faithfulness criteria. Old campaign wrappers have been retired. They cannot
 recover the missing original tensors by rerunning an environment.
 
+The current paper also uses the separate [paired saved-curve rescoring](../analysis/paired_rescoring/README.md)
+and [exploratory episode-influence supplement](../analysis/paired_rescoring/influence_results/2026-10-01-v1/methods_results.md).
+The pairing holds each saved ranking and its interventions fixed while changing
+the response. It is not a prospectively collected comparison between attribution
+targets on authenticated identical contexts.
+
 ## Authenticity, duplicates, and missing evidence
 
 The input manifest authenticates each complete original file against the
@@ -72,5 +78,6 @@ result rows with 57 population identities and checks ten artifact hashes.
 See the analysis guide for definitions and uncertainty limitations. Current
 GPU collection writes new, explicitly identified transactional run directories
 outside this historical inventory. It never masquerades as recovery of these
-old runs. Production numerical validation and the new paired study remain
-separate gates; successful CPU reproduction alone does not certify them.
+old runs. Production numerical validation and a prospective paired
+ranking-quality study on authenticated contexts remain unresolved. Successful
+CPU reproduction alone does not certify either.

@@ -2,9 +2,19 @@
 
 This repository contains the current general research preprint, preserved historical records, and reproducible analysis of those records. The paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. The preprint is not a journal acceptance or a completed journal submission.
 
-The sole current author is Arjun Bajpai. Read the [current paper](paper/paper-revision.pdf), its [LaTeX source](paper/paper.tex), or the [anonymous audit copy](paper/paper-anonymous-draft.pdf). The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and `paper/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. The current paper is a 24-page general preprint. Its historical filenames and template do not imply submission to TMLR.
+The sole current author is Arjun Bajpai. Read the [current paper](paper/paper.pdf), its [LaTeX source](paper/paper.tex), or the [anonymous audit copy](paper/paper-anonymous-draft.pdf). The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and the archived `legacy/pre-response-geometry/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. The current paper is a 24-page general preprint. `paper/paper.pdf` is the canonical download, and `paper/paper-revision.pdf` is an identical compatibility copy. The template does not imply submission to TMLR.
 
 See [current verification and scope](docs/preprint_status.md) for the CPU checks, manuscript consistency review and public-artifact boundaries.
+
+## Repository guide
+
+| Location | Status |
+|---|---|
+| [paper/](paper/README.md) | Current manuscript, source and clearly named PDF copies. |
+| [analysis/revision/](analysis/revision/README.md) and [analysis/paired_rescoring/](analysis/paired_rescoring/README.md) | Current retrospective analyses and their explicit limits. |
+| [data/](data/README.md) | Immutable historical inputs with current interpretation documented separately. |
+| [notebooks/](notebooks/README.md), [out/](out/README.md), [output/](output/README.md), [paper/figures/](paper/figures/README.md) | Historical notebooks and displays, not current findings or reproduction entrypoints. |
+| [legacy/](legacy/README.md) | Superseded paper and retired original source files. |
 
 ## What the evidence establishes
 
@@ -101,7 +111,7 @@ Vision attribution is post-image-adaptor, language attribution is post-language-
 - `paper/`: current preprint source and PDFs, official TMLR style/license, and preserved historical assets.
 - `docs/`: current contracts and explicitly bounded historical demonstrations.
 
-See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymous builds. The historical PDF is protected from replacement. Final paper and supplement checks include source provenance, anonymity, rights, numerical/statistical validity and full rendered inspection. This repository does not claim journal acceptance or completed submission.
+See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymous builds. The historical PDF is preserved under `legacy/pre-response-geometry/`. Identified builds update both current PDF filenames together. Final paper and supplement checks include source provenance, anonymity, rights, numerical/statistical validity and full rendered inspection. This repository does not claim journal acceptance or completed submission.
 
 ## Citation and licenses
 

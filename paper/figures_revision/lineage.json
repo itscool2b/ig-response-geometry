@@ -7,7 +7,7 @@
     "populations": 57,
     "valid_physical_records": 22966
   },
-  "builder_sha256": "f36fb5cb4083c6915573f883c885e9bf719d5b675d836b6e47346a3d58709516",
+  "builder_sha256": "01848a919fca4f897ff164854ce10efaf73213e26fcb9d0cc2e5da2555fe9c7f",
   "manuscript_source_sha256": "20727242d016843eb85b3eddb6876c93b29c5cb8e5627943d66ea3620fed60bc",
   "manuscript_inputs_sha256": {
     "paper/references.bib": "bc341847d9766e0dd50bc1fe57dba06a2e0d76fdbe840133376e0954b6a2590e"

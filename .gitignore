@@ -10,6 +10,7 @@ runs/
 .pytest_cache/
 *.egg-info/
 out/*
+!out/README.md
 !out/figures/
 !out/figures/*.png
 !out/figures_m4/

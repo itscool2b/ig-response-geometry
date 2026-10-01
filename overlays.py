@@ -1,18 +1,14 @@
 """
 Qualitative artifact renderers for per-step IG sidecars.
 
-Pure functions: load a sidecar .pt, extract the per-modality attributions,
-render to three file layouts:
+Functions load saved sidecars, extract modality attributions, and render vision,
+token, episode-summary or combined panels to caller-selected output paths.
+The current authenticated run-level workflow is documented in
+docs/legacy_workflows.md. Historical figures are not current validation results.
 
-    out/overlays/<task>/ep{EP}_t{T}.png     render_overlay_only_png
-    out/tokens/<task>/ep{EP}_t{T}.png       render_tokens_only_figure
-    out/episodes/<task>/ep{EP}_summary.png  render_episode_summary
-
-render_step_figure produces the combined three-panel layout used by the
-single-shot demo `ig_rdt.py`.
-
-No RDT or SigLIP import here, these run on any machine with matplotlib
-(the 150 GB of sidecars never need to leave the pod; PNGs come home).
+Rendering requires NumPy, Pillow, PyTorch and matplotlib. It does not load
+the RDT or SigLIP models. render_step_figure is the combined panel renderer
+also used by the single-shot ig_rdt.py demonstration.
 """
 
 import os

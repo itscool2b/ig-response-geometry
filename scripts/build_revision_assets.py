@@ -1,8 +1,8 @@
-"""Generate manuscript tables/figures only from the verified v2 analysis.
+"""Generate current manuscript tables and figures from authenticated artifacts.
 
 The lineage registry binds every displayed estimate, interval and population
 count to a named result/occurrence view and its physical-record membership.
-Historical paper/figures and paper/paper.pdf are never written.
+This generator never writes manuscript PDFs or historical paper/figures.
 """
 from pathlib import Path
 import csv

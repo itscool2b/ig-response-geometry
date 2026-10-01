@@ -10,7 +10,7 @@ Existing public Git history is preserved and may contain earlier copies.
 The root README records the same exception.
 
 Exception: paper/ijcai26.sty and paper/named.bst are the IJCAI conference
-LaTeX template and bibliography style files, included only to build the paper.
+LaTeX template and bibliography style files, retained for the historical paper.
 They are third-party template files and are not covered by the MIT license.
 
 Exception: paper/tmlr.sty and paper/tmlr.bst come from the official TMLR

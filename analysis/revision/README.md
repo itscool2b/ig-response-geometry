@@ -3,10 +3,11 @@
 This analysis authenticates preserved raw records and makes their statistical
 populations explicit. It does not repair missing historical identities, perform
 model inference, recover missing evidence, or establish submission readiness.
-The active current artifact is `results/2026-09-30-v2/`. The earlier
-`results/2026-09-30/` is a preserved preliminary computation; its solver analysis
-used k=20 on the initial seed files. The current artifact uses the historical
-paper's k=5 across both released solver evaluation seeds. Do not mix their rows.
+The active public artifact is `results/2026-09-30-v2/`. A preliminary
+computation previously used `results/2026-09-30/` and k=20 on the initial seed
+files. That preliminary computation is retained privately and is not distributed
+in this public repository or research supplement. The public v2 artifact uses
+the historical paper's k=5 across both released solver evaluation seeds.
 
 Run from the repository root with Python 3.12 and NumPy:
 
@@ -15,6 +16,12 @@ python -m analysis.revision.analyze --output <new-output-directory> --draws 1000
 python -m analysis.revision.verify <new-output-directory>
 python -m pytest tests/test_revision_analysis.py -q
 ```
+
+The paired rescoring protocol authenticates the exact bytes of the canonical
+producer `analyze.py`. Its module-header output-path example predates this
+release and is retained as part of that authenticated source. Use the fresh
+output-directory command above; the old example is not a current artifact
+location or an instruction to replace preserved evidence.
 
 Existing output directories are refused. The parser checks the complete 99-file
 inventory against `input_manifest.json`, rejects changed input bytes, duplicate

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the general research paper without overwriting the historical paper.pdf."""
+"""Build the current research paper and protect the archived historical paper."""
 from __future__ import annotations
 
 import argparse
@@ -38,13 +38,22 @@ def validate_revision_assets(root: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--anonymous", action="store_true", help="Build an anonymous audit copy and suppress identifying links/acknowledgments.")
-    parser.add_argument("--output", type=Path, help="Destination PDF; historical paper/paper.pdf is protected.")
+    parser.add_argument("--output", type=Path, help="Destination PDF; either current identified filename also updates its compatibility alias.")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     paper = root / "paper"
-    output = (args.output or paper / ("paper-anonymous-draft.pdf" if args.anonymous else "paper-revision.pdf")).resolve()
-    if output == (paper / "paper.pdf").resolve():
-        parser.error("The historical paper/paper.pdf must not be overwritten by this research-paper build.")
+    requested = args.output or paper / ("paper-anonymous-draft.pdf" if args.anonymous else "paper.pdf")
+    output = requested.resolve()
+    identified = [(paper / name).resolve() for name in ("paper.pdf", "paper-revision.pdf")]
+    if args.anonymous and output in identified:
+        parser.error("An anonymous build cannot overwrite either current identified PDF.")
+    destinations = identified if not args.anonymous and output in identified else [output]
+    if not args.anonymous and (paper / "paper-anonymous-draft.pdf").resolve() in destinations:
+        parser.error("The reserved anonymous PDF requires --anonymous.")
+    archive = root / "legacy/pre-response-geometry"
+    if (requested.absolute().is_relative_to(archive.absolute())
+            or any(path.is_relative_to(archive.resolve()) for path in destinations)):
+        parser.error("The historical legacy/pre-response-geometry archive must not be overwritten.")
     validate_revision_assets(root)
     for executable in ("pdflatex", "bibtex"):
         if not shutil.which(executable):
@@ -69,11 +78,12 @@ def main() -> None:
         log = (work / "revision.log").read_text(errors="replace")
         if "There were undefined references" in log or ("Citation" in log and "undefined" in log) or "Label(s) may have changed" in log:
             raise RuntimeError("Undefined reference or citation in final LaTeX pass.\n" + log[-20000:])
-        output.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(work / "revision.pdf", output)
-        output.with_suffix(".build.log").write_text("\n".join(transcripts), encoding="utf-8")
+        for destination in dict.fromkeys(destinations):
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(work / "revision.pdf", destination)
+            destination.with_suffix(".build.log").write_text("\n".join(transcripts), encoding="utf-8")
         warnings = [line for line in log.splitlines() if "Warning" in line or "Overfull" in line]
-        print(f"Built {output}")
+        print("Built " + ", ".join(str(path) for path in dict.fromkeys(destinations)))
         print("\n".join(warnings) if warnings else "No final-pass warnings or overfull boxes.")
 
 

@@ -3,7 +3,7 @@
 No production numerical defaults or automatic experiment launch. The run
 command requires a frozen bank, explicit protocol and hashed E01 gate. Context
 collectors need no attribution maps or dummy integration budget. One action
-forward produces both common responses for every saved intervention mask.
+forward produces all three common responses (Q, L2, RMS) for every saved intervention mask.
 """
 from __future__ import annotations
 
