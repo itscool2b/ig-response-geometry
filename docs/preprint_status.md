@@ -1,6 +1,6 @@
 # Current preprint and verification
 
-The current paper is *Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study*, by Arjun Bajpai. The identified and anonymous PDFs each have 24 pages. The source, abstract, generated tables and figures belong to this revision. The eight-month acknowledgment appears in the identified version. The older `paper/paper.pdf` and Zenodo deposit retain their original title and historical scope.
+The current paper is *Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study*. The identified and anonymous PDFs each have 24 pages. The source, abstract, generated tables and figures belong to this revision. The eight-month acknowledgment appears in the identified version. The older `paper/paper.pdf` and Zenodo deposit retain their original title and historical scope. Those PDF files belong to the full repository and are not included in the curated research supplement.
 
 On October 1, 2026, the complete current repository CPU suite passed with **695 tests** and six dependency deprecation warnings. It ran in the isolated Python 3.12.14 environment documented in [CPU reproduction](cpu_reproduction.md), with Torch 2.14.1+cpu, network-dependent model access disabled and no GPU inference. Dependency consistency and pinned-template validation passed. Tests establish the behavior covered by their assertions, not model efficacy or journal acceptance.
 

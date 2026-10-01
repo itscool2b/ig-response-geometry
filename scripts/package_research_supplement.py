@@ -53,7 +53,7 @@ DOCUMENTS = (
     "data/README.md", "data/README-historical-2026-09-30.md",
     "docs/integrated_gradients.md", "docs/per_step_ig.md", "docs/ig_rdt.md",
     "docs/ig_resnet.md", "docs/ig_vit.md", "docs/ig_tinyllama.md", "docs/runtime_verification.md",
-    "docs/legacy_workflows.md", "docs/cpu_reproduction.md", "scripts/build_paper.md", "paper/arxiv_abstract.txt",
+    "docs/legacy_workflows.md", "docs/cpu_reproduction.md", "docs/preprint_status.md", "scripts/build_paper.md", "paper/arxiv_abstract.txt",
     "scripts/setup_runtime.sh", "scripts/run_full_pass.sh", "scripts/run_faithfulness.sh",
     "scripts/run_sanity.sh", "scripts/run_displacement.sh", "scripts/run_overlays.sh",
     "paper/paper.tex", "paper/appendix_aliasing.tex", "paper/references.bib", "paper/tmlr.sty", "paper/tmlr.bst",
