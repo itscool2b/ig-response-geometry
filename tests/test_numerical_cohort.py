@@ -57,7 +57,8 @@ def protocol_v4():
         criteria="relative coordinate L1<=0.01, group Spearman>=0.99, top5 overlap>=0.95. Common-response AUC differences above0.01 flag material sensitivity.")
 
 
-def test_roster_counts_unavailable_not_started_and_failed_jobs_without_duplication(tmp_path):
+@pytest.mark.parametrize("sealed_only",[False,True])
+def test_roster_counts_unavailable_not_started_and_failed_jobs_without_duplication(tmp_path,sealed_only):
     protocol=protocol_v4();protocol_path=tmp_path/"protocol.json";protocol_path.write_bytes(canonical_json(protocol))
     jobs=[]
     for ep,call in ((0,0),(0,12),(1,0)):
@@ -69,10 +70,11 @@ def test_roster_counts_unavailable_not_started_and_failed_jobs_without_duplicati
     (tmp_path/"completion").mkdir()
     failed=tmp_path/"completion"/(jobs[0]["job_id"]+".json")
     failed.write_bytes(canonical_json(dict(queue_sha256=file_hash(queue_path),returncode=1)))
-    audit=audit_cohort(protocol_path,queue_path)
+    audit=audit_cohort(protocol_path,queue_path,sealed_only=sealed_only)
     assert audit["planned_contexts"]==4 and len(audit["rows"])==24
     assert audit["unavailable_contexts"]==1
-    assert audit["cell_status_counts"]==dict(infrastructure_or_contract_failure=3,not_yet_reported=15,call_not_reached=6)
+    pending="unsealed_at_audit_start" if sealed_only else "not_yet_reported"
+    assert audit["cell_status_counts"]==dict(infrastructure_or_contract_failure=3,call_not_reached=6,**{pending:15})
     assert audit["context_status_counts"]["contains_infrastructure_or_contract_failure"]==1
     # Changed protocol cannot be silently interpreted under the old frozen queue.
     protocol_path.write_text("{}")
@@ -190,7 +192,7 @@ def test_retry_cannot_replace_identity_or_successful_result(tmp_path,corruption)
         retry_link(original,retry,amendment,file_hash(protocol),4)
 
 
-def test_complete_v6_cohort_authenticates_six_targets_and_preserves_partial_corruption(tmp_path):
+def complete_v6_fixture(tmp_path,*,sealed=True):
     write=lambda p,v:p.write_bytes(canonical_json(v))
     criteria=dict(repeatability="bitwise equal",coordinates="L1 difference <=0.01",group_order="Spearman >=0.99 top5 overlap >=0.95",
         completeness="relative residual <=0.01",primitive_response="RMS curve difference <=0.01 RMS area difference <=0.005",
@@ -230,7 +232,13 @@ def test_complete_v6_cohort_authenticates_six_targets_and_preserves_partial_corr
             source_context_id="ctx",source_replay_verified=True,numerics=outcomes)])
     write(out/"report.json",report)
     write(out/"completion.json",dict(status=report["status"],artifacts_sha256={"report.json":file_hash(out/"report.json")}))
-    write(tmp_path/"completion"/(job_id+".json"),dict(queue_sha256=file_hash(queue_path),job_id=job_id,returncode=0))
+    if sealed:
+        write(tmp_path/"completion"/(job_id+".json"),dict(queue_sha256=file_hash(queue_path),job_id=job_id,returncode=0))
+    return protocol_path,queue_path,out
+
+
+def test_complete_v6_cohort_authenticates_six_targets_and_preserves_partial_corruption(tmp_path):
+    protocol_path,queue_path,out=complete_v6_fixture(tmp_path)
     audit=audit_cohort(protocol_path,queue_path)
     assert audit["cell_status_counts"]=={"complete_diagnostics":6}
     assert all(any(c["criterion"]=="candidate_runtime_bundle" and c["status"]=="satisfies" for c in r["checks"]) for r in audit["rows"])
@@ -238,3 +246,94 @@ def test_complete_v6_cohort_authenticates_six_targets_and_preserves_partial_corr
     (out/"state-L2.json").write_text("{}")
     audit=audit_cohort(protocol_path,queue_path)
     assert len(audit["rows"])==6 and audit["cell_status_counts"]=={"invalid_or_incomplete_evidence":6}
+
+
+def test_sealed_only_ignores_corrupt_live_reports_and_all_live_job_artifacts(tmp_path,monkeypatch):
+    import scripts.audit_numerical_cohort as module
+    protocol,queue,out=complete_v6_fixture(tmp_path,sealed=False)
+    (out/"report.json").write_text("{corrupt and still changing")
+    (out/"unreferenced-raw.pt").write_bytes(b"incomplete live tensor")
+    original_hash=module.file_hash;original_snapshot=module.report_snapshot;original_json=module.strict_json
+    forbidden=[out.resolve(),(tmp_path/"prepared").resolve(),(tmp_path/"claims").resolve()]
+    def guarded(function):
+        def call(path,*args,**kwargs):
+            if any(Path(path).resolve().is_relative_to(root) for root in forbidden):
+                raise AssertionError("An unsealed job artifact was read: "+str(path))
+            return function(path,*args,**kwargs)
+        return call
+    monkeypatch.setattr(module,"file_hash",guarded(original_hash))
+    monkeypatch.setattr(module,"report_snapshot",guarded(original_snapshot))
+    monkeypatch.setattr(module,"strict_json",guarded(original_json))
+    audit=audit_cohort(protocol,queue,sealed_only=True,verify_artifacts=True)
+    assert audit["planned_contexts"]==1 and len(audit["rows"])==6
+    assert audit["cell_status_counts"]=={"unsealed_at_audit_start":6}
+    assert audit["attempt_status_counts"]=={"unsealed_at_audit_start":1}
+    assert audit["sealed_membership"][0]["sealed_job_ids"]==[]
+    assert all(row["attempts"][0]["partial_report_files_sha256"]=={} for row in audit["rows"])
+
+
+def test_new_completion_during_audit_cannot_leak_into_rows_or_history(tmp_path,monkeypatch):
+    import scripts.audit_numerical_cohort as module
+    protocol,queue,out=complete_v6_fixture(tmp_path,sealed=False)
+    original=module.audit_single_queue
+    completion=tmp_path/"completion/fixture-e000-c000.json"
+    def complete_after_freeze(*args,**kwargs):
+        completion.write_bytes(canonical_json(dict(queue_sha256=file_hash(queue),job_id="fixture-e000-c000",returncode=0)))
+        (out/"report.json").write_text("{newly sealed but corrupt")
+        return original(*args,**kwargs)
+    monkeypatch.setattr(module,"audit_single_queue",complete_after_freeze)
+    audit=audit_cohort(protocol,queue,sealed_only=True,verify_artifacts=True)
+    assert completion.exists()
+    assert audit["cell_status_counts"]=={"unsealed_at_audit_start":6}
+    assert audit["attempt_status_counts"]=={"unsealed_at_audit_start":1}
+    assert str(completion) not in audit["source_files_sha256"]
+    assert audit["sealed_membership"][0]["unsealed_job_ids"]==["fixture-e000-c000"]
+
+
+def test_fixed_membership_reaches_retry_history_and_retains_sealed_failure(tmp_path,monkeypatch):
+    import scripts.audit_numerical_cohort as module
+    protocol,original_path,retry,amendment=retry_fixture(tmp_path)
+    original=module.audit_single_queue;created=False
+    def complete_parent_after_freeze(*args,**kwargs):
+        nonlocal created
+        if not created:
+            created=True
+            path=original_path.parent/"completion/fixture-170m-e000-c000-l2.json"
+            path.write_bytes(canonical_json(dict(queue_sha256=file_hash(original_path),job_id="fixture-170m-e000-c000-l2",returncode=0)))
+        return original(*args,**kwargs)
+    monkeypatch.setattr(module,"audit_single_queue",complete_parent_after_freeze)
+    audit=audit_cohort(protocol,original_path,sealed_only=True,retry_queues=[retry],retry_amendments=[amendment])
+    assert len(audit["rows"])==6
+    assert audit["attempt_status_counts"]=={"infrastructure_or_contract_failure":1,"unsealed_at_audit_start":3}
+    prior=audit["repair_lineage"][0]["prior_attempts"]
+    assert prior["fixture-170m-e000-c000-logpi"]["returncode"]==1
+    assert prior["fixture-170m-e000-c000-l2"]["status"]=="unsealed_at_audit_start"
+    assert "returncode" not in prior["fixture-170m-e000-c000-l2"]
+
+
+def test_sealed_corrupt_target_remains_invalid_and_sealed_failure_is_not_skipped(tmp_path):
+    protocol,queue,out=complete_v6_fixture(tmp_path)
+    completion=tmp_path/"completion/fixture-e000-c000.json"
+    completion.write_bytes(canonical_json(dict(queue_sha256=file_hash(queue),job_id="fixture-e000-c000",returncode=1)))
+    failed=audit_cohort(protocol,queue,sealed_only=True,verify_artifacts=True)
+    assert failed["cell_status_counts"]=={"infrastructure_or_contract_failure":6}
+    assert failed["attempt_status_counts"]=={"infrastructure_or_contract_failure":1}
+    (out/"state-L2.json").write_text("{}")
+    corrupt=audit_cohort(protocol,queue,sealed_only=True,verify_artifacts=True)
+    assert corrupt["cell_status_counts"]=={"invalid_or_incomplete_evidence":6}
+    assert corrupt["attempt_status_counts"]=={"infrastructure_or_contract_failure":1}
+    assert all(row["attempts"][0]["returncode"]==1 for row in corrupt["rows"])
+    assert corrupt["sealed_membership"][0]["sealed_job_ids"]==["fixture-e000-c000"]
+
+
+def test_sealed_completion_mutation_is_rejected_against_start_snapshot(tmp_path,monkeypatch):
+    import scripts.audit_numerical_cohort as module
+    protocol,queue,_=complete_v6_fixture(tmp_path)
+    original=module.audit_single_queue
+    def mutate_seal(*args,**kwargs):
+        path=tmp_path/"completion/fixture-e000-c000.json"
+        value=json.loads(path.read_text());value["returncode"]=1;path.write_bytes(canonical_json(value))
+        return original(*args,**kwargs)
+    monkeypatch.setattr(module,"audit_single_queue",mutate_seal)
+    with pytest.raises(ValueError,match="Sealed completion changed"):
+        audit_cohort(protocol,queue,sealed_only=True)

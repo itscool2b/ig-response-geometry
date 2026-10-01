@@ -347,7 +347,7 @@ def planned_roster(protocol,queue,queue_root):
     return roster
 
 
-def audit_single_queue(protocol_path,queue_path,*,verify_artifacts=False):
+def audit_single_queue(protocol_path,queue_path,*,verify_artifacts=False,sealed_jobs=None):
     protocol_path,queue_path=Path(protocol_path),Path(queue_path)
     protocol,queue=strict_json(protocol_path),strict_json(queue_path)
     protocol_hash,queue_hash=file_hash(protocol_path),file_hash(queue_path)
@@ -368,6 +368,10 @@ def audit_single_queue(protocol_path,queue_path,*,verify_artifacts=False):
             context_status[context_key]="call_not_reached";placeholders("call_not_reached");continue
         if not job:
             context_status[context_key]="job_missing";placeholders("job_missing");continue
+        if sealed_jobs is not None and job["job_id"] not in sealed_jobs:
+            context_status[context_key]="unsealed_at_audit_start"
+            placeholders("unsealed_at_audit_start","Live reports and artifacts were intentionally not read by the sealed-only audit")
+            continue
         report_path=queue_path.parent/"results"/job["job_id"]/"report.json"
         completion_path=queue_path.parent/"completion"/(job["job_id"]+".json")
         rows_before=len(rows)
@@ -481,12 +485,16 @@ def audit_single_queue(protocol_path,queue_path,*,verify_artifacts=False):
         qualification="Conditional candidate-completeness checks apply if that budget is selected. Missing raw tensors remain unverified even when report-only thresholds are satisfied.")
 
 
-def attempt_record(queue_path,queue,job):
+def attempt_record(queue_path,queue,job,*,sealed_jobs=None):
     """Keep failed and partial attempts even when an explicit repair supersedes them."""
     completion_path=queue_path.parent/"completion"/(job["job_id"]+".json")
     report_path=queue_path.parent/"results"/job["job_id"]/"report.json"
     record=dict(queue_sha256=file_hash(queue_path),job_id=job["job_id"],queue_path=str(queue_path),
                 status="not_started_or_not_reported")
+    if sealed_jobs is not None and job["job_id"] not in sealed_jobs:
+        record.update(status="unsealed_at_audit_start",report_read_policy="not_read_unsealed_at_start",
+                      partial_report_files_sha256={})
+        return record
     if completion_path.exists():
         completion,digest=report_snapshot(completion_path)
         if completion["queue_sha256"]!=record["queue_sha256"] or completion.get("job_id",job["job_id"])!=job["job_id"]:
@@ -512,7 +520,7 @@ def _portable_name(value):
     return str(value).replace("\\","/").rstrip("/").split("/")[-1]
 
 
-def retry_link(parent_path,retry_path,amendment_path,protocol_hash,version):
+def retry_link(parent_path,retry_path,amendment_path,protocol_hash,version,*,parent_sealed_jobs=None):
     parent,retry=strict_json(parent_path),strict_json(retry_path)
     parent_hash=file_hash(parent_path)
     if retry["protocol_sha256"]!=protocol_hash or parent["protocol_sha256"]!=protocol_hash:
@@ -543,7 +551,7 @@ def retry_link(parent_path,retry_path,amendment_path,protocol_hash,version):
         old=original[job_id]
         fields=("context_id","source_manifest_sha256","source_sidecar_sha256") if version==4 else ("context_id","planned_status","bank_sha256","decision_sha256")
         if any(job.get(k)!=old.get(k) for k in fields): raise ValueError("Retry changes source context or decision identity")
-        prior=attempt_record(parent_path,parent,old)
+        prior=attempt_record(parent_path,parent,old,sealed_jobs=parent_sealed_jobs)
         if prior.get("returncode")==0: raise ValueError("Retry replaces a successful completed job")
         if job_id in declared:
             d=declared[job_id]
@@ -555,7 +563,7 @@ def retry_link(parent_path,retry_path,amendment_path,protocol_hash,version):
         retained=retry["retained_completed_jobs"]
         if len(retained)!=len(set(retained)) or set(retained)!=set(original)-set(replacement): raise ValueError("Retained job roster differs")
         for job_id in retained:
-            if attempt_record(parent_path,parent,original[job_id]).get("returncode")!=0: raise ValueError("Retained job was not completed")
+            if attempt_record(parent_path,parent,original[job_id],sealed_jobs=parent_sealed_jobs).get("returncode")!=0: raise ValueError("Retained job was not completed")
     if version==4 and retry["validator_sha256"]!=parent["validator_sha256"]:
         raise ValueError("V4 execution-only retry changes validator bytes")
     return dict(parent_queue_sha256=parent_hash,retry_queue_sha256=file_hash(retry_path),
@@ -563,25 +571,50 @@ def retry_link(parent_path,retry_path,amendment_path,protocol_hash,version):
         replaces_jobs=list(replacement),prior_attempts=prior_records)
 
 
-def audit_cohort(protocol_path,queue_path,*,verify_artifacts=False,retry_queues=(),retry_amendments=()):
+def freeze_sealed_membership(paths,queues):
+    """Freeze every queue's completion-file membership before reading job data.
+
+    Both successful and failed completion records qualify as sealed attempts.
+    Directory inventories happen first, so later job completions cannot enter
+    through a slower report, history, or retry-lineage read.
+    """
+    inventories=[]
+    for path,queue in zip(paths,queues):
+        names={p.name for p in (path.parent/"completion").glob("*.json") if p.is_file()}
+        inventories.append(frozenset(job["job_id"] for job in queue["jobs"] if job["job_id"]+".json" in names))
+    return [{job_id:file_hash(path.parent/"completion"/(job_id+".json")) for job_id in sorted(ids)}
+            for path,ids in zip(paths,inventories)]
+
+
+def audit_cohort(protocol_path,queue_path,*,verify_artifacts=False,retry_queues=(),retry_amendments=(),sealed_only=False):
     """Apply explicit infrastructure repair lineage without increasing the population."""
     if len(retry_queues)!=len(retry_amendments): raise ValueError("Each retry queue requires its recorded amendment")
     paths=[Path(queue_path),*[Path(p) for p in retry_queues]]
-    audits=[audit_single_queue(protocol_path,p,verify_artifacts=verify_artifacts) for p in paths]
-    result=audits[0];protocol=strict_json(protocol_path);version=protocol["protocol_version"]
     queues=[strict_json(p) for p in paths]
+    sealed=freeze_sealed_membership(paths,queues) if sealed_only else [None]*len(paths)
+    audits=[audit_single_queue(protocol_path,p,verify_artifacts=verify_artifacts,sealed_jobs=members)
+            for p,members in zip(paths,sealed)]
+    result=audits[0];protocol=strict_json(protocol_path);version=protocol["protocol_version"]
+    if sealed_only:
+        result["read_policy"]="sealed_only_membership_frozen_before_job_reads"
+        result["sealed_membership"]=[dict(queue_path=str(path),queue_sha256=audit["queue_sha256"],
+            sealed_job_ids=sorted(members),unsealed_job_ids=sorted(job["job_id"] for job in queue["jobs"] if job["job_id"] not in members),
+            completion_sha256=members) for path,queue,audit,members in zip(paths,queues,audits,sealed)]
+        for path,members in zip(paths,sealed):
+            result["source_files_sha256"].update({str(path.parent/"completion"/(job_id+".json")):digest for job_id,digest in members.items()})
     def cell_key(row): return tuple(row[k] for k in ("stratum","episode","call","target","modality"))
     def job_key(job): return parse_job(job["job_id"],[s["id"] for s in protocol["strata"]])
     def row_job_key(row): return (row["stratum"],row["episode"],row["call"],row["target"] if version==4 else None)
     selected={cell_key(r):r for r in result["rows"]};history={};links=[]
     for index,(path,queue,audit) in enumerate(zip(paths,queues,audits)):
         if index:
-            link=retry_link(paths[index-1],path,Path(retry_amendments[index-1]),result["protocol_sha256"],version)
+            link=retry_link(paths[index-1],path,Path(retry_amendments[index-1]),result["protocol_sha256"],version,
+                            parent_sealed_jobs=sealed[index-1])
             links.append(link)
             result["source_files_sha256"][str(retry_amendments[index-1])]=link["amendment_sha256"]
         present_jobs={job_key(j):j for j in queue["jobs"]}
         for identity,job in present_jobs.items():
-            history.setdefault(identity,[]).append(attempt_record(path,queue,job))
+            history.setdefault(identity,[]).append(attempt_record(path,queue,job,sealed_jobs=sealed[index]))
         for row in audit["rows"]:
             if index==0 or row_job_key(row) in present_jobs: selected[cell_key(row)]=row
         result["source_files_sha256"].update(audit["source_files_sha256"])
@@ -618,6 +651,11 @@ def audit_cohort(protocol_path,queue_path,*,verify_artifacts=False,retry_queues=
         group["minimum_value"]=min(values) if values else None;group["maximum_value"]=max(values) if values else None
         result["criterion_groups"].append(group)
     if len(result["rows"])!=result["planned_context_target_modality_cells"]: raise ValueError("Retry changed planned cell count")
+    if sealed_only:
+        for path,members in zip(paths,sealed):
+            for job_id,digest in members.items():
+                if file_hash(path.parent/"completion"/(job_id+".json"))!=digest:
+                    raise ValueError("Sealed completion changed after membership was frozen: "+job_id)
     for path,digest in result["source_files_sha256"].items():
         if file_hash(path)!=digest: raise ValueError("Source changed during cohort audit: "+path)
     return result
@@ -627,6 +665,8 @@ def markdown_report(audit):
     text=["# E01 numerical cohort criterion audit","",f"Protocol v{audit['protocol_version']}; {audit['planned_contexts']} planned contexts; {audit['unavailable_contexts']} unavailable contexts.","",audit["conclusion"],"",audit["qualification"],"",
         "| Stratum | Planned cells | Complete diagnostics | Unavailable | Other incomplete/failure cells |",
         "|---|---:|---:|---:|---:|"]
+    if audit.get("sealed_membership") is not None:
+        text[6:6]=["Sealed-only mode: completion-file membership was frozen for every queue before reading job reports. Active or newly completed jobs remain unsealed in this snapshot; their reports and artifacts were not read. Sealed failed attempts remain in the lineage.",""]
     for stratum in sorted({r["stratum"] for r in audit["rows"]}):
         rows=[r for r in audit["rows"] if r["stratum"]==stratum];counts=Counter(r["status"] for r in rows)
         text.append(f"| {stratum} | {len(rows)} | {counts['complete_diagnostics']} | {counts['call_not_reached']} | {len(rows)-counts['complete_diagnostics']-counts['call_not_reached']} |")
@@ -653,11 +693,12 @@ def main():
     parser.add_argument("--queue",type=Path,required=True)
     parser.add_argument("--out",type=Path,required=True)
     parser.add_argument("--verify-artifacts",action="store_true")
+    parser.add_argument("--sealed-only",action="store_true",help="Freeze completed-job membership before all report/history reads and skip unsealed reports/artifacts")
     parser.add_argument("--retry-queue",type=Path,action="append",default=[])
     parser.add_argument("--retry-amendment",type=Path,action="append",default=[])
     args=parser.parse_args()
     audit=audit_cohort(args.protocol,args.queue,verify_artifacts=args.verify_artifacts,
-        retry_queues=args.retry_queue,retry_amendments=args.retry_amendment)
+        retry_queues=args.retry_queue,retry_amendments=args.retry_amendment,sealed_only=args.sealed_only)
     args.out.mkdir(parents=True,exist_ok=False)
     (args.out/"audit.json").write_bytes(canonical_json(audit)+b"\n")
     (args.out/"review.md").write_text(markdown_report(audit),encoding="utf-8")
