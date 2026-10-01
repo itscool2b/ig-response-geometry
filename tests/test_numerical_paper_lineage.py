@@ -1,6 +1,7 @@
 """A manuscript build must fail when its saved numerical evidence changes."""
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -15,6 +16,9 @@ def test_numerical_input_changes_invalidate_an_unchanged_display(tmp_path, chang
         "analysis/numerical_case/summarize.py": b"Reproducer",
         "analysis/numerical_case/case.json": b'{"completed":12}',
     }
+    root = Path(__file__).resolve().parents[1]
+    for name in ("tmlr.sty", "tmlr.bst", "tmlr-LICENSE", "tmlr-source.json"):
+        files["paper/" + name] = (root / "paper" / name).read_bytes()
     for name, data in files.items():
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -30,5 +34,6 @@ def test_numerical_input_changes_invalidate_an_unchanged_display(tmp_path, chang
     path.write_text(json.dumps(registry), encoding="utf-8")
     validate_revision_assets(tmp_path)
     (tmp_path / changed).write_bytes(files[changed] + b"changed")
-    with pytest.raises(RuntimeError, match="Stale or missing manuscript assets"):
+    with pytest.raises(RuntimeError, match="Stale or missing manuscript assets") as caught:
         validate_revision_assets(tmp_path)
+    assert changed in str(caught.value)
