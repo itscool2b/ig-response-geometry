@@ -35,6 +35,7 @@ def configure_cli_startup():
 _PROCESS_STARTUP = configure_cli_startup()
 
 import numpy as np
+from scipy.integrate import trapezoid
 import torch
 import integrated_gradients as ig_kernel
 
@@ -600,7 +601,7 @@ def evaluate_rankings(action_forward, reference, actual, baseline, indices, axis
                     normalized = auc_normalized([100*f for f in fractions], values, *endpoints,
                                                 denominator_min=cutoff)
                     status = "zero_endpoint_gap" if gap == 0 else "nearzero_endpoint_gap" if abs(gap) <= cutoff else "defined"
-                    by_target[target] = dict(values=values, raw_auc=float(np.trapezoid(values, fractions)),
+                    by_target[target] = dict(values=values, raw_auc=float(trapezoid(values, fractions)),
                                              normalized_auc=normalized, endpoint_gap=gap, status=status)
             curves[direction] = dict(selected_positions=masks if exact else [group[0] for group in masks],
                 mask_sha256=[[object_hash(mask) for mask in group] for group in masks] if exact else [object_hash(group[0]) for group in masks],
@@ -960,7 +961,7 @@ def authenticate_action_results(results):
                 if any(x is None for x in values+endpoints):
                     expected_raw = expected_normalized = None
                 else:
-                    expected_raw = float(np.trapezoid(values,results["realized_fractions"]))
+                    expected_raw = float(trapezoid(values,results["realized_fractions"]))
                     expected_normalized = auc_normalized([100*x for x in results["realized_fractions"]],values,*endpoints,
                                                         denominator_min=results["denominator_min"].get(target,0))
                 if outcome["raw_auc"] != expected_raw or outcome["normalized_auc"] != expected_normalized:
