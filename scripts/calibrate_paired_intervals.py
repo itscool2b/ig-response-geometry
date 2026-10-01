@@ -43,6 +43,16 @@ REGIMES={
     "symmetric_completion":dict(noise="normal",description="Call survival decreases with absolute episode shock; even selection leaves centered conditional means unchanged."),
     "asymmetric_completion":dict(noise="normal",description="Latent quality shifts paired effects and per-mask survival; exact length/J/M-dependent conditional truth differs from the unconditional truth.")}
 
+SPECIFICITY_REGIMES=deepcopy(REGIMES)
+SPECIFICITY_REGIMES["correlated_mc"]["description"]="Episode-coherent parameter-draw noise shared across calls, targets, modalities and directions, with a smaller call-specific interaction."
+SPECIFICITY_REGIMES["asymmetric_completion"]["description"]="Quality shifts trained-versus-permuted transfer and J/R-dependent joint completion, with analytic conditional truth."
+SPECIFICITY_REGIMES["near_degenerate"]["description"]="One target's transfer contrasts have 1e-7 residual scale while the other target retains ordinary variance."
+
+
+def regime_registry(family=study.FAMILY):
+    study.local_contrasts(family)
+    return REGIMES if family==study.FAMILY else SPECIFICITY_REGIMES
+
 
 def stream_seed(seed,regime,trial,stream):
     return int(object_hash(dict(master_seed=seed,regime=regime,trial=trial,stream=stream)),16)
@@ -92,7 +102,8 @@ def conditional_quality_mean(regime,probabilities,j,m):
     return float((plus-minus)/(plus+minus))
 
 
-def analytic_truth(design,regime):
+def analytic_truth(design,regime,family=study.FAMILY):
+    if family==study.SPECIFICITY_FAMILY:return specificity_truth(design,regime)
     conditional={}; unconditional={}
     shift=np.tile(np.array([.06,-.04,.02,0.])[None,None,:],(3,2,1));shift[:,1,:]*=-1
     for index,spec in enumerate(design["strata"]):
@@ -103,7 +114,7 @@ def analytic_truth(design,regime):
     return tuple(np.concatenate([sum(w*values[s] for s,w in group["weights"].items()) for group in design["groups"]]) for values in (conditional,unconditional))
 
 
-def generate_trial(design,regime,seed,trial,complete_counts=None):
+def generate_trial(design,regime,seed,trial,complete_counts=None,family=study.FAMILY):
     """Generate independently reset episode vectors with an analytic truth.
 
     Four method areas define the five linearly dependent paired contrasts.
@@ -111,6 +122,7 @@ def generate_trial(design,regime,seed,trial,complete_counts=None):
     nonnegative without changing any contrast. Thus the generator concerns
     the paired estimator, not fabricated neural-network intervention outputs.
     """
+    if family==study.SPECIFICITY_FAMILY:return generate_specificity_trial(design,regime,seed,trial,complete_counts)
     if regime not in REGIMES:raise ValueError("Unknown calibration regime")
     rng=np.random.Generator(np.random.PCG64(stream_seed(seed,regime,trial,"data")))
     data={}; truths={}; unconditional={}; diagnostics={}
@@ -191,28 +203,110 @@ def generate_trial(design,regime,seed,trial,complete_counts=None):
     return data,truth,unconditional_truth,diagnostics
 
 
-def simulate_one(design,regime,seed,trial,minimum_complete,complete_counts=None):
+def trial_seed_hash(seed,regime,trial,family=study.FAMILY):
+    identity=dict(seed=seed,regime=regime,trial=trial)
+    if family!=study.FAMILY:identity["family"]=family
+    return object_hash(identity)
+
+
+def specificity_means(regime,index):
+    mean=np.tile(np.array([.035,.025,.015,.030]),3)+.003*index
+    if regime=="near_degenerate":mean[::2]=0.
+    return mean
+
+
+def specificity_quality_shift(regime):
+    shift=np.tile(np.array([.04,-.03,.02,-.01]),3)
+    if regime=="near_degenerate":shift[::2]=0.
+    return shift
+
+
+def specificity_truth(design,regime):
+    conditional={};unconditional={}
+    for index,spec in enumerate(design["strata"]):
+        mean=specificity_means(regime,index)
+        tilt=conditional_quality_mean(regime,length_probabilities(regime,index),spec["calls_per_episode"],spec["parameter_draws"])
+        conditional[spec["id"]]=mean+specificity_quality_shift(regime)*tilt
+        unconditional[spec["id"]]=mean
+    return tuple(np.concatenate([sum(w*values[s] for s,w in group["weights"].items()) for group in design["groups"]]) for values in (conditional,unconditional))
+
+
+def generate_specificity_trial(design,regime,seed,trial,complete_counts=None):
+    """Known E05 truth with parameter draws shared across all episode calls.
+
+    These paired transfer estimators can be represented by two nonnegative
+    method areas after adding a common offset. They are not model observations.
+    Family coverage is separately union-bounded, so no cross-family independence
+    or fabricated joint completion distribution is needed.
+    """
+    if regime not in SPECIFICITY_REGIMES:raise ValueError("Unknown E05 synthetic regime")
+    rng=np.random.Generator(np.random.PCG64(stream_seed(seed,regime,trial,"weight_specificity_data")))
+    data={};diagnostics={};kind=SPECIFICITY_REGIMES[regime]["noise"]
+    for index,spec in enumerate(design["strata"]):
+        sid=spec["id"];planned=len(spec["reset_seeds"]);n=planned if complete_counts is None else complete_counts[sid]
+        j=spec["calls_per_episode"];r=spec["parameter_draws"];probs=length_probabilities(regime,index)
+        matrices=[];mcs=[];attempts=0;failed=0;lengths=[]
+        task_scale=[.25,.5,1.,2.,.75,1.5][index] if regime=="heteroskedastic_tasks" else 1.
+        base_scale=.015 if regime=="correlated_mc" else .15
+        seed_scale=.30 if regime=="correlated_mc" else .06
+        coordinate_scale=np.ones(12)
+        if regime=="near_degenerate":coordinate_scale[::2]=1e-7
+        while attempts<n if complete_counts is None else len(matrices)<n:
+            attempts+=1
+            if attempts>10000*n:raise RuntimeError("Conditional E05 sampler failed; no favorable regime omission")
+            if regime=="asymmetric_completion" and complete_counts is not None:
+                sizes=np.minimum(j,np.arange(1,26))
+                probabilities=np.array([.5*probs*.988**(sizes*(r+1)),.5*probs*.998**(sizes*(r+1))])
+                draw=rng.choice(50,p=(probabilities/probabilities.sum()).reshape(-1))
+                quality=-1. if draw<25 else 1.;length=int(draw%25+1)
+            else:
+                quality=float(rng.choice([-1.,1.]));length=int(rng.choice(np.arange(1,26),p=probs))
+            common=float(noise(rng,(),kind));selected=rng.permutation(length)[:min(j,length)]
+            between=(.4*common+.7*noise(rng,(12,),kind))*base_scale*task_scale*coordinate_scale
+            within=noise(rng,(length,12),kind)*base_scale*(2/3)*task_scale*coordinate_scale
+            # One coherent parameter draw across every selected call and all
+            # twelve contrasts; interactions do not erase its shared component.
+            coherent=(.7*rng.normal(size=(r,1,1))+.5*rng.normal(size=(r,1,12)))*seed_scale*coordinate_scale
+            interaction=.4*rng.normal(size=(r,length,12))*seed_scale*coordinate_scale
+            draw_calls=specificity_means(regime,index)+between+within[None,:,:]+coherent+interaction
+            if regime=="asymmetric_completion":draw_calls+=quality*specificity_quality_shift(regime)
+            probability=(1. if complete_counts is not None else (.998 if quality>0 else .988)**(len(selected)*(r+1))) if regime=="asymmetric_completion" else math.exp(-.12*len(selected)*abs(common)) if regime=="symmetric_completion" else 1.
+            if rng.random()>probability:failed+=1;continue
+            vectors=draw_calls[:,selected,:].mean(axis=1)
+            matrices.append(vectors.mean(axis=0));mcs.append(study._cov(vectors)/r);lengths.append(length)
+        data[sid]=dict(matrix=np.stack(matrices) if matrices else np.empty((0,12)),
+            parameter_mc_covariances=np.stack(mcs) if mcs else np.empty((0,12,12)))
+        diagnostics[sid]=dict(design_planned_episodes=planned,complete_episodes=len(matrices),synthetic_episode_proposals=attempts,
+            synthetic_rejections=failed,count_conditioning="exact_joint_complete_episode_counts" if complete_counts is not None else "planned_episode_sampling",
+            selected_calls_mean=float(np.minimum(j,lengths).mean()) if lengths else None,completed_trajectory_length_mean=float(np.mean(lengths)) if lengths else None,
+            parameter_draws=r,parameter_seed_unit="episode",conditional_quality_mean=conditional_quality_mean(regime,probs,j,r))
+    truth,unconditional=specificity_truth(design,regime)
+    return data,truth,unconditional,diagnostics
+
+
+def simulate_one(design,regime,seed,trial,minimum_complete,complete_counts=None,family=study.FAMILY):
     started=time.perf_counter()
-    data,truth,unconditional,diagnostics=generate_trial(design,regime,seed,trial,complete_counts)
+    data,truth,unconditional,diagnostics=(generate_trial(design,regime,seed,trial,complete_counts) if family==study.FAMILY else generate_trial(design,regime,seed,trial,complete_counts,family))
     base=dict(regime=regime,trial=trial,truth=truth.tolist(),unconditional_truth=unconditional.tolist(),
-              episode_accounting=diagnostics,seed_sha256=object_hash(dict(seed=seed,regime=regime,trial=trial)))
+              family=family,episode_accounting=diagnostics,seed_sha256=trial_seed_hash(seed,regime,trial,family))
     if any(len(data[s]["matrix"])<max(2,minimum_complete[s]) for s in data):
         return dict(**base,status="insufficient_conditional_population",familywise_noncoverage=True,
                     endpoint_mc_gate=False,elapsed_seconds=time.perf_counter()-started)
     settings=design["analysis"]
-    alpha=design["global_alpha"]*design["family_weights"][study.FAMILY]
+    alpha=design["global_alpha"]*design["family_weights"][family]
+    registry=study.family_registry(design,family);tail=alpha/(2*len(registry))
     intervals=[]
     # Production uses these fixed weights/streams on random datasets. Varying
     # the bootstrap seed by synthetic trial would calibrate another procedure.
     bootstrap_seed=settings["seed"]
     for repeat in range(settings["mc_repeats"]):
-        draws=study._bootstrap(design,data,settings["draws"],bootstrap_seed+repeat)
-        intervals.append(np.quantile(draws,[alpha/120,1-alpha/120],axis=0).T)
+        draws=(study._bootstrap(design,data,settings["draws"],bootstrap_seed+repeat) if family==study.FAMILY else study._bootstrap_family(design,data,settings["draws"],bootstrap_seed+repeat,family))
+        intervals.append(np.quantile(draws,[tail,1-tail],axis=0).T)
     intervals=np.array(intervals)
     primary=intervals[0]
     misses=(truth<primary[:,0])|(truth>primary[:,1])
     widths=(primary[:,1]-primary[:,0])/2
-    h=np.array([.05*design["frozen_scales"][f"{c['group']}:{c['modality']}"] for c in study.primary_registry(design)])
+    h=np.array([.05*design["frozen_scales"][f"{c['group']}:{c['modality']}"] for c in registry])
     spreads=np.ptp(intervals,axis=0).max(axis=1)
     estimates=np.concatenate([sum(w*data[s]["matrix"].mean(axis=0) for s,w in g["weights"].items()) for g in design["groups"]])
     return dict(**base,status="evaluated",familywise_noncoverage=bool(misses.any()),
@@ -270,12 +364,14 @@ def validate_protocol(protocol,design):
     if protocol.get("kind")!="paired_interval_calibration_protocol" or protocol.get("schema_version")!=1:
         raise ValueError("Unknown calibration protocol")
     if protocol.get("mode") not in {"candidate_scope","characterization_only"}:raise ValueError("Unknown calibration mode")
+    family=protocol.get("family",study.FAMILY);regimes=regime_registry(family)
+    if family not in study.inferential_families(design):raise ValueError("Calibration family is outside the declared study")
     counts=protocol.get("complete_episode_counts")
     if protocol["mode"]=="candidate_scope" and (counts is None or protocol.get("count_conditioning")!="exact_joint_complete_episode_counts"):
         raise ValueError("Candidate coverage must bind the exact observed complete counts")
     if protocol["mode"]=="candidate_scope":
-        plan=design["analysis"].get("coverage_plan")
-        if not plan or plan.get("kind")!="prospective_exact_count_coverage_plan" or plan.get("schema_version")!=1 or protocol.get("coverage_plan_sha256")!=object_hash(plan):
+        plan=study.prospective_coverage_plan(design,family)
+        if not plan or plan.get("family",study.FAMILY)!=family or plan.get("kind")!="prospective_exact_count_coverage_plan" or plan.get("schema_version")!=1 or protocol.get("coverage_plan_sha256")!=object_hash(plan):
             raise ValueError("Candidate calibration requires its immutable prospective plan")
         keys=("analysis_module_sha256","generator_source_sha256","regime_definitions_sha256","regimes",
               "stage_derivation","simulation_stages","seed","count_conditioning")
@@ -286,19 +382,21 @@ def validate_protocol(protocol,design):
     if counts is not None:
         if set(counts)!={s["id"] for s in design["strata"]} or any(type(counts[s["id"]]) is not int or not 2<=counts[s["id"]]<=len(s["reset_seeds"]) for s in design["strata"]):
             raise ValueError("Invalid complete-count scope")
-    if protocol["scope_sha256"]!=object_hash(study.calibration_scope(design,counts)):
+    if protocol["scope_sha256"]!=object_hash(study.calibration_scope(design,counts,family)):
         raise ValueError("Calibration changed the planned inference scope")
     if protocol["analysis_module_sha256"]!=file_hash(study.__file__) or protocol["generator_source_sha256"]!=file_hash(__file__):
         raise ValueError("Calibration code differs from the prospective source identity")
-    if protocol["regime_definitions_sha256"]!=object_hash(REGIMES) or protocol["regimes"]!=list(REGIMES):
+    if protocol["regime_definitions_sha256"]!=object_hash(regimes) or protocol["regimes"]!=list(regimes):
         raise ValueError("The complete fixed regime registry must be preserved without favorable selection")
     if protocol["simulation_stages"]!=derive_simulation_stages(scenario_count=len(REGIMES),**protocol["stage_derivation"]):
         raise ValueError("Simulation stage counts differ from their recorded precision derivation")
-    alpha=design["global_alpha"]*design["family_weights"][study.FAMILY]
+    alpha=design["global_alpha"]*design["family_weights"][family]
     if protocol["stage_derivation"]["limit"]!=alpha:
         raise ValueError("Simulation acceptance changed the allocated inferential alpha")
+    if "e05" in design and protocol["stage_derivation"]["simulation_alpha"]!=design["analysis"].get("coverage_simulation_alpha",.05)/2:
+        raise ValueError("Two-family calibration must preserve its equal simulation-confidence allocation")
     settings=design["analysis"]
-    minimum=study.bootstrap_requirement(alpha,60,settings["min_tail_draws"],settings["tail_relative_mcse"])
+    minimum=study.bootstrap_requirement(alpha,len(study.family_registry(design,family)),settings["min_tail_draws"],settings["tail_relative_mcse"])
     if settings["draws"]<minimum or settings["mc_repeats"]<2:
         raise ValueError("Coverage must simulate the fully resolved production interval procedure")
     if set(protocol["minimum_complete_episodes"])!={s["id"] for s in design["strata"]}:
@@ -330,17 +428,19 @@ def verify_sources(manifest):
 
 
 def validate_trial_record(record,design,protocol,protocol_sha256,regime,trial):
+    family=protocol.get("family",study.FAMILY)
     if (record.get("regime"),record.get("trial"),record.get("protocol_sha256"))!=(regime,trial,protocol_sha256):
         raise ValueError("Stored synthetic trial identity mismatch")
-    expected_seed=object_hash(dict(seed=protocol["seed"],regime=regime,trial=trial))
+    if record.get("family",study.FAMILY)!=family:raise ValueError("Stored trial inferential family mismatch")
+    expected_seed=trial_seed_hash(protocol["seed"],regime,trial,family)
     if record.get("seed_sha256")!=expected_seed:
         raise ValueError("Synthetic trial seed identity mismatch")
-    truth,unconditional=analytic_truth(design,regime)
+    truth,unconditional=analytic_truth(design,regime,family)
     if not np.array_equal(record["truth"],truth) or not np.array_equal(record["unconditional_truth"],unconditional):
         raise ValueError("Synthetic trial truth differs from the declared generator")
     if record["status"]=="evaluated":
         bounds=np.asarray(record["confidence_interval"])
-        if bounds.shape!=(60,2) or not np.isfinite(bounds).all() or np.any(bounds[:,0]>bounds[:,1]):
+        if bounds.shape!=(len(study.family_registry(design,family)),2) or not np.isfinite(bounds).all() or np.any(bounds[:,0]>bounds[:,1]):
             raise ValueError("Invalid saved synthetic confidence interval")
         misses=(truth<bounds[:,0])|(truth>bounds[:,1])
         if record["familywise_noncoverage"] is not bool(misses.any()) or record["noncovering_contrast_indices"]!=np.flatnonzero(misses).tolist():
@@ -430,6 +530,7 @@ def run_calibration(design,protocol,out, *, workers,resume,design_sha256,protoco
 
 def _run_calibration(design,protocol,out, *, workers,resume,design_sha256,protocol_sha256,through_look):
     validate_protocol(protocol,design)
+    family=protocol.get("family",study.FAMILY);regimes=regime_registry(family)
     study.integer(workers,"CPU workers")
     through_look=len(protocol["simulation_stages"]) if through_look is None else study.integer(through_look,"execution look bound")
     if through_look>len(protocol["simulation_stages"]):raise ValueError("Execution look bound exceeds the fixed protocol")
@@ -460,7 +561,9 @@ def _run_calibration(design,protocol,out, *, workers,resume,design_sha256,protoc
                     path=directory/f"trial_{trial:06d}.json"
                     if str(path.relative_to(out)) in committed:
                         continue
-                    job=pool.submit(simulate_one,design,regime,protocol["seed"],trial,protocol["minimum_complete_episodes"],protocol.get("complete_episode_counts"))
+                    parameters=(design,regime,protocol["seed"],trial,protocol["minimum_complete_episodes"],protocol.get("complete_episode_counts"))
+                    if family!=study.FAMILY:parameters=(*parameters,family)
+                    job=pool.submit(simulate_one,*parameters)
                     pending[job]=(path,regime,trial)
             finished=0
             for job in as_completed(pending):
@@ -482,41 +585,41 @@ def _run_calibration(design,protocol,out, *, workers,resume,design_sha256,protoc
     statistical="passed" if all(v["decision"]=="passed" for v in summaries.values()) else "failed" if any(v["decision"]=="failed" for v in summaries.values()) else "inconclusive"
     status="approved" if statistical=="passed" and protocol["mode"]=="candidate_scope" else "characterization_only" if protocol["mode"]=="characterization_only" else statistical
     verify_sources(manifest)
-    result=dict(status=status,statistical_status=statistical,scope_sha256=protocol["scope_sha256"],
+    result=dict(status=status,statistical_status=statistical,family=family,scope_sha256=protocol["scope_sha256"],
         protocol_sha256=protocol_sha256,generator_source_sha256=file_hash(__file__),analysis_module_sha256=file_hash(study.__file__),
         coverage_plan_sha256=protocol.get("coverage_plan_sha256"),
         assumptions="Coverage evidence for the complete recorded synthetic regimes only; no distribution-free guarantee. Insufficient conditional populations count as noncoverage, not favorable exclusions.",
         complete_episode_counts=protocol.get("complete_episode_counts"),count_conditioning=protocol.get("count_conditioning","planned_episode_sampling"),
         minimum_complete_episodes=protocol["minimum_complete_episodes"],simulation_family_alpha=protocol["stage_derivation"]["simulation_alpha"],
         look_weights=protocol["stage_derivation"]["look_weights"],planned_scenario_ids=list(REGIMES),
-        scenarios=[dict(id=r,description=REGIMES[r]["description"],**summaries[r]) for r in REGIMES],
+        scenarios=[dict(id=r,description=regimes[r]["description"],**summaries[r]) for r in regimes],
         endpoint_mc_interpretation="The first fixed bootstrap stream defines coverage; independently repeated endpoints are a separately reported computational precision gate, never selected for favorable coverage.",
         execution_limit_look=through_look,
         unresolved_regimes=[r for r in REGIMES if summaries[r]["decision"]=="inconclusive"],
         elapsed_seconds=time.perf_counter()-started,manifest_sha256=file_hash(manifest_path),
         trial_ledger_sha256=file_hash(out/"trial_ledger.jsonl"),trial_ledger_chain_sha256=head,
         trials=[dict(path=str(path.relative_to(out)),sha256=file_hash(path)) for path in sorted(out.glob("*/trial_*.json"))])
-    if status=="approved":study.validate_calibration(design,{sid:{"matrix":np.empty((n,30))} for sid,n in protocol["complete_episode_counts"].items()},result)
+    if status=="approved":study.validate_calibration(design,{sid:{"matrix":np.empty((n,len(study.local_contrasts(family))))} for sid,n in protocol["complete_episode_counts"].items()},result,family)
     atomic_bytes(out/"calibration.json",canonical_json(result)+b"\n")
     return result
 
 
-def benchmark(design, *, seed,trials,out,complete_counts=None):
+def benchmark(design, *, seed,trials,out,complete_counts=None,family=study.FAMILY):
     """All regimes, fixed trial count, never an approval artifact."""
     records=[]
     minimum={s["id"]:2 for s in design["strata"]}
     for regime in REGIMES:
         for trial in range(trials):
-            row=simulate_one(design,regime,seed,trial,minimum,complete_counts)
+            row=simulate_one(design,regime,seed,trial,minimum,complete_counts,family)
             records.append(row)
             print(f"{regime} trial {trial}: {row['elapsed_seconds']:.3f}s; noncoverage={row['familywise_noncoverage']}",flush=True)
     times=np.array([r["elapsed_seconds"] for r in records])
     report=dict(kind="CPU_runtime_benchmark_not_coverage_approval",analysis_module_sha256=file_hash(study.__file__),
-        generator_source_sha256=file_hash(__file__),scope=study.calibration_scope(design,complete_counts),
+        generator_source_sha256=file_hash(__file__),family=family,scope=study.calibration_scope(design,complete_counts,family),
         complete_episode_counts=complete_counts,
         seed=seed,trials_per_regime=trials,records=records,mean_seconds_per_trial=float(times.mean()),
         maximum_seconds_per_trial=float(times.max()),total_serial_seconds=float(times.sum()),
-        bootstrap_array_bytes=design["analysis"]["draws"]*60*8,
+        bootstrap_array_bytes=design["analysis"]["draws"]*len(study.family_registry(design,family))*8,
         environment=dict(numpy=np.__version__,scipy=scipy.__version__,python=platform.python_version(),platform=platform.platform(),blas_threads=1))
     with Path(out).open("xb") as stream:stream.write(canonical_json(report)+b"\n")
     return report
@@ -548,39 +651,41 @@ def characterization_design(*,episodes,calls,permutations,draws,repeats):
     return study.validate_design(design)
 
 
-def characterization_protocol(design, *, seed,look_weights,reference_rate,joint_success_targets,complete_counts=None):
-    derivation=dict(look_weights=look_weights,simulation_alpha=.05,
-        limit=design["global_alpha"]*design["family_weights"][study.FAMILY],
+def characterization_protocol(design, *, seed,look_weights,reference_rate,joint_success_targets,complete_counts=None,family=study.FAMILY):
+    regimes=regime_registry(family)
+    derivation=dict(look_weights=look_weights,simulation_alpha=design["analysis"].get("coverage_simulation_alpha",.05)/len(study.inferential_families(design)),
+        limit=design["global_alpha"]*design["family_weights"][family],
         reference_rate=reference_rate,joint_success_targets=joint_success_targets)
-    return dict(schema_version=1,kind="paired_interval_calibration_protocol",mode="characterization_only",
-        scope_sha256=object_hash(study.calibration_scope(design,complete_counts)),analysis_module_sha256=file_hash(study.__file__),
+    return dict(schema_version=1,kind="paired_interval_calibration_protocol",mode="characterization_only",family=family,
+        scope_sha256=object_hash(study.calibration_scope(design,complete_counts,family)),analysis_module_sha256=file_hash(study.__file__),
         complete_episode_counts=complete_counts,
         count_conditioning="exact_joint_complete_episode_counts" if complete_counts is not None else "planned_episode_sampling",
-        generator_source_sha256=file_hash(__file__),regime_definitions_sha256=object_hash(REGIMES),regimes=list(REGIMES),
+        generator_source_sha256=file_hash(__file__),regime_definitions_sha256=object_hash(regimes),regimes=list(regimes),
         stage_derivation=derivation,simulation_stages=derive_simulation_stages(scenario_count=len(REGIMES),**derivation),
         seed=seed,minimum_complete_episodes={s["id"]:2 for s in design["strata"]})
 
 
-def make_coverage_plan(design, *, seed,look_weights,reference_rate,joint_success_targets):
+def make_coverage_plan(design, *, seed,look_weights,reference_rate,joint_success_targets,family=study.FAMILY):
     """Embed this plan in the global design before collecting confirmation data."""
     template=characterization_protocol(design,seed=seed,look_weights=look_weights,
-        reference_rate=reference_rate,joint_success_targets=joint_success_targets)
+        reference_rate=reference_rate,joint_success_targets=joint_success_targets,family=family)
     keys=("analysis_module_sha256","generator_source_sha256","regime_definitions_sha256","regimes",
           "stage_derivation","simulation_stages","seed")
-    return dict(kind="prospective_exact_count_coverage_plan",schema_version=1,
+    return dict(kind="prospective_exact_count_coverage_plan",schema_version=1,family=family,
         count_conditioning="exact_joint_complete_episode_counts",**{key:template[key] for key in keys})
 
 
-def instantiate_coverage_protocol(design,complete_counts):
+def instantiate_coverage_protocol(design,complete_counts,family=study.FAMILY):
     """After an effects-free completion audit, bind exact counts to the old plan.
 
     The global design is not amended. Future calibration/protocol file hashes
     belong in the separately sealed post-run artifact registry.
     """
-    plan=design["analysis"]["coverage_plan"]
-    protocol=dict(plan,kind="paired_interval_calibration_protocol",mode="candidate_scope",
-        scope_sha256=object_hash(study.calibration_scope(design,complete_counts)),
-        complete_episode_counts=complete_counts,coverage_plan_sha256=object_hash(plan),
+    plan=study.prospective_coverage_plan(design,family)
+    if plan is None:raise ValueError("Missing prospective family coverage plan")
+    protocol=dict(deepcopy(plan),kind="paired_interval_calibration_protocol",mode="candidate_scope",family=family,
+        scope_sha256=object_hash(study.calibration_scope(design,complete_counts,family)),
+        complete_episode_counts=deepcopy(complete_counts),coverage_plan_sha256=object_hash(plan),
         minimum_complete_episodes=dict(complete_counts))
     return validate_protocol(protocol,design)
 
@@ -603,13 +708,14 @@ def main():
     design=study.validate_design(strict_json(args.design))
     if args.command=="benchmark":
         study.integer(args.trials,"benchmark trials"); study.integer(args.seed,"benchmark seed",0)
-        counts=None
+        counts=None;family=study.FAMILY
         if args.protocol is not None:
             if file_hash(args.protocol)!=args.protocol_sha256:raise ValueError("Benchmark protocol identity mismatch")
             protocol=validate_protocol(strict_json(args.protocol),design)
             if args.seed!=protocol["seed"]:raise ValueError("Benchmark changed its fixed data-generation seed")
             counts=protocol.get("complete_episode_counts")
-        report=benchmark(design,seed=args.seed,trials=args.trials,out=args.out,complete_counts=counts)
+            family=protocol.get("family",study.FAMILY)
+        report=benchmark(design,seed=args.seed,trials=args.trials,out=args.out,complete_counts=counts,family=family)
         print(canonical_json({k:report[k] for k in ("mean_seconds_per_trial","maximum_seconds_per_trial","total_serial_seconds")}).decode())
     else:
         if args.protocol is None or file_hash(args.protocol)!=args.protocol_sha256:raise ValueError("Prospectively frozen protocol identity required")

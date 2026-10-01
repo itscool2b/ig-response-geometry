@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from copy import deepcopy
 import hashlib
 import itertools
 import math
@@ -30,6 +31,12 @@ LOCAL_CONTRASTS = [dict(modality=m, direction=d, method=a, control=b,
                         response="RMS", metric="raw_auc")
                    for m, d, (a, b) in itertools.product(MODALITIES, DIRECTIONS, COMPARISONS)]
 FAMILY = "primary_rms"
+SPECIFICITY_FAMILY = "weight_specificity_rms"
+SPECIFICITY_CONTRASTS = [dict(modality=m,direction=d,method=t,control=f"permuted_{t}",response="RMS",metric="raw_auc")
+    for m,d,t in itertools.product(MODALITIES,DIRECTIONS,("Q_IG","L2_IG"))]
+E05_SCOPE = dict(null_kind="within_linear_weight_entry_permutation_v1",reference="own_function_self_reference",
+    response="trained_probe_RMS",tie_rule="stable_descending_then_index",parameter_seed_unit="episode",
+    completion_population="separate_joint_complete_episodes")
 ESTIMAND = "equal_episode_mean_of_uniform_executed_calls_under_capped_behavior_policy"
 
 
@@ -56,6 +63,27 @@ def primary_registry(design):
     return [dict(id=f"{g['id']}:{c['modality']}:{c['direction']}:{c['method']}-vs-{c['control']}",
                  group=g["id"], family=FAMILY, **c)
             for g in design["groups"] for c in LOCAL_CONTRASTS]
+
+
+def local_contrasts(family=FAMILY):
+    if family==FAMILY:return LOCAL_CONTRASTS
+    if family==SPECIFICITY_FAMILY:return SPECIFICITY_CONTRASTS
+    raise ValueError("Unknown prospective inferential family")
+
+
+def family_registry(design,family=FAMILY):
+    return [dict(id=f"{g['id']}:{c['modality']}:{c['direction']}:{c['method']}-vs-{c['control']}",
+                 group=g["id"],family=family,**c) for g in design["groups"] for c in local_contrasts(family)]
+
+
+def inferential_families(design):
+    return (FAMILY,SPECIFICITY_FAMILY) if "e05" in design else (FAMILY,)
+
+
+def prospective_coverage_plan(design,family=FAMILY):
+    if "e05" in design:
+        return design["analysis"].get("coverage_plans",{}).get(family)
+    return design["analysis"].get("coverage_plan") if family==FAMILY else None
 
 
 def validate_design(design):
@@ -110,6 +138,17 @@ def validate_design(design):
         raise ValueError("This implementation requires disjoint reset streams, not unmodeled shared blocks")
     if design.get("primary_contrasts") != primary_registry(design):
         raise ValueError("The exact 60 primary contrasts must be prospectively enumerated")
+    if "e05" in design:
+        if design["e05"]!=E05_SCOPE or design.get("e05_contrasts")!=family_registry(design,SPECIFICITY_FAMILY):
+            raise ValueError("E05 scope and all 24 trained-response transfer contrasts must be explicit")
+        expected={FAMILY:5/7,SPECIFICITY_FAMILY:2/7}
+        if set(weights)!=set(expected) or any(not math.isclose(weights[k],v,rel_tol=0,abs_tol=1e-15) for k,v in expected.items()):
+            raise ValueError("Expanded study requires the prospectively selected 60/84 and 24/84 alpha allocation")
+        for stratum in strata:
+            integer(stratum["parameter_draws"],"episode-coherent parameter draws",2)
+            digest(stratum["e05_gate_sha256"],"randomized-function numerical gate")
+    elif SPECIFICITY_FAMILY in weights:
+        raise ValueError("A weight-specificity alpha allocation requires its full prospective scope")
     previous={s["id"]:0 for s in strata}
     stage_ids=set()
     for stage in design.get("pilot_stages",[]):
@@ -336,6 +375,84 @@ def stratum_data(rows, bank, *, include_secondary=False):
                 matrix=np.stack([e["effects"].mean(axis=0) for e in retained]) if retained else np.empty((0,30)))
 
 
+def specificity_stratum_data(rows,bank,parameter_draws):
+    """Separate E05 population; shared parameter draws remain episode clusters."""
+    integer(parameter_draws,"parameter draws",2)
+    accounts=_selection(bank)
+    expected={(e["episode_id"],e["policy_call_idx"],m,r):e["context_id"]
+        for e in bank["contexts"] for m in MODALITIES for r in range(parameter_draws)}
+    lookup={};draw_ids={};seen_ids={};own_references={};diagnostics=Counter()
+    for row in rows:
+        key=(row["episode_id"],row["policy_call_idx"],row["modality"],row["draw_index"])
+        if key in lookup:raise ValueError("Repeated E05 context/modality/parameter draw")
+        if expected.get(key)!=row["source_context_id"]:raise ValueError("Unexpected E05 context membership")
+        draw=(row["episode_id"],row["draw_index"])
+        identity=digest(row["parameter_draw_sha256"],"parameter draw")
+        if draw in draw_ids and draw_ids[draw]!=identity:raise ValueError("Parameter draw changed within an episode")
+        if identity in seen_ids and seen_ids[identity]!=draw:raise ValueError("Parameter draw was reused across independent episode/draw units")
+        draw_ids[draw]=identity;seen_ids[identity]=draw;lookup[key]=row
+    if set(lookup)!=set(expected):raise ValueError("Incomplete prospective E05 membership; failed rows must be retained")
+    by_ep={}
+    for e in bank["contexts"]:by_ep.setdefault(e["episode_id"],[]).append(e)
+    episodes=[];membership=[];failures=Counter();baselines={m:[] for m in MODALITIES}
+    for eid,entries in sorted(by_ep.items()):
+        entries=sorted(entries,key=lambda e:e["policy_call_idx"]);account=accounts[entries[0]["episode"]]
+        if sorted(e["policy_call_idx"] for e in entries)!=sorted(account["selected_calls"]):raise ValueError("E05 selected calls differ from the bank")
+        values=np.full((parameter_draws,len(entries),12),np.nan);reasons=[];trained={};ep_baselines={m:[] for m in MODALITIES}
+        for j,e in enumerate(entries):
+            for modality in MODALITIES:
+                baseline=None
+                for r in range(parameter_draws):
+                    row=lookup[(eid,e["policy_call_idx"],modality,r)]
+                    if row["status"]!="evaluated":
+                        reasons.append(f"{modality}:draw{r}:{row.get('failure_kind',row['status'])}");continue
+                    identity=digest(row["randomized_reference_sha256"],"own-function reference")
+                    reference_key=(eid,e["policy_call_idx"],r)
+                    if reference_key in own_references and own_references[reference_key]!=identity:raise ValueError("Own-function actual reference changed across modalities")
+                    own_references[reference_key]=identity
+                    result=row["results"];current_baseline=audit_rms(result);baseline=current_baseline
+                    rankings=result["rankings"]
+                    anchor=object_hash(dict(reference=result["active_reference_sha256"],
+                        input=result["response_table"][result["input_response_id"]],baseline=result["response_table"][result["baseline_response_id"]],
+                        fractions=result["realized_fractions"],trained={t:rankings[f"trained_{t}"] for t in ("Q_IG","L2_IG")}))
+                    context_key=(e["policy_call_idx"],modality)
+                    if context_key in trained and trained[context_key]!=anchor:raise ValueError("Trained response or trained ranking changed across parameter draws")
+                    trained[context_key]=anchor
+                    for label,ranking in rankings.items():
+                        prefix=f"{modality}:{label}"
+                        diagnostics[prefix+":"+ranking["status"]]+=1
+                        if ranking["status"]=="defined":
+                            diagnostics[prefix+":all_zero_map"]+=int(ranking.get("zero_map",False))
+                            diagnostics[prefix+":tied_ranking"]+=int(ranking.get("tied_positions",0)>0)
+                    for k,c in enumerate(SPECIFICITY_CONTRASTS):
+                        if c["modality"]!=modality:continue
+                        a,problem_a=_ranking_area(rankings,"trained_"+c["method"],c["direction"])
+                        b,problem_b=_ranking_area(rankings,c["control"],c["direction"])
+                        if problem_a or problem_b:
+                            reasons.extend(f"{modality}:draw{r}:{problem}" for problem in (problem_a,problem_b) if problem)
+                        else:values[r,j,k]=(1 if c["direction"]=="deletion" else -1)*(a-b)
+                if baseline is not None:ep_baselines[modality].append(baseline)
+        valid=bool(np.isfinite(values).all());failures.update(reasons)
+        member=dict(episode_id=eid,reset_seed=entries[0]["reset_seed"],executed_calls=len(account["eligible_calls"]),
+            selected_calls=len(entries),planned_episode_weight=1/len(by_ep),joint_complete=valid,failure_reasons=sorted(set(reasons)),
+            parameter_draws=[dict(draw_index=r,parameter_draw_sha256=draw_ids[(eid,r)],within_episode_draw_weight=1/parameter_draws) for r in range(parameter_draws)],
+            contexts=[dict(context_id=e["context_id"],call=e["policy_call_idx"],within_episode_weight=1/len(entries),
+                inclusion_probability=account["inclusion_probability"],terminal_record_sha256=e["terminal_record_sha256"]) for e in entries])
+        membership.append(member)
+        for m in MODALITIES:
+            if len(ep_baselines[m])==len(entries):baselines[m].append(dict(episode_id=eid,value=float(np.mean(ep_baselines[m]))))
+        if valid:
+            draw_vectors=values.mean(axis=1)
+            episodes.append(dict(episode_id=eid,total_calls=len(account["eligible_calls"]),effects=values.mean(axis=0),
+                draw_call_effects=values,draw_episode_effects=draw_vectors,parameter_mc_covariance=_cov(draw_vectors)/parameter_draws))
+    for member in membership:member["conditional_episode_weight"]=1/len(episodes) if member["joint_complete"] else 0
+    return dict(episodes=episodes,membership=membership,baseline_episodes=baselines,failure_counts=dict(failures),
+        numerical_diagnostic_counts=dict(diagnostics),diagnostic_unit="context_modality_parameter_draw",planned_episodes=len(by_ep),planned_contexts=len(bank["contexts"]),
+        evaluated_calls_per_episode=bank["selection"]["calls_per_episode"],evaluated_parameter_draws=parameter_draws,
+        conditioning="all_selected_calls_modalities_targets_and_parameter_draws_finite; separate_from_base_family",
+        secondary={},matrix=np.stack([e["draw_episode_effects"].mean(axis=0) for e in episodes]) if episodes else np.empty((0,12)))
+
+
 def secondary_summaries(rows,bank):
     """All score conventions, component controls and ratio curves, descriptive.
 
@@ -499,6 +616,51 @@ def load_study(design, registry, design_sha256):
     return output
 
 
+def load_specificity_study(design,registry,design_sha256,base_data):
+    """Authenticate separate E05 shards against the already loaded base study."""
+    from weight_arrangement_control import load_completed_control
+    validate_design(design)
+    if "e05" not in design or registry.get("global_design_sha256")!=design_sha256:raise ValueError("Missing prospective E05 design binding")
+    entries=registry["e05_strata"];specs={s["id"]:s for s in design["strata"]}
+    if len(entries)!=6 or {e["id"] for e in entries}!=set(specs):raise ValueError("E05 registry must cover every declared stratum")
+    base_paths={}
+    for entry in registry["strata"]:
+        for shard in entry.get("shards",[entry]):
+            base_paths[(entry["id"],str(Path(shard["metrics"]).resolve()))]=shard
+    output={};all_draws=set()
+    for entry in entries:
+        sid=entry["id"];spec=specs[sid];items=[]
+        for shard in entry.get("shards",[entry]):
+            path=Path(shard["metrics"]);base=Path(shard["base_metrics"])
+            original=base_paths.get((sid,str(base.resolve())))
+            if original is None:raise ValueError("E05 base path is outside its authenticated study stratum")
+            for prefix,source in (("",path),("base_",base)):
+                for suffix,field in (("","metrics_sha256"),(".manifest.json","manifest_sha256"),(".completion.json","completion_sha256")):
+                    if file_hash(str(source)+suffix)!=digest(shard[prefix+field],prefix+field):raise ValueError("E05 registry artifact mismatch")
+                    if prefix and shard[prefix+field]!=original[field]:raise ValueError("E05 changed its original base identity")
+            rows,manifest,_=load_completed_control(path,base_path=base)
+            config=manifest["configuration"];protocol=config["protocol"];bank=config["bank"]
+            if protocol.get("global_design_sha256")!=design_sha256 or protocol["stage"]!=design["stage"]:raise ValueError("E05 producer is not bound to the original prospective design")
+            if any(config[field]!=shard[field] for field in ("bank_sha256","protocol_sha256")):raise ValueError("E05 bank/protocol identity mismatch")
+            if shard["bank_sha256"]!=original["bank_sha256"] or shard["base_protocol_sha256"]!=original["protocol_sha256"]:raise ValueError("E05 bank or base protocol changed")
+            if config["e05_gate_sha256"]!=spec["e05_gate_sha256"] or protocol["parameter_draws"]!=spec["parameter_draws"]:raise ValueError("E05 changed its numerical gate or parameter-draw budget")
+            if (bank["task"],bank["model"],bank["pipeline"]["checkpoint"]["sha256"])!=(spec["task"],spec["model"],spec["checkpoint_sha256"]):raise ValueError("E05 task/checkpoint mismatch")
+            if bank["selection"]["calls_per_episode"]!=spec["calls_per_episode"]:raise ValueError("E05 changed its call budget")
+            if {key:protocol[key] for key in E05_SCOPE}!=design["e05"]:raise ValueError("E05 changed its scientific null/reference/tie scope")
+            item=specificity_stratum_data(rows,bank,spec["parameter_draws"])
+            for member in item["membership"]:
+                for draw in member["parameter_draws"]:
+                    identity=draw["parameter_draw_sha256"]
+                    if identity in all_draws:raise ValueError("E05 parameter draw reused across independent study episodes")
+                    all_draws.add(identity)
+            items.append(item)
+        if not items:raise ValueError("E05 stratum has no completed shards")
+        output[sid]=combine_shards(items)
+        def population(item):return {e["episode_id"]:(e["reset_seed"],e["executed_calls"],e["selected_calls"],e["contexts"]) for e in item["membership"]}
+        if population(output[sid])!=population(base_data[sid]):raise ValueError("E05 planned episode/context membership differs from its base study")
+    return output
+
+
 def combine_shards(items):
     """Merge disjoint episode shards without treating shards as equal units."""
     from copy import deepcopy
@@ -507,8 +669,8 @@ def combine_shards(items):
         raise ValueError("An episode appears in multiple shards")
     result=deepcopy(items[0])
     for item in items[1:]:
-        if (item["evaluated_calls_per_episode"],item["evaluated_random_permutations"])!=(result["evaluated_calls_per_episode"],result["evaluated_random_permutations"]):
-            raise ValueError("Pilot shards changed J or M and their conditional population")
+        if any(item.get(k)!=result.get(k) for k in ("evaluated_calls_per_episode","evaluated_random_permutations","evaluated_parameter_draws")):
+            raise ValueError("Pilot shards changed J, M or R and their conditional population")
         for key in ("episodes","membership"):
             result[key].extend(deepcopy(item[key]))
         result["matrix"]=np.concatenate([result["matrix"],item["matrix"]])
@@ -612,7 +774,38 @@ def candidate_variance(components, calls, permutations):
                 total_variance=non_mc+mc_unit/permutations, expected_calls=float(j.mean()))
 
 
-def pilot_report(design, data, *, draws, seed, upper_quantile, call_budgets, permutations):
+def specificity_variance_components(data):
+    """Decompose episode-coherent parameter MC without treating calls as draws."""
+    covariance=_cov(data["matrix"]);within=[];mc_within=[];mc_full=[];observed=[];totals=[];counts=[];negative=[];negative_mc=[]
+    for ep in data["episodes"]:
+        array=ep["draw_call_effects"];r,j,width=array.shape;n=ep["total_calls"]
+        if r<2 or width!=12 or (j<2 and n>1):raise ValueError("E05 pilot needs repeated parameter draws and calls to identify components")
+        mc=ep["parameter_mc_covariance"];observed.append(np.diag(mc));fpc=(1-j/n)/j
+        centered=array-array.mean(axis=1,keepdims=True)
+        within_mc=centered.var(axis=0,ddof=1).sum(axis=0)/(j-1) if j>1 else np.zeros(width)
+        raw_within=ep["effects"].var(axis=0,ddof=1)-within_mc/r if j>1 else np.zeros(width)
+        full=np.diag(mc)*r-fpc*within_mc
+        within.append(np.maximum(raw_within,0));negative.append(raw_within<0)
+        mc_within.append(within_mc);mc_full.append(np.maximum(full,0));negative_mc.append(full<0)
+        totals.append(n);counts.append(j)
+    totals=np.asarray(totals);counts=np.asarray(counts);within=np.asarray(within);observed=np.asarray(observed)
+    between_unclipped=np.diag(covariance)-np.mean(within*((1-counts/totals)/counts)[:,None]+observed,axis=0)
+    return dict(covariance=covariance,within=within,observed_mc=observed,between=np.maximum(between_unclipped,0),
+        between_unclipped=between_unclipped,within_negative_moment_counts=np.sum(negative,axis=0),
+        parameter_full_mean_negative_moment_counts=np.sum(negative_mc,axis=0),
+        mc_within=np.asarray(mc_within),mc_full_mean=np.asarray(mc_full),total_calls=totals,sampled_calls=counts)
+
+
+def candidate_specificity_variance(components,calls,parameter_draws):
+    integer(calls,"candidate E05 calls");integer(parameter_draws,"candidate parameter draws",2)
+    j=np.minimum(calls,components["total_calls"]);fpc=((1-j/components["total_calls"])/j)[:,None]
+    non_mc=components["between"]+np.mean(components["within"]*fpc,axis=0)
+    mc_unit=np.mean(components["mc_full_mean"]+components["mc_within"]*fpc,axis=0)
+    return dict(non_mc_variance=non_mc,mc_variance_per_parameter_draw=mc_unit,
+        total_variance=non_mc+mc_unit/parameter_draws,expected_calls=float(j.mean()))
+
+
+def pilot_report(design, data, *, draws, seed, upper_quantile, call_budgets, permutations,family=FAMILY,baseline_data=None):
     """No means, signed effects, episode effects, efficacy curves or opaque IDs.
 
     Episode-bootstrap upper quantiles describe pilot uncertainty under the
@@ -629,40 +822,46 @@ def pilot_report(design, data, *, draws, seed, upper_quantile, call_budgets, per
     for j in call_budgets:
         integer(j, "call budget")
     rng = np.random.Generator(np.random.PCG64(seed))
-    report = dict(kind="variance_only_pilot_report", stage="variance_only_pilot", disclosure="labeled_variance_only_not_blinded",
-        no_signed_efficacy_estimates=True, primary_contrasts=primary_registry(design),
+    width=len(local_contrasts(family));specificity=family==SPECIFICITY_FAMILY
+    component_fn=specificity_variance_components if specificity else variance_components
+    candidate_fn=candidate_specificity_variance if specificity else candidate_variance
+    budget_field="parameter_draws" if specificity else "random_permutations"
+    unit_field="mc_variance_per_parameter_draw" if specificity else "mc_variance_per_permutation"
+    if specificity and baseline_data is None:raise ValueError("E05 planning must use the shared noncomparative base-study scale population")
+    baseline_data=data if baseline_data is None else baseline_data
+    report = dict(kind="variance_only_pilot_report", stage="variance_only_pilot",family=family, disclosure="labeled_variance_only_not_blinded",
+        no_signed_efficacy_estimates=True, primary_contrasts=family_registry(design,family),
         uncertainty_status="empirical_bootstrap_planning_approximation_requires_recruitment_and_coverage_calibration",
         uncertainty=dict(draws=draws, seed=seed, upper_quantile=upper_quantile), strata={}, scales={})
     baseline_bootstrap = {}
     for stratum in design["strata"]:
         sid, item = stratum["id"], data[stratum["id"]]
-        components = variance_components(item)
+        components = component_fn(item)
         n = len(item["matrix"])
-        candidates = {j: candidate_variance(components, j, permutations) for j in call_budgets}
-        boot = {j: np.empty((draws,30)) for j in call_budgets}
-        boot_mc = {j: np.empty((draws,30)) for j in call_budgets}
+        candidates = {j: candidate_fn(components, j, permutations) for j in call_budgets}
+        boot = {j: np.empty((draws,width)) for j in call_budgets}
+        boot_mc = {j: np.empty((draws,width)) for j in call_budgets}
         for b in range(draws):
             indices = rng.integers(0,n,n)
             sample = dict(episodes=[item["episodes"][k] for k in indices], matrix=item["matrix"][indices])
-            comp = variance_components(sample)
+            comp = component_fn(sample)
             for j in call_budgets:
-                candidate=candidate_variance(comp,j,permutations)
+                candidate=candidate_fn(comp,j,permutations)
                 boot[j][b] = candidate["non_mc_variance"]
-                boot_mc[j][b] = candidate["mc_variance_per_permutation"]
+                boot_mc[j][b] = candidate[unit_field]
         frontier = []
         for j, point in candidates.items():
             upper = np.maximum(point["non_mc_variance"], np.quantile(boot[j],upper_quantile,axis=0))
-            frontier.append(dict(calls_per_episode=j, random_permutations=permutations,
+            frontier.append(dict(calls_per_episode=j, **{budget_field:permutations},
                 expected_selected_calls=point["expected_calls"],
                 non_mc_variance=point["non_mc_variance"].tolist(), non_mc_variance_upper=upper.tolist(),
-                mc_variance_per_permutation=point["mc_variance_per_permutation"].tolist(),
-                mc_variance_per_permutation_upper=np.maximum(point["mc_variance_per_permutation"],np.quantile(boot_mc[j],upper_quantile,axis=0)).tolist(),
+                **{unit_field:point[unit_field].tolist(),unit_field+"_upper":np.maximum(point[unit_field],np.quantile(boot_mc[j],upper_quantile,axis=0)).tolist()},
                 variance_upper_to_point_ratio=[float(u/v) if v>0 else None for u,v in zip(upper,point["non_mc_variance"])]))
         centered = item["matrix"]-item["matrix"].mean(axis=0)
         report["strata"][sid] = dict(planned_episodes=item["planned_episodes"], complete_episodes=n,
             planned_contexts=item["planned_contexts"], membership=item["membership"],
             evaluated_calls_per_episode=item["evaluated_calls_per_episode"],
-            evaluated_random_permutations=item["evaluated_random_permutations"],
+            **({"evaluated_parameter_draws":item["evaluated_parameter_draws"]} if specificity else {"evaluated_random_permutations":item["evaluated_random_permutations"]}),
             membership_sha256=object_hash(item["membership"]), failure_counts=item["failure_counts"],
             numerical_diagnostic_counts=item["numerical_diagnostic_counts"],
             conditioning=item["conditioning"], covariance=components["covariance"].tolist(),
@@ -673,10 +872,11 @@ def pilot_report(design, data, *, draws, seed, upper_quantile, call_budgets, per
             zero_observed_variance_cells=np.flatnonzero(np.diag(components["covariance"])==0).tolist(),
             centered_absolute_max=np.max(abs(centered),axis=0).tolist(),
             centered_absolute_q95=np.quantile(abs(centered),.95,axis=0).tolist(), frontier=frontier)
+        if specificity:report["strata"][sid]["parameter_full_mean_negative_moment_counts"]=components["parameter_full_mean_negative_moment_counts"].tolist()
         baseline_bootstrap[sid] = {}
         for modality in MODALITIES:
-            values = np.array([r["value"] for r in item["baseline_episodes"][modality]])
-            if len(values) != item["planned_episodes"]:
+            values = np.array([r["value"] for r in baseline_data[sid]["baseline_episodes"][modality]])
+            if len(values) != baseline_data[sid]["planned_episodes"]:
                 raise ValueError("Noncomparative scale requires all planned episodes' baseline endpoints; missingness must be resolved or redesigned")
             samples = np.empty(draws)
             for start in range(0,draws,512):
@@ -696,50 +896,67 @@ def pilot_report(design, data, *, draws, seed, upper_quantile, call_budgets, per
     return report
 
 
+def specificity_pilot_report(design,data,baseline_data, *, parameter_draws,**kwargs):
+    return pilot_report(design,data,permutations=parameter_draws,family=SPECIFICITY_FAMILY,baseline_data=baseline_data,**kwargs)
+
+
 def bootstrap_requirement(alpha, comparisons, min_tail_draws=100, tail_relative_mcse=.1):
     p = finite(alpha,"family alpha",positive=True)/(2*integer(comparisons,"comparisons"))
     if not 0<p<.5 or not 0<tail_relative_mcse<1:
         raise ValueError("Invalid tail probability or MC precision")
-    return max(math.ceil(min_tail_draws/p), math.ceil((1-p)/(p*tail_relative_mcse**2)))
+    def ceil_arithmetic(value):
+        # Rational family allocations can round one ulp above an integer.
+        rounded=round(value)
+        return rounded if math.isclose(value,rounded,rel_tol=1e-14,abs_tol=1e-10) else math.ceil(value)
+    return max(ceil_arithmetic(min_tail_draws/p),ceil_arithmetic((1-p)/(p*tail_relative_mcse**2)))
 
 
 def _bootstrap(design,data,draws,seed):
+    return _bootstrap_family(design,data,draws,seed,FAMILY)
+
+
+def _bootstrap_family(design,data,draws,seed,family):
     rng = np.random.Generator(np.random.PCG64(seed))
-    output = np.zeros((draws,60))
+    width=len(local_contrasts(family))
+    output = np.zeros((draws,len(design["groups"])*width))
     for g, group in enumerate(design["groups"]):
         for sid, weight in group["weights"].items():
             matrix = data[sid]["matrix"]
+            if matrix.ndim!=2 or matrix.shape[1]!=width or not np.isfinite(matrix).all():
+                raise ValueError("Episode matrix differs from its finite family contrast scope")
             n = len(matrix)
             if n<2:
                 raise ValueError("Insufficient complete episodes in a declared task; task weights cannot be renormalized")
             for start in range(0,draws,256):
                 stop=min(start+256,draws)
                 counts=rng.multinomial(n,np.full(n,1/n),size=stop-start)
-                output[start:stop,g*30:(g+1)*30] += weight*(counts@matrix/n)
+                output[start:stop,g*width:(g+1)*width] += weight*(counts@matrix/n)
     return output
 
 
-def calibration_scope(design, complete_counts=None):
-    return dict(method=design["analysis"]["method"],primary_family=primary_registry(design),
+def calibration_scope(design, complete_counts=None, family=FAMILY):
+    return dict(method=design["analysis"]["method"],family=family,primary_family=family_registry(design,family),
         analysis_settings={k:v for k,v in design["analysis"].items() if not k.startswith("coverage_")},
         frozen_scales=design.get("frozen_scales"),analysis_module_sha256=file_hash(__file__),
         complete_episode_counts=complete_counts,
         global_alpha=design["global_alpha"],family_weights=design["family_weights"],
         strata=[dict(id=s["id"],planned_episodes=len(s["reset_seeds"]),calls_per_episode=s["calls_per_episode"],
-                     random_permutations=s["random_permutations"]) for s in design["strata"]],
-        groups=design["groups"],conditioning=design["failure_policy"])
+                     random_permutations=s["random_permutations"],
+                     **({"parameter_draws":s["parameter_draws"]} if family==SPECIFICITY_FAMILY else {})) for s in design["strata"]],
+        groups=design["groups"],conditioning=design["failure_policy"],
+        e05_scope=design.get("e05") if family==SPECIFICITY_FAMILY else None)
 
 
-def validate_calibration(design,data,calibration):
+def validate_calibration(design,data,calibration,family=FAMILY):
     """Authenticate scope and binomial simulation uncertainty, not just a label."""
     from scipy.stats import beta
     observed_counts={sid:len(item["matrix"]) for sid,item in data.items()}
     if calibration.get("complete_episode_counts")!=observed_counts or calibration.get("count_conditioning")!="exact_joint_complete_episode_counts":
         raise ValueError("Coverage calibration must bind the exact observed complete-episode counts")
-    if calibration.get("status") != "approved" or calibration.get("scope_sha256") != object_hash(calibration_scope(design,observed_counts)):
+    if calibration.get("family",FAMILY)!=family or calibration.get("status") != "approved" or calibration.get("scope_sha256") != object_hash(calibration_scope(design,observed_counts,family)):
         raise ValueError("A matching, independently recorded coverage calibration is required")
-    plan=design["analysis"].get("coverage_plan")
-    if not plan or plan.get("kind")!="prospective_exact_count_coverage_plan" or plan.get("schema_version")!=1 or calibration.get("coverage_plan_sha256")!=object_hash(plan):
+    plan=prospective_coverage_plan(design,family)
+    if not plan or plan.get("family",FAMILY)!=family or plan.get("kind")!="prospective_exact_count_coverage_plan" or plan.get("schema_version")!=1 or calibration.get("coverage_plan_sha256")!=object_hash(plan):
         raise ValueError("Calibration differs from the immutable prospective coverage plan")
     cases=calibration.get("scenarios",[])
     if not cases or not calibration.get("assumptions") or not calibration.get("generator_source_sha256"):
@@ -754,8 +971,12 @@ def validate_calibration(design,data,calibration):
     if not look_weights or any(finite(w,"simulation look weight",positive=True)>1 for w in look_weights) or sum(look_weights)>1+1e-12:
         raise ValueError("Simulation look weights exceed their probability budget")
     derivation=plan["stage_derivation"]
-    if confidence_alpha!=derivation["simulation_alpha"] or look_weights!=derivation["look_weights"] or derivation["limit"]!=design["global_alpha"]*design["family_weights"][FAMILY]:
+    if confidence_alpha!=derivation["simulation_alpha"] or look_weights!=derivation["look_weights"] or derivation["limit"]!=design["global_alpha"]*design["family_weights"][family]:
         raise ValueError("Coverage simulation changed its prospective probability budgets")
+    if "e05" in design:
+        plans=[prospective_coverage_plan(design,f) for f in inferential_families(design)]
+        if any(p is None for p in plans) or sum(p["stage_derivation"]["simulation_alpha"] for p in plans)>design["analysis"].get("coverage_simulation_alpha",.05)+1e-15:
+            raise ValueError("Family calibration confidence budgets exceed the prospective study-wide simulation budget")
     expected=plan["regimes"]
     if len(set(expected))!=len(expected) or calibration.get("planned_scenario_ids")!=expected or sorted(expected)!=sorted(c["id"] for c in cases):
         raise ValueError("Coverage simulation omitted a prospectively declared scenario")
@@ -772,57 +993,62 @@ def validate_calibration(design,data,calibration):
         if n!=plan["simulation_stages"][look]:
             raise ValueError("Coverage simulation changed its prospective stage size")
         upper=1. if failures==n else float(beta.ppf(1-confidence_alpha*look_weights[look]/len(cases),failures+1,n-failures))
-        if upper>design["global_alpha"]*design["family_weights"][FAMILY]:
+        if upper>design["global_alpha"]*design["family_weights"][family]:
             raise ValueError("Simulation upper noncoverage bound exceeds the allocated family alpha")
 
 
-def confirmatory_report(design,data, *, calibration):
+def confirmatory_report(design,data, *, calibration,family=FAMILY):
     if design["stage"] != "confirmatory_locked":
         raise ValueError("Confirmation cannot reuse the variance-only pilot stage")
     settings=design["analysis"]
     if settings["method"] != "stratified_episode_percentile_bootstrap":
         raise ValueError("Unknown interval method")
-    alpha=design["global_alpha"]*design["family_weights"][FAMILY]
-    required=bootstrap_requirement(alpha,60,settings["min_tail_draws"],settings["tail_relative_mcse"])
+    contrasts=local_contrasts(family);width=len(contrasts);registry=family_registry(design,family)
+    alpha=design["global_alpha"]*design["family_weights"][family]
+    required=bootstrap_requirement(alpha,len(registry),settings["min_tail_draws"],settings["tail_relative_mcse"])
     if integer(settings["draws"],"bootstrap draws")<required or integer(settings["mc_repeats"],"endpoint MC repeats",2)<2:
         raise ValueError(f"Global tail resolution requires at least {required} draws and independent endpoint repeats")
-    validate_calibration(design,data,calibration)
+    validate_calibration(design,data,calibration,family)
     intervals=[]
     for repeat in range(settings["mc_repeats"]):
-        samples=_bootstrap(design,data,settings["draws"],settings["seed"]+repeat)
-        intervals.append(np.quantile(samples,[alpha/120,1-alpha/120],axis=0).T)
+        samples=(_bootstrap(design,data,settings["draws"],settings["seed"]+repeat) if family==FAMILY else
+                 _bootstrap_family(design,data,settings["draws"],settings["seed"]+repeat,family))
+        tail=alpha/(2*len(registry))
+        intervals.append(np.quantile(samples,[tail,1-tail],axis=0).T)
     intervals=np.asarray(intervals)
     endpoint_spread=np.ptp(intervals,axis=0).max(axis=1)
     output=[]
     planned_membership={sid:item["membership"] for sid,item in data.items()}
     for g,group in enumerate(design["groups"]):
         estimate=sum(w*data[s]["matrix"].mean(axis=0) for s,w in group["weights"].items())
-        non_mc_var=np.zeros(30)
-        mc_var=np.zeros(30)
+        non_mc_var=np.zeros(width)
+        mc_var=np.zeros(width)
         for sid,w in group["weights"].items():
             item=data[sid]; n=len(item["matrix"])
-            episode_mc=np.stack([ep["mc"].sum(axis=0)/len(ep["effects"])**2 for ep in item["episodes"]])
+            episode_mc=np.stack([ep["mc"].sum(axis=0)/len(ep["effects"])**2 if family==FAMILY else ep["parameter_mc_covariance"] for ep in item["episodes"]])
             current_mc=np.diag(episode_mc.mean(axis=0))/n
             total=np.diag(_cov(item["matrix"]))/n
             mc_var+=w*w*current_mc
             non_mc_var+=w*w*np.maximum(total-current_mc,0)
-        for local,c in enumerate(LOCAL_CONTRASTS):
-            index=g*30+local
+        for local,c in enumerate(contrasts):
+            index=g*width+local
             scale=design["frozen_scales"][f"{group['id']}:{c['modality']}"]
             h=.05*finite(scale,"frozen baseline scale",positive=True)
             mc_ok=mc_var[local] <= .01*non_mc_var[local] and mc_var[local] <= .01*h*h
             interval_ok=endpoint_spread[index] <= settings["endpoint_mc_fraction_h"]*h
-            output.append(dict(**primary_registry(design)[index], estimate=float(estimate[local]),
-                confidence_interval=intervals[0,index].tolist(), marginal_alpha=alpha/60,
+            output.append(dict(**registry[index], estimate=float(estimate[local]),
+                confidence_interval=intervals[0,index].tolist(), marginal_alpha=alpha/len(registry),
                 halfwidth_target=h, substantial_difference=.10*scale,
                 halfwidth_attained=float(np.diff(intervals[0,index])[0]/2)<=h,
                 endpoint_mc_max_spread=float(endpoint_spread[index]), endpoint_mc_gate=bool(interval_ok),
-                random_mc_standard_error=float(np.sqrt(mc_var[local])), random_mc_gate=bool(mc_ok),
+                **({"random_mc_standard_error":float(np.sqrt(mc_var[local])),"random_mc_gate":bool(mc_ok)} if family==FAMILY else
+                   {"parameter_mc_standard_error":float(np.sqrt(mc_var[local])),"parameter_mc_gate":bool(mc_ok)}),
                 interval_status="calibrated_candidate" if mc_ok and interval_ok else "precision_gate_failed",
                 population_sha256=object_hash({s:planned_membership[s] for s in group["weights"]})))
     # Total episode variance already contains finite random-control MC noise.
     # MC is audited, not added a second time to the bootstrap interval.
-    return dict(kind="paired_global_confirmation", primary_results=output, global_alpha=design["global_alpha"],
+    return dict(kind="paired_global_confirmation",family=family, primary_results=output, global_alpha=design["global_alpha"],
+        mc_source="independent_context_feature_order" if family==FAMILY else "episode_coherent_parameter_draw",
         family_weights=design["family_weights"], nominal_multiplicity="Bonferroni_within_declared_family",
         required_bootstrap_draws=required, bootstrap_settings=settings,
         point_and_ci_membership=planned_membership, membership_sha256=object_hash(planned_membership),
@@ -832,12 +1058,31 @@ def confirmatory_report(design,data, *, calibration):
                                  planned_contexts=v["planned_contexts"], cause_counts=v["failure_counts"]) for s,v in data.items()},
         descriptive_stratum_results={s:dict(estimate=v["matrix"].mean(axis=0).tolist(),
             standard_error=np.sqrt(np.diag(_cov(v["matrix"]))/len(v["matrix"])).tolist(),
-            contrast_order=LOCAL_CONTRASTS, inference="descriptive_no_simultaneous_coverage_claim") for s,v in data.items()},
+            contrast_order=contrasts, inference="descriptive_no_simultaneous_coverage_claim") for s,v in data.items()},
         descriptive_crossed_response_and_component_results={s:v.get("secondary",{}) for s,v in data.items()},
         limitation="finite_effects_conditional_on_joint_completion; unbounded_RMS_has_no_missing_outcome_bias_bound")
 
 
-def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutations):
+def confirmatory_study_report(design,data_by_family,calibrations):
+    validate_design(design)
+    families=inferential_families(design)
+    if set(data_by_family)!=set(families) or set(calibrations)!=set(families):raise ValueError("Every prespecified inferential family must have data and executed coverage evidence")
+    reports={f:confirmatory_report(design,data_by_family[f],calibration=calibrations[f],family=f) for f in families}
+    overlap={}
+    if SPECIFICITY_FAMILY in families:
+        for sid in data_by_family[FAMILY]:
+            maps={f:{e["episode_id"]:e for e in data_by_family[f][sid]["membership"]} for f in families}
+            if set(maps[FAMILY])!=set(maps[SPECIFICITY_FAMILY]):raise ValueError("Family attempted episode populations differ")
+            overlap[sid]=dict(both_complete=sum(maps[FAMILY][e]["joint_complete"] and maps[SPECIFICITY_FAMILY][e]["joint_complete"] for e in maps[FAMILY]),
+                base_only_complete=sum(maps[FAMILY][e]["joint_complete"] and not maps[SPECIFICITY_FAMILY][e]["joint_complete"] for e in maps[FAMILY]),
+                e05_only_complete=sum(not maps[FAMILY][e]["joint_complete"] and maps[SPECIFICITY_FAMILY][e]["joint_complete"] for e in maps[FAMILY]))
+    return dict(kind="paired_two_family_confirmation" if len(families)==2 else "paired_single_family_confirmation",
+        family_reports=reports,completion_overlap=overlap,global_alpha=design["global_alpha"],family_weights=design["family_weights"],
+        coverage_interpretation="separate_family_noncoverage_bounds_sum_by_union_bound; no_cross_family_independence_assumption",
+        limitation="family_specific_joint_completion_populations; no_distribution_free_coverage_or_training_causality_claim")
+
+
+def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutations,family=FAMILY):
     """Greedy measured-cost allocation satisfying every approximate precision constraint.
 
     This is a feasible integer allocation, not a global-optimum proof. Welch t
@@ -847,7 +1092,9 @@ def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutati
     from scipy.stats import t, beta, binom
     integer(max_episodes,"maximum episodes per stratum",2)
     integer(permutations,"random permutations",2)
-    if pilot.get("primary_contrasts") != primary_registry(design) or pilot.get("stage") != "variance_only_pilot":
+    contrasts=local_contrasts(family);width=len(contrasts);specificity=family==SPECIFICITY_FAMILY
+    unit_field="mc_variance_per_parameter_draw" if specificity else "mc_variance_per_permutation"
+    if pilot.get("primary_contrasts") != family_registry(design,family) or pilot.get("stage") != "variance_only_pilot":
         raise ValueError("Pilot contrast order or scientific scope differs from allocation design")
     planning=design["planning"]
     failure_alpha=finite(planning["failure_confidence_alpha"],"failure-bound alpha",positive=True)
@@ -864,18 +1111,20 @@ def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutati
             raise ValueError("Zero observed pilot variance cannot certify population precision; resolve degeneracy before allocation")
         if call_choices[sid]!=pilot["strata"][sid]["evaluated_calls_per_episode"]:
             raise ValueError("Changed J requires a pilot at that J: failure and conditional-variance populations do not transport automatically")
-        observed_m=pilot["strata"][sid]["evaluated_random_permutations"]
+        observed_m=([pilot["strata"][sid]["evaluated_parameter_draws"]] if specificity else pilot["strata"][sid]["evaluated_random_permutations"])
         if observed_m and observed_m!=[permutations]:
-            raise ValueError("Changed M requires a pilot at that M: additional masks may alter joint completion; exact controls alone are exempt")
+            raise ValueError("Changed R requires matching parameter-draw completion/variance evidence" if specificity else "Changed M requires a pilot at that M: additional masks may alter joint completion; exact controls alone are exempt")
         selected[sid]=matches[0]
-    alpha=design["global_alpha"]*design["family_weights"][FAMILY]/60
+    alpha=design["global_alpha"]*design["family_weights"][family]/len(family_registry(design,family))
     counts={sid:2 for sid in selected}
+    cost_field="parameter_seconds_per_draw_call" if specificity else "random_seconds_per_order_call"
     costs_per_episode={sid:finite(costs[sid]["collection_seconds"],"collection cost",positive=True)+
         selected[sid]["expected_selected_calls"]*(finite(costs[sid]["fixed_probe_seconds_per_call"],"probe cost",positive=True)+
-        permutations*finite(costs[sid]["random_seconds_per_order_call"],"random cost")) for sid in selected}
+        permutations*finite(costs[sid][cost_field],"MC cost"))+
+        (permutations*finite(costs[sid].get("parameter_seconds_per_draw_episode",0.),"parameter setup cost") if specificity else 0.) for sid in selected}
     if any(x<=0 for x in costs_per_episode.values()):
         raise ValueError("Total measured cost must be positive")
-    if any(costs[s]["random_seconds_per_order_call"]<0 for s in selected):
+    if any(costs[s][cost_field]<0 or costs[s].get("parameter_seconds_per_draw_episode",0)<0 for s in selected):
         raise ValueError("Random-control cost cannot be negative")
 
     def constraints(ns):
@@ -885,18 +1134,18 @@ def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutati
             for sid,w in group["weights"].items():
                 r=selected[sid]
                 terms.append(w*w*np.array(r["non_mc_variance_upper"])/ns[sid])
-                mc_terms.append(w*w*np.array(r["mc_variance_per_permutation_upper"])/ns[sid])
+                mc_terms.append(w*w*np.array(r[unit_field+"_upper"])/ns[sid])
             non_mc=np.sum(terms,axis=0); unit_mc=np.sum(mc_terms,axis=0)
             variance=non_mc+unit_mc/permutations
             all_terms=np.array(terms)+np.array(mc_terms)/permutations
             denom=np.sum([v*v/(ns[sid]-1) for v,sid in zip(all_terms,group["weights"])],axis=0)
-            df=np.divide(variance*variance,denom,out=np.full(30,np.inf),where=denom>0)
+            df=np.divide(variance*variance,denom,out=np.full(width,np.inf),where=denom>0)
             q=t.ppf(1-alpha/2,df)
-            h=np.array([pilot["scales"][f"{group['id']}:{c['modality']}"]["conservative_planning_halfwidth"] for c in LOCAL_CONTRASTS])
+            h=np.array([pilot["scales"][f"{group['id']}:{c['modality']}"]["conservative_planning_halfwidth"] for c in contrasts])
             if np.any(h<=0):
                 raise ValueError("No positive lower calibration scale; no epsilon replacement is permitted")
             ratios=q*np.sqrt(variance)/h
-            relative_requirement=np.divide(unit_mc,.01*non_mc,out=np.zeros(30),where=non_mc>0)
+            relative_requirement=np.divide(unit_mc,.01*non_mc,out=np.zeros(width),where=non_mc>0)
             relative_requirement[(unit_mc>0)&(non_mc==0)]=np.inf
             needed=np.maximum(relative_requirement,unit_mc/(.01*h*h))
             results.append(dict(group=group["id"], ratios=ratios, required_permutations=needed))
@@ -932,29 +1181,49 @@ def allocate_episodes(design,pilot,call_choices,costs, *, max_episodes,permutati
         # Simultaneous Clopper-Pearson lower bounds over six strata and the
         # prospectively capped looks. Future quotas use a separate probability
         # budget and an iid completion model, never failed-episode replacement.
-        lower=0. if successes==0 else float(beta.ppf(failure_alpha/(6*looks),successes,trials-successes+1))
+        family_count=len(inferential_families(design))
+        lower=0. if successes==0 else float(beta.ppf(failure_alpha/(6*looks*family_count),successes,trials-successes+1))
         completion_lower[sid]=lower
         lo,hi=n,max_episodes
-        if lower==0 or binom.sf(n-1,hi,lower)<1-shortfall_alpha/6:
+        if lower==0 or binom.sf(n-1,hi,lower)<1-shortfall_alpha/(6*family_count):
             rosters[sid]=None; feasible=False
             continue
         while lo<hi:
             mid=(lo+hi)//2
-            if binom.sf(n-1,mid,lower)>=1-shortfall_alpha/6:
+            if binom.sf(n-1,mid,lower)>=1-shortfall_alpha/(6*family_count):
                 hi=mid
             else:
                 lo=mid+1
         rosters[sid]=lo
-    return dict(kind="variance_only_allocation_candidate", required_complete_episodes=counts,
+    return dict(kind="variance_only_allocation_candidate",family=family, required_complete_episodes=counts,
         planned_episodes=rosters,completion_probability_lower=completion_lower,calls_per_episode=call_choices,
-        permutations_evaluated=permutations, required_permutations=math.ceil(required_m) if math.isfinite(required_m) else None,
+        **({"parameter_draws_evaluated":permutations,"required_parameter_draws":math.ceil(required_m) if math.isfinite(required_m) else None} if specificity else
+           {"permutations_evaluated":permutations,"required_permutations":math.ceil(required_m) if math.isfinite(required_m) else None}),
         precision_constraints_met=bool(feasible), random_mc_constraints_met=bool(required_m<=permutations),
         approximate_cost_seconds=sum(rosters[s]*costs_per_episode[s] for s in counts) if all(rosters.values()) else None,
+        measured_cost_seconds_per_episode=costs_per_episode,
         maximum_halfwidth_to_target_ratio=max(float(r["ratios"].max()) for r in constraints_final),
         interpretation="candidate_only; empirical_upper_variance_Welch_t_and_conditional_completion_require_calibration",
-        failure_planning=dict(confidence_alpha=failure_alpha,shortfall_alpha=shortfall_alpha,pilot_max_looks=looks,
+        failure_planning=dict(confidence_alpha=failure_alpha,shortfall_alpha=shortfall_alpha,pilot_max_looks=looks,inferential_family_count=len(inferential_families(design)),
                               assumption="independent_identically_distributed_episode_completion_within_stratum; no_replacement"),
         optimization="greedy_integer_cost_allocation_not_global_optimum", no_signed_efficacy_estimates=True)
+
+
+def allocate_two_family_episodes(design,pilots,call_choices,costs, *, max_episodes,permutations,parameter_draws):
+    validate_design(design)
+    if set(pilots)!={FAMILY,SPECIFICITY_FAMILY} or set(costs)!=set(pilots):raise ValueError("Both families need matching pilot and measured cost evidence")
+    budgets={FAMILY:permutations,SPECIFICITY_FAMILY:parameter_draws}
+    results={f:allocate_episodes(design,pilots[f],call_choices,costs[f],max_episodes=max_episodes,permutations=budgets[f],family=f) for f in budgets}
+    rosters={s:None if any(results[f]["planned_episodes"][s] is None for f in budgets) else max(results[f]["planned_episodes"][s] for f in budgets) for s in call_choices}
+    per_episode={}
+    for s in call_choices:
+        if costs[FAMILY][s]["collection_seconds"]!=costs[SPECIFICITY_FAMILY][s]["collection_seconds"]:raise ValueError("Shared collector cost differs across families")
+        per_episode[s]=sum(results[f]["measured_cost_seconds_per_episode"][s] for f in budgets)-costs[FAMILY][s]["collection_seconds"]
+    return dict(kind="two_family_fixed_roster_planning_candidate",family_allocations=results,planned_episodes=rosters,
+        approximate_cost_seconds=sum(rosters[s]*per_episode[s] for s in rosters) if all(rosters.values()) else None,
+        precision_constraints_met=all(r["precision_constraints_met"] and r["random_mc_constraints_met"] for r in results.values()),
+        optimization="maximum_of_two_feasible_family_rosters; conservative_not_global_cost_optimum",
+        no_signed_efficacy_estimates=True,interpretation="empirical_pilot_bounds_and_conditional_completion_assumptions_require_separate_validation")
 
 
 def normal_reference_pilot_stages(sd_upper_ratios,alpha_spending,variance_cells=180):
@@ -1001,15 +1270,33 @@ def main():
             raise ValueError("Trusted input digest mismatch")
     design=validate_design(strict_json(args.design)); registry=strict_json(args.registry)
     data=load_study(design,registry,args.design_sha256)
+    specificity=load_specificity_study(design,registry,args.design_sha256,data) if "e05" in design else None
     if args.command=="pilot":
         report=pilot_report(design,data,**design["pilot_analysis"])
+        if specificity is not None:
+            second=specificity_pilot_report(design,specificity,data,**design["e05_pilot_analysis"])
+            second["scales"]=deepcopy(report["scales"])
+            report=dict(kind="two_family_variance_only_pilot",family_reports={FAMILY:report,SPECIFICITY_FAMILY:second},
+                disclosure="labeled_variance_only_not_blinded",no_signed_efficacy_estimates=True)
     else:
-        if args.calibration is None or file_hash(args.calibration)!=args.calibration_sha256 or args.calibration_sha256!=registry.get("coverage_calibration_sha256"):
-            raise ValueError("Coverage calibration must match the independently sealed post-run registry")
-        calibration=strict_json(args.calibration)
-        if calibration.get("protocol_sha256")!=registry.get("coverage_protocol_sha256"):
-            raise ValueError("Exact-count calibration protocol differs from the sealed registry")
-        report=confirmatory_report(design,data,calibration=calibration)
+        if specificity is not None:
+            if args.calibration is not None or args.calibration_sha256 is not None:raise ValueError("Expanded confirmation uses both sealed family calibration entries, not a single artifact")
+            entries=registry["coverage_calibrations"]
+            if set(entries)!=set(inferential_families(design)):raise ValueError("Missing a separately executed family calibration")
+            calibrations={}
+            for family,entry in entries.items():
+                if file_hash(entry["path"])!=digest(entry["sha256"],"family calibration"):raise ValueError("Family calibration artifact differs from its sealed registry")
+                value=strict_json(entry["path"])
+                if value.get("protocol_sha256")!=digest(entry["protocol_sha256"],"family coverage protocol"):raise ValueError("Family calibration protocol differs from its sealed registry")
+                calibrations[family]=value
+            report=confirmatory_study_report(design,{FAMILY:data,SPECIFICITY_FAMILY:specificity},calibrations)
+        else:
+            if args.calibration is None or file_hash(args.calibration)!=args.calibration_sha256 or args.calibration_sha256!=registry.get("coverage_calibration_sha256"):
+                raise ValueError("Coverage calibration must match the independently sealed post-run registry")
+            calibration=strict_json(args.calibration)
+            if calibration.get("protocol_sha256")!=registry.get("coverage_protocol_sha256"):
+                raise ValueError("Exact-count calibration protocol differs from the sealed registry")
+            report=confirmatory_report(design,data,calibration=calibration)
     report.update(global_design_sha256=args.design_sha256,registry_sha256=args.registry_sha256,
                   pilot_stage=registry.get("pilot_stage"),analysis_module_sha256=file_hash(__file__))
     args.out.parent.mkdir(parents=True,exist_ok=True)
