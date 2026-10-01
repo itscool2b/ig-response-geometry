@@ -1,66 +1,25 @@
-# ig_vit.py
+# ViT-B/16 attribution demonstration
 
-Integrated Gradients on ViT-B/16 (Vision Transformer). Attributes the predicted class log-probability to input pixels. Structurally identical to ig_resnet.py but produces patch-shaped attribution patterns and achieves dramatically better completeness.
+Updated September 30, 2026. `ig_vit.py` attributes an ImageNet log-softmax score to input pixels. It uses `ViT_B_16_Weights.IMAGENET1K_V1`, evaluation mode and a black reference processed through the model transforms. Its original measurements are historical.
 
-## How ViT differs from ResNet for IG
+ViT-B/16 divides the 224 by 224 image into 196 patches, each 16 by 16 pixels, and projects each patch into a 768-coordinate token. The script computes pixel attributions. A dense patch projection has different weight columns for different pixel/channel coordinates, so sharing the projection does not require equal attribution within a patch. Visible patch-shaped patterns are observations, not a guarantee.
 
-ViT-B/16: 12 transformer layers, 12 attention heads, 768-dim embeddings. The input 224x224 image is split into 14x14 = 196 patches of 16x16 pixels each. Each patch is linearly projected to a 768-dim embedding, then processed as a token through the transformer.
+## Historical comparison
 
-Because IG operates on the raw pixel input (not the patch embeddings), the attribution heatmap shows a visible 14x14 grid pattern. Pixels within the same patch tend to get similar attribution values since they share the same linear projection.
-
-## Why ViT gets 0.14% completeness vs ResNet's 13.13%
-
-GELU is smooth (infinitely differentiable). ReLU is piecewise linear with sharp kinks. The IG integral approximation depends on the smoothness of the gradient along the interpolation path:
-
-- ReLU: gradient is a step function that changes abruptly at every activation boundary. With 50+ layers, the path crosses thousands of boundaries. The Riemann sum can't capture each transition, and convergence is non-monotonic (increasing m sometimes makes it worse due to aliasing).
-- GELU: gradient is smooth and continuous. The Riemann sum converges monotonically and quickly.
-
-| m | ViT error | ResNet error |
-|---|-----------|-------------|
+| m | ViT recorded residual | ResNet recorded residual |
+|---|---:|---:|
 | 64 | 15.08% | 44.01% |
 | 128 | 1.08% | 48.09% |
 | 300 | 0.14% | 13.13% |
 
-ViT converges monotonically. ResNet oscillates.
+The ViT residual decreased at these three budgets. Smooth GELU does not guarantee monotone finite-budget convergence. Architecture, learned weights, preprocessing and scalar responses differ, so the comparison does not isolate smoothness as the cause.
 
-## Sections
+For an independent mathematical example, `cos(128*pi*alpha)` is smooth and integrates to zero on `[0,1]`. Its historical endpoint averages at m=63,64,128 are approximately 0.015625,1,0.007752. A finite grid can poorly resolve a smooth function.
 
-### #model
+The old classifier output was German shepherd with logit 9.15 and probability 89.7%. These values and `output/ig_vit.png` were not regenerated with the [revised core](integrated_gradients.md).
 
-```python
-weights = ViT_B_16_Weights.IMAGENET1K_V1
-model = vit_b_16(weights=weights).cuda()
-model.train(False)
-```
+## Display limitations
 
-ImageNet V1 weights. `model.train(False)` sets inference mode (disables dropout, locks batch norm to running stats).
+The heatmap sums signed RGB-channel attributions per pixel, then takes magnitude. The tensor is still a 224 by 224 pixel map unless explicitly aggregated into patches. Its old patch-grid attribution label did not reflect such an aggregation.
 
-### #forward_fn
-
-```python
-def forward_fn(x):
-    logits = model(x).squeeze(0)
-    return torch.log_softmax(logits, dim=-1)[class_id]
-```
-
-Same log_softmax target as ResNet.
-
-### #ig
-
-Same black image baseline (zeros in pixel space, preprocessed through ImageNet normalization). m=300 steps.
-
-### #visualize
-
-Same 3-panel layout as ResNet (original, heatmap, overlay). The heatmap shows the characteristic 14x14 patch grid because ViT processes patches as tokens. Patches overlapping the dog are bright. Background patches are dark.
-
-## Output
-
-`output/ig_vit.png`
-
-Predicts "German shepherd" at 89.7% confidence (logit=9.15). Much higher than ResNet's 32.7%.
-
-## Changes from original
-
-- Switched image loading from `torchvision.io.decode_image` to `PIL.Image.open`
-- Changed forward_fn from raw logit to log_softmax
-- Same baseline fix as ResNet (PIL black image through preprocess pipeline)
+The model's preprocessing crop and the stretched original-image overlay have different geometry. A corrected replacement must use or map the actual model crop. The original photograph and derivative figure remain covered by the exception in `NOTICE`, not this repository's MIT license.

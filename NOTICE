@@ -10,3 +10,15 @@ repository. The root README records the same exception.
 Exception: paper/ijcai26.sty and paper/named.bst are the IJCAI conference
 LaTeX template and bibliography style files, included only to build the paper.
 They are third-party template files and are not covered by the MIT license.
+
+Exception: paper/tmlr.sty and paper/tmlr.bst come from the official TMLR
+template. They are covered by the upstream Apache 2.0 license reproduced in
+paper/tmlr-LICENSE. paper/tmlr-source.json records their pinned source and hashes.
+
+The redistribution provenance of the demonstration photograph and derivative
+figures listed above has not been established. They are historical artifacts,
+excluded from the new submission package. Their presence is not a grant of
+permission to reuse them.
+
+rdt_sampling.py contains an adaptation of the pinned upstream RDT sampler.
+Its original MIT notice and TSAIL attribution are reproduced in that file.

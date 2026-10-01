@@ -1,108 +1,34 @@
-# ig_llava.py
+# LLaVA demonstration and unresolved numerical causes
 
-Integrated Gradients on LLaVA-1.5-7B (multimodal vision-language model). 4-bit quantized to fit 12 GB VRAM. Attributes next-token prediction to combined image+text embeddings. Outputs a side-by-side image heatmap and token bar chart.
+Updated September 30, 2026. `ig_llava.py` is a historical LLaVA-1.5-7B example using a 4-bit model. It attributes a next-token log-softmax score to a combined image/text embedding sequence. The original example predicted “The” at 70.0% for “What is this?” on the demonstration photograph.
 
-This is the most complex script. It combines the vision-model approach (image heatmap) with the LLM approach (token bars) in a single attribution.
+The intended image representation comprises 576 CLIP patch features projected into 4096-coordinate language embeddings and inserted at image-token positions. This is representation attribution, not pixel IG through CLIP. Image and text summaries sum embedding coordinates at their respective sequence positions.
 
-## Architecture
+## Baseline, precision and API
 
-LLaVA-1.5-7B combines a CLIP ViT-L/14 vision encoder with a Vicuna-7B language model. The image is encoded into 576 patch tokens (24x24 grid, from 336px / 14px patches), projected through a multi-modal projector to 4096-dim (matching the LM), and spliced into the text token sequence at `<image>` placeholder positions. Total sequence: ~592 tokens.
+The PAD-embedding reference fills image and text positions. It is a learned reference, not an information-free condition. Positive-epsilon RMSNorm has a finite zero-input Jacobian; see [the normalization explanation](ig_tinyllama.md).
 
-## Quantization and memory
+The demo casts embeddings to fp16 for its quantized forward and computes log-softmax in fp32. Revised IG arithmetic is separate and fails on nonfinite values. Better forward precision is a testable intervention, not a guaranteed remedy.
 
-4-bit quantized via BitsAndBytes. The model uses ~4.4 GB in 4-bit.
+`get_image_features` varies by Transformers version. The old claim that `.pooler_output` must be an unprojected CLS vector is not generally true. The audit inspected Transformers 5.18.0, whose returned structure can contain projected features in that field as well as hidden states. The old dependency and representation identity remain unresolved. Assigning a 1024-coordinate vector to 4096-coordinate positions would normally fail dimension checks rather than silently broadcast as the earlier explanation claimed. Check the actual API, shapes, selected layer, CLS removal and projection before using this legacy path.
 
-8-bit was attempted but OOMs during the backward pass on 12 GB VRAM (model is ~7.4 GB in 8-bit, leaving insufficient room for gradient storage).
+Calling `gradient_checkpointing_enable()` alone does not establish that checkpointing is active in evaluation mode. The inspected implementation gates the relevant path on training mode. The old memory estimate therefore does not prove activation. Indiscriminately enabling training can also change the function through dropout.
 
-Gradient checkpointing trades compute for memory by recomputing activations during backward instead of storing them. Essential for fitting forward+backward in VRAM.
+## Preserved residuals
 
-## Sections
-
-### #embeddings -- constructing the combined input
-
-This is the trickiest part. The processor creates input_ids with 576 image placeholder tokens (id=32000). We need to replace those with actual CLIP features.
-
-```python
-clip_out = model.get_image_features(inputs.pixel_values)
-selected = clip_out.hidden_states[model.config.vision_feature_layer]
-selected = selected[:, 1:]  # remove CLS token
-img_feats = model.model.multi_modal_projector(selected).squeeze(0).float()
-```
-
-The pipeline: CLIP ViT hidden states (second-to-last layer) -> remove CLS token -> multi-modal projector -> (576, 4096).
-
-The combined embedding is built by replacing the image placeholder positions with the projected features:
-```python
-combined = text_embeds.clone()
-combined[0, img_start:img_end, :] = img_feats
-```
-
-### #baseline
-
-PAD token embeddings for the full sequence (both image and text positions). Same rationale as TinyLlama: zeros cause RMSNorm gradient singularity. PAD is numerically stable and semantically represents "no information."
-
-### #forward_fn
-
-```python
-def forward_fn(embeds):
-    out = model(inputs_embeds=embeds.half(), attention_mask=attn_mask)
-    logprobs = torch.log_softmax(out.logits[0, -1, :].float(), dim=-1)
-    return logprobs[next_token_id]
-```
-
-Embeddings cast to float16 for the forward pass (matching 4-bit compute dtype). Log_softmax computed in float32 for precision.
-
-### #split attributions
-
-After IG on the combined 592-token sequence, attributions are split into image and text regions by index:
-
-```python
-image_attr = attr_squeezed[img_start:img_end].sum(dim=-1)  # (576,)
-text_attr = concat(attr[:img_start], attr[img_end:]).sum(dim=-1)
-```
-
-### #visualize
-
-Left: image heatmap (24x24 grid upscaled 14x with scipy.ndimage.zoom, overlaid at 50% opacity).
-Right: text token bar chart (red=positive, blue=negative).
-
-## Output
-
-`output/ig_llava.png`
-
-For "What is this?" on a German Shepherd image, the model predicts "The" as the first response token (70.0% probability).
-
-## Completeness
-
-28.26% error at m=300. This is the worst completeness across all five models.
-
-The cause is 4-bit quantization. Each forward pass produces slightly different outputs for the same input due to stochastic rounding in the dequantization step. When IG accumulates gradients over m steps, this noise accumulates instead of averaging out. Higher m makes it worse:
-
-| m | error |
-|---|-------|
+| m | Recorded relative completeness residual |
+|---|---:|
 | 300 | 28.26% |
 | 1000 | 78.89% |
 
-This is a hardware limitation, not a code bug. On a GPU with 24+ GB VRAM, running in float16 or 8-bit would give much better completeness.
+The explanation that each dequantization uses stochastic rounding whose noise necessarily accumulates with m was not established by repeated-input forward/gradient tests or controlled precision/quantizer comparisons. Averaging independent zero-mean noise would not alone imply increasing variance with more samples.
 
-## Bug fix: get_image_features
+These observations do not isolate hardware, quantization, integration or an implementation defect as the cause. The promises that fp16/8-bit execution or a larger GPU must restore completeness are withdrawn. A causal diagnosis needs separately identified controls; this edit does not run them.
 
-The original code called:
-```python
-img_feats = model.get_image_features(inputs.pixel_values, return_dict=True).pooler_output[0]
-```
+The historical account reports about 4.4 GB model storage in 4-bit and an 8-bit backward OOM on 12 GB hardware. Those are environmental observations, not current guarantees. Increasing m in sequential IG primarily adds work rather than retaining m graphs simultaneously.
 
-This was wrong in two ways:
+## Visualization and status
 
-1. `get_image_features` in this transformers version returns the raw CLIP `BaseModelOutputWithPooling`, not projected features. The `return_dict=True` parameter is not valid for this method.
+`output/ig_llava.png` displays a 24 by 24 representation map and text bars. Correctly locating tokens on the source photograph depends on the processor's actual crop/resize geometry. A stretched-image overlay alone does not establish alignment. The photograph and figure retain the rights exception in `NOTICE`.
 
-2. `.pooler_output` is the CLS token output (shape [batch, 1024]), not the 576-patch feature sequence. Indexing with `[0]` gave a 1024-dim vector that got broadcast-assigned to 576 embedding positions, producing nonsensical image representations.
-
-The fix: manually extract the correct hidden layer from CLIP, remove the CLS token, and project through `model.model.multi_modal_projector` to get the proper (576, 4096) features.
-
-## VRAM budget
-
-- 4-bit model: ~4.4 GB
-- Gradient checkpointed forward+backward: ~3 GB
-- Embeddings + gradient accumulation: ~0.5 GB
-- Total: ~8 GB (fits in 12 GB with room for desktop apps)
+This page does not certify the legacy quantized runtime. Current research and numerical validation are described in [ig_rdt.md](ig_rdt.md) and [integrated_gradients.md](integrated_gradients.md).

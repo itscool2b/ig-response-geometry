@@ -1,68 +1,84 @@
-# The Readout, Not the Denoiser
+# Response Geometry in Per-Step Integrated Gradients
 
-Per-step, per-modality Integrated Gradients for diffusion-policy vision-language-action models. This repository holds the code, the released metrics records, and the analysis notebooks behind the paper.
+This repository contains the active TMLR revision, the preserved historical records, and reproducible analysis of those records. Revision work is in progress. Numerical validation and new paired ranking/control experiments are required before the current draft can be treated as submission-ready.
 
-The paper is published on [Zenodo](https://doi.org/10.5281/zenodo.22133507). Its source and PDF also live in `paper/` (`paper/paper.tex`, `paper/paper.pdf`). The method attributes every control decision of the Robotics Diffusion Transformer (RDT) to its vision, language, and state inputs across ManiSkill3 manipulation episodes, and the paper reports two structural findings about evaluating attribution on diffusion policies.
+The sole current author is Arjun Bajpai. The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and `paper/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. Current source is `paper/paper.tex`; `paper/paper-revision.pdf` and `paper/paper-anonymous-draft.pdf` are explicitly provisional candidates.
 
-## Layout
+## What the evidence establishes
 
-- `paper/` contains the paper source, figures, and bibliography.
-- `data/` contains the released per-step metrics JSONL records. `data/README.md` maps every file to the run that produced it, including which runs were regenerated after the original cloud pods were decommissioned.
-- `notebooks/` contains the executed analysis notebooks. `metrics_report.ipynb` builds the main-pass tables and figures. `month4_report.ipynb` is the Month 4 analysis record and opens with a dated note on two interpretations the paper later superseded.
-- `out/figures*/` contains the generated figures and the CSV tables behind them, including the bootstrap interval tables.
-- `scripts/` contains the single-command stages. `run_full_pass.sh` runs per-step IG, `run_faithfulness.sh` and `run_sanity.sh` run the metric stages, `run_target_ablation.sh` and `run_displacement.sh` record the exact Month 4 and Month 5 commands.
-- `docs/` documents each pipeline component. `docs/per_step_ig.md` and `docs/ig_rdt.md` cover the RDT attribution path used by the paper. The other files document the Month 2 single-model IG studies.
-- Top-level Python files are the pipeline itself. `per_step_ig.py` and `per_step_attribution.py` run episode attribution, `faithfulness.py`, `sanity.py`, `baseline_sensitivity.py`, and `displacement.py` run the evaluations, and `make_paper_figs.py`, `make_month4_figs.py`, and `make_month5_figs.py` regenerate the paper figures. `ig_resnet.py`, `ig_vit.py`, `ig_tinyllama.py`, and `ig_llava.py` are the Month 2 single-model studies that preceded the RDT work (`image.jpg` is their third-party demo input photo, which is not covered by the repository license). `audit.py` independently recomputes the released medians and AUCs from `data/`, and `analyze_month4.py` and `patch_nb_alttarget.py` are retained one-off helpers from the Month 4 analysis, kept for the record.
+The historical `logpi` target is an auxiliary quadratic discrepancy from one fixed-noise predicted action chunk. It is not the diffusion policy's log likelihood. Rescoring the same recorded ranking and interventions changes median vision deletion AUC from 0.447903 under Q to 0.290759 under stabilized L2. This demonstrates response-geometry sensitivity; it does not establish a better ranking.
 
-## Setup
+Normalized random-order AUC is not universally 0.5. The equal-feature quadratic counterexample gives 2/3 for the continuous integral and 0.65976 on the historical sampled grid. Actual efficacy comparisons need matched empirical controls. Changing solver step count measures solver-resolution sensitivity and does not exclude denoiser contraction.
 
-The analysis layer needs only Python 3.12 or newer and the packages in `requirements.txt` (the byte-identical regeneration below was last verified on Python 3.14). With those installed, the notebooks, `audit.py`, `bootstrap_ci.py --selftest`, and the `make_*_figs.py` generators reproduce every committed CSV table, and every committed figure except three preserved artifacts, from the committed JSONL records plus a few preserved decommissioned-era constants embedded in the generators, which `data/README.md` documents. The CSV tables regenerate byte-identically. The figure PNGs re-render with identical data but can differ at the byte level across matplotlib versions, and the committed renders used matplotlib 3.11. The exceptions are `fig_c_auc_curves.png` (a preserved render of the decommissioned main-pass curves, which `make_paper_figs.py` only re-tiles), `out/figures/fig_b_overlays_grid.png` (the preserved Month 3 overlay grid, whose source overlays are not redistributed), and `out/figures/fig_b_overlays_grid_1b.png` (the RDT-1B seed 242 overlay grid, identical to the paper's Figure 3 file `paper/figures/fig_b_overlays_grid.png`, whose source overlays are likewise not redistributed). The two `fig_b_overlays_grid` files share a stem but differ, with the Month 3 grid under `out/figures/` and the 1B grid as the paper figure.
+Original observation/attribution sidecars, exact historical checkpoint binaries and some primary raw records are unavailable. Scalar fingerprint agreement can detect inconsistencies but cannot authenticate those missing artifacts. Newly downloaded weights, embeddings and collected contexts are identified as new evidence.
 
-```
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
+## Reproduce the saved-data analysis on CPU
 
-The GPU stages (`per_step_ig.py` and everything downstream of it) additionally require:
+The active analysis reads all 99 preserved JSONL inputs through an immutable manifest. It records every physical line, quarantines the one known corrupted line by hash, retains all duplicate occurrences, and reports explicit primary and sensitivity populations. Point estimates and episode-bootstrap intervals share population identities. See [analysis/revision/README.md](analysis/revision/README.md).
 
-- The RDT authors' source repository cloned at `~/rdt-repo`. The pipeline imports `models.rdt_runner`, the SigLIP encoder, `configs/state_vec.py`, and `scripts/maniskill_model.py` from it, and the 1B path reads `~/rdt-repo/configs/base.yaml`. Clone `thu-ml/RoboticsDiffusionTransformer` from GitHub to that path. The recorded runs used the repository as of spring 2026. Small local adjustments made during the recorded runs are documented in the authors' research notes, which are kept privately.
-- ManiSkill3 with a working Vulkan/SAPIEN rendering stack (installed via `mani_skill` in `requirements.txt`).
-- A CUDA GPU with at least 24 GB to match the recorded RDT-170M runs, while development is workable on 12 GB with gradient checkpointing. The recorded runs used PyTorch 2.6 to 2.8 across the machines listed in the paper's Hardware paragraph.
-
-The shell scripts invoke `.venv/bin/python`, so they expect the virtualenv above at the repo root.
-
-## Reproducing
-
-Episode seeds are fixed at 42 and 142, with 242 added for the third RDT-1B evaluation seed, and the diffusion noise is seeded per forward pass. The scripts in `scripts/` record each stage with the commands as executed on the original GPUs, except the Month 6 strengthening runs (the seed 142 and 242 RDT-1B faithfulness runs, the matched-population logpi ablation runs, and the seed 142 displacement runs), which used the same entry points and flags at the seeds and scopes recorded in `data/README.md`.
-
-Two things to know before re-running anything:
-
-- The committed records partially defeat naive re-runs. `per_step_ig.py --resume` skips every episode whose `episode_end` row already exists in the output file, and `run_displacement.sh` skips its two 1B base runs when their outputs exist, so the regeneration stage of `run_paper_experiments.sh` and the PickCube 1B base run are no-ops against the committed `data/`, while the StackCube 1B base output is not committed and regenerates when missing, as `data/README.md` records. `run_full_pass.sh` defaults to 50 episodes per task and seed while the committed records hold 15, so against the committed `data/` it would append episodes 15 to 49 rather than skip. The displacement measurements themselves, however, open their outputs in append mode with no skip logic, so re-running `run_displacement.sh` appends duplicate rows to the committed displacement files. To regenerate raw records from scratch, run the stages in a clean checkout with an emptied `data/` directory (keep `data/README.md`), or point `--out` at fresh paths.
-- Re-executing `notebooks/metrics_report.ipynb` end to end overwrites `out/figures/fig_c_auc_curves.png`, which is the only preserved render of the decommissioned main-pass faithfulness curves and cannot be regenerated, with a version computed from the committed subset records only. It also overwrites `out/figures/fig_a_completeness.png`, which is harmless because `make_paper_figs.py` rebuilds that figure from committed records. A re-executed notebook would also pool the later-added ablation, m=128, and RDT-1B records into its table populations, so its saved outputs are the preserved record rather than a re-run target. Do not run that notebook with Run-All unless you intend this.
-
-Model checkpoints download from the `robotics-diffusion-transformer` Hugging Face repositories and are not redistributed here. The RDT-1B results additionally require the RDT authors' ManiSkill fine-tuned checkpoint, published in the `robotics-diffusion-transformer/maniskill-model` Hugging Face repository as `rdt/mp_rank_00_model_states.pt`. Place it at `checkpoints/rdt_maniskill_authors/mp_rank_00_model_states.pt` before running any 1B stage. If it is absent the loader falls back to the Hugging Face base weights, plus the project LoRA only when a local `checkpoints/rdt_maniskill_lora/final.pt` exists, and neither fallback reproduces the paper's 1B numbers.
-
-The precomputed instruction embeddings under `data/lang_embeds/` are not redistributed. Either generate them with `encode_task_lang.py` (requires hosting T5-XXL) or fetch the authors' precomputed `text_embed_*.pt` files from the `maniskill-model` Hugging Face repository, noting that the latter covers five tasks that do not include PickSingleYCB-v1, which is why the Month 4 follow-up runs reused the PickCube embedding for that task as the paper's Experimental Setup section records. The authors' files are raw embedding tensors, and converting them to the padded dictionary format the pipeline loads and producing the zeroed `baseline_bos_eos.pt` were manual steps in the recorded runs with no committed converter, so `encode_task_lang.py` is the only path runnable from this repository alone. The committed Month 4 follow-up records used those precomputed embeddings with a zeroed language baseline, while the Month 5 displacement and reproduction records used real T5-XXL embeddings hosted on the Month 5 machine, so which path reproduces which record is set by the deviations recorded in the paper.
-
-The reproducibility statement in the paper records which original records were decommissioned and which committed records corroborate them.
-
-The Month 7 verification records (`data/m7_*.jsonl`, produced by `scripts/run_verification.sh`) re-run the full pass, faithfulness, and standard sanity with seed-tagged sidecars and re-certify the affected verdicts, as the paper's Table 2 and Table 3 captions record. `audit.py` includes a sidecar provenance fingerprint that verifies every committed step/faithfulness pair, flags the two retained pre-fix seed-42 m=128 faithfulness files as having consumed seed-142 sidecars (see `data/README.md`), and clears every other pair at 100% of rows.
-
-## Citing
-
-See `CITATION.cff`, or use:
-
-```bibtex
-@article{bajpai2026readout,
-  title  = {The Readout, Not the Denoiser: Per-Step Integrated Gradients
-            for Diffusion-Policy Vision-Language-Action Models},
-  author = {Bajpai, Arjun},
-  year   = {2026},
-  doi    = {10.5281/zenodo.22133507},
-  url    = {https://doi.org/10.5281/zenodo.22133507},
-}
+```bash
+python -m venv .venv
+# Activate the environment for your shell.
+python -m pip install -r requirements.txt
+python -m analysis.revision.verify analysis/revision/results/2026-09-30-v2
+python -m analysis.revision.analyze --output runs/saved-data-reanalysis --draws 10000 --seed 0
+python -m analysis.revision.verify runs/saved-data-reanalysis
 ```
 
-## License
+The output directory must be new. The canonical registry contains 284 results and 57 source populations. A clean-input rerun reproduced all ten scientific/lineage artifacts byte-for-byte; environment/checkout provenance describes the actual execution. Git preserves hashed output bytes across platforms.
 
-MIT. See `LICENSE`. The license covers the code and records in this repository. `image.jpg` is a third-party demo photograph retained for the Month 2 study record, and the Month 2 attribution figures `output/ig_resnet50.png`, `output/ig_vit.png`, and `output/ig_llava.png` each reproduce that same photograph. None of these four files are relicensed by this repository. See `NOTICE`.
+The CPU revision environment used Python 3.12.14. `requirements-cpu-lock.txt` records its full installed package set, including CPU Torch and test dependencies. `requirements.txt` is the smaller pinned analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
+
+## Revised GPU runtime
+
+The supported setup uses Linux, CUDA 12.8, Torch 2.8.0, a working Vulkan/SAPIEN graphics stack, and the dependencies in `requirements-gpu.txt`. The actual revision environment has passed rendering, checkpoint loading, finite-gradient and controller smoke checks on a 96 GB RTX PRO 6000 Blackwell for current 170M and explicit authors-1B checkpoints. These checks establish runtime plumbing, not attribution accuracy or task competence.
+
+Clone the official upstream source and select the exact validated revision:
+
+```bash
+git clone https://github.com/thu-ml/RoboticsDiffusionTransformer.git rdt-upstream
+git -C rdt-upstream checkout cd79363a1387e8f81c7724d070ef7e45fd23150f
+export RDT_SOURCE="$PWD/rdt-upstream"
+python -m pip install -r requirements-gpu.txt
+python encode_task_lang.py --output-dir runs/language-v1 --revision 3db67ab1af984cf10548a73467f0e5bca2aaaeb2
+```
+
+Install the correct CUDA Torch build before the additional GPU dependencies. `scripts/setup_runtime.sh` records the tested RunPod setup; inspect its paths before using it elsewhere. Upstream must be clean and at the pinned commit. The loader validates exact checkpoint keys, shapes and finite values and records checkpoint hashes. For 1B, explicitly select `--checkpoint-mode authors` with the authors' checkpoint path, `lora` with an adapter path, or `pretrained`. There is no file-presence fallback.
+
+Language encoding saves token IDs, task text, masks, source/model/tokenizer identity and the encoded PAD/EOS baseline. T5 has no BOS token; `baseline_bos_eos.pt` is a retained filename. Fresh encoding cannot reconstruct unidentified historical embeddings.
+
+A bounded engineering example:
+
+```bash
+python per_step_ig.py --task PickCube-v1 --model 170m \
+  --model-revision 8aa386cac3bbfd9540676c75b3d767cc7f88a10a \
+  --vision-revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 \
+  --lang-dir runs/language-v1 --episodes 1 --max-policy-calls 1 \
+  --seed-base 910001 --m 4 --quadrature trapezoid --no-checkpoint \
+  --out runs/engineering-example/metrics.jsonl
+```
+
+m4 is a plumbing check. Choose scientific integration budgets only after coordinate, ranking, precision and response validation on the retained configurations. The revised core uses fp32 path/product/accumulation arithmetic, evaluated endpoints and explicit nonfinite failures. Low-precision model forwards can still affect accuracy; small completeness residuals do not prove correct coordinates.
+
+New runs use unique directories, immutable manifests, stored noise and hash-bound sidecars. `--resume` accepts only identical settings/source and verified committed episodes. It retains failed attempts and rebuilds the derived JSONL. Historical JSONL files cannot be resumed. Evaluation requires matching model/language/source identities and exact reference replay; explicitly permitted legacy input remains unverified.
+
+Vision attribution is post-image-adaptor, language attribution is post-language-adaptor, and state attribution is pre-state-adaptor. The observation pipeline uses one current external image plus five fixed background slots. One policy call predicts a 64-step chunk, subsampled into at most 16 controller steps. See [docs/ig_rdt.md](docs/ig_rdt.md), [docs/integrated_gradients.md](docs/integrated_gradients.md) and [docs/per_step_ig.md](docs/per_step_ig.md).
+
+## Repository map and manuscript
+
+- `analysis/revision/`: active retrospective analysis, tests, lineage and result registry.
+- `data/`: immutable historical JSONL files and their current evidence guide.
+- `pipeline.py`, `per_step_attribution.py`, `rdt_sampling.py`, `experiment_io.py`: revised loading, attribution, sampling and storage.
+- `faithfulness.py`, `sanity.py`, `baseline_sensitivity.py`, `displacement.py`: controlled replay/evaluation entrypoints. Check each current `--help`; historical shell wrappers are not an execution specification for the revised protocol.
+- `scripts/validate_*.py`: targeted numerical diagnostics requiring recorded decisions and authenticated contexts.
+- `paper/`: current source, official TMLR style/license, provisional builds and preserved historical assets.
+- `docs/`: current contracts and explicitly bounded historical demonstrations.
+
+See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymous builds. The historical PDF is protected from replacement. Final paper and supplement checks include source provenance, anonymity, rights, numerical/statistical validity and full rendered inspection. This repository does not claim journal acceptance or completed submission.
+
+## Citation and licenses
+
+`CITATION.cff` identifies the existing released code/records and historical deposit. Cite that exact version when referring to those released artifacts; the provisional revision has no newly assigned DOI or release version.
+
+Code and original project records are MIT licensed. `image.jpg` and the three Month 2 figures reproducing it have unresolved third-party redistribution provenance and are excluded from new submission packaging. They remain in repository history/current archival files and are not relicensed here. The official TMLR style/bibliography files carry their upstream Apache 2.0 license. The historical IJCAI template has its own provenance. See `NOTICE` and `paper/tmlr-source.json`.
+

@@ -1,0 +1,39 @@
+# Analysis layer. Enough to re-run the notebooks, bootstrap_ci.py, audit.py,
+# and the make_*_figs.py figure generators from the committed JSONL records.
+# The notebooks were executed with Python 3.12 (they record 3.12.13), and the
+# analysis layer runs on Python 3.12 or newer (byte-identical regeneration
+# last verified on Python 3.14). CSV tables regenerate byte-identically.
+# Figure PNGs re-render with identical data, but byte-level identity to the
+# committed renders is matplotlib-version-sensitive (the committed renders
+# used matplotlib 3.11).
+numpy
+pandas
+matplotlib
+scipy
+Pillow
+jupyter
+
+# GPU pipeline. Needed only to re-run attribution, faithfulness, sanity, or
+# displacement stages (per_step_ig.py and downstream). The recorded runs used
+# PyTorch 2.6 to 2.8 across machines; the RTX 5090 m=128 subset specifically
+# used PyTorch 2.8 with CUDA 12.8. ManiSkill3 brings gymnasium and sapien.
+torch
+torchvision
+transformers
+peft
+sentencepiece
+huggingface_hub
+mani_skill
+gymnasium
+h5py
+PyYAML
+
+# The Month 2 demo ig_llava.py additionally needs bitsandbytes for its 4-bit
+# quantization, which also pulls in accelerate. accelerate (device_map) is
+# likewise used by ig_llava.py, encode_task_lang.py, and ig_tinyllama.py and
+# installs transitively via peft above. bitsandbytes is CUDA-specific and sits
+# outside the analysis layer, so install it by hand to run the llava demo.
+
+# NOT pip-installable: the RDT authors' source repository must be cloned to
+# ~/rdt-repo (see README "Reproducing"). Model checkpoints download from
+# Hugging Face on first run.

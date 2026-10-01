@@ -6,6 +6,8 @@ data/*
 !data/*.jsonl
 demos/
 .venv/
+runs/
+.pytest_cache/
 *.egg-info/
 out/*
 !out/figures/
@@ -24,6 +26,12 @@ paper/paper.aux
 paper/paper.bbl
 paper/paper.xdv
 paper/paper.txt
+paper/*.build.log
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
 paper_ijcai26.zip
 
 # OS noise

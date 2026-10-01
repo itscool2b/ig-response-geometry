@@ -1,103 +1,80 @@
-# integrated_gradients.py
+# Integrated gradients: current numerical contract
 
-Core module. One function, no classes, no model-specific code. All five model scripts import from this file.
+Updated September 30, 2026. This page describes the revised public implementation. Updating the code does not regenerate or validate historical outputs.
 
-## The formula
+## Definition and scope
 
-Integrated Gradients for input dimension i:
+For scalar F, input x, reference b and straight path z(a)=b+a(x-b),
 
 ```
-IG_i(x) = (x_i - x'_i) * integral from 0 to 1 of (dF/dx_i)(x' + alpha * (x - x')) d_alpha
+IG_i(x;b) = (x_i-b_i) integral_0^1 partial_i F(z(a)) da.
 ```
 
-Where:
-- x is the actual input
-- x' is the baseline (uninformative reference)
-- F is the model's scalar output (a logit, log-prob, action norm, etc.)
-- alpha sweeps from 0 (baseline) to 1 (input)
+A baseline is a chosen reference, not necessarily an absence of information. Under the appropriate differentiability/integrability assumptions, summing the exact integrals gives F(x)-F(b) by the chain rule and the fundamental theorem along the complete path. This is not a separate endpoint-difference theorem for each coordinate.
 
-The key property (completeness axiom): `sum of all IG_i = F(x) - F(x')`. The attributions add up to exactly the difference in model output.
+Implementation invariance concerns equivalent functions in the same coordinates, with the same baseline and path. It does not identify different representations, baselines or targets. An affine target transformation cF+d scales IG by c; a nonlinear transformation changes the path gradient weights and may change rankings. Sensitivity(a) addresses the specific case where input and baseline differ in one feature and their outputs differ. See [Sundararajan, Taly and Yan (2017)](https://proceedings.mlr.press/v70/sundararajan17a.html).
 
-## Code walkthrough
-
-### Function signature
+## API and precision
 
 ```python
-def integrated_gradients(forward_fn, input_tensor, baseline_tensor, m=300):
+result = integrated_gradients(
+    forward_fn, input_tensor, baseline_tensor, m=64,
+    quadrature="trapezoid", arithmetic_dtype=torch.float32,
+    return_result=True,
+)
+attr = result.attributions
+metadata = result.diagnostics()
 ```
 
-- `forward_fn`: any callable that takes a tensor and returns a scalar. The caller builds this to target a specific output (e.g., a class log-prob, next-token log-prob, action norm).
-- `input_tensor` / `baseline_tensor`: same shape, same device.
-- `m=300`: number of interpolation steps. Default of 300 works well for most models. TinyLlama needs m=1000.
+Inputs must be finite floating tensors with identical shapes and devices. The scalar callable must retain its autograd connection. The default Tensor return remains available for existing callers.
 
-### Interpolation loop
+Detached fp32 master tensors supply displacement and interpolation. Gradient accumulation, division, attribution products and accounting reductions also use fp32. Exact endpoint tensors are used at alpha 0 and 1. Each master leaf is differentiably cast immediately before the forward to `forward_dtype`, which defaults to the original input dtype. This keeps bf16 models compatible while separating model precision from IG arithmetic. It does not remove rounding inside the forward/backward computation.
 
-```python
-diff = input_tensor - baseline_tensor
-sum_gradients = torch.zeros_like(input_tensor)
+For small mathematical diagnostics, explicitly select `arithmetic_dtype=torch.float64` and a compatible `forward_dtype`. Precision comparisons must hold the model, inputs, baseline, target and actual latent-noise values fixed.
 
-for k in range(m + 1):
-    alpha = k / m
-    interpolated = (baseline_tensor + alpha * diff).detach().requires_grad_(True)
-    output = forward_fn(interpolated)
-    grad = torch.autograd.grad(output, interpolated)[0]
-    grad = torch.nan_to_num(grad, nan=0.0, posinf=0.0, neginf=0.0)
-    sum_gradients += grad
-    del interpolated, output, grad
-    torch.cuda.empty_cache()
+## Quadrature
+
+`m` is a positive integer interval count. Both rules evaluate m+1 points:
+
+```
+trapezoid:
+ (x_i-b_i)/m * [g_i(0)/2 + sum(k=1..m-1) g_i(k/m) + g_i(1)/2]
+legacy_endpoint_average:
+ (x_i-b_i)/(m+1) * sum(k=0..m) g_i(k/m)
 ```
 
-Step by step:
-1. Create interpolated input at position alpha along the straight-line path from baseline to input. `.detach().requires_grad_(True)` makes it a fresh leaf tensor for gradient computation.
-2. Forward pass through the model via forward_fn.
-3. Compute gradient with `torch.autograd.grad()`. Returns dF/d(interpolated).
-4. NaN protection. Zeroes out any NaN/inf gradients. Handles edge cases like zero embeddings through RMSNorm layers in LLMs.
-5. Accumulate into a running sum.
-6. Free memory. Critical for large models.
+Composite trapezoidal quadrature is the revised default. The named legacy option preserves the old quadrature, not its bf16 arithmetic or nonfinite replacement. Under sufficient regularity these rules generally have first-order and second-order error, respectively for legacy and trapezoid. Such asymptotic statements do not guarantee monotone improvement at successive budgets.
 
-This is a Riemann sum with m+1 uniformly-spaced evaluation points (alpha = 0, 1/m, 2/m, ..., 1).
+Softmax, SiLU and GELU are smooth at finite inputs. Softmax has no argmax discontinuity. Smooth functions can still be poorly resolved by a finite grid; Gauss-Legendre is not generally invalid for nonsmooth functions. The old ResNet/ViT/LLM examples cannot establish a universally superior rule or isolate activation choice.
 
-### Why autograd.grad instead of .backward()
+## Nonfinite values and completeness
 
-During development, `.backward()` produced 280% completeness error on ResNet50, while `autograd.grad` + `model.requires_grad_(False)` gave 7.85%. The issue: `.backward()` computes gradients for all leaf tensors (including model parameters), which can interfere with the input gradient computation on deep models with many ReLU transitions.
+Any nonfinite input, path value, score, derivative, running sum or returned arithmetic result fails the computation. `NonFiniteAttributionError.diagnostics` records the stage, path alpha/index where applicable, NaN/infinity counts, bounded coordinate samples and caller identity. There is no silent derivative replacement.
 
-### Attribution computation
+The structured result records evaluated endpoint scores, signed gap, attribution sum, absolute residual and relative residual. A zero gap has relative residual `None`, serialized as JSON null. A small nonzero gap can still be ill conditioned; no universal denominator threshold is established by the code.
 
-```python
-avg_gradients = sum_gradients / (m + 1)
-attributions = diff * avg_gradients
-```
+Completeness checks one signed sum. Coordinate errors can cancel. The preserved linear bf16 audit fixture had 6.25% maximum coordinate error at m=64 while reporting 0.26% scalar error. A corrupted-backward example lost canceling coordinates while reporting exact completeness. Revised tests check known coordinates directly. The historical 3% residual criterion is an accounting convention, not a map-quality certificate.
 
-Multiply the average gradient by (input - baseline) element-wise. This is the Riemann sum approximation of the path integral.
+## Autograd and memory
 
-### Completeness check
+`autograd.grad` returns requested derivatives without accumulating them into those tensors' `.grad` buffers. `.backward()` uses the same chain rule but normally accumulates leaf gradients. Existing parameter-gradient buffers do not feed into a fresh input derivative. The old API switch coincided with other changes and did not establish parameter-gradient interference as the cause of the reported error. See [PyTorch's API contract](https://docs.pytorch.org/docs/2.14/generated/torch.autograd.grad.html).
 
-```python
-expected = (f_input - f_baseline).item()
-actual = attributions.sum().item()
-rel_error = abs(error / expected) * 100
-```
+The loop releases each graph after its gradient. Increasing m adds sequential work rather than storing m graphs simultaneously. Unused CUDA allocator blocks are reusable by PyTorch; `empty_cache()` releases cached blocks to other applications and does not free live tensors. It is no longer called after every interpolation. See [PyTorch memory management](https://docs.pytorch.org/docs/2.14/notes/cuda.html#cuda-memory-management).
 
-Verifies `sum(attributions) = F(input) - F(baseline)`. Prints absolute and relative error. A low error means the Riemann sum is well-converged.
+## Evidence boundaries
 
-## Return value
+`tests/test_integrated_gradients.py` checks linear/nonlinear analytical coordinates, bf16 inputs, float64 diagnostics, endpoints and failures. `tests/test_rdt_sampling.py` checks explicit-noise sampler contracts. CPU tests are not real-model accuracy evidence. `scripts/validate_rdt_numerics.py` compares selected authenticated contexts with numerical factors separated.
 
-Returns attributions tensor, same shape as input_tensor. Each element tells you how much that dimension of the input contributed to the output difference F(input) - F(baseline).
+The following old single-example values are retained for traceability. They were not produced by the revised default:
 
-## Quadrature experiments
+| Model / modality | m | Recorded relative residual |
+|---|---:|---:|
+| ViT-B/16 | 300 | 0.14% |
+| TinyLlama 1.1B | 1000 | 0.55% |
+| RDT-1B vision | 300 | 9.06% |
+| RDT-1B language | 300 | 5.11% |
+| RDT-1B state | 300 | 6.12% |
+| ResNet50 | 300 | 13.13% |
+| LLaVA 1.5-7B, 4-bit | 300 | 28.26% |
 
-Gauss-Legendre quadrature was tested as an alternative to the Riemann sum. GL uses optimally-placed sample points and non-uniform weights. For smooth functions (ViT with GELU), GL at m=300 gave 0.18% error vs Riemann's 0.14%. For non-smooth functions (ResNet with ReLU), GL showed wildly non-monotonic convergence (0.25% at m=256 but 14.46% at m=500). For LLMs (TinyLlama), GL was much worse than Riemann (85.92% vs 25.91% at m=300).
-
-Conclusion: the Riemann sum is more reliable across model architectures. GL's optimal point placement can alias with ReLU gradient discontinuities and transformer internal structure.
-
-## Completeness results across all models
-
-| Model | m | Error | Notes |
-|-------|---|-------|-------|
-| ViT-B/16 | 300 | 0.14% | Best. Smooth GELU activations |
-| TinyLlama 1.1B | 1000 | 0.55% | Needs high m due to sharp SiLU regions |
-| RDT-1B (state) | 300 | 6.12% | IG on raw 128-dim `state_vec` (pre-adaptor), path runs through `state_adaptor` (mlp3x_gelu) + 5-step chain so attribution at `MANISKILL_INDICES` is per-joint. Target is `log π` (σ²=1 Gaussian around final denoised mean). |
-| RDT-1B (language) | 300 | 5.11% | BOS/EOS T5 baseline is close to real encodings (was 13.71% with the earlier zeros baseline); under real-render conditioning the gap is now tiny (0.0019) |
-| RDT-1B (vision) | 300 | 9.06% | Slot-3-only gray baseline (five non-camera slots identical between input and baseline); real PickCube-v1 render as input |
-| ResNet50 | 300 | 13.13% | ReLU gradient discontinuities + log_softmax |
-| LLaVA 1.5-7B | 300 | 28.26% | 4-bit quantization gradient noise |
+These numbers do not rank attribution quality or establish the mechanism causing their differences.
