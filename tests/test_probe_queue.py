@@ -86,3 +86,33 @@ def test_source_or_frozen_decision_change_prevents_new_job(tmp_path,monkeypatch)
     (queue.ROOT/queue.SOURCE_FILES[0]).write_text('changed implementation')
     with pytest.raises(ValueError,match='implementation changed'):
         queue.worker(args)
+
+
+def test_queue_preserves_named_snapshot_checkpoint_identity(tmp_path, monkeypatch):
+    """HF symlink resolution must not replace a recorded checkpoint filename."""
+    import paired_comparison as paired
+    from scripts import validate_fp32_probe
+    root, _ = fixture_queue(tmp_path, monkeypatch, count=1)
+    snapshot = tmp_path / 'snapshots' / 'revision' / 'mp_rank_00_model_states.pt'
+    blob = tmp_path / 'blobs' / ('a' * 64)
+    original_resolve = Path.resolve
+    def hf_resolve(path, *args, **kwargs):
+        return blob if path == snapshot else original_resolve(path, *args, **kwargs)
+    monkeypatch.setattr(Path, 'resolve', hf_resolve)
+    assert snapshot.resolve().name != snapshot.name
+    protocol = root / 'selection.json'
+    queue.exclusive_json(protocol, dict(recorded_before_execution=True, decision_id='E01',
+        protocol_version=6, source_collection_protocol_sha256='collection', validation={},
+        strata=[dict(id='one', task='PickCube-v1', model='1b', checkpoint_mode='authors', checkpoint_sha256='bytes')]))
+    bank = dict(task='PickCube-v1', model='1b', pipeline=dict(checkpoint_mode='authors', checkpoint=dict(sha256='bytes')),
+        selection=dict(collector_protocol_sha256='collection'),
+        contexts=[dict(episode=0, policy_call_idx=0, status='available', context_id='context')])
+    monkeypatch.setattr(paired, 'make_bank', lambda metrics: bank)
+    monkeypatch.setattr(validate_fp32_probe, 'validate_decision', lambda *args: None)
+    output = tmp_path / 'built'
+    queue.build(SimpleNamespace(protocol=protocol, bank_root=tmp_path / 'bank', output=output,
+                                lang_dir=tmp_path / 'language', checkpoint_path=snapshot))
+    arguments = strict_json(output / 'queue.json')['jobs'][0]['common_arguments']
+    actual = arguments[arguments.index('--checkpoint-path') + 1]
+    assert actual == str(snapshot.absolute())
+    assert Path(actual).name == 'mp_rank_00_model_states.pt'

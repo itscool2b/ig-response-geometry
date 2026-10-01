@@ -60,7 +60,10 @@ def build(args):
                     if stratum['checkpoint_mode'] != 'pretrained':
                         if args.checkpoint_path is None:
                             raise ValueError('Explicit authors checkpoint path is required')
-                        command.extend(['--checkpoint-path', str(args.checkpoint_path.resolve())])
+                        # Preserve the named snapshot entry. Resolving an HF
+                        # symlink changes the filename field in the checkpoint
+                        # identity even though its authenticated bytes match.
+                        command.extend(['--checkpoint-path', str(args.checkpoint_path.absolute())])
                     jobs.append(dict(job_id=job_id, context_id=row['context_id'],
                                      source_manifest_sha256=file_hash(store.root / 'manifest.json'),
                                      source_sidecar_sha256=row['attr_sha256'], command=command))

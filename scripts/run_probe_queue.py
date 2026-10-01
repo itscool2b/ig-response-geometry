@@ -85,7 +85,9 @@ def build(args):
             if stratum['checkpoint_mode'] != 'pretrained':
                 if args.checkpoint_path is None:
                     raise ValueError('An explicit authors checkpoint path is required')
-                common.extend(['--checkpoint-path', str(args.checkpoint_path.resolve())])
+                # The source identity records the named snapshot filename;
+                # following an HF symlink replaces it with the blob basename.
+                common.extend(['--checkpoint-path', str(args.checkpoint_path.absolute())])
             jobs.append(dict(job_id=job_id, planned_status=entry['status'], context_id=entry['context_id'],
                              decision_sha256=file_hash(decision_file), bank_sha256=file_hash(bank_file),
                              decision_file=str(decision_file), bank_file=str(bank_file), common_arguments=common))
