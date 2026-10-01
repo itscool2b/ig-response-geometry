@@ -8,7 +8,7 @@
     "valid_physical_records": 22966
   },
   "builder_sha256": "21beb1c158fe8e5b3c2dcf8f0f4496fb4f4e1c77c8c65002e93aee34f0991234",
-  "manuscript_source_sha256": "4d143fc9778258e8c2b935aa6de4bb64b386fdf851980ea4123715fe01e719ce",
+  "manuscript_source_sha256": "6592295f27ae9f6273345b0ee37fee130a65b8a8d3074e3386c8145d3e924dd6",
   "manuscript_inputs_sha256": {
     "paper/references.bib": "bc341847d9766e0dd50bc1fe57dba06a2e0d76fdbe840133376e0954b6a2590e"
   },

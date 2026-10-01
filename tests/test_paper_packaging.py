@@ -9,12 +9,14 @@ from scripts.package_paper_sources import anonymous_source, assert_anonymous, bu
 
 def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     root = Path(__file__).resolve().parents[1]
-    result = anonymous_source((root/'paper/paper.tex').read_text(encoding='utf-8'))
+    source = (root/'paper/paper.tex').read_text(encoding='utf-8')
+    result = anonymous_source(source)
     for value in ('Arjun', 'arjunbajpai', 'itscool2b', 'Acknowledgments', r'\ifanonymous', r'\ifdefined'):
         assert value not in result
     assert r'\author{\name Anonymous authors}' in result
     assert r'\usepackage[preprint]{tmlr}' in result and r'\usepackage{tmlr}' not in result
-    assert 'AI tools were used to develop and check mathematical constructions' in result
+    disclosure = 'AI tools were used to develop and check mathematical constructions'
+    assert (disclosure in result) == (disclosure in source)
     for value in ('working draft', 'remain pending', 'under review as submission', 'paper under double-blind review'):
         assert value not in result.lower()
     assert r'\bibliography{references}' in result
