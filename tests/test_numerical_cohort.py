@@ -90,7 +90,7 @@ def target_fixture():
         gradient_probes=[dict(repeat=r,alpha=a,rng_unchanged=True) for r in range(2) for a in (0,.9,1)],
         operation_audits=[dict(alpha=a,status="passed") for a in (0,.9,1)],
         gradient_repeatability={str(a):deepcopy(pair) for a in (0,.9,1)},
-        budgets=[dict(m=m,repeat=r,rng_unchanged=True,diagnostics=dict(expected_gap=.2,relative_residual=.001,nonfinite_count=0))
+        budgets=[dict(m=m,repeat=r,rng_unchanged=True,diagnostics=dict(m=m,expected_gap=.2,relative_residual=.001,nonfinite_count=0))
                  for m in (2,4,8) for r in range(2 if m==8 else 1)],
         map_repeatability={"8":dict(IG=deepcopy(pair),path_gradient=deepcopy(pair),common_responses=[])},comparisons=[])
     for lo,hi in ((2,4),(2,8),(4,8)):
@@ -101,6 +101,24 @@ def target_fixture():
             report["comparisons"].append(dict(candidate_m=lo,reference_m=hi,ranking=ranking,relative_l1_difference=.001,
                 group_spearman=1,rank_status="defined",top5_count=0,top5_overlap=None,top1_match=True,common_responses=responses))
     return report,decision
+
+
+def test_auditor_consumes_actual_ig_diagnostics_and_rejects_conflicting_budget():
+    import torch
+    from integrated_gradients import integrated_gradients
+    report,decision=target_fixture()
+    actual=torch.tensor([.5,1.],dtype=torch.float32)
+    for row in report["budgets"]:
+        row["diagnostics"]=integrated_gradients(
+            lambda x:(x*x).sum(),actual,torch.zeros_like(actual),m=row["m"],
+            return_result=True).diagnostics()
+    checks,observations=v6_target(report,CRITERIA,decision)
+    assert [row["m"] for row in observations]==[2,4,8,8]
+    assert all(row["expected_gap"]==1.25 for row in observations)
+    assert all(c["status"]=="satisfies" for c in checks if c["criterion"]=="candidate_completeness")
+    report["budgets"][0]["diagnostics"]["m"]=999
+    with pytest.raises(ValueError,match="diagnostic budget"):
+        v6_target(report,CRITERIA,decision)
 
 
 def test_rms_threshold_scales_by_baseline_and_does_not_average_directions():

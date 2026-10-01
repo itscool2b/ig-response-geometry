@@ -200,7 +200,9 @@ def v6_target(report,criteria,decision):
     checks.append(check("map_budget_repeat_coverage",set(keys)==expected and len(keys)==len(expected),"==",True))
     for value in maps:
         d=value["diagnostics"];gap=d.get("expected_gap");cutoff=decision["denominator_min"][target]
-        observations.append(dict(m=value["m"],repeat=value["repeat"],**d))
+        if d.get("m") != value["m"]:
+            raise ValueError("Map diagnostic budget differs from its declared budget")
+        observations.append({**d,"m":value["m"],"repeat":value["repeat"]})
         checks.append(check("map_rng_unchanged",value.get("rng_unchanged"),"==",True,m=value["m"],repeat=value["repeat"]))
         checks.append(check("finite_map",d.get("nonfinite_count"),"==",0,m=value["m"],repeat=value["repeat"]))
         checks.append(check("candidate_completeness",d.get("relative_residual"),"<=",criteria["residual"],
