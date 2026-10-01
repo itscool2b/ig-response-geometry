@@ -2,6 +2,8 @@
 \begin{table}[htbp]
 \centering\small
 \setlength{\tabcolsep}{3.5pt}
+\caption{Saved RDT-1B PickCube campaign, \OneBCalls{} source calls and \OneBEpisodes{} episodes under both estimands. The first weights each call equally; the second weights each episode's median equally. Conditional 95\% episode intervals describe the released mixture. Evaluation seeds share a checkpoint, and the pooled language population spans two baseline provenances.}
+\label{tab:oneb}
 \begin{tabular}{llll}
 \toprule
 Estimand & Modality & Insertion AUC & Deletion AUC \\
@@ -12,6 +14,4 @@ Median of episode medians & Vision & 0.940 [0.927, 0.959] & 0.289 [0.235, 0.313]
 Median of episode medians & Language & 0.488 [0.368, 0.581] & 0.297 [0.151, 0.342] \\
 \bottomrule
 \end{tabular}
-\caption{Saved RDT-1B PickCube campaign, \OneBCalls{} source calls and \OneBEpisodes{} episodes under both estimands. The first weights each call equally; the second weights each episode's median equally. Conditional 95\% episode intervals describe the released mixture. Evaluation seeds share a checkpoint, and the pooled language population spans two baseline provenances.}
-\label{tab:oneb}
 \end{table}

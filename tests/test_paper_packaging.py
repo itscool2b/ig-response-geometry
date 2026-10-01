@@ -13,8 +13,10 @@ def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     for value in ('Arjun', 'arjunbajpai', 'itscool2b', 'Acknowledgments', r'\ifanonymous', r'\ifdefined'):
         assert value not in result
     assert r'\author{\name Anonymous authors}' in result
-    assert r'\usepackage{tmlr}' in result and r'\usepackage[preprint]' not in result
-    assert 'AI tools assisted' in result
+    assert r'\usepackage[preprint]{tmlr}' in result and r'\usepackage{tmlr}' not in result
+    assert 'AI tools were used to develop and check mathematical constructions' in result
+    for value in ('working draft', 'remain pending', 'under review as submission', 'paper under double-blind review'):
+        assert value not in result.lower()
     assert r'\bibliography{references}' in result
 
 

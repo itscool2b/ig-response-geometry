@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the working TMLR revision without overwriting the historical paper.pdf."""
+"""Build the general research paper without overwriting the historical paper.pdf."""
 from __future__ import annotations
 
 import argparse
@@ -37,14 +37,14 @@ def validate_revision_assets(root: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--anonymous", action="store_true", help="Use anonymous TMLR review style and suppress identifying links/acknowledgments.")
+    parser.add_argument("--anonymous", action="store_true", help="Build an anonymous audit copy and suppress identifying links/acknowledgments.")
     parser.add_argument("--output", type=Path, help="Destination PDF; historical paper/paper.pdf is protected.")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     paper = root / "paper"
     output = (args.output or paper / ("paper-anonymous-draft.pdf" if args.anonymous else "paper-revision.pdf")).resolve()
     if output == (paper / "paper.pdf").resolve():
-        parser.error("The historical paper/paper.pdf must not be overwritten by this working-draft build.")
+        parser.error("The historical paper/paper.pdf must not be overwritten by this research-paper build.")
     validate_revision_assets(root)
     for executable in ("pdflatex", "bibtex"):
         if not shutil.which(executable):

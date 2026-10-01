@@ -1,6 +1,6 @@
-# Working TMLR builds
+# General research-paper builds
 
-The default build is an identified preprint. The anonymous flag removes author metadata, the public repository URL and acknowledgments, and uses the official anonymous TMLR style. Both are explicitly working drafts pending scientific and artifact gates. Neither is a submission package.
+The default build is the identified general research paper. The anonymous flag removes author metadata, the public repository URL and acknowledgments for independent audit. Both use the pinned template in its neutral preprint mode, with no journal submission or review-status header. The historical filenames and TMLRAnonymous switch remain for compatibility. Neither build implies submission to a journal. The identified acknowledgment records the eight-month research project; AI contributions are disclosed on the first page.
 
 With Python 3 and TeX Live (`texlive-latex-extra`, `texlive-fonts-recommended`, `texlive-science`, `lmodern` on Debian/Ubuntu):
 

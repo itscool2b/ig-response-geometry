@@ -2,6 +2,8 @@
 \begin{table}[htbp]
 \centering\small
 \setlength{\tabcolsep}{3.5pt}
+\caption{Within-ranking response transformation, with median AUC and conditional 95\% episode-bootstrap intervals. Each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes. The same recorded interventions are reused within a ranking cohort. The two ranking cohorts are not authenticated paired contexts; comparisons between them do not identify ranking improvement.}
+\label{tab:targets}
 \begin{tabular}{lllll}
 \toprule
 Ranking target & Response & Modality & Insertion AUC & Deletion AUC \\
@@ -16,6 +18,4 @@ $L$ & $L$ & Vision & 0.756 [0.700, 0.803] & 0.283 [0.252, 0.327] \\
 $L$ & $L$ & Language & 0.507 [0.456, 0.566] & 0.249 [0.202, 0.278] \\
 \bottomrule
 \end{tabular}
-\caption{Within-ranking response transformation, with median AUC and conditional 95\% episode-bootstrap intervals. Each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes. The same recorded interventions are reused within a ranking cohort. The two ranking cohorts are not authenticated paired contexts; comparisons between them do not identify ranking improvement.}
-\label{tab:targets}
 \end{table}

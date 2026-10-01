@@ -2,6 +2,8 @@
 \begin{table}[htbp]
 \centering\small
 \setlength{\tabcolsep}{3.5pt}
+\caption{Month 7 model randomization (C1) and input shuffle (C2), all recorded calls. Conditional 95\% episode intervals accompany median Spearman correlation. These diagnostics test different dependencies: low C2 correlation does not establish learned-model dependence, and C1 changes integration budget as well as weights.}
+\label{tab:sanity}
 \begin{tabular}{llrrll}
 \toprule
 Task & Check & Calls & Episodes & Vision $\rho$ & Language $\rho$ \\
@@ -16,6 +18,4 @@ StackCube & C1 & 100 & 26 & 0.958 [0.952, 0.965] & 0.965 [0.960, 0.969] \\
 StackCube & C2 & 100 & 26 & 0.140 [0.117, 0.154] & 0.266 [0.246, 0.279] \\
 \bottomrule
 \end{tabular}
-\caption{Month 7 model randomization (C1) and input shuffle (C2), all recorded calls. Conditional 95\% episode intervals accompany median Spearman correlation. These diagnostics test different dependencies: low C2 correlation does not establish learned-model dependence, and C1 changes integration budget as well as weights.}
-\label{tab:sanity}
 \end{table}

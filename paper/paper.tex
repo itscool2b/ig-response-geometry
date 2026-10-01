@@ -1,10 +1,10 @@
-%%%% Working TMLR revision. Default is the identified preprint.
-% Pass \\def\\TMLRAnonymous{1} before input for the anonymous review draft.
+%%%% General research paper. Default is the identified preprint.
+% Pass \\def\\TMLRAnonymous{1} before input for the anonymous audit copy.
 \documentclass[10pt]{article}
 \newif\ifanonymous
 \ifdefined\TMLRAnonymous
   \anonymoustrue
-  \usepackage{tmlr}
+  \usepackage[preprint]{tmlr}
 \else
   \anonymousfalse
   \usepackage[preprint]{tmlr}
@@ -39,14 +39,15 @@
 
 \author{\name Arjun Bajpai \email arjunbajpai2009@gmail.com \\
 \addr Independent Researcher}
+\ifanonymous
+\author{\name Anonymous authors}
+\fi
 
 \begin{document}
 
 \maketitle
 % TMLR author separator and algorithmic boolean operator share this name.
 \let\AND\relax
-
-\noindent\textbf{Revision status (October 1, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports analytic results, a canonical retrospective reanalysis and an incomplete numerical diagnostic campaign. Comparative ranking efficacy and learned-weight dependence are outside its empirical claims. Author review and submission checks remain pending.
 
 \begin{abstract}
 Attribution evaluation depends on both the ranking that selects interventions and the response that scores them.
@@ -67,7 +68,7 @@ The artifact preserves the raw-record lineage, analytic checks, adverse results 
 %% ================================================================
 \section{Introduction}
 
-Vision-language-action (VLA) models such as RT-2~\citep{zitkovich2023rt2}, Octo~\citep{team2024octo}, and the Robotics Diffusion Transformer (RDT)~\citep{liu2024rdt} combine sensory observations and instructions to predict robot actions.
+Vision-language-action (VLA) models such as RT-2~\citep{zitkovich2023rt2}, Octo~\citep{team2024octo}, and the Robotics Diffusion Transformer (RDT)~\citep{liu2024rdt} combine sensory observations and instructions to predict robot actions.\footnote{AI tools were used to develop and check mathematical constructions, design and implement saved-data analyses, review code and literature, and draft and revise this manuscript. The author is responsible for the content.}
 Diffusion policies~\citep{chi2023diffusion} generate action chunks through iterative denoising~\citep{ho2020ddpm}.
 Applying a scalar attribution method to this vector-valued output requires specifying what aspect of the action prediction is being explained.
 That choice also matters when evaluating the resulting explanation.
@@ -436,10 +437,10 @@ This diagnoses concentration in the recorded cohort, not population robustness, 
 
 \begin{table}[htbp]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\input{tables_revision/paired_rescoring.tex}
 \caption{Paired response differences $\Delta=\operatorname{AUC}_{Q}-\operatorname{AUC}_{L}$ within the same saved curve. Each row uses 750 calls from 30 recorded episodes; rows within a ranking cohort reuse those calls. The primary mean weights episodes equally. Its 95\% interval is a conditional, unadjusted episode-bootstrap description. The paired-call median is shown alongside it because overshooting tails can reverse the sign of the mean. Neither summary is a comparison of Q and L2 ranking quality.}
 \label{tab:paired-rescoring}
+\setlength{\tabcolsep}{4pt}
+\input{tables_revision/paired_rescoring.tex}
 \end{table}
 
 We classify each saved squared-discrepancy ordinate relative to the interval between its stored actual and baseline endpoint discrepancies, without assuming exact self-reference.
@@ -533,10 +534,10 @@ There is no completed 1B numerical context in this snapshot.
 These are snapshot statuses, not assertions about the final state of later interrupted work.
 \begin{table}[htbp]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\input{tables_revision/numerical_roster.tex}
 \caption{Full planned engineering roster at the authenticated 03:36 UTC snapshot. The first four numerical columns count contexts; the last gives complete/planned target-modality cells. Each context has six cells. Unreached source calls and available but unsealed results remain distinct. Completion does not imply numerical qualification.}
 \label{tab:numerical-roster}
+\setlength{\tabcolsep}{4pt}
+\input{tables_revision/numerical_roster.tex}
 \end{table}
 
 \paragraph{Repeatability and budget sensitivity.}
@@ -553,10 +554,10 @@ All lower-budget comparisons, raw denominators and individual check results rema
 The maxima summarize the recorded cases without an interval or population generalization.
 \begin{table}[htbp]
 \centering\small
-\setlength{\tabcolsep}{3.5pt}
-\input{tables_revision/numerical_diagnostics.tex}
 \caption{Diagnostics on all 12 completed contexts per target/modality arm. \(n\) counts contexts, and ``Viol.'' counts arms with at least one recorded pairwise-threshold violation between the two finest budgets. The remaining columns are maxima across those contexts: relative IG coordinate \(L_1\) difference, finest-budget relative completeness residual, and maximum raw RMS response-curve change divided by the all-baseline RMS displacement, all in percent. RMS maxima include IG and mean-path-gradient rankings and both perturbation directions. Coordinate differences use the finer map's \(L_1\) norm. Comparators are 256 versus 512 for vision/language and 512 versus 1024 for state. These dependent engineering diagnostics are not population error rates or proof that the finest maps are accurate; no setting or subset is approved.}
 \label{tab:numerical-diagnostics}
+\setlength{\tabcolsep}{3.5pt}
+\input{tables_revision/numerical_diagnostics.tex}
 \end{table}
 
 Both targets retain finest-budget state completeness violations at the two recorded PickSingleYCB episode-1 contexts, alongside substantial changes between the two finest maps.
@@ -635,15 +636,15 @@ Its CPU reproducer recomputes the reported diagnostics and saved-tensor checks f
 The new runtime separately records immutable context, source, checkpoint, language, environment and noise identities, and fails explicitly on nonfinite attribution rather than sanitizing coordinates.
 A candidate PDF or a successful script run alone does not constitute an authenticated scientific replication.
 \ifanonymous
-The identified repository URL is omitted from this draft. Local anonymous manuscript-source and research-supplement packages accompany this author-review candidate; final author and distribution checks remain pending.
+Anonymous manuscript sources and a research supplement accompany this audit copy. The identified repository URL is omitted to support independent review.
 \else
-The canonical repository is \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}. This local revision and its review packages await the author's publication decision; the repository URL alone does not identify the current local candidate.
+The canonical repository is \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}. The accompanying versioned research package identifies the exact sources used for this paper; the repository URL alone does not identify this version.
 The active retrospective artifact is \texttt{analysis/revision/results/2026-09-30-v2}; the manuscript registry is \texttt{paper/figures\_revision/lineage.json}.
 \fi
 
 \ifanonymous\else
 \section*{Acknowledgments}
-I am sincerely grateful to Professor Sumit K.\ Jha, Department of Computer and Information Science and Engineering, University of Florida, and to Brian Rodriguez, University of Florida, for mentoring and guiding me throughout this seven-month project. I thank them for their time and technical advice.
+I am sincerely grateful to Professor Sumit K.\ Jha, Department of Computer and Information Science and Engineering, University of Florida, and to Brian Rodriguez, University of Florida, for mentoring and guiding me throughout this eight-month research project. I thank them for their time and technical advice.
 \fi
 
 \bibliographystyle{tmlr}
@@ -749,8 +750,6 @@ The full untrimmed means, medians and conditional intervals remain unchanged.
 
 \begin{table}[htbp]
 \centering\small
-\setlength{\tabcolsep}{4pt}
-\input{tables_revision/episode_influence.tex}
 \caption{Exploratory omissions of one complete recorded episode. The range spans
 all 30 omission means; ``Same sign'' counts agreement with the full-cohort mean.
 Each case uses 750 calls in 30 episodes before omission; rows in a ranking
@@ -758,6 +757,8 @@ cohort reuse calls. These ranges are not confidence intervals. All 240 omission
 records and their retained-population hashes are supplied in the separate
 influence artifact.}
 \label{tab:episode-influence}
+\setlength{\tabcolsep}{4pt}
+\input{tables_revision/episode_influence.tex}
 \end{table}
 
 All four negative insertion means remain negative under every individual
