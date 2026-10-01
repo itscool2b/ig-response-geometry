@@ -1,241 +1,196 @@
-"""Direct contraction-mechanism measurement (Month 5).
+"""Conditional solver-depth sensitivity of saved attribution rankings.
 
-For each signal-bearing policy-call row of a per_step_ig.py JSONL, measure the
-action displacement ||a_perturbed - a_original|| as a function of
-  (a) top-k input deletion fraction k in --del-grid, and
-  (b) the number of DPM-Solver++ denoising steps T in --solver-steps.
-
-The Month-4 hypothesis held that the iterative denoiser contracts perturbed
-conditioning back toward the action manifold, predicting a stronger policy
-"contracts more, not less." This script tests that claim directly: if
-contraction were the mechanism, the displacement should shrink as T grows and
-as the policy gets stronger. The measurement refuted it. The displacement holds
-or grows between the two-step and twenty-step endpoints on every curve, and the
-paper ("The Readout, Not the Denoiser", Sec. 6.1) traces the small log-density
-magnitude to the quadratic per-entry readout instead.
-
-a_original = ctx["ref_action"], the seeded conditional_sample on the real adapted
-             inputs at the CURRENT T (re-sampled per T, NOT the sidecar's T=5
-             ref_action, so original and perturbed share the same chain length).
-a_perturbed = same chain, but with the top-k |IG| ext-cam tokens (vision) or the
-             top-k real language tokens replaced by the baseline embeddings,
-             reusing faithfulness.py's perturb_image / perturb_lang verbatim.
-The tokens deleted are chosen by the canonical T=5 sidecar attribution (rank_T=5)
-so the deletion SET is held fixed and only the chain length T varies.
-
-Displacement is reported over the 8 active ManiSkill dims and over the full
-(64,128) chunk, as raw L2, per-element RMS, and relative-to-reference L2.
-
-Output: data/metrics_displacement_{source_metrics_basename}_{ts}.jsonl, one row
-per (episode, policy_call, T, modality). Downstream: make_month5_figs.py renders
-fig_displacement_vs_T.png and bootstrap_ci.py adds episode-bootstrap CI bands.
+The selected positions are fixed by each source attribution's recorded solver
+depth. References are recomputed at each evaluated depth with the same saved
+initial noise. This measures solver-resolution sensitivity, not denoiser causality
+or a universal contraction mechanism. All valid calls are eligible by default.
 """
 import argparse
-import json
-import os
+from collections import OrderedDict
+import math
 import time
 
 import torch
-from PIL import Image
 
-from per_step_attribution import prepare_ig_context, MANISKILL_INDICES
-from pipeline import load_pipeline, load_lang
-from faithfulness import (
-    topk_mask, perturb_image, perturb_lang, EXT_CAM_START, EXT_CAM_END,
-    load_step_rows,
-)
-
-RANK_T = 5  # the canonical T at which the sidecar attribution was computed
+from experiment_io import file_hash, object_hash, tensor_hash
+from faithfulness import (EXT_CAM_START, EXT_CAM_END, EvaluationWriter,
+                          add_replay_arguments, load_sidecar, perturb_image,
+                          perturb_lang, replay_context, replay_inputs,
+                          replay_pipeline, topk_mask, preflight_source_replays)
+from per_step_attribution import MANISKILL_INDICES
 
 
 def parse_args():
-    p = argparse.ArgumentParser()
-    p.add_argument("--metrics", required=True,
-                   help="Path to a per_step_ig.py JSONL (its sidecars supply the "
-                        "T=5 attribution ranking and the obs/proprio to replay).")
-    p.add_argument("--task", required=True, help="ManiSkill task id.")
-    p.add_argument("--model", choices=["170m", "1b"], default="170m")
-    p.add_argument("--no-checkpoint", action="store_true",
-                   help="Disable gradient checkpointing on the pipeline load.")
-    p.add_argument("--out", default=None,
-                   help="Output JSONL. Auto-named from metrics if omitted.")
-    p.add_argument("--limit", type=int, default=None,
-                   help="Only process the first N signal-bearing step rows.")
-    p.add_argument("--solver-steps", default="1,2,3,5,10,20",
-                   help="Comma list of DPM-Solver++ step counts T to sweep.")
-    p.add_argument("--del-grid", default="0,1,5,10,20",
-                   help="Comma list of top-k deletion percentages. 0 is the "
-                        "zero-displacement anchor.")
-    p.add_argument("--modality", choices=["vision", "language", "both"],
-                   default="vision")
-    p.add_argument("--no-signal-filter", action="store_true",
-                   help="Process all rows, not just |ref action| >= 15. Use for 1B "
-                        "(its fine-tuned action norms sit below 15 throughout).")
+    p=argparse.ArgumentParser(description=__doc__)
+    add_replay_arguments(p)
+    p.add_argument("--solver-steps", required=True, help="Explicit planned comma-separated positive solver depths")
+    p.add_argument("--del-grid", default="0,1,5,10,20")
+    p.add_argument("--modality", choices=["vision","language","both"], default="vision")
+    p.add_argument("--signal-filter", choices=["all","legacy_norm_ge15"], default="all")
+    p.add_argument("--no-signal-filter", action="store_true", help="Compatibility alias for --signal-filter all")
+    p.add_argument("--selection", choices=["prefix","round_robin_episodes"], default="round_robin_episodes")
+    p.add_argument("--reference-norm-min", type=float, default=0.0)
     return p.parse_args()
 
 
-def displacement(a_pert, a_orig):
-    """All quantities under no_grad. a_pert, a_orig are (1, 64, 128) bf16."""
-    d8 = (a_pert[..., MANISKILL_INDICES] - a_orig[..., MANISKILL_INDICES]).float()
-    full = (a_pert - a_orig).float()
-    ref8 = a_orig[..., MANISKILL_INDICES].float()
-    return {
-        "l2_active": d8.norm().item(),                       # over 64*8 active entries
-        "rms_active": d8.pow(2).mean().sqrt().item(),        # per-entry RMS
-        "l2_full": full.norm().item(),                       # over 64*128
-        "rel_active": (d8.norm() / (ref8.norm() + 1e-9)).item(),
-    }
+def displacement(a_pert,a_orig,*,reference_norm_min=0.0):
+    """Cast before subtraction; zero/small relative denominators are explicit."""
+    if a_pert.shape != a_orig.shape or a_orig.ndim != 3 or a_orig.shape[-1] <= max(MANISKILL_INDICES):
+        raise ValueError("Action shapes must agree and contain the declared active coordinates")
+    if not math.isfinite(reference_norm_min) or reference_norm_min < 0:
+        raise ValueError("Reference norm cutoff must be finite and nonnegative")
+    if not torch.isfinite(a_pert).all() or not torch.isfinite(a_orig).all():
+        raise ValueError("Nonfinite action tensor")
+    perturbed,reference = a_pert.float(),a_orig.float()
+    active = perturbed[...,MANISKILL_INDICES]-reference[...,MANISKILL_INDICES]
+    full = perturbed-reference
+    norm = float(reference[...,MANISKILL_INDICES].norm().item())
+    active_norm = float(active.norm().item())
+    result=dict(l2_active=active_norm,rms_active=float(active.square().mean().sqrt().item()),
+                l2_full=float(full.norm().item()),
+                rel_active=active_norm/norm if norm > reference_norm_min else None,
+                relative_status="defined" if norm > reference_norm_min else "undefined_reference_norm",
+                ref_action_norm_active=norm,active_dimensions=active.numel())
+    if any(isinstance(value,float) and not math.isfinite(value) for value in result.values()):
+        raise ValueError("Nonfinite displacement arithmetic")
+    return result
+
+
+def select_calls(rows,limit,method):
+    if limit is None or len(rows) <= limit:
+        return rows
+    if limit < 1:
+        raise ValueError("Selection limit must be positive")
+    if method == "prefix":
+        return rows[:limit]
+    if method != "round_robin_episodes":
+        raise ValueError("Unknown selection rule")
+    groups=OrderedDict()
+    for row in rows:
+        key=tuple(row[k] for k in ("task","model","seed","episode"))
+        groups.setdefault(key,[]).append(row)
+    selected,index=[],0
+    while len(selected) < limit:
+        for group in groups.values():
+            if index < len(group):
+                selected.append(group[index])
+                if len(selected) == limit:
+                    break
+        index+=1
+    return selected
+
+
+def parse_grid(text,*,solver=False):
+    grid=[int(value) for value in text.split(",")]
+    if not grid or len(grid) != len(set(grid)) or grid != sorted(grid):
+        raise ValueError("Grid must be nonempty, unique, and increasing")
+    if solver and min(grid) < 1:
+        raise ValueError("Solver depths must be positive")
+    if not solver and (grid[0] != 0 or grid[-1] > 100):
+        raise ValueError("Deletion grid must start at zero and remain within [0,100]")
+    return grid
 
 
 def main():
-    args = parse_args()
-    solver_grid = [int(x) for x in args.solver_steps.split(",")]
-    del_grid = [int(x) for x in args.del_grid.split(",")]
-    modalities = ["vision", "language"] if args.modality == "both" else [args.modality]
-
-    rows = load_step_rows(args.metrics)
-    if not args.no_signal_filter:
-        rows = [r for r in rows if r.get("ref_norm_maniskill", -1) >= 15]
-    if args.limit is not None and len(rows) > args.limit:
-        #Stratify the sample across episodes (round-robin by policy call) so the
-        #downstream episode-bootstrap has many groups, not the 2-3 you get by
-        #taking the first N rows of long failure trajectories.
-        from collections import OrderedDict
-        byep = OrderedDict()
-        for r in rows:
-            byep.setdefault(r["episode"], []).append(r)
-        picked, idx = [], 0
-        while len(picked) < args.limit:
-            added = False
-            for ers in byep.values():
-                if idx < len(ers):
-                    picked.append(ers[idx]); added = True
-                    if len(picked) >= args.limit:
-                        break
-            if not added:
-                break
-            idx += 1
-        rows = picked
-
-    if args.out is None:
-        base = os.path.splitext(os.path.basename(args.metrics))[0]
-        ts = time.strftime("%Y%m%d_%H%M%S")
-        args.out = f"data/metrics_displacement_{base}_{ts}.jsonl"
-    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
-
-    print(f"\n=== displacement over {len(rows)} rows x {len(solver_grid)} T values, "
-          f"writing {args.out} ===")
-    print(f"    T grid: {solver_grid}   del grid: {del_grid}   modalities: {modalities}\n")
-    jsonl = open(args.out, "a")
-
-    #Outer loop over T: the DPM-Solver++ step count is baked into the scheduler at
-    #RDTRunner construction, so each T needs its own pipeline load. The 96 GB card
-    #makes the reload (~30-60s) cheap relative to the per-row forwards.
-    for T in solver_grid:
-        print(f"--- loading pipeline at T={T} ---")
-        pipe = load_pipeline(args.model, enable_checkpoint=not args.no_checkpoint,
-                             solver_steps=T)
-        lang = load_lang(args.task)
-
-        for i, row in enumerate(rows):
-            t0 = time.time()
-            sidecar = torch.load(row["attr_file"], weights_only=False, map_location="cpu")
-            obs_image = Image.fromarray(sidecar["obs_image"])
-            proprio = sidecar["proprio"]
-
-            #ref_action is recomputed at THIS T inside prepare_ig_context, so
-            #a_original and every a_perturbed share the same chain length.
-            ctx = prepare_ig_context(
-                pipe["runner"], pipe["vision_model"],
-                obs_image, proprio,
-                lang["lang_tokens"], lang["lang_attn_mask"], lang["lang_tokens_baseline"],
-                pipe["bg_image_encoded"], pipe["img_tokens_baseline"],
-                pipe["action_mask"], pipe["ctrl_freqs"],
-                seed=row["seed"], sigma_sq=1.0, target="logpi",
-            )
-            a_orig = ctx["ref_action"]
-
-            for modality in modalities:
-                #Rank positions with the same |IG|-sum reduction as faithfulness.py,
-                #using the canonical T=5 sidecar attribution (held fixed across T).
-                if modality == "vision":
-                    attr = sidecar["vision_attr"].to("cuda", dtype=torch.bfloat16)
-                    abs_per_pos = attr.abs().sum(dim=-1).squeeze(0)
-                    ranked_scores = abs_per_pos[EXT_CAM_START:EXT_CAM_END]
-                    n_ranked = 729
-                    real_mask = real_idx = None
-                else:
-                    attr = sidecar["lang_attr"].to("cuda", dtype=torch.bfloat16)
-                    abs_per_pos = attr.abs().sum(dim=-1).squeeze(0)
-                    real_mask = ctx["lang_attn_mask"].squeeze(0)
-                    real_idx = torch.nonzero(real_mask, as_tuple=False).squeeze(-1)
-                    ranked_scores = abs_per_pos[real_idx]
-                    n_ranked = int(real_mask.sum().item())
-
-                disp_lists = {"l2_active": [], "rms_active": [], "l2_full": [],
-                              "rel_active": []}
-                with torch.no_grad():
-                    for k in del_grid:
-                        if k == 0:
-                            #Zero-deletion anchor: a_perturbed == a_original exactly.
-                            for key in disp_lists:
-                                disp_lists[key].append(0.0)
-                            continue
-                        ranked_mask = topk_mask(ranked_scores, k, n_ranked)
-                        if modality == "vision":
-                            cond = perturb_image(ctx["img_adapted"], ctx["img_adapted_bl"],
-                                                 ranked_mask)
-                            a_pert = ctx["seeded_conditional_sample"](
-                                ctx["lang_adapted"], cond, ctx["state_traj_actual"]).detach()
-                        else:
-                            full_mask = torch.zeros(ctx["lang_adapted"].shape[1],
-                                                    dtype=torch.bool, device=ranked_scores.device)
-                            full_mask[real_idx] = ranked_mask
-                            cond = perturb_lang(ctx["lang_adapted"], ctx["lang_adapted_bl"],
-                                                real_mask, full_mask)
-                            a_pert = ctx["seeded_conditional_sample"](
-                                cond, ctx["img_adapted"], ctx["state_traj_actual"]).detach()
-                        d = displacement(a_pert, a_orig)
-                        for key in disp_lists:
-                            disp_lists[key].append(d[key])
-                        del a_pert, cond
-
-                ref_norm_active = a_orig[..., MANISKILL_INDICES].float().norm().item()
-                out_row = {
-                    "event": "displacement",
-                    "task": args.task, "model": args.model,
-                    "episode": row["episode"], "seed": row["seed"],
-                    "policy_call_idx": row["policy_call_idx"],
-                    "attr_file": row["attr_file"],
-                    "ref_norm_maniskill": row["ref_norm_maniskill"],
-                    "modality": modality,
-                    "solver_steps": T, "rank_T": RANK_T,
-                    "del_grid": del_grid,
-                    "l2_active": disp_lists["l2_active"],
-                    "rms_active": disp_lists["rms_active"],
-                    "l2_full": disp_lists["l2_full"],
-                    "rel_active": disp_lists["rel_active"],
-                    "ref_action_norm_active": ref_norm_active,
-                    "wall_seconds": time.time() - t0,
-                }
-                jsonl.write(json.dumps(out_row) + "\n")
-                jsonl.flush()
-                del attr
-
-            #Progress: show the largest-deletion displacement of the last modality
-            #written (out_row survives from the final loop iteration).
-            big = out_row["l2_active"][-1]
-            print(f"  T={T} {i+1}/{len(rows)} ep{row['episode']:03d}t{row['policy_call_idx']:02d} "
-                  f"{out_row['modality']}: l2_active@k{del_grid[-1]}={big:.4f} "
-                  f"|ref|active={ref_norm_active:.3f}")
-            del ctx, sidecar
+    args=parse_args()
+    solvers,grid=parse_grid(args.solver_steps,solver=True),parse_grid(args.del_grid)
+    if not math.isfinite(args.reference_norm_min) or args.reference_norm_min < 0:
+        raise ValueError("Reference norm threshold must be finite and nonnegative")
+    if args.no_signal_filter and args.signal_filter != "all":
+        raise ValueError("Conflicting signal-filter choices")
+    modalities=["vision","language"] if args.modality == "both" else [args.modality]
+    rows,source,digest=replay_inputs(args,apply_limit=False)
+    n_source=len(rows)
+    if args.signal_filter == "legacy_norm_ge15":
+        rows=[r for r in rows if r["ref_norm_maniskill"] >= 15]
+    n_filter=len(rows)
+    rows=select_calls(rows,args.limit,args.selection)
+    if not rows:
+        raise ValueError("Selected displacement population is empty")
+    config=dict(target=args.target,source_pipeline=source["configuration"]["pipeline"] if source else None,
+                solver_grid=solvers,nominal_deletion_percent=grid,modalities=modalities,
+                signal_filter=args.signal_filter,selection=args.selection,source_rows=n_source,
+                rows_after_filter=n_filter,selected_rows=len(rows),
+                selected_source_keys=[[r.get("run_id"),r["seed"],r["episode"],r["policy_call_idx"]] for r in rows],
+                ranking_source_solver_steps=sorted({r.get("solver_steps") for r in rows},key=str),
+                reference_norm_min=args.reference_norm_min,source_code_sha256=file_hash(__file__),
+                interpretation="Solver-resolution sensitivity with fixed ranking and saved initial noise; no denoiser-causality claim")
+    with EvaluationWriter(args,source,digest,"displacement",config,len(rows)*len(solvers)*len(modalities)) as writer:
+        # The source depth need not appear in the study grid. Always authenticate
+        # its original action before loading any alternative solver configuration.
+        original_pipe,original_lang=replay_pipeline(args,source)
+        preflight=preflight_source_replays(args,rows,source,original_pipe,original_lang,writer=writer)
+        preflight_hash=writer.write_auxiliary("source_replay.json",preflight)
+        del original_pipe,original_lang
+        if torch.cuda.is_available():
             torch.cuda.empty_cache()
-
-        del pipe, lang
-        torch.cuda.empty_cache()
-
-    jsonl.close()
-    print(f"\ndone. wrote {args.out}")
+        for steps in solvers:
+            writer.context={"solver_steps":steps}
+            pipe,lang=replay_pipeline(args,source,solver_steps=steps,allow_solver_change=True)
+            for row in rows:
+                writer.set_context(row,solver_steps=steps)
+                started=time.time()
+                sidecar,sidecar_hash=load_sidecar(row,args.metrics,source)
+                writer.set_context(row,solver_steps=steps,source_attr_sha256=sidecar_hash)
+                rank_steps=row.get("solver_steps")
+                if source is not None and rank_steps != source["configuration"]["solver_steps"]:
+                    raise ValueError("Source row solver depth differs from source manifest")
+                ctx=replay_context(args,row,sidecar,pipe,lang,verify_reference=steps == rank_steps,strict=source is not None)
+                reference=ctx["ref_action"]
+                device=reference.device
+                for modality in modalities:
+                    writer.set_context(row,solver_steps=steps,modality=modality,source_attr_sha256=sidecar_hash)
+                    attribution=sidecar["vision_attr" if modality == "vision" else "lang_attr"].to(device)
+                    scores=attribution.float().abs().sum(dim=-1).squeeze(0)
+                    if modality == "vision":
+                        indices=torch.arange(EXT_CAM_START,EXT_CAM_END,device=device)
+                        real_mask=None
+                    else:
+                        real_mask=ctx["lang_attn_mask"].squeeze(0)
+                        indices=torch.nonzero(real_mask,as_tuple=False).flatten()
+                    ranked=scores[indices]
+                    count=len(indices)
+                    order=indices[torch.argsort(ranked,descending=True,stable=True)].cpu().tolist()
+                    values={key:[] for key in ("l2_active","rms_active","l2_full","rel_active","relative_status")}
+                    counts,mask_hashes=[],[]
+                    cached={}
+                    with torch.no_grad():
+                        for percent in grid:
+                            mask=topk_mask(ranked,percent,count)
+                            selected=int(mask.sum().item())
+                            counts.append(selected)
+                            mask_hashes.append(object_hash(sorted(order[:selected])))
+                            if selected not in cached:
+                                if modality == "vision":
+                                    condition=perturb_image(ctx["img_adapted"],ctx["img_adapted_bl"],mask)
+                                    perturbed=ctx["seeded_conditional_sample"](ctx["lang_adapted"],condition,ctx["state_traj_actual"]).detach()
+                                else:
+                                    full_mask=torch.zeros(ctx["lang_adapted"].shape[1],dtype=torch.bool,device=device)
+                                    full_mask[indices]=mask
+                                    condition=perturb_lang(ctx["lang_adapted"],ctx["lang_adapted_bl"],real_mask,full_mask)
+                                    perturbed=ctx["seeded_conditional_sample"](condition,ctx["img_adapted"],ctx["state_traj_actual"]).detach()
+                                if selected == 0 and not torch.equal(perturbed,reference):
+                                    raise ValueError("Zero-intervention replay differs from its reference action")
+                                cached[selected]=displacement(perturbed,reference,reference_norm_min=args.reference_norm_min)
+                            measured=cached[selected]
+                            for key in values:
+                                values[key].append(measured[key])
+                    writer.write(dict(event="displacement",task=args.task,model=args.model,target=args.target,
+                                      source_replay_verified=preflight["verified"],source_replay_sha256=preflight_hash,
+                                      rank_T=rank_steps,del_grid_nominal_percent=grid,selected_counts=counts,
+                                      realized_deletion_fractions=[n/count for n in counts],eligible_count=count,
+                                      eligible_indices=indices.cpu().tolist(),ranking_indices=order,mask_sha256=mask_hashes,
+                                      tie_rule="stable decreasing score, increasing eligible index",
+                                      **values,ref_action_norm_active=measured["ref_action_norm_active"],
+                                      active_dimensions=measured["active_dimensions"],reference_norm_min=args.reference_norm_min,
+                                      reference_sha256=tensor_hash(reference),initial_noise_sha256=tensor_hash(ctx["initial_noise"]),
+                                      evaluated_pipeline_identity=pipe["identity"],wall_seconds=time.time()-started))
+                del ctx,sidecar
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+            del pipe,lang
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
