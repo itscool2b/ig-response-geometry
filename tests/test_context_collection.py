@@ -97,3 +97,39 @@ def test_missing_or_duplicate_stratum_rejected():
     row = stratum()
     with pytest.raises(ValueError):
         selected_stratum({'decision_id': 'E01', 'strata': [row, row]}, 'example')
+
+
+def test_separate_policy_stream_is_saved_and_step_cap_is_enforced(tmp_path):
+    spec = {**stratum(), 'policy_seed_base': 1800, 'max_episode_steps': 19}
+    assert selected_stratum({'decision_id': 'E02', 'strata': [spec]}, 'example') == spec
+    seen = []
+    def capture(image, proprio, seed):
+        seen.append(seed)
+        return prepare(image, proprio, seed)
+    output = tmp_path / 'metrics.jsonl'
+    env = Environment()  # This fixture does not implement its own step cap.
+    with RunStore(output, {'solver_steps': 5}).writer() as store:
+        end = collect_episode(env, store, 0, spec, capture,
+                              render=lambda env: Image.new('RGB', (2, 2)))
+    rows, manifest = authenticated_source(output)
+    assert env.seed == 900 and seen == [1800, 1800]
+    assert end['env_steps'] == 19 and end['policy_calls'] == 2
+    assert end['stop_reason'] == 'collector_environment_step_cap'
+    assert end['collector_step_cap'] and not end['truncated']
+    assert end['policy_seed'] == 1800
+    for row in rows:
+        payload, _ = load_sidecar(row, output, manifest)
+        assert row['seed'] == 900 and row['policy_seed'] == payload['policy_seed'] == 1800
+
+
+@pytest.mark.parametrize('base', [900, True, -1, 2**32])
+def test_overlapping_or_invalid_policy_stream_rejected(base):
+    with pytest.raises(ValueError):
+        selected_stratum({'decision_id': 'E02', 'strata': [{**stratum(), 'policy_seed_base': base}]}, 'example')
+
+
+def test_seed_stream_overlap_between_strata_rejected():
+    first = {**stratum(), 'episodes': 3, 'policy_seed_base': 1800}
+    second = {**stratum(), 'id': 'other', 'seed_base': 1801, 'policy_seed_base': 2800}
+    with pytest.raises(ValueError, match='overlap'):
+        selected_stratum({'decision_id': 'E02', 'strata': [first, second]}, 'example')

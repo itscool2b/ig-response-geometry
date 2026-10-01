@@ -17,11 +17,32 @@ from experiment_io import RunStore, file_hash, object_hash, strict_json, tensor_
 from per_step_attribution import MANISKILL_INDICES, prepare_ig_context
 from per_step_ig import ACTION_MAX, ACTION_MIN
 from pipeline import load_lang, load_pipeline
+from fp32_probe_cache import runtime_settings
+
+
+def validate_seed_streams(protocol):
+    """New studies explicitly separate simulator and policy-noise seed blocks."""
+    strata = protocol.get('strata', [])
+    if not any('policy_seed_base' in row for row in strata):
+        return
+    used = set()
+    for row in strata:
+        if type(row.get('episodes')) is not int or row['episodes'] < 1:
+            raise ValueError('Invalid episode count in seed roster')
+        for field in ('seed_base', 'policy_seed_base'):
+            base = row.get(field)
+            if type(base) is not int or base < 0 or base + row['episodes'] > 2**32:
+                raise ValueError('Every new-study stratum requires explicit valid simulator and policy seed blocks')
+            block = set(range(base, base + row['episodes']))
+            if used & block:
+                raise ValueError('Simulator/policy seed blocks overlap within the declared study')
+            used.update(block)
 
 
 def selected_stratum(protocol, stratum_id):
     if not isinstance(protocol.get('decision_id'), str) or not protocol['decision_id']:
         raise ValueError('A recorded experiment decision is required')
+    validate_seed_streams(protocol)
     matches = [row for row in protocol.get('strata', []) if row.get('id') == stratum_id]
     if len(matches) != 1:
         raise ValueError('Stratum must identify exactly one recorded configuration')
@@ -53,22 +74,25 @@ def render_observation(env):
 def collect_episode(env, store, episode, stratum, prepare, render=render_observation):
     transaction = store.begin_episode(episode)
     seed = stratum['seed_base'] + episode
+    policy_seed = stratum.get('policy_seed_base', stratum['seed_base']) + episode
     selected = set(stratum['evaluate_calls'])
     try:
         observation, info = env.reset(seed=seed)
         terminated = truncated = False
+        collector_step_cap = False
         env_steps = 0
         calls = 0
-        while not (terminated or truncated) and calls < stratum['max_policy_calls']:
+        while not (terminated or truncated or collector_step_cap) and calls < stratum['max_policy_calls']:
             started = time.perf_counter()
             image = render(env)
             proprio = observation['agent']['qpos'][0, :8].detach().cpu()
             with torch.no_grad():
-                context = prepare(image, proprio, seed)
+                context = prepare(image, proprio, policy_seed)
             payload = {key: context[key].detach().cpu() for key in
                        ('initial_noise', 'ref_action', 'lang_attn_mask', 'action_mask', 'ctrl_freqs')}
             payload.update(obs_image=torch.from_numpy(np.asarray(image).copy()), proprio=proprio,
-                           sampler_metadata=context['sampler_metadata'], collector_type='context_only')
+                           sampler_metadata=context['sampler_metadata'], collector_type='context_only',
+                           policy_seed=policy_seed)
             payload['initial_noise_sha256'] = tensor_hash(payload['initial_noise'])
             context_id = object_hash({'episode': episode, 'policy_call': calls,
                 'configuration': store.identity, 'observation': tensor_hash(payload['obs_image']),
@@ -76,7 +100,7 @@ def collect_episode(env, store, episode, stratum, prepare, render=render_observa
                 'reference': tensor_hash(payload['ref_action'])})
             payload['context_id'] = context_id
             transaction.save_step(dict(event='step', task=stratum['task'], model=stratum['model'],
-                episode=episode, seed=seed, policy_call_idx=calls, env_step_at_call=env_steps,
+                episode=episode, seed=seed, policy_seed=policy_seed, policy_call_idx=calls, env_step_at_call=env_steps,
                 solver_steps=store.configuration['solver_steps'], target='logpi',
                 collector_type='context_only', selected_for_analysis=calls in selected,
                 ref_norm_maniskill=context['ref_action'][..., MANISKILL_INDICES].float().norm().item(),
@@ -88,13 +112,16 @@ def collect_episode(env, store, episode, stratum, prepare, render=render_observa
             for action in actions:
                 observation, _, terminated, truncated, info = env.step(action.reshape(1, 8))
                 env_steps += 1
-                if terminated or truncated:
+                collector_step_cap = env_steps >= stratum['max_episode_steps']
+                if terminated or truncated or collector_step_cap:
                     break
             del context, payload
         terminal = dict(event='episode_end', task=stratum['task'], model=stratum['model'],
-            episode=episode, seed=seed, env_steps=env_steps, policy_calls=calls,
+            episode=episode, seed=seed, policy_seed=policy_seed, env_steps=env_steps, policy_calls=calls,
             success=bool(info.get('success', False)), terminated=bool(terminated), truncated=bool(truncated),
-            stop_reason='terminated' if terminated else 'truncated' if truncated else 'protocol_call_limit',
+            collector_step_cap=collector_step_cap,
+            stop_reason='terminated' if terminated else 'truncated' if truncated else
+                        'collector_environment_step_cap' if collector_step_cap else 'protocol_call_limit',
             selected_calls_present=sorted(c for c in selected if c < calls),
             selected_calls_unavailable=sorted(c for c in selected if c >= calls))
         transaction.commit(terminal)
@@ -124,17 +151,23 @@ def main():
         raise ValueError('Loaded checkpoint differs from the recorded stratum')
     source_files = ['collect_contexts.py', 'per_step_ig.py', 'per_step_attribution.py',
                     'pipeline.py', 'checkpoint_contract.py', 'experiment_io.py', 'rdt_sampling.py',
-                    'integrated_gradients.py']
+                    'integrated_gradients.py', 'fp32_probe_cache.py']
     config = dict(schema_version=1, collector_type='context_only', task=stratum['task'], model=stratum['model'],
         target='logpi', m=None, quadrature=None, pipeline=pipe['identity'], language=language['identity'],
         solver_steps=protocol['solver_steps'], episodes=stratum['episodes'], seed_base=stratum['seed_base'],
+        policy_seed_base=stratum.get('policy_seed_base', stratum['seed_base']),
         max_policy_calls=stratum['max_policy_calls'], max_episode_steps=stratum['max_episode_steps'],
         protocol_sha256=file_hash(args.protocol), protocol=protocol, stratum_id=args.stratum,
         call_selection={'rule': 'prespecified_indices_with_all_executed_calls_preserved',
                         'evaluate_calls': stratum['evaluate_calls'], 'missing_rule': 'record_unavailable_no_replacement'},
         control_mode='pd_joint_pos', action_subsampling=4,
         observation_pipeline='one_current_external_camera_five_background_slots',
-        noise_policy='fixed_episode_seed_stored_per_context', forward_dtype='torch.bfloat16',
+        noise_policy=('separate_policy_episode_seed_stored_per_context' if 'policy_seed_base' in stratum
+                      else 'fixed_episode_seed_stored_per_context'), forward_dtype='torch.bfloat16',
+        runtime_settings=runtime_settings(),
+        runtime_hardware={'device': torch.cuda.get_device_name(),
+                          'capability': list(torch.cuda.get_device_capability()),
+                          'cuda': torch.version.cuda},
         source_sha256={name: file_hash(Path(__file__).parent / name) for name in source_files},
         environment={name: importlib.metadata.version(name) for name in
                      ['torch', 'numpy', 'diffusers', 'transformers', 'mani_skill', 'sapien']})

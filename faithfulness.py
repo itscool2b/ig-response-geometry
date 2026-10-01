@@ -504,7 +504,7 @@ def replay_context(args, row, sidecar, pipe, lang, *, verify_reference=True,
         pipe["runner"], pipe["vision_model"], sidecar_image(sidecar) if obs_image is None else obs_image,
         sidecar["proprio"], lang["lang_tokens"], lang["lang_attn_mask"], lang["lang_tokens_baseline"],
         pipe["bg_image_encoded"], pipe["img_tokens_baseline"], pipe["action_mask"], pipe["ctrl_freqs"],
-        seed=row["seed"], target=args.target, initial_noise=sidecar.get("initial_noise"),
+        seed=row.get("policy_seed", row["seed"]), target=args.target, initial_noise=sidecar.get("initial_noise"),
         frozen_ref_action=frozen_reference)
     if strict:
         fields = ["initial_noise", "lang_attn_mask", "action_mask", "ctrl_freqs"]
