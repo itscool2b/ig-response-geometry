@@ -1,124 +1,76 @@
-# Metrics records: filename to run mapping
+# Preserved records and current analysis
 
-Every file is JSONL, one record per line. Step records carry per-modality
-completeness error, IG sums, reference action norm, and wall time, and the step
-files also interleave one `episode_end` record per episode carrying the
-episode's success flag. Those rows are the source of the success counts quoted
-below, and loaders should dispatch on the `event` field. Faithfulness
-and sanity records are keyed to the same policy calls. Episode `e` uses
-environment seed `42+e` or `142+e`, plus `242+e` for the third RDT-1B evaluation
-seed. The diffusion noise is re-seeded per forward pass. The signal-bearing filter (reference action norm >= 15) is applied when
-computing the published table values, not stored in the files.
+The 99 JSONL files in this directory are immutable historical evidence. Their
+current statistical interpretation is the September 30, 2026 revision in
+[`analysis/revision`](../analysis/revision/README.md), with canonical outputs in
+[`2026-09-30-v2`](../analysis/revision/results/2026-09-30-v2/). No historical raw
+record was changed to obtain those results.
 
-## What these files are (and are not)
+The original filename inventory is retained in
+[`README-historical-2026-09-30.md`](README-historical-2026-09-30.md). Its scientific
+interpretations and former table references are historical and superseded by
+this guide, the current analysis registry, and the revised manuscript. In
+particular, matching a scalar fingerprint does not authenticate a context or
+checkpoint; nominally matched filenames do not establish paired experiments;
+and the old AUC thresholds are descriptive conventions, not universal
+faithfulness criteria. Old campaign wrappers have been retired. They cannot
+recover the missing original tensors by rerunning an environment.
 
-One defect is disclosed up front. Sidecar filenames carried no seed (or integration
-budget) tag until a Month 4 fix, so the second seed of every pre-fix run overwrote
-the first seed's sidecars, and pre-fix downstream stages loaded whatever the last
-writer left at each shared path. `audit.py` ships a provenance fingerprint (the
-step row's `-vision_gap` must equal the faithfulness row's `vision_f_baseline`
-exactly when a row's own sidecar was loaded) that proves the two seed-42 m=128
-faithfulness files below consumed seed-142 sidecars, and clears every other
-committed step/faithfulness pair at 100% of rows. The two proven-contaminated
-files are retained as the record rather than silently replaced, no published
-value derives from them, and the paper discloses the exposure of the
-decommissioned pre-fix records alongside the verification rerun that
-re-certifies their verdicts.
+## Authenticity, duplicates, and missing evidence
 
-The committed records are **not a byte-level reproduction of every paper table.**
-The original main evaluation pass (4 tasks x 2 seeds x 50 episodes at m=64), the
-original m=128 PickCube and StackCube subset, the standard sanity runs (C1
-last-layer and C2 input randomization), the main-pass faithfulness records, the
-initial RDT-1B scale check, the ~3,881 overlay PNGs, and the per-step attribution
-sidecar tensors were produced on cloud GPUs that have since been decommissioned and are
-not redistributed here. The headline completeness, faithfulness, and
-standard-sanity tables (Tables 1 to 3) were computed from those main-pass records and
-are preserved in the analysis notebooks (saved outputs)
-rather than regenerable from the files below. Note in particular that the
-notebook's faithfulness and standard-sanity cells compute over an unfiltered
-(all-calls) population, so they do not reproduce the signal-bearing table values on
-their own. The files below are the regeneration and follow-up runs that are
-shippable. They reproduce the target-ablation table and corroborate the protocol at
-a smaller episode budget.
+The input manifest authenticates each complete original file against the
+recorded Git bytes, with an explicitly enumerated Windows CRLF representation.
+The ledger accounts for 22,967 physical lines: 22,966 valid records and one
+known NUL-corrupted line quarantined by its exact hash. An unexpected parse or
+hash failure stops analysis. There are 129 repeated-key groups: 71 differ only
+in wall time, and 58 differ in scientific fields. Every occurrence is retained.
 
-## Step / completeness records
+The primary retrospective view selects the last occurrence of each repeated key
+within its source file. It is a documented reconciliation rule, not proof that
+the selected attempt is correct. Conflict-excluded and raw-inclusive
+sensitivities have separate population identities. Episode bootstrap intervals
+use the same population as the point estimate, preserve within-episode
+dependence, and do not estimate checkpoint variability. Call-weighted and
+episode-weighted estimands remain distinct.
 
-| File pattern | Run | Scope |
-|---|---|---|
-| `metrics_<task>_170m_seed{42,142}.jsonl` | **Regeneration run** (Sec 4), NOT the 50-episode main pass despite the name | 15 episodes x 25 policy calls per seed, post-fix episode ceiling, 0 successes |
-| `metrics_{PegInsertionSide,PickSingleYCB}-v1_170m_seed{42,142}_m128.jsonl` | m=128 subset, later-added tasks only | 8 episodes per seed (`PegInsertionSide seed142` includes one duplicated partial episode from a `--resume` restart) |
-| `metrics_PickCube-v1_170m_seed{42,142}_{l2,maxdev}.jsonl` | Target ablation, alternative targets | regeneration scope; the `seed42` l2/maxdev files contain a duplicated partial episode 12 from a `--resume` restart, and `..._seed42_maxdev.jsonl` has one NUL-corrupted line (the analysis loader skips it) |
-| `metrics_PickCube-v1_170m_seed{42,142}_logpi.jsonl` | Matched-population logpi target step records, Month 6 (the per-step IG run behind the Table 4 logpi faithfulness column) | regeneration scope, 15 episodes per seed |
-| `m7_metrics_<task>_170m_seed{42,142}.jsonl` | **Month 7 verification pass** (`scripts/run_verification.sh` V1): a clean rerun of the main-pass protocol with seed-tagged sidecars, after the sidecar seed collision disclosed above. `--max-policy-calls 4` (7 on PegInsertionSide) reproduces the original pass's episode shape | 50 episodes per seed, 1,894 step rows total, 1,347 signal-bearing, 2 successes in 400 episodes |
-| `m7_metrics_{PegInsertionSide,PickSingleYCB}-v1_170m_seed42_m128.jsonl` | Month 7 clean rerun of the m=128 seed-42 arm (V4 step records; their faithfulness outputs are listed below) | 8 episodes each at m=128, full post-fix episode shape |
-| `metrics_PickCube-v1_1b_seed42.jsonl` | RDT-1B scale check (authors' fine-tuned weights) | 20 episodes, 9 successes; all rows below the signal threshold |
-| `metrics_PickCube-v1_1b_seed{142,242}.jsonl` | RDT-1B scale check, Month 6 evaluation seeds. Environment and IG protocol matched to the committed seed 42 run, executed on a fresh RTX PRO 6000 pod that encoded its own T5-XXL instruction embeddings and two-token language baseline, so the language rows span a different baseline provenance than the seed 42 record (see the paper's Setup deviations) | 20 episodes each, 1 and 5 successes; all rows below the signal threshold |
-| `metrics_StackCube-v1_1b_seed142.jsonl` | RDT-1B StackCube base run for the Month 6 displacement second seed. The 1B is not fine-tuned for StackCube and succeeds on 7 of 20 episodes here; this run only sources the displacement re-run and is not a faithfulness result | 20 episodes, 7 successes; all rows below the signal threshold |
+Original attribution sidecars, observations, action tensors, diffusion noise,
+model identities and several main-pass raw records were not recovered. This
+limits historical attribution and causal claims. Numeric agreement can support
+a consistency check but cannot supply those missing identities. Old filenames,
+seed labels and source code are provenance clues, not substitutes for raw
+context authentication. Preserved historical derived tables may use different
+duplicate rules or unrecovered constants; they are not current authority.
 
-## Faithfulness records (`metrics_faithfulness_*`)
+## Current interpretation
 
-| File pattern | Run |
-|---|---|
-| `..._PickCube-v1_1b_seed42_*.jsonl` | RDT-1B faithfulness (Table 2 bottom block; 320 rows) |
-| `..._PickCube-v1_1b_seed{142,242}_*.jsonl` | RDT-1B faithfulness, Month 6 evaluation seeds (Table 2 bottom block, per-seed plus pooled; 480 and 399 rows). Vision passes both bars at every seed; language insertion passes at 42 and 142 and misses at 242. |
-| `..._{PegInsertionSide,PickSingleYCB}-v1_170m_seed142_m128_*.jsonl` | m=128 faithfulness, later-added tasks, seed 142. Fingerprint-verified own-sidecar provenance; these are the rows the paper's budget-section faithfulness sentence quotes |
-| `..._{PegInsertionSide,PickSingleYCB}-v1_170m_seed42_m128_*.jsonl` | m=128 faithfulness, seed 42. **Proven contaminated**: the provenance fingerprint shows 0% row agreement with their own step records, because these runs loaded the seed-142 m=128 sidecars that had overwritten their own under the pre-fix shared filenames. Retained as the record; no published value derives from them |
-| `..._PickCube-v1_170m_seed*_{l2,maxdev}_*.jsonl` | Target-ablation faithfulness (Table 4 l2 / maxdev columns) |
-| `..._PickCube-v1_170m_seed*_logpi_*.jsonl` | Matched-population logpi faithfulness, Month 6 (Table 4 logpi column, same re-run population as l2/maxdev, ~750 rows). Deletion AUC 0.448 misses the 0.40 bar on this 0-success population, where l2 and maxdev pass. |
-| `m7_metrics_faithfulness_<task>_170m_seed{42,142}.jsonl` | Month 7 verification faithfulness over the m7 step records (V2). Reproduces every vision verdict of the paper's Table 2 RDT-170M block on fingerprint-verified provenance; language verdicts reproduce with one borderline cell (PickCube language deletion 0.438 against the published 0.477, crossing to the passing side of the 0.45 bar) |
-| `m7_metrics_faithfulness_<task>_170m_seed42_m128.jsonl` | Month 7 clean rerun of the m=128 seed-42 faithfulness arm (V4), replacing the proven-contaminated pre-fix pair for analysis purposes |
+Saved curves permit Q/L2 rescoring with the same historical ranking and
+interventions held fixed. This establishes sensitivity to the response
+transformation. It does not measure whether one attribution target produces a
+better ranking. The current registry records exact membership, filters,
+denominator behavior, units, source hashes, and explicit result identifiers.
+Zero endpoint gaps are undefined; negative AUCs are retained. The equal-feature
+quadratic example has continuous AUC 2/3 and sampled-grid AUC 0.65976, so 0.5 is
+not a general random-order null. Empirical random rankings require measurement.
 
-(The faithfulness files over the duplicated step runs noted above, PegInsertionSide
-seed142 m128 and the seed42 l2/maxdev pair, mirror those replayed rows. The
-bootstrap loader's dedup applies to them the same way.)
+The released solver results remain descriptive comparisons under their
+recorded keys. Unrecovered contexts and varying reference actions prevent them
+from establishing denoiser causality or equivalence. The current manuscript
+uses the canonical v2 results and generated figure/table lineage rather than
+the former release's unrecovered primary constants.
 
-## Sanity records (`metrics_sanity_*`)
+## Reproduction
 
-| File pattern | Run |
-|---|---|
-| `metrics_sanity_C1_frozen_*` | Frozen-target C1 variant (Table 3 bottom block), m=16, first 50 steps per task-seed, 4 tasks x 2 seeds |
-| `metrics_sanity_C1_cascade_*` | Full-backbone cascade C1 variant, same scope |
+From the repository root, using the pinned CPU requirements:
 
-(The standard last-layer C1 and the C2 input-randomization runs behind the
-per-task rows of Table 3 are part of the main pass and are not in this release.)
+```console
+python -m analysis.revision.analyze --output <new-directory> --draws 10000 --seed 0
+python -m analysis.revision.verify <new-directory>
+```
 
-| `m7_metrics_sanity_{C1,C2}_<task>_170m_seed{42,142}.jsonl` | Month 7 verification sanity (V3): standard last-layer C1 and C2 over the m7 step records, m=16, first 50 rows per task-seed, shuffle seed 777. Reproduces every Table 3 standard-row verdict: C1 fails everywhere (vision and language 0.916 to 0.965), C2 vision passes everywhere (0.097 to 0.167), C2 language passes three of four with StackCube borderline (0.252) |
-
-## Baseline sensitivity (`metrics_baseline_sensitivity_*`)
-
-PickCube and StackCube, seed 42, first 30 steps each (Table 5).
-
-## Month 5 records (`m5_*`, `disp_validate.jsonl`)
-
-| File | Run |
-|---|---|
-| `m5_metrics_displacement_{PickCube,StackCube}-v1_{170m,1b}.jsonl` | Action-displacement experiment behind the displacement figure. Vision and language, solver steps T in {1,2,3,5,10,20}, deletion fractions {0,1,5,10,20}%, rankings from the T=5 attributions, seed 42. 49 to 50 policy calls per run (60 for PickCube 1B); episode counts 8/20/8/5 for PickCube-170m/PickCube-1b/StackCube-170m/StackCube-1b. The 1B runs are unfiltered because 1B action norms sit below the signal threshold. The PickCube 170m file contains 12 `--resume` replay duplicate rows at (episode 1, call 0), one per modality x solver-step pair, identical except wall time; the bootstrap loader's dedup keeps the last. |
-| `metrics_displacement_metrics_{PickCube,StackCube}-v1_1b_seed142_*.jsonl` | Displacement second seed, Month 6 (seed 142, vision modality, `--limit 60` stratified, `--no-signal-filter` since 1B norms sit below the threshold). Pooled with the seed-42 `m5` files for the two-seed 1B curves in the displacement figure, 40 episode groups on PickCube and 25 on StackCube. |
-| `disp_validate.jsonl` | Validation record for the displacement identity. Contains displacement-side rows only: two policy calls at each of solver steps {1, 5, 20} (six rows, deletion grid {0,5,20}%, rankings from the T=5 attributions, with l2/rms/relative fields). The identity check uses the two solver-steps-5 rows, joining their nonzero deletion fractions against the matching `vision_deletion_curve` values in `m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl` (which ran the production five-step chain), where delta log pi equals minus the squared displacement over (2 x 512), reproducing at correlation ~0.9999997 (recomputing the join from the committed files gives 0.9999998). The other-T rows have no faithfulness counterpart and are not part of the check. |
-| `m5_metrics_PickCube-v1_1b_seed42.jsonl` | Month 5 1B reproduction base run on the RunPod RTX PRO 6000 with real T5-XXL embeddings. 20 episodes, 8 successes (the Month 4 run on identical seeds had 9; per-forward noise seeding does not bit-reproduce across machines and library versions). |
-| `m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl` | Reproduction-gate faithfulness over that base run (334 rows). Vision insertion median 0.919 and deletion 0.264, inside the episode-bootstrap intervals of the committed Month 4 run (0.926 and 0.248). Language insertion median 0.515, below the 0.55 bar, which the paper's Table 2 caption records as a baseline-provenance caveat on the two of three count. |
-| `m5_metrics_PickCube-v1_170m_seed42.jsonl` | Partial 170M smoke record from the pod bootstrap. Contains a re-executed (episode 1, call 0) row pair that shares vision/language errors but differs in state error and wall time, plus a dangling partial episode from an interrupted run. Used by no table; the analysis loader's dedup keeps the last row. |
-
-The StackCube 1B base run (5 episodes, seed 42) that supplied sidecars for
-`m5_metrics_displacement_StackCube-v1_1b.jsonl` is not committed. Only its
-displacement output is. `scripts/run_displacement.sh` regenerates it when
-missing.
-
-## Interval tables
-
-`out/figures_m5/table_*_ci.csv` carry 95% episode-bootstrap intervals
-(`bootstrap_ci.py`, B=10000, seed 0, episode-level resampling).
-`table_verification_ci.csv` covers the Month 7 verification pass
-(`--table verification`; per-task faithfulness medians, completeness pass
-rates, and standard-sanity medians over the m7 records). The bootstrap
-loader deduplicates the documented `--resume` replay rows, so its point
-estimates and `n` can differ from the duplicate-inclusive
-`out/figures_m4/table_*.csv` values that the paper tables print, in the third
-decimal for most statistics and by up to 0.8 points for the m=128 pass-rate
-cells. Both populations are derivable from the files above.
-
-One derived table needs a view caveat. `out/figures_m4/table_m128.csv` mixes
-two comparison views in its m128 column, the preserved matched-view PickCube
-and StackCube constants next to seed-averaged full-view PegInsertionSide and
-PickSingleYCB values. The paper's Table 6 keeps the views separate and reports
-the released tasks per seed, so quote that table rather than the CSV.
+Existing output directories are refused. The complete analysis produces 284
+result rows with 57 population identities and checks ten artifact hashes.
+See the analysis guide for definitions and uncertainty limitations. Current
+GPU collection writes new, explicitly identified transactional run directories
+outside this historical inventory. It never masquerades as recovery of these
+old runs. Production numerical validation and the new paired study remain
+separate gates; successful CPU reproduction alone does not certify them.
