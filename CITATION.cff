@@ -4,12 +4,12 @@ title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study
 authors:
   - family-names: Bajpai
     given-names: Arjun
-repository-code: "https://github.com/itscool2b/the-readout-not-the-denoiser-repo"
+repository-code: "https://github.com/itscool2b/ig-response-geometry"
 license: MIT
 preferred-citation:
   type: article
   title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study"
-  url: "https://github.com/itscool2b/the-readout-not-the-denoiser-repo/blob/main/paper/paper-revision.pdf"
+  url: "https://github.com/itscool2b/ig-response-geometry/blob/main/paper/paper-revision.pdf"
   year: 2026
   authors:
     - family-names: Bajpai

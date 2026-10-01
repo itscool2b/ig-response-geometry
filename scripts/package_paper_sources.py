@@ -20,7 +20,7 @@ from scripts.build_paper import validate_revision_assets
 from scripts.validate_template_provenance import validate_template_bytes
 
 IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
-               'the-readout-not-the-denoiser-repo')
+               'the-readout-not-the-denoiser-repo', 'ig-response-geometry')
 
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in

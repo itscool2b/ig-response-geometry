@@ -72,7 +72,7 @@ PAPER_ASSETS = tuple("paper/tables_revision/" + name + ".tex" for name in
     "paper/figures_revision/solver_endpoint.png")
 RIGHTS_EXCLUDED = frozenset({"image.jpg", "output/ig_resnet50.png", "output/ig_vit.png", "output/ig_llava.png"})
 IDENTIFIERS = ("arjun bajpai", "arjunbajpai2009", "itscool2b",
-               "the-readout-not-the-denoiser-repo", "22133507")
+               "the-readout-not-the-denoiser-repo", "ig-response-geometry", "22133507")
 MACHINE_PATH = re.compile(r"[A-Za-z]:[\\/](?:Users|workspace)[\\/]|/(?:home|root|workspace)/|~[/\\]", re.I)
 
 
