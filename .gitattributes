@@ -7,3 +7,7 @@ paper/arxiv_abstract.txt -text
 paper/tables_revision/** -text
 paper/figures_revision/** -text
 scripts/build_revision_assets.py -text
+# Preserved source files have an exact-byte archive manifest.
+legacy/** -text
+# Shell entrypoints must remain executable after a Windows checkout/upload.
+scripts/*.sh text eol=lf
