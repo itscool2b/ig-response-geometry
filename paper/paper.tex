@@ -33,6 +33,7 @@
 \renewcommand{\arraystretch}{1.15}
 
 \urlstyle{same}
+\input{tables_revision/macros.tex}
 
 \title{Response Geometry in Per-Step Integrated Gradients\\for Diffusion-Policy Vision-Language-Action Models}
 
@@ -45,18 +46,18 @@
 % TMLR author separator and algorithmic boolean operator share this name.
 \let\AND\relax
 
-\noindent\textbf{Revision status (September 30, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} corrects interpretations but retains labeled historical tables and figures pending canonical population reconciliation, real-model numerical validation, and a paired ranking/control study. It is not submission-ready.
+\noindent\textbf{Revision status (September 30, 2026).} This working draft\footnote{AI tools assisted with code review, analysis implementation, literature checks and drafting this revision. The author retains responsibility for all content.} reports a canonical retrospective reanalysis. Actual-model numerical validation and a prospective paired ranking/control study remain in progress. It is not submission-ready.
 
 \begin{abstract}
 We study how scalar response choices affect the evaluation of Integrated Gradients (IG) for diffusion-policy vision-language-action models.
 Our application to the Robotics Diffusion Transformer attributes a fixed-noise predicted action chunk to vision and language features and proprioceptive state at each policy call.
 The primary scalar is an auxiliary quadratic action-discrepancy score, rather than an identified policy likelihood.
 A retrospective analysis of saved perturbation curves separates the ranking used to select features from the response used to score their removal.
-For the same recorded quadratic-target rankings, changing only the response to negative $\ell_2$ changes median deletion AUC from 0.4479 to 0.2908, reversing the historical threshold verdict without changing a selected feature.
-Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from 0.2830 to 0.4404.
+For the same recorded quadratic-target rankings, changing only the response to negative $\ell_2$ changes median deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} without changing a selected feature.
+Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from \RescoreLDeletionL{} to \RescoreLDeletionQ{}.
 An equal-feature example also shows that random-order normalized AUC need not be 0.5.
 These results identify response geometry as a confound in cross-target attribution comparisons.
-Historical RDT experiments additionally report nonzero action displacement, persistent correlations after backbone randomization, and target-dependent completeness residuals.
+Historical RDT experiments additionally report nonzero action displacement, persistent correlations after backbone randomization, and finite completeness residuals.
 They do not isolate denoiser contraction, establish the dominance of input anchoring, or certify ranking efficacy without matched controls.
 We distinguish reproducible saved-record analyses from historical summaries whose original inputs are unavailable, and identify numerical and provenance requirements for a controlled comparison.
 The public artifact provides code and saved metrics for the analyses described here.
@@ -93,7 +94,7 @@ Likewise, a small scalar discrepancy does not imply that the predicted action is
 Our contributions are as follows.
 \begin{enumerate}
 \item \textbf{Application.} A per-policy-call, per-modality IG construction for a fixed-noise diffusion sampler, with an explicit auxiliary action-discrepancy target and modality-specific feature baselines.
-\item \textbf{Response-geometry analysis.} Exact within-ranking rescoring of recorded perturbation curves, showing that a historical deletion-AUC verdict can reverse without a change in feature ordering.
+\item \textbf{Response-geometry analysis.} Exact within-ranking rescoring of recorded perturbation curves, showing that deletion AUC changes without a change in feature ordering.
 \item \textbf{Calibration counterexample.} An equal-contribution policy for which every ranking has continuous quadratic-response insertion and deletion AUC of $2/3$, establishing that 0.5 is not a universal chance reference.
 \item \textbf{Empirical diagnostic record.} Historical completeness, perturbation, displacement, and randomization measurements, with explicit distinctions between reconstructible records, missing original artifacts, and unsupported causal interpretations.
 \end{enumerate}
@@ -113,7 +114,7 @@ Petsiuk et al.~\citep{petsiuk2018rise} introduced the insertion and deletion cur
 The reliability of perturbation metrics is itself an active concern.
 Hooker et al.~\citep{hooker2019roar} evaluate attributions by retraining on ablated inputs.
 Rong et al.~\citep{rong2022road} show that deletion without retraining leaks information through the shape of the mask itself, and Tomsett et al.~\citep{tomsett2020sanity} find that common saliency metrics are themselves unreliable.
-Our structural findings add a diffusion-policy instance of that caution, where the readout convention rather than the ranking drives the magnitude verdict.
+Our response-geometry analysis adds a diffusion-policy instance of that caution: changing the readout convention changes AUC while the recorded ranking stays fixed.
 Adebayo et al.~\citep{adebayo2018sanity} proposed model and data randomization tests to assess whether saliency maps depend on learned parameters and training data.
 Their results caution against interpreting visually plausible maps as evidence of that dependence.
 Our backbone randomizations are limited tests because learned encoders and adaptors remain in place.
@@ -203,15 +204,13 @@ The stabilized $\ell_2$ target is smooth in the residual and has zero gradient a
 The maximum-deviation target, abbreviated maxdev, uses a different norm and is not a monotone transform of $\ell_2$ in general: residuals $(1,1)$ and $(1.1,0)$ reverse order.
 The quadratic and stabilized $\ell_2$ responses are algebraically related for a fixed perturbation, although their gradients can induce different attribution rankings.
 Their units and scales differ, so a larger magnitude alone does not demonstrate greater information or operational usefulness.
-Section~\ref{sec:targets-results} evaluates all three.
+Section~\ref{sec:targets-results} isolates response changes for the quadratic and stabilized $\ell_2$ targets. The maximum-deviation records remain an auxiliary diagnostic in the released analysis.
 
 \subsection{Per-Step Episode Attribution}
 
 RDT outputs action chunks of 64 steps, subsampled $4\times$ to 16 environment steps.
 We run IG once per \emph{policy call}, not per environment step, because the chunk is the atomic unit of decision.
-Per-call attribution costs about one minute per decision on RDT-170M at $m{=}64$.
-Attributing every environment step would multiply that cost by the 16 subsampled steps per chunk and put a full pass beyond practical budgets.
-The per-call choice is what makes full-episode evaluation tractable.
+The attribution unit is therefore one policy query. Runtime depends on the implementation, hardware, precision and integration budget; the earlier timing summaries are not used as a performance result.
 
 At each policy call we compute three independent attributions through modality-specific forward functions.
 \begin{itemize}
@@ -230,7 +229,7 @@ Algorithm~\ref{alg:perstep} summarizes the procedure.
 \STATE $o_0 \leftarrow \mathcal{E}.\text{reset}()$
 \FOR{policy call $t = 0, 1, \ldots$}
     \STATE Encode $o_t$ into vision $v_t$, language $l_t$, state $s_t$
-    \STATE Compute $a_t \leftarrow \pi_\theta(o_t)$ with fixed seed, no grad
+    \STATE Draw and store $z_t$; compute $a_t \leftarrow g_\theta(o_t,z_t)$ without gradients
     \STATE Define $F$ from $a_t$, the fixed-noise predicted chunk $\mu_t$, and the chosen target
     \FOR{modality $M \in \{V, L, S\}$}
         \STATE Set baseline $x'_M$, input $x_M$
@@ -256,560 +255,276 @@ Section~\ref{sec:anchoring} quantifies sensitivity to the vision baseline choice
 \subsection{Evaluation Protocol}
 \label{sec:metrics}
 
-We evaluate along three axes against fixed quantitative bars.
-The historical numeric bars are study-specific descriptive targets, not community standards or calibrated hypothesis tests.
-Random ranking does not generally yield AUC 0.5 after endpoint normalization.
-For an equal-feature additive scalar policy with all-one input, zero baseline, and reference action one, deletion fraction $q$ gives normalized quadratic response $1-q^2$, while insertion gives $1-(1-q)^2$.
-Every ordering has continuous AUC $2/3$ for both curves; on the historical token grid the values are about 0.6597, exceeding the historical vision insertion bar without ranking information.
-Reported 95\% intervals use episode-resampled percentile bootstrap intervals with $B=10{,}000$ and a fixed seed; the episode identities must correspond to independent sampled contexts for the clustering interpretation to hold.
-
-\paragraph{Correctness.}
-We measure the completeness error
+\paragraph{Completeness.}
+For each modality, with the other inputs frozen, we report the absolute residual
+$|\sum_i\mathrm{IG}_i-(F(x)-F(x'))|$ and its relative version
 \begin{equation}
-\text{Err} = \frac{\left| \sum_i \mathrm{IG}_i - (F(x) - F(x')) \right|}{\left| F(x) - F(x') \right|}
+\mathrm{Err}=\frac{|\sum_i\mathrm{IG}_i-(F(x)-F(x'))|}{|F(x)-F(x')|}.
 \end{equation}
-per modality at every policy call.
-Completeness is evaluated per modality, with the other two modalities frozen, rather than as one joint sum over all modalities, because each modality has its own forward function and baseline.
-The bars are a median error at or under 3\% and at least 90\% of cases at or under 3\%.
+An exactly zero signed gap makes the relative quantity undefined. A small nonzero gap may amplify numerical error.
+The historical action-norm filter $\|a_t\|\geq15$ does not bound this denominator, and is retained only as a population sensitivity.
+A low residual checks a scalar accounting identity; canceling coordinate errors can still change the attribution map or ranking.
 
-\paragraph{Faithfulness.}
-We run two perturbation tests.
-\emph{Top-$k$ deletion} ranks inputs by $|\mathrm{IG}|$, replaces the top $k\%$ with the baseline for $k \in \{1, 5, 10\}$, and measures $\Delta F = F(\text{deleted}) - F(\text{original})$, which is nonpositive for a self-referenced discrepancy in exact arithmetic and is not itself evidence of ranking quality.
-The historical bar at $k{=}5\%$ is $\Delta Q \leq -0.5$ under the auxiliary per-entry Gaussian convention.
-\emph{Insertion/deletion AUC}~\citep{petsiuk2018rise} progressively inserts tokens starting from the baseline, or deletes them starting from the input, in IG-ranked order over $k \in \{0, 1, 5, 10, 20, 30, 50, 75, 100\}\%$.
-We compute the AUC after rescaling $F$ so that the full input maps to 1 and the baseline to 0.
-The ranked units are the 729 external-camera patch tokens for vision and the real instruction tokens for language.
-The bars are vision insertion at or above 0.60 and deletion at or below 0.40, and language insertion at or above 0.55 and deletion at or below 0.45.
-The auxiliary score scale of $\Delta Q$ is set by the target's normalization conventions, namely $\sigma^2{=}1$ and the per-entry mean over $D$.
-An alternative sum-form convention without the $1/D$ factor would scale every reported $\Delta Q$ by $D{=}512$ (Section~\ref{sec:contraction}).
-The historical magnitude bar applies only to the quadratic target under that convention, not to alternative-target units.
+\paragraph{Perturbation curves.}
+We rank eligible feature groups by the sum of absolute coordinate attributions.
+The groups are external-camera patch tokens for vision and attended instruction tokens for language.
+Deletion replaces a prefix of the ranking with baseline features; insertion replaces a prefix of a baseline input with original features.
+For a scalar response $R$, the normalized ordinate is
+\begin{equation}
+\widetilde R(x_k)=\frac{R(x_k)-R(x')}{R(x)-R(x')}.
+\label{eq:normalization}
+\end{equation}
+We integrate on each record's stored fraction grid. Neither the curve nor its AUC is necessarily bounded by $[0,1]$.
+The historical grid requests $\{0,1,5,10,20,30,50,75,100\}\%$ of groups; rounding changes realized language-token fractions, so the saved curves cannot be treated as uniformly sampled continuous functions.
+Top-$k$ score changes are $R(x_k)-R(x)$, with units defined by $R$.
+We distinguish the attribution target that generates a ranking from the response that evaluates its interventions.
+The earlier study-specific thresholds are not used as efficacy tests in the revised tables.
 
-\paragraph{Sanity.}
-\emph{C1 (model randomization)} re-initializes model weights with Xavier-uniform draws and re-runs IG.
-Attributions should decorrelate from the original, with Spearman $\rho \leq 0.2$.
-We run three randomization variants.
-The standard variant re-initializes the output projection of the final action layer and recomputes the target under the perturbed model.
-The frozen-target variant re-initializes the same projection but keeps the original model's reference action.
-The cascade variant re-initializes every backbone weight matrix and positional embedding (107 tensors) with the frozen target.
-\emph{C2 (input randomization)} applies a deterministic pixel permutation to the external-camera image and a post-encoding token-order shuffle to the language embedding, then re-runs IG with the same $\rho \leq 0.2$ bar.
-C1 follows the model-randomization test of \citeauthor{adebayo2018sanity}~\citep{adebayo2018sanity}, while C2 is an inference-time input-randomization check in the same spirit.
-Correlations are computed over the 729 external-camera patch scores for vision, the real instruction tokens for language, and the eight active state dimensions.
-All sanity re-runs compute the perturbed attribution at $m{=}16$ on the first 50 steps of each task-seed base run and correlate it against that run's original $m{=}64$ attribution.
-The standard C1 and C2 rows use the main pass as the base run, while the frozen and cascade variants use the regeneration run described in Section~\ref{sec:setup}.
-The standard C1 result jointly changes weights and integration budget; it does not isolate the effect of changing $m$ alone.
-The stored attribution sidecars, the per-policy-call attribution tensors, reference action, observation, and proprioceptive state saved alongside each run, encoded neither the integration budget nor the episode seed in their filenames until a tagging fix that postdates every run described in this paragraph.
-Both consequences are disclosed.
-First, the $m{=}128$ extension ran concurrently with the variant sanity stages on PegInsertionSide and PickSingleYCB, so some frozen-target and cascade rows for those two tasks may correlate against $m{=}128$ attributions rather than $m{=}64$ ones.
-Second, the two seeds of each pre-fix run wrote to the same sidecar paths, with the second seed writing last, so every pre-fix stage that loaded sidecars for the first seed is exposed to having consumed the second seed's tensors, mixing the second seed's attribution rankings and observations with the first seed's noise seeding and row filtering.
-A released consistency fingerprint compares each step record's completeness gap with the faithfulness record's recomputed baseline value.
-The seed-42 $m=128$ faithfulness records disagree with their own step records on all tested rows, whereas post-fix records agree.
-A discrepancy reveals an incompatibility; scalar equality alone cannot authenticate an exact observation, checkpoint, or noise identity.
-Subset sensitivity analyses leave historical threshold descriptions unchanged, but do not restore missing identities or validate independent-cluster inference for reused contexts.
+\paragraph{Randomization and baseline diagnostics.}
+C1 reinitializes model parameters and correlates the resulting attributions with the originals.
+The standard variant changes the final action-output projection and recomputes its reference action; frozen-reference and backbone-cascade variants retain the original reference.
+The historical cascade simultaneously reinitializes all backbone parameter matrices of rank at least two; it retains one-dimensional parameters, encoders and adaptors. It is not a progressive layerwise cascade.
+C2 shuffles both external-camera pixels and language. The historical implementation uses a pre-T5 shuffled-language cache when available and otherwise permutes post-T5 embeddings; the saved records do not authenticate which mode each call used.
+These are different dependence tests, and C2 is not the label-randomization experiment of Adebayo et al.~\citep{adebayo2018sanity}.
+Historical perturbed maps use $m=16$ and original maps nominally use $m=64$, so C1 also changes the numerical approximation.
+A baseline sensitivity compares black, gray and blurred observation features.
 
-\paragraph{Baseline sensitivity.}
-For the vision modality we recompute IG under three baselines per step (black, gray, and a Gaussian blur of the actual observation) and report pairwise Spearman correlations of the patch rankings.
-
-%% ================================================================
-\section{Experimental Setup}
+\section{Retrospective Data and Statistical Protocol}
 \label{sec:setup}
 
-\paragraph{Models.}
-RDT-170M~\citep{liu2024rdt} (14 DiT layers, 1024-dim hidden) is the primary model, used with pretrained-only weights.
-This is deliberate.
-A policy without task-specific fine-tuning exercises the attribution machinery on realistic failure behavior, and its near-zero task success (1 success in 400 episodes) supplies the failure side of the qualitative analysis.
-RDT-1B (28 layers, 2048-dim) serves as the scale check on PickCube with the original authors' fine-tuned weights, a checkpoint that can solve the task.
-An initial scale-check run produced 7/20 successes.
-A re-run of the same checkpoint for the faithfulness evaluation, on the follow-up machine and under the deviations recorded below, produced 9/20.
-A Month 5 reproduction run of the same checkpoint and seeds with real T5-XXL embeddings on a third machine produced 8/20 successes, and its records are committed.
-Its vision faithfulness medians fall inside the episode bootstrap intervals of the committed run (insertion 0.919 against 0.926 and deletion 0.264 against 0.248).
+\paragraph{Scope and traceability.}
+The revised analysis authenticates \ArchiveFiles{} preserved files containing \ArchiveValidRecords{} valid records and \ArchiveQuarantined{} specifically identified corrupt line.
+Each valid physical record has a source path, original line number and byte hash.
+The raw inventory contains \ArchiveDuplicateGroups{} repeated-key groups, of which \ArchiveConflictingGroups{} differ in scientific fields rather than only timing metadata.
+The last occurrence is a declared retrospective selection convention, not evidence that a conflicting attempt is correct.
+A separate sensitivity removes every key with a conflicting payload.
+The records, occurrence decisions, population membership, result identifiers and generated manuscript cells are linked in the released lineage registry.
+This authenticates preserved data bytes, not missing checkpoints, observations, action tensors or noise.
 
-\paragraph{Tasks.}
-We evaluate on four ManiSkill3~\citep{tao2024maniskill3} manipulation tasks with a simulated Franka Panda seven-degree-of-freedom (7-DoF) arm.
-PickCube-v1 grasps a cube and lifts it to a target.
-StackCube-v1 stacks a red cube on a green cube.
-PegInsertionSide-v1 inserts a peg into a hole from the side.
-PickSingleYCB-v1 grasps a Yale-CMU-Berkeley (YCB) object.
-Each task is conditioned on a natural-language instruction encoded offline through T5-XXL.
-Tables abbreviate PegInsertionSide-v1 and PickSingleYCB-v1 as PegInsertion and PickYCB.
-We record five protocol deviations up front.
-The run campaigns are labeled by project month, Month 4 through Month 7, and the released records and data README use the same labels.
-The original task list named OpenDrawer, which exists only as a Fetch-mobile-manipulator variant in the installed ManiSkill3, so it was dropped.
-PickSingle does not exist under that name, so the published PickSingleYCB-v1 was substituted.
-The recorded TurnFaucet attempt used an incorrect controller, and no corrected rerun is documented.
-Its low norms and unsuccessful outcomes therefore do not establish task incompatibility or justify a capability-based exclusion; the four-task selection is a historical scope limitation.
-The Month 4 follow-up machine could not host T5-XXL, so every follow-up run on it loaded the authors' precomputed instruction embeddings and a zeroed placeholder in place of the encoded two-token language baseline.
-The affected language numbers are the seed 42 RDT-1B language values reported with Table~\ref{tab:faithfulness}, the variant language correlations in Table~\ref{tab:sanity}, and the regeneration-run and $m{=}128$-overlay language distributions in Figure~\ref{fig:completeness}.
-Comparisons between them and main-pass language numbers therefore span two baselines, while the vision and state baselines are unchanged.
-The Month 6 runs at seeds 142 and 242 encoded their instruction embeddings and the two-token language baseline with T5-XXL on their own machine, so the pooled 1B language row in Table~\ref{tab:faithfulness} spans both language-baseline provenances.
-The follow-up PickSingleYCB runs also reused the PickCube instruction embedding because the task's own embedding was unavailable, so no per-task language metrics are tabulated from them.
-The PickSingleYCB language distributions in Figure~\ref{fig:completeness} carry that proxy embedding, and the pooled variant language correlations include those proxy rows.
+\paragraph{Campaigns and models.}
+The principal reconstructed RDT-170M tables use the saved Month 7 verification campaign at $m=64$, covering PickCube, StackCube, PegInsertionSide and PickSingleYCB in ManiSkill3~\citep{tao2024maniskill3}.
+These are separate experiments from the unavailable original main-pass inputs.
+The model was pretrained RDT-170M; the saved RDT-1B PickCube campaign used a task-finetuned checkpoint.
+The model comparison changes training, trajectories and historical preprocessing as well as parameter count, and is not a scale or competence intervention.
+Table~\ref{tab:oneb} therefore reports the 1B cohort separately.
+No missing original completeness, standard-sanity, or early PickCube/StackCube integration-budget result is copied into a primary table.
 
-\paragraph{Protocol.}
-The full evaluation pass is 4 tasks $\times$ 2 seeds (42, 142) $\times$ 50 episodes at $m{=}64$.
-It yields roughly 1{,}900 attributed policy calls, of which 1{,}341 are action-norm-selected and enter the quantitative tables.
-The historical action-norm filter retains reference norms at least 15; we call these action-norm-selected rows.
-The norm of one action does not bound the completeness denominator $|F(x)-F(x')|$, so this filter is not a conditioning or signal guarantee.
-Seven follow-up runs extended the protocol.
-An $m{=}128$ subset covered PickCube and StackCube (2 seeds $\times$ 8 episodes) and was later extended to PegInsertionSide and PickSingleYCB at the same scope.
-A configuration fix raising the episode-step ceiling landed between the $m{=}64$ pass and all later runs.
-As a result, later episodes typically run to 25 policy calls while the original $m{=}64$ episodes were shorter.
-Depth-truncated comparisons in Section~\ref{sec:budget} truncate the $m{=}128$ rows to the $m{=}64$ episode shape.
-A regeneration run repeated all four tasks at $m{=}64$ (2 seeds $\times$ 15 episodes, post-fix configuration) to supply base attributions for the variant sanity checks, the baseline study, and the target ablation.
-The target ablation re-ran PickCube at the same scope once per alternative target.
-The 1B faithfulness run covered PickCube at three evaluation seeds (42, 142, 242), 20 episodes each at $m{=}64$, with the seed 42 row kept from the earlier follow-up run and seeds 142 and 242 added later.
-A displacement run measured the action change under top-ranked deletion directly in action space on PickCube and StackCube at both model scales.
-It swept solver steps $T \in \{1, 2, 3, 5, 10, 20\}$, the denoising-step count of Section~\ref{sec:target}, and deletion fractions up to 20\% on vision and language, with rankings taken from the $T{=}5$ attributions.
-The reported vision curves pool the 1B runs over seeds 42 and 142, use seed 42 at 170M, and carry 8 to 40 episodes per curve.
-A Month 5 reproduction run repeated the 1B faithfulness with real T5-XXL embeddings.
-A Month 7 verification pass repeated the full evaluation pass, the faithfulness stage, and the standard sanity checks at the main-pass scope with seed-tagged sidecars, together with a clean rerun of the $m{=}128$ seed-42 arm, following the external audit of the sidecar filename scheme disclosed in Section~\ref{sec:metrics}, and its records are committed.
+\paragraph{Known protocol limits.}
+The historical action chunk is subsampled before simulator execution, while attribution concerns the full predicted chunk.
+The four-task scope reflects historical implementation choices. An attempted TurnFaucet run used an incorrect controller, and no corrected rerun is documented; unsuccessful outcomes under that configuration cannot justify a capability exclusion.
+Early follow-up jobs used a zero language baseline in place of encoded padding/end tokens, and the PickSingleYCB follow-up used a proxy PickCube instruction embedding.
+The pooled 1B language cohort spans the early baseline and later encoded baselines.
+Early sidecar filenames also omitted seed and integration budget, permitting overwrites and possible reuse across nominal runs.
+Seed-tagged Month 7 records mitigate that filename issue but do not recover old contexts.
+We do not infer exact context equality from matching scalar fingerprints.
 
-\paragraph{Hardware.}
-The main pass ran on a single RTX 4090 (24\,GB).
-The original $m{=}128$ subset (PickCube and StackCube) ran on an RTX 5090 (32\,GB, PyTorch 2.8 with CUDA 12.8).
-The $m{=}128$ extension to the other two tasks and the remaining Month 4 follow-up experiments ran on a machine with two RTX 4090s.
-The displacement measurement and the Month 5 reproduction run used a RunPod RTX PRO 6000 Blackwell (96\,GB), which hosted T5-XXL and therefore used real instruction embeddings.
-The Month 6 runs (the seed 142 and 242 RDT-1B faithfulness runs, the nominally matched $Q$ ablation, and the seed 142 displacement runs) ran on a second RunPod RTX PRO 6000 pod.
-That pod encoded its own T5-XXL instruction embeddings and two-token language baseline.
-T5-XXL instruction embeddings are precomputed offline, so the 4.8B-parameter encoder never resides in GPU memory during attribution.
+\paragraph{Estimands and uncertainty.}
+The primary population is all valid saved calls after the declared occurrence rule.
+Continuous call-level summaries use medians over calls; residual pass rates use proportions over the stated call population. Solver contrasts report relative changes between endpoint medians, and the separately named equal-episode analysis uses episode medians.
+We resample entire recorded episode groups, keyed by task, model, recorded seed and episode, with $B=10{,}000$ draws and seed zero.
+Point estimates and intervals use exactly the same source-record population.
+These percentile intervals describe the released empirical episode mixture, with longer episodes contributing more calls; they do not estimate variability across independently trained checkpoints.
+A separately named 1B sensitivity reports the median of episode medians, weighting episodes equally.
+For the old randomization variants we also group potentially reused nominal task/episode keys across seeds as a conditional dependence sensitivity.
+Neither grouping repairs unobserved context identity.
+Very small cluster counts are explicitly disclosed, and two-group baseline resampling is not presented as calibrated interval coverage.
+All unfiltered results and the historical norm-selected sensitivity remain available; no favorable tail is removed to obtain a threshold verdict.
 
-%% ================================================================
-\section{Evaluation Results}
+\section{Reconstructed Retrospective Results}
+\label{sec:results}
 
-This section retains historical summaries while distinguishing available records from missing original data.
-Passing a study-specific bar does not by itself establish attribution efficacy.
+\subsection{Completeness and Perturbation Summaries}
 
-\subsection{Correctness}
+Table~\ref{tab:correctness} reports completeness residuals from the saved verification campaign.
+Vision and language have smaller median relative residuals than state in these cohorts, but this does not establish more accurate coordinates or a causal explanation based on dimension count.
+The historical integrator combines model-forward, path, summation and quadrature errors.
+Actual-model validation must separate those factors on identical inputs before selecting production settings.
+\input{tables_revision/completeness.tex}
 
-Table~\ref{tab:correctness} preserves the original main-pass completeness summary; its raw records are unavailable, so it is not primary reconstructible evidence.
-Figure~\ref{fig:completeness} uses a separate committed regeneration campaign with its own population and baseline deviations.
-Historical vision and language medians range from 1.87 to 2.54\%, while state medians range from 4.53 to 7.46\%.
-The 90\%-of-cases bar is missed at $m=64$.
-These scalar residuals do not establish coordinate accuracy or identify causes of numerical error.
-Historical gradients accumulated in the input dtype, and nonfinite substitutions were not counted in saved records.
-Same-context numerical validation is needed for budget-only conclusions and current map validation.
-\begin{table}[tbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3.5pt}
-\begin{tabular}{@{}l r rr r rr r rr@{}}
-\toprule
- & & \multicolumn{2}{c}{\textbf{Vision}} & & \multicolumn{2}{c}{\textbf{Language}} & & \multicolumn{2}{c}{\textbf{State}} \\
-\cmidrule(lr){3-4} \cmidrule(lr){6-7} \cmidrule(lr){9-10}
-Task & $n$ & med & $\leq$3\% && med & $\leq$3\% && med & $\leq$3\% \\
-\midrule
-PegInsertion & 425 & 2.11 & 75.8 && 1.95 & 73.9 && 4.70 & 37.9 \\
-\rowcolor{gray!6}
-PickCube & 264 & 2.02 & 68.6 && 2.08 & 67.0 && 5.12 & 34.8 \\
-PickYCB & 348 & 2.06 & 69.8 && 2.06 & 67.8 && 4.53 & 36.5 \\
-\rowcolor{gray!6}
-StackCube & 304 & 2.54 & 59.9 && 1.87 & 75.0 && 7.46 & 25.3 \\
-\bottomrule
-\end{tabular}
-\caption{Completeness error (\%) at $m{=}64$ on RDT-170M, action-norm-selected rows ($|$ref action$| \geq 15$). The ``med'' column is the median error. The ``$\leq$3\%'' column is the fraction of rows at or under the 3\% bar.}
-\label{tab:correctness}
-\end{table}
+Table~\ref{tab:faithfulness} reports native quadratic-response insertion and deletion AUCs for the same verification campaign.
+These are descriptive perturbation results. Without matched random and simple ranking controls, their magnitudes do not establish attribution efficacy.
+Normalization can produce extreme negative values: the smallest saved PickCube vision insertion AUC in the all-valid population is \PickCubeInsertionMinimum{}.
+The analysis retains that observation and its endpoint denominator instead of clipping it or treating the action-norm filter as a validity certificate.
+Medians are consequently accompanied by the released denominator/tail diagnostics; a central summary alone does not describe the entire curve population.
+\input{tables_revision/faithfulness.tex}
 
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.85\linewidth,height=0.38\textheight,keepaspectratio]{figures/fig_a_completeness.png}
-\caption{Completeness error distributions by task and modality over all policy calls of the committed regeneration run at $m{=}64$ (2 seeds $\times$ 15 episodes per task). The PegInsertionSide and PickSingleYCB panels carry $m{=}128$ overlays, and the PickCube panel carries the seed 42 RDT-1B scale-check rows. Vision and language mass concentrates at low error with tails extending past the 3\% line. State shows a longer right tail. The PickSingleYCB language histograms reflect the proxy PickCube instruction embedding recorded in Section~\ref{sec:setup}. All language distributions in this figure come from runs that used the zeroed language baseline recorded in Section~\ref{sec:setup}. Errors are clipped at 0.5 (50\%) for display, so the rightmost bin pools all larger errors.}
-\label{fig:completeness}
-\end{figure}
-
-\subsection{Faithfulness}
-\label{sec:faithfulness}
-
-Table~\ref{tab:faithfulness} reports faithfulness at $m{=}64$ on the same action-norm-selected population, with the RDT-1B scale check in the bottom block.
-The 170M block of Table~\ref{tab:faithfulness} is a historical summary whose original rows are unavailable.
-Vision insertion AUC ranges from 0.792 to 0.866 and deletion AUC from 0.290 to 0.345.
-These values cross the historical bars, but no matched random-ranking comparison establishes an advantage over a null baseline.
-The interventions replace adapted patch tokens, not pixels.
-Language insertion ranges from 0.344 to 0.504.
-With only 16 to 30 instruction tokens, requested percentage interventions differ from realized fractions.
-Neither token count nor the cross-checkpoint comparison isolates a cause; the latter also spans baseline and population changes.
-
-\begin{table}[tbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}ll r r rr@{}}
-\toprule
-\textbf{Task} & \textbf{Mod.} & $\boldsymbol{n}$ & $\boldsymbol{\Delta Q}$ & \textbf{Ins} & \textbf{Del} \\
-\midrule
-PegInsertion & Vision & 425 & $-$0.0018 & \textbf{0.792} & \textbf{0.290} \\
-& Lang. & 425 & $-$0.0039 & 0.344 & \textbf{0.249} \\
-\midrule
-\rowcolor{gray!6}
-PickCube & Vision & 264 & $-$0.0032 & \textbf{0.856} & \textbf{0.317} \\
-\rowcolor{gray!6}
-& Lang. & 264 & $-$0.0004 & 0.504 & 0.477 \\
-\midrule
-PickYCB & Vision & 348 & $-$0.0013 & \textbf{0.843} & \textbf{0.345} \\
-& Lang. & 348 & $-$0.0003 & 0.368 & 0.477 \\
-\midrule
-\rowcolor{gray!6}
-StackCube & Vision & 304 & $-$0.0039 & \textbf{0.866} & \textbf{0.336} \\
-\rowcolor{gray!6}
-& Lang. & 304 & $-$0.0016 & 0.378 & 0.539 \\
-\midrule
-\midrule
-RDT-1B s42 & Vision & 320 & $-$0.00016 & \textbf{0.926} & \textbf{0.248} \\
-RDT-1B s142 & Vision & 480 & $-$0.00012 & \textbf{0.937} & \textbf{0.293} \\
-RDT-1B s242 & Vision & 399 & $-$0.00018 & \textbf{0.954} & \textbf{0.314} \\
-\rowcolor{gray!6}
-RDT-1B pool & Vision & 1{,}199 & $-$0.00015 & \textbf{0.940} & \textbf{0.288} \\
-\rowcolor{gray!6}
-RDT-1B pool & Lang. & 1{,}199 & $-$0.00012 & 0.541 & \textbf{0.267} \\
-\bottomrule
-\end{tabular}
-\caption{Faithfulness at $m{=}64$. $\Delta Q$ is the median target change after top-5\% deletion, in auxiliary per-entry log-kernel units. Bold AUC values cross their historical bars (vision insertion $\geq$0.60 and deletion $\leq$0.40, language $\geq$0.55 and $\leq$0.45). The top block is RDT-170M with both seeds on action-norm-selected rows ($|$ref action$| \geq 15$). The bottom block is the RDT-1B scale check with the authors' fine-tuned weights on three evaluation seeds (42, 142, 242, with 9, 1, and 5 of 20 successes), on all policy-call rows per seed. The historical filter was not applied at 1B because its action norms sit below 15 throughout, creating a different selected population. The seed 42 language values were computed against the zeroed language baseline recorded in Section~\ref{sec:setup}, while the seed 142 and 242 runs encoded their instruction embeddings and the two-token baseline with T5-XXL on their own machine. The pooled language row therefore spans the two language-baseline provenances. The vision rows are unaffected by that difference. Each of the three vision rows crosses both historical bars; this is not a test of cross-checkpoint robustness or efficacy against a null ranking. The pooled vision 95\% episode bootstrap interval is 0.926 to 0.954 for insertion and 0.250 to 0.312 for deletion. Language insertion is seed-sensitive. It is 0.562, 0.583, and 0.519 at the three seeds, so it passes the 0.55 bar at two of the three seeds. The pooled value 0.541 sits just under the bar with a 95\% interval of 0.449 to 0.605 that straddles it. The committed Month 5 reproduction of seed 42 with real T5-XXL embeddings records a language insertion median of 0.515, below the bar, so the two of three count is tied to the language-baseline provenance rather than to the seeds alone. We therefore report the language insertion pass as seed-sensitive rather than robust, while the vision verdicts and the language deletion pass hold at every seed. The RDT-170M block predates the sidecar seed-tagging fix of Section~\ref{sec:metrics}, and its seed-42-labeled halves are presumed to have consumed seed-142 sidecars, mixing that seed's rankings and observations with seed-42 noise seeding and signal filtering. The released verification records from the full protocol rerun with seed-tagged sidecars (Section~\ref{sec:setup}) reproduce every vision verdict in this block, with insertion from 0.766 to 0.868 and deletion from 0.286 to 0.362 across the four tasks, and reproduce the language misses. One borderline cell crosses its bar: PickCube language deletion is 0.438 in the verification pass against the tabulated 0.477, moving to the passing side of the 0.45 bar, consistent with reading the 170M language metrics as mixed. These are evaluation seeds on one checkpoint, so they measure rollout and sampling variance, not generalization across training initializations.}
-\label{tab:faithfulness}
-\end{table}
-
-Historical top-5\% quadratic-score changes have magnitudes around $10^{-3}$ or smaller.
-Pooled 1B values are smaller still, despite recorded successful episodes and changes in predicted actions.
-This observational contrast changes checkpoints, training, action regimes and filtering rules; it is not a controlled competence effect.
-Magnitudes describe the chosen score and require a stated convention and operational criterion.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.85\linewidth,height=0.38\textheight,keepaspectratio]{figures/fig_c_auc_curves.png}
-\caption{Normalized insertion (higher is better) and deletion (lower is better) curves over the token-fraction grid, aggregated per modality over all faithfulness rows, including the $m{=}128$ subset, which is a broader population than Table~\ref{tab:faithfulness}. The legend's $m{=}64$ label comes from the file tagging in the released notebook and does not describe the pooled population.}
-\label{fig:auc}
-\end{figure}
-
-\subsection{Sanity Checks}
-\label{sec:sanity}
-
-Table~\ref{tab:sanity} reports Spearman correlations between original and perturbed attributions.
-C2 vision crosses the historical decorrelation bar on all four tasks and language on three.
-Repeated tokens are a possible explanation for StackCube's language result, but no control isolates this mechanism.
-State is not shuffled, although its attribution gradients may change when another modality changes.
-C1 correlations remain high under frozen-reference and backbone-cascade randomization.
-These observations motivate input-only and gradient-only controls; they do not establish that model dependence is unnecessary or that input shuffling certifies grounding.
-
-\begin{table}[tbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}ll rrr@{}}
-\toprule
-\textbf{Task} & \textbf{Check} & $\boldsymbol{\rho}$\textbf{\,Vision} & $\boldsymbol{\rho}$\textbf{\,Lang.} & $\boldsymbol{\rho}$\textbf{\,State} \\
-\midrule
-PegInsertion & C1 & 0.953 & 0.950 & 0.786 \\
-& C2 & \textbf{0.091} & \textbf{0.002} & 0.667 \\
-\midrule
-\rowcolor{gray!6}
-PickCube & C1 & 0.937 & 0.903 & 0.750 \\
-\rowcolor{gray!6}
-& C2 & \textbf{0.160} & \textbf{0.087} & 0.810 \\
-\midrule
-PickYCB & C1 & 0.918 & 0.917 & 0.714 \\
-& C2 & \textbf{0.166} & \textbf{0.141} & 0.762 \\
-\midrule
-\rowcolor{gray!6}
-StackCube & C1 & 0.953 & 0.970 & 0.667 \\
-\rowcolor{gray!6}
-& C2 & \textbf{0.157} & 0.240 & 0.786 \\
-\midrule
-\midrule
-\multicolumn{2}{@{}l}{C1 frozen (pooled)} & 0.929 & 0.862 & 0.643 \\
-\multicolumn{2}{@{}l}{C1 cascade (pooled)} & 0.713 & 0.910 & 0.643 \\
-\bottomrule
-\end{tabular}
-\caption{Sanity checks (Spearman $\rho$, where bold passes the $\leq$0.2 bar). The per-task rows are the standard C1 (final-layer re-init, moving target) and C2 (input shuffle) on action-norm-selected rows ($n$ = 67/62/85/75 per task). The bottom block holds the frozen-target and full-backbone cascade C1 variants, pooled over all four tasks and both seeds ($n{=}400$ each, no signal filter). Perturbed attributions are computed at $m{=}16$ (Section~\ref{sec:metrics}). The variant rows correlate against the regeneration run and carry the language-baseline and embedding-proxy deviations recorded in Section~\ref{sec:setup}. The released interval tables give a 95\% episode bootstrap interval of 0.906 to 0.940 for the pooled frozen vision median. The per-task C1 and C2 rows come from the pre-fix main pass and carry the same seed exposure disclosed in Section~\ref{sec:metrics}. The verification pass reproduces every standard-row verdict: C1 remains above the 0.2 bar at 0.916 to 0.965 on vision and language, C2 vision passes on all four tasks at 0.097 to 0.167, and C2 language passes on three of four, with StackCube borderline at 0.252.}
-\label{tab:sanity}
-\end{table}
-
-\subsection{Qualitative Analysis}
-\label{sec:qualitative}
-
-Figure~\ref{fig:overlays} shows six representative vision overlays from a single checkpoint, the fine-tuned RDT-1B on PickCube at evaluation seed 242.
-The top row is three successes and the bottom row is three failures, taken as the first three of each by episode index rather than hand-picked, with a representative mid-trajectory step shown per episode.
-In the success panels, attribution concentrates on the target cube and the gripper's approach vector.
-In the failure panels, the attribution pattern is mixed, with some panels scattering attribution across the scene and others concentrating on task objects despite the failed outcome.
-Because both rows come from the same checkpoint and the same run, this is a descriptive within-checkpoint contrast rather than a cross-checkpoint one, and it shows that attribution placement alone does not separate success from failure here.
-
-In inspected examples, the per-step language attribution bars peak on the content tokens that name the target object, such as \emph{red} and \emph{cube} on PickCube.
-High correlation under backbone randomization cautions against treating token bars as independent evidence of learned grounding.
-Spearman correlation does not estimate a fraction of model-dependent information.
-
-A historical pipeline selected 16 rows from per-modality completeness residuals and named the groups vision misfocus, language misgrounding, state misreading, delayed credit, and success-well-grounded.
-Those names are not validated behavioral diagnoses: an integration residual does not identify a perceptual, semantic, or temporal failure mechanism.
-The groups should be interpreted only as numerical diagnostics.
-The archived count of 3{,}881 generated images cannot be reconstructed from the released subset and is not used as scientific evidence.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.92\textwidth,height=0.32\textheight,keepaspectratio]{figures/fig_b_overlays_grid.png}
-\caption{Per-step vision IG overlays from a single checkpoint, the fine-tuned RDT-1B on PickCube at evaluation seed 242, where warm colors indicate high attribution. The top row is three successes and the bottom row is three failures, taken as the first three of each by episode index, with a representative mid-trajectory step per episode. Successful episodes often concentrate attribution on the target object and the gripper. The failure panels are mixed, some scattering attribution across the scene and some staying on task objects, so attribution placement alone does not separate success from failure in these examples. Because both rows come from the same checkpoint and run, this is a descriptive within-checkpoint contrast.}
-\label{fig:overlays}
-\end{figure}
-
-\section{Response Geometry and Diagnostic Limits}
-\label{sec:mechanisms}
-
-The saved experiments support observations about attribution evaluation, but interpreting their causes requires separating score definitions, intervention effects and numerical validity.
-
-\subsection{Action Displacement and the Quadratic Readout}
-\label{sec:contraction}
-
-Table~\ref{tab:faithfulness} reports smaller quadratic-score changes for the recorded 1B checkpoint than for the historical 170M cohort.
-The checkpoints differ in size, training, action regime and trajectories, and only 170M uses action-norm filtering.
-This does not identify the effect of competence or scale.
-
-Direct displacement measurements show nonzero response to feature deletion on two tasks at both scales.
-At $T=5$ and top-5\% vision deletion, historical median relative displacements range from 4.4 to 8.5\%.
-Thus the near-zero score is not evidence that the action stays exactly fixed.
-The identity $Q=-\lVert a-\mu\rVert^2/(2D\sigma^2)$ maps displacement to its numerical score.
-Removing $1/D$ multiplies score changes by 512 without changing exact IG rankings, normalized AUC or relative completeness.
-Operational interpretation requires stated action units, normalization and a justified measurement criterion.
-
-Changing $T$ changes discretization over the complete denoising horizon; it does not add steps to one fixed trajectory.
-Changing conditioning also differs from testing contraction under identical conditioning.
-The endpoint medians from $T=2$ to $T=20$ do not show monotonic decay, but do not rule out denoiser contraction.
-Episode-resampled 95\% intervals for changes of median relative displacement include appreciable decreases: PickCube-170M [$-23.82$, $31.04$]\%, PickCube-1B [$-10.11$, $37.88$]\%, StackCube-170M [$-30.10$, $73.97$]\%, and StackCube-1B [$-19.41$, $52.31$]\%.
-The 1B curves pool two evaluation seeds, 170M uses one, and curves contain 8 to 40 episodes.
-These are solver-resolution observations, not an identified comparison of denoiser mechanisms.
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.85\linewidth,height=0.38\textheight,keepaspectratio]{figures/fig_1b_vs_170m.png}
-\caption{Historical quadratic-response AUCs on PickCube, with different populations as in Table~\ref{tab:faithfulness}. The 1B heights pool three evaluation seeds. Reference lines are historical vision bars without established chance calibration. The contrast changes checkpoint size, training, contexts and filtering and does not isolate competence.}
-\label{fig:scale}
-\end{figure}
-
-\begin{figure}[tbp]
-\centering
-\includegraphics[width=0.85\linewidth,height=0.38\textheight,keepaspectratio]{figures/fig_displacement_vs_T.png}
-\caption{Historical action displacement under top-5\% vision-token deletion across solver resolutions. Top: absolute displacement. Bottom: displacement divided by reference-action norm. Nonzero displacement shows changed actions, but varying resolution does not isolate contraction along a common trajectory. Bands are episode bootstrap intervals over 8 to 40 episodes per curve; 1B pools seeds 42 and 142.}
-\label{fig:displacement}
-\end{figure}
+The saved 1B analysis illustrates a second distinction: changing the episode weighting changes the estimand.
+Table~\ref{tab:oneb} uses the same \OneBCalls{} calls from \OneBEpisodes{} episodes under both summaries.
+The language summaries are more sensitive to this weighting than the vision summaries, within a cohort that also mixes language-baseline provenance.
+Neither estimate is a training-replication result or a controlled improvement over 170M.
+\input{tables_revision/oneb.tex}
 
 \subsection{Separating Attribution Target from Evaluation Response}
 \label{sec:targets-results}
 
-Table~\ref{tab:targets} retains historical native-score summaries.
-Each target changes both the ranking and its evaluation response, so native AUC comparison does not isolate ranking quality.
-
-\begin{table}[tbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}l rrr rrrr@{}}
-\toprule
- & \multicolumn{3}{c}{\textbf{Completeness}} & \multicolumn{4}{c}{\textbf{Faithfulness}} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-8}
-\textbf{Target} & med err & $\leq$3\% & $n$ & $\Delta F$@5 & \textbf{Ins} & \textbf{Del} & $n$ \\
-\midrule
-$Q$ & \textbf{1.86} & 76.8 & 699 & $-$0.0014 & \textbf{0.883} & 0.448 & 750 \\
-\rowcolor{gray!6}
-$\ell_2$ & 4.73 & 10.7 & 721 & $-$1.2299 & \textbf{0.755} & \textbf{0.284} & 774 \\
-maxdev & 6.67 & 10.9 & 713 & $-$0.1562 & \textbf{0.723} & \textbf{0.273} & 765 \\
-\bottomrule
-\end{tabular}
-\caption{Historical native-target summary on PickCube (170M, $m=64$, both seeds, vision). Magnitudes have target-specific units; bold denotes historical bars only. Completeness uses action-norm-selected rows; faithfulness includes all recorded rows. Alternative-target counts include resume duplicates, unlike the interval calculations. Reference-action norms differ on all 750 joined quadratic-versus-alternative calls, so exact matching is unestablished. These columns do not identify ranking advantage or an inherent accuracy-magnitude tradeoff.}
-\label{tab:targets}
-\end{table}
-
-\paragraph{Fixed-ranking response transformation.}
-Saved quadratic and $\ell_2$ perturbation curves can be rescored without recomputing IG or changing selected features.
-For $D=512$, $\sigma^2=1$, and $\epsilon=10^{-12}$,
+The same recorded interventions can be rescored without recomputing IG or changing a selected feature.
+Let $d$ be the recorded active-action discrepancy, $Q=-d^2/1024$, and $L=-\sqrt{d^2+\epsilon}$ with $\epsilon=10^{-12}$.
+Then
 \begin{equation}
 L=-\sqrt{-1024Q+\epsilon},\qquad Q=-\frac{L^2-\epsilon}{1024}.
+\label{eq:rescore}
 \end{equation}
-We normalize and integrate each transformed curve on its recorded grid, retaining the last record per seed, episode and policy-call key.
-Each arm contains 750 distinct calls.
-For quadratic-target rankings, median deletion AUC changes from 0.447903 under $Q$ to 0.290759 under $L$; insertion changes from 0.883442 to 0.755679.
-For $\ell_2$ rankings, deletion changes from 0.283007 under $L$ to 0.440376 under $Q$; insertion changes from 0.756490 to 0.884070.
-The historical deletion verdict reverses in both directions solely through response transformation.
-This requires no cross-arm context match and preserves the recorded curves' provenance limitations.
-It does not establish ranking identity, equivalence or efficacy.
+We transform every recorded curve ordinate, evaluate its endpoints under the transformed response, and reintegrate on the same saved grid.
+Each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes after duplicate handling.
+For quadratic-target vision rankings, median deletion AUC changes from \RescoreQDeletionQ{} under $Q$ to \RescoreQDeletionL{} under $L$.
+For stabilized-$\ell_2$ rankings it changes from \RescoreLDeletionL{} under $L$ to \RescoreLDeletionQ{} under $Q$.
+Table~\ref{tab:targets} and Figure~\ref{fig:response-geometry} include both modalities and both perturbation directions.
+\input{tables_revision/rescore.tex}
 
-\paragraph{Numerical and scientific interpretation.}
-The historical alternative-target cohorts have larger relative completeness residuals at $m=64$.
-Stabilized $\ell_2$ is smooth, so an actual square-root kink does not explain its error.
-High curvature, quadrature, accumulation and model-forward precision, and cohort differences remain unseparated.
-Scaling a score multiplies exact IG and score changes while preserving ranking and relative completeness; numerical magnitude alone is not recovered information.
-A valid comparison must evaluate quadratic-IG and $\ell_2$-IG on authenticated paired contexts and noise under a common response, alongside random and simple rankings.
-Positive and negative outcomes are both informative about attribution beyond response geometry.
-
-\subsection{What Randomization Correlations Establish}
-\label{sec:anchoring}
-
-Saved frozen-reference and backbone-cascade variants retain high correlations.
-Freezing the reference addresses one moving-target explanation but does not isolate every source of correlation.
-Encoders and adaptors remain learned, integration budgets differ, and overwritten sidecars limit context identity.
-The values in Table~\ref{tab:sanity} are descriptive within these limits.
-
-\begin{figure}[tbp]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\linewidth,height=0.38\textheight,keepaspectratio]{figures/fig_c1_variants.png}
-\caption{Historical model-randomization correlations. Frozen-reference and cascade values use saved records; standard C1 and C2 preserve unavailable original summaries. Variants change randomized parameters and may differ in source contexts or budgets. Persistent correlation does not uniquely identify input anchoring; low C2 correlation does not establish learned-model dependence.}
-\label{fig:c1}
+\includegraphics[width=.97\linewidth]{figures_revision/response_geometry.pdf}
+\caption{Changing only the evaluation response while keeping each recorded ranking and its interventions fixed. Error bars are conditional episode-bootstrap intervals for each median. Lines connect responses within a ranking cohort; the two ranking cohorts are not authenticated pairs. There is no universal chance reference line.}
+\label{fig:response-geometry}
 \end{figure}
 
-The factor $(x_i-x_i')$ in Eq.~\ref{eq:ig} permits shared structure but does not force a particular ranking.
-Integrated gradients can dominate rankings, and the input features depend on retained learned encoders and adaptors.
-No direct input-only or gradient-only comparison establishes dominance of the multiplier.
-Nor is Spearman correlation a fraction of model-independent information.
+This establishes response-geometry sensitivity within each saved ranking cohort.
+It does not establish that Q-IG and L2-IG select the same features, that their rankings are equivalent, or that either is effective.
+The attempted cross-cohort join has different reference-action norms at every nominal key; exact raw contexts and noise are unavailable.
+Apparent agreement after common rescoring therefore cannot replace a prospective paired ranking comparison.
+Likewise, the larger native L2 score is not by itself recovered information, and stabilized L2 has no square-root kink at exact agreement.
 
-Input shuffling asks whether a map changes when input arrangement changes.
-A map defined only from input magnitudes can pass while ignoring learned policy parameters.
-C2 therefore cannot replace model-dependence checks or certify grounding.
+\subsection{An Analytic Random-Order Counterexample}
+\label{sec:random-null}
 
-Table~\ref{tab:baseline} shows positive but imperfect black-gray association and greater differences involving blur.
-With only two episode clusters per task, it does not establish equivalence.
-Baseline changes affect the interpolation path and gradients as well as the input difference, so the mechanism is unisolated.
+For an additive scalar policy with equal feature contributions, an all-one input and a zero baseline, every feature ordering is identical for perturbation evaluation.
+At deleted fraction $q$, quadratic-response normalization gives $1-q^2$; insertion gives $1-(1-q)^2$.
+Both continuous AUCs are $2/3$, despite the absence of ranking information.
+Trapezoidal integration on the historical requested grid gives \RandomGridAUC{} for both curves.
+The continuous integral and sampled-grid statistic are distinct quantities.
+An unstabilized negative-norm response instead produces linear normalized curves in this example.
+Consequently, a fixed AUC reference such as 0.5 requires justification for the policy, response and intervention protocol; it is not universal.
+This construction is an analytic control, not an empirical random-ranking measurement on RDT.
 
-\begin{table}[tbp]
+\subsection{Randomization and Baseline Diagnostics}
+\label{sec:sanity}
+\label{sec:anchoring}
+
+Table~\ref{tab:sanity} reconstructs the standard verification-campaign correlations.
+Model randomization retains substantial rank association, while input shuffling changes the maps more strongly.
+That contrast does not make model dependence unnecessary or certify semantic grounding.
+A map based only on input magnitude can change under input shuffling while ignoring learned policy weights.
+The saved frozen-reference and cascade variants, including a dependence-grouping sensitivity, are reported in Appendix~\ref{sec:appendix-diagnostics}.
+\input{tables_revision/sanity.tex}
+
+The IG multiplier $(x_i-x_i')$ permits shared structure but does not force a particular ranking.
+The path gradients can dominate the result, and the input features themselves come from retained learned encoders/adaptors.
+Persistent correlations therefore motivate input-only and path-gradient-only controls; they do not establish multiplier dominance.
+Spearman correlation is not a fraction of model-independent information.
+The baseline comparisons in Appendix~\ref{sec:appendix-diagnostics} show imperfect agreement but cannot establish equivalence with their small number of groups.
+
+\subsection{Action Displacement and Solver Resolution}
+\label{sec:contraction}
+
+The quadratic score is a normalized squared displacement, so its numerical magnitude has a direct dependence on the chosen convention.
+Removing $1/D$ multiplies exact scores and attributions by $D$ without changing exact ranks, normalized AUC, or relative completeness.
+This algebra does not determine whether an action change is operationally important; that requires action units and a justified behavioral criterion.
+
+The saved solver analysis compares median relative action displacement under top-5\% vision deletion between $T=2$ and $T=20$.
+Figure~\ref{fig:displacement} reports the endpoint contrast with conditional resampling of nominal episode pairs.
+Reference actions vary across solver settings, and exact contexts/noise cannot be authenticated.
+The intervals permit appreciable increases and decreases.
+Changing $T$ changes discretization over the full denoising horizon, rather than adding steps along one fixed trajectory.
+These observations therefore identify neither a causal contraction mechanism nor its absence.
+
+\begin{figure}[htbp]
 \centering
-\small
-\begin{tabular}{@{}l rrr@{}}
-\toprule
-\textbf{Task} & \textbf{black vs gray} & \textbf{black vs blur} & \textbf{gray vs blur} \\
-\midrule
-PickCube & 0.825 & 0.539 & 0.455 \\
-\rowcolor{gray!6}
-StackCube & 0.814 & 0.546 & 0.496 \\
-\bottomrule
-\end{tabular}
-\caption{Historical vision baseline sensitivity: median patch-ranking Spearman correlation over the first 30 recorded calls per task at $m=64$. Pre-fix sidecars leave source seed identity uncertain. Within a row, all baselines use one loaded context and noise seed. Black-gray agreement is imperfect, and two episode clusters per task do not establish equivalence or unchanged top-$k$ selections.}
-\label{tab:baseline}
-\end{table}
+\includegraphics[width=.95\linewidth]{figures_revision/solver_endpoint.pdf}
+\caption{Retrospective change in median relative displacement under top-5\% vision deletion. Intervals use nominal episode pairing across solver resolutions, conditional on the released records and grouping. The vertical reference denotes no endpoint change, not a contraction test or an equivalence margin. Raw context/noise identity remains unknown.}
+\label{fig:displacement}
+\end{figure}
 
-\subsection{Limits of the Historical Integration-Budget Comparison}
-\label{sec:budget}
+\section{Numerical Validation and Prospective Study}
+\label{sec:numerical-validation}
 
-Table~\ref{tab:m128} preserves historical completeness pass-rate summaries.
-The rows previously called matched truncate $m=128$ to four calls but do not pair identical observations, episodes, language baselines or runtimes.
-The $m=64$ comparator is the larger main pass; early $m=128$ uses eight episodes per seed and its original PickCube/StackCube records are missing.
-Differences are compatible with a budget effect but cannot identify it.
-Full-view rates also change the trajectory-depth distribution.
-Later saved $m=128$ cohorts cannot recover the absent early records.
-\begin{table}[tbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{@{}ll rrr@{}}
-\toprule
-\textbf{Task} & \textbf{View} & $\boldsymbol{m{=}64}$ & $\boldsymbol{m{=}128}$ & $\boldsymbol{n_{128}}$ \\
-\midrule
-PickCube & matched & 68.6 & \textbf{80.5} & 41 \\
-StackCube & matched & 59.9 & \textbf{89.8} & 49 \\
-\midrule
-PickCube & full & 68.6 & 72.9 & 377 \\
-StackCube & full & 59.9 & 62.0 & 379 \\
-PegInsertion & full & 75.8 & 64.0\,/\,77.0 & 189\,/\,178 \\
-PickYCB & full & 69.8 & 73.7\,/\,71.8 & 194\,/\,195 \\
-\bottomrule
-\end{tabular}
-\caption{Vision completeness pass rate (\% of action-norm-selected rows at or under 3\% error) at $m{=}64$ and $m{=}128$. The ``matched'' view truncates $m{=}128$ episodes to the $m{=}64$ episode shape (first four policy calls), which aligns maximum call depth but does not pair contexts, and bold marks its two cells. The PickCube and StackCube cells in both the matched and full views, together with their $m{=}128$ faithfulness AUCs quoted in the text, come from the decommissioned main-pass $m{=}128$ subset and are not regenerable from the released records. The released records cover the PegInsertion and PickYCB $m{=}128$ runs only, as the reproducibility statement records. The ``full'' view keeps every call of each $m{=}128$ episode, a row mix containing deep-trajectory steps absent from the $m{=}64$ pass. PegInsertion and PickYCB are reported per seed (42\,/\,142). The PickYCB $m{=}128$ run reused the PickCube instruction embedding (Section~\ref{sec:setup}), and no language metrics are tabulated from it. The PegInsertion counts retain the resume-replay duplicate rows documented in the released data README, and removing them shifts the seed 142 PegInsertion cell from 77.0 on $n{=}178$ to 76.2 on $n{=}160$ with no verdict change.}
-\label{tab:m128}
-\end{table}
+\textbf{Status of this working draft.} The revised runtime's actual-model numerical campaign is in progress. Its results and the ensuing ranking study have not yet been integrated into this manuscript.
+The retrospective results above do not certify a production numerical setting or close the efficacy question.
 
-These are descriptive cohort comparisons, not evidence of smooth path integrands or a budget-only cause.
-A convergence study requires identical inputs, baselines, checkpoint and stored noise, with separate control of forward precision, accumulation and quadrature.
-Coordinate, ranking and response stability checks must supplement scalar completeness.
+The numerical design uses authenticated stored observations, masks, reference actions and exact noise arrays.
+It separates accumulation arithmetic, master-path/product arithmetic, quadrature and downstream model precision, and compares complete coordinate arrays, eligible-group ranks, top-5\% membership and perturbation responses.
+A downstream fp32 control lifts the same bf16-rounded parameters and cached adapted representations, explicitly converts non-parameter dtype attributes, and holds the original reference action fixed.
+This tests downstream arithmetic on fixed numeric inputs; it is not an end-to-end fp32 encoder study or recovery of unrounded checkpoint parameters.
+Repeated endpoints alone do not certify gradient/path repeatability, so the validity assessment must also inspect attribution repeats and failures.
 
-%% ================================================================
-\FloatBarrier
-\section{Discussion}
+After numerical settings are independently validated, a prospective study must generate Q-IG, L2-IG, random, input-difference-magnitude and path-gradient-only rankings on the same contexts and stored noise.
+All rankings must use common intervention masks, realized fractions and evaluation responses.
+The path-gradient-only control omits the input multiplier; the gradient at the self-reference endpoint alone is uninformative because both discrepancy gradients vanish there.
+Paired effects must be summarized at the episode unit, with task/checkpoint strata, declared failure denominators and precision-based sample planning.
+A blinded variance pilot can select the episode budget before comparative effects are inspected.
+Both informative negative and positive results are relevant; neither a favorable threshold crossing nor a single engineering context is a stopping criterion for the scientific study.
 
-Evaluation should name the attribution target, ranking, intervention, response, normalization and population separately.
-Exact rescoring shows that normalized AUC depends on response geometry as well as ranking.
-Our counterexample shows why fixed bars cannot substitute for matched controls.
-Randomization results also need input-only and gradient-only comparisons before persistent structure is assigned a dominant cause.
-These requirements support informative comparisons of attribution methods; historical threshold crossings alone do not settle them.
+\section{Discussion and Limitations}
 
-\paragraph{Limitations.}
-The cross-scale displacement comparison covers two tasks at two seeds at 1B scale, and the target ablation covers one task.
-Both invite replication at scale.
-The 1B evaluation seeds vary the rollouts and the sampling on one fixed checkpoint, so they bound rollout and sampling variance and not generalization across training initializations.
-The tables report medians or pooled pass rates, and rows within an episode are correlated, so row-level $n$ overstates the effective sample size.
-The 1{,}199 pooled 1B rows, for example, come from 60 episodes.
-We mitigate this by reporting per-seed values where populations differ and by scoping claims to directions and orders of magnitude.
-The tables also make many pass or fail comparisons against pre-specified bars without a multiplicity correction, and we read them as descriptive summaries rather than inferential tests.
-Episode-level bootstrap intervals accompany Figure~\ref{fig:displacement} and ship as interval tables for every released run that backs a published table, while the decommissioned runs remain without intervals.
-The distribution figures (Figures~\ref{fig:completeness} and~\ref{fig:auc}) and the in-text $m{=}128$ AUC values are not accompanied by interval tables.
-The historical pretrained-only 170M has very low recorded success, limiting behavioral interpretation.
-State completeness misses its median bar and has no perturbation AUC evaluation.
-Eight active state dimensions permit a nine-point deletion grid, so omission is a scope choice, not an impossibility.
-C2 changes vision and language only, with language shuffled after encoding; modality differences remain unexplained.
-Baseline sensitivity is vision-only with few independent episodes.
-Follow-up language results span the baseline and proxy-embedding deviations in Section~\ref{sec:setup}.
-Numerical diagnostic groups are not validated behavioral failure labels.
-Historical maps lack same-context high-precision checks, and missing sidecars, checkpoints and environment identities prevent exact reproduction of several campaigns.
-All results concern one model family in ManiSkill3 simulation; 1B faithfulness covers one task.
-\paragraph{Engineering notes.}
-The historical execution made the following engineering choices.
-The language-baseline preference arose from preliminary tests whose records are unavailable; its efficacy is not independently verified.
-Fixed noise defines the sample-conditioned estimand; attribution of a noise expectation is a different possible construction.
-The loop attributes each policy call and executes at most 16 subsampled steps before replanning or termination.
-Historical timings need a current benchmark before selecting new numerical settings or sample sizes.
+The reconstructible evidence separates three questions: what a scalar response measures, whether a numerical attribution is reliable, and whether its ranking contains useful model-dependent information.
+The saved response transformation answers the first question for fixed recorded interventions.
+It cannot answer the latter two by itself.
+A stronger paper requires the controlled numerical and ranking studies above rather than treating retrospective limitations as the final contribution.
 
-\paragraph{Future directions.}
-A paired study of quadratic-IG, $\ell_2$-IG, random order, input-only magnitude and path-gradient-only rankings (omitting the IG input multiplier) would separate ranking information from response geometry and anchoring.
-Sampling should target independent episodes, a meaningful effect and uncertainty bound, with explicit failure accounting.
-Smoother model constructions~\citep{jha2021smoother,jha2022shaping} and adaptive integration~\citep{walker2024idg} suggest numerical studies, but their benefits for this sampler and score require measurement.
-Broader tasks, checkpoints and real-robot evaluation would test transfer.
+Historical uncertainty also has several distinct sources.
+Source-record hashing can authenticate released bytes while checkpoint and context identities remain unknown.
+Episode resampling addresses within-episode dependence conditional on a particular empirical mixture; it does not repair shared or overwritten contexts, preprocessing confounds, or missing training replicates.
+The 1B results come from one checkpoint, and the solver and alternative-target analyses cover narrower task populations than the verification campaign.
+Normalized response curves may be unbounded and sensitive to endpoint gaps.
+Camera-token and language-token interventions differ in group counts and semantics, so their AUCs are not directly interchangeable measures of modality importance.
 
-%% ================================================================
+Historical overlay panels are preserved as artifacts but are not used as evidence of successful grounding or behavioral failure diagnosis.
+Likewise, groups previously named from completeness residuals are numerical diagnostic groups, not independently validated labels such as misgrounding or delayed credit.
+The unrecovered original main-pass and early budget-extension numbers are excluded from revised primary tables.
+Appendix~\ref{sec:appendix-budget} reports only reconstructible later budget cohorts, without a convergence claim.
+
 \section{Conclusion}
-We apply per-policy-call, per-modality IG to a fixed-noise diffusion sampler and examine what evaluation measures.
-Changing only the response of recorded perturbation curves reverses historical normalized-AUC verdicts.
-An analytic example shows that random ranking need not yield AUC 0.5.
-Displacement and randomization observations motivate controls but do not establish exclusive denoiser or anchoring mechanisms.
-Efficacy requires matched rankings and controls under a common response, numerical validation and authenticated contexts.
-Saved-record analyses preserve useful evidence while making these dependencies explicit.
+
+Per-policy-call IG for a fixed-noise diffusion sampler can be defined using an explicit auxiliary action-discrepancy score.
+For saved RDT perturbation curves, changing only the evaluation response changes normalized AUC without changing the selected features.
+An analytic example rules out a universal random-ranking AUC of 0.5.
+The canonical retrospective tables preserve what the available records support and exclude unrecovered primary constants.
+Numerical validity and efficacy relative to matched controls remain requirements for the ongoing prospective revision.
 
 \section*{Ethical Statement}
-
-This work analyzes pretrained robotic manipulation policies in simulation.
-No human subjects were involved.
-The interpretability methods presented here are intended to improve the transparency and safety of robotic systems.
+This work analyzes pretrained robotic manipulation policies in simulation; no human subjects were involved.
+Attribution is a diagnostic tool here, not a safety guarantee for robot deployment.
+Misinterpreting attractive maps, low completeness residuals or uncalibrated AUCs could create unjustified confidence in a policy, which motivates the explicit limits and controls.
 
 \section*{Reproducibility Statement}
-
-Per-step completeness metrics are emitted as JSONL records with one row per policy call, carrying the per-modality errors, IG sums, action norm, and wall time.
-The faithfulness and sanity post-processing stages write companion JSONL files keyed to the same steps.
-The original protocol asked for one consolidated metrics file, and this multi-file layout is a deviation from that requirement.
-The published table values apply the action-norm-selected filter of Section~\ref{sec:setup}, and the matched-view and ablation columns derive from their records under the filters stated in their captions.
-Episode seeds are fixed at 42 and 142, with 242 added for the third RDT-1B evaluation seed, where episode $e$ uses seed $42{+}e$, $142{+}e$, or $242{+}e$, and the diffusion noise is seeded per forward pass.
-The repository preserves scripts for the historical full pass, faithfulness, sanity, target-ablation and displacement stages. A working command and fixed seed do not guarantee reproduction without the corresponding checkpoint, conditioning artifacts and runtime identity.
-The seed 142 and 242 RDT-1B faithfulness runs, the nominally matched $Q$ ablation runs, and the seed 142 displacement runs used the same entry points and flags at the seeds and scopes recorded in the released data README.
-Historical 1B execution required the authors' fine-tuned ManiSkill checkpoint; base-weight or local LoRA fallbacks do not reproduce it.
-Current support requires strict checkpoint identity and verified loading, gradient and rendering behavior; fixed seeds cannot recover missing weights or patches.
-The committed records are not a byte-level reproduction of every table.
-Six artifact families were produced on cloud GPUs that have since been decommissioned.
-They are the main evaluation pass and its faithfulness records, the original $m{=}128$ PickCube and StackCube subset, the standard sanity runs, the initial RDT-1B scale-check run, the per-step attribution sidecars, and the overlay images.
-None of them are part of the release.
-The records we release are the regeneration run of Section~\ref{sec:setup}, which reproduces the target ablation and corroborates the main-pass protocol at a smaller episode budget.
-The release also holds the RDT-1B faithfulness records at all three evaluation seeds, the $m{=}128$ PegInsertionSide and PickSingleYCB runs, the frozen-target and cascade sanity runs, and the baseline-sensitivity and target-ablation runs including the nominally matched $Q$ pair.
-It further holds the six displacement records behind Figure~\ref{fig:displacement}, the RDT-1B base attribution runs behind the second displacement seed, the Month 5 1B reproduction records, and a validation record for the displacement identity.
-The RDT-170M main-pass values were computed from the now-decommissioned main-pass records and are not regenerable from the committed data.
-These are the completeness values in Table~\ref{tab:correctness}, the RDT-170M block of Table~\ref{tab:faithfulness}, and the standard C1 and C2 rows of Table~\ref{tab:sanity}.
-The three-seed RDT-1B rows of Table~\ref{tab:faithfulness} and the frozen-target and cascade rows of Table~\ref{tab:sanity} are computed from the committed records and regenerate exactly from them, with bootstrap intervals in the released interval tables.
-The released analysis notebooks preserve the Table~\ref{tab:correctness} values exactly and retain the other analyses over broader unfiltered row populations.
-A README maps each committed file to the run it represents.
-Two committed records are retained with a known defect rather than silently replaced: the seed-42 $m{=}128$ faithfulness files consumed seed-142 sidecars through the pre-fix shared filenames, as indicated by the released audit script's incompatible gap fingerprint of Section~\ref{sec:metrics}, and the README marks them accordingly; no published value derives from them.
-The separate Month 7 campaign used seed-tagged sidecars and agrees with many historical descriptions, but changes PickCube's borderline language-deletion verdict.
-Missing sidecars are not authenticated or recovered by fixed seeds alone.
-Arithmetic reproduction from records is distinct from model reproduction under pinned code, checkpoints and exact inputs.
+The retrospective analysis parses a hash-authenticated raw inventory, records occurrence decisions, and links each result to physical source records.
+The revised tables and figures are generated from the same canonical artifact, with identical point/interval populations and a manuscript lineage registry.
+It retains conflicting-key exclusions, action-norm strata, endpoint/tail diagnostics, alternative episode weightings and conditional grouping sensitivities.
+These operations reproduce arithmetic over saved records; they do not recover missing models, sidecars or original observations.
+The new runtime separately records immutable context, source, checkpoint, language, environment and noise identities, and fails explicitly on nonfinite attribution rather than sanitizing coordinates.
+A candidate PDF or a successful script run alone does not constitute an authenticated scientific replication.
 \ifanonymous
-The identified public repository link is omitted from this anonymous draft. The review artifact must be assembled and audited before submission.
+The identified repository URL is omitted from this draft. An anonymous review supplement must be assembled and inspected after the scientific gates are complete.
 \else
-Code, records, interval tables, and the analysis notebooks are available at \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}.
+Code, raw records and the canonical analysis are available at \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}.
+The active retrospective artifact is \texttt{analysis/revision/results/2026-09-30-v2}; the manuscript registry is \texttt{paper/figures\_revision/lineage.json}.
 \fi
 
 \ifanonymous\else
 \section*{Acknowledgments}
-
 I am sincerely grateful to Professor Sumit K.\ Jha, Department of Computer and Information Science and Engineering, University of Florida, and to Brian Rodriguez, University of Florida, for mentoring and guiding me throughout this seven-month project. I thank them for their time and technical advice.
 \fi
 
-%% ================================================================
 \bibliographystyle{tmlr}
 \bibliography{references}
+\clearpage
+\appendix
+\section{Additional Retrospective Diagnostics}
+\label{sec:appendix-diagnostics}
+The frozen-reference and backbone-cascade analyses retain learned encoders/adaptors and historical context uncertainty.
+Table~\ref{tab:variants} reports both recorded-episode grouping and a conditional shared-context grouping. These are sensitivity analyses, not proof that either grouping is independent.
+Table~\ref{tab:baseline} reports baseline-ranking point summaries; the small group count prevents an equivalence conclusion.
+\input{tables_revision/variants.tex}
+\input{tables_revision/baseline.tex}
+\FloatBarrier
+
+\section{Saved Integration-Budget Cohorts}
+\label{sec:appendix-budget}
+\label{sec:budget}
+Table~\ref{tab:m128} replaces the previous table of unrecovered and duplicated constants with the reconstructible later cohorts.
+The norm-selected population and occurrence rule are retained explicitly for this historical sensitivity.
+These calls are not paired with the earlier $m=64$ main pass on identical observations, baselines, runtime and noise.
+Truncating trajectories to the same call depth does not create such pairs.
+An integration-budget effect must instead be evaluated on authenticated fixed contexts, with precision and quadrature controlled.
+\input{tables_revision/budget.tex}
 
 \end{document}

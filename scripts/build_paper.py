@@ -3,10 +3,26 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+
+
+def validate_revision_assets(root: Path) -> None:
+    """Reject stale manuscript/display inputs before producing a candidate."""
+    registry_path = root / "paper/figures_revision/lineage.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    expected = dict(registry["generated_sha256"])
+    expected["paper/paper.tex"] = registry["manuscript_source_sha256"]
+    mismatches = [name for name, digest in expected.items()
+                  if not (root / name).is_file()
+                  or hashlib.sha256((root / name).read_bytes()).hexdigest() != digest]
+    if mismatches:
+        raise RuntimeError("Stale or missing manuscript assets: " + ", ".join(mismatches)
+                           + ". Run scripts/build_revision_assets.py before compiling.")
 
 
 def main() -> None:
@@ -19,6 +35,7 @@ def main() -> None:
     output = (args.output or paper / ("paper-anonymous-draft.pdf" if args.anonymous else "paper-revision.pdf")).resolve()
     if output == (paper / "paper.pdf").resolve():
         parser.error("The historical paper/paper.pdf must not be overwritten by this working-draft build.")
+    validate_revision_assets(root)
     for executable in ("pdflatex", "bibtex"):
         if not shutil.which(executable):
             parser.error(f"{executable} is required (TeX Live with latex-extra, fonts-recommended, science and lmodern).")
@@ -27,7 +44,9 @@ def main() -> None:
         work = Path(scratch)
         for name in ("paper.tex", "references.bib", "tmlr.sty", "tmlr.bst"):
             shutil.copyfile(paper / name, work / name)
-        shutil.copytree(paper / "figures", work / "figures")
+        for directory in ("figures", "figures_revision", "tables_revision"):
+            if (paper / directory).exists():
+                shutil.copytree(paper / directory, work / directory)
         entry = (r"\def\TMLRAnonymous{1}" if args.anonymous else "") + r"\input{paper.tex}"
         latex = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", "-file-line-error", "-jobname=revision", entry]
         commands = (latex, ["bibtex", "revision"], latex, latex, latex)
