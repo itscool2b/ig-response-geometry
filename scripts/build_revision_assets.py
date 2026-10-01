@@ -209,7 +209,7 @@ def main():
             estimate(base + modality + "_err", f"table:completeness:{task}:{modality}", scale=100, digits=2)
             for modality in ("vision", "lang", "state")))
     table("completeness", "lrrlll", r"Task & Calls & Episodes & Vision (\%) & Language (\%) & State (\%)", body,
-        r"Results from the Month 7 verification campaign using all valid calls at $m=64$. Each cell shows the median relative completeness residual as a percentage, with a conditional 95\% episode-bootstrap interval. The estimate and interval use exactly the same calls and episodes. These results describe historical numerical checks. They do not establish that the individual attribution coordinates are accurate.", "tab:correctness")
+        'The Month 7 verification campaign uses all valid calls at $m=64$. Each cell reports the median relative completeness residual as a percentage and a conditional 95\\% episode-bootstrap interval. The estimate and interval use exactly the same calls and episodes. These historical numerical checks do not establish that individual attribution coordinates are accurate.', "tab:correctness")
 
     body = []
     for task, display in tasks:
@@ -219,7 +219,7 @@ def main():
                 estimate(base + "_insertion_auc", f"table:faithfulness:{task}:{modality}:insertion") + " & " +
                 estimate(base + "_deletion_auc", f"table:faithfulness:{task}:{modality}:deletion"))
     table("faithfulness", "llrrll", r"Task & Modality & Calls & Episodes & Insertion AUC & Deletion AUC", body,
-        r"Results from the Month 7 verification campaign using all valid calls and the native quadratic response. Each median and its conditional 95\% interval use the same population. We do not call an entry successful based on a chance threshold that has not been calibrated. The stored token-fraction grids, endpoint conventions and limits on the recorded provenance still apply to these descriptive estimates.", "tab:faithfulness")
+        'Results from the Month 7 verification campaign, using all valid calls and the native quadratic response. Medians and conditional 95\\% intervals use the same population. Entries are not classified as successful against an uncalibrated chance threshold. These descriptive estimates retain the limits of the stored token-fraction grids, endpoint conventions and recorded provenance.', "tab:faithfulness")
 
     body = []
     for rank in ("Q", "L2"):
@@ -232,7 +232,7 @@ def main():
                     estimate(base + "insertion", f"table:rescore:{rank}:{response}:{modality}:insertion") + " & " +
                     estimate(base + "deletion", f"table:rescore:{rank}:{response}:{modality}:deletion"))
     table("rescore", "lllll", "Ranking target & Response & Modality & Insertion AUC & Deletion AUC", body,
-        r"The response is changed while each recorded ranking stays fixed. The table shows median AUC with conditional 95\% episode-bootstrap intervals. Each ranking cohort contains \RescoreCalls{} calls from \RescoreEpisodes{} episodes and reuses the same recorded interventions. The two ranking cohorts have not been established as paired contexts. Comparing them therefore cannot show that one ranking is better.", "tab:targets")
+        'The response changes while the saved rankings stay fixed. The table reports median AUC and conditional 95\\% episode-bootstrap intervals. Each ranking cohort contains \\RescoreCalls{} calls from \\RescoreEpisodes{} episodes and reuses the same recorded interventions. The two ranking cohorts have not been established as paired contexts, so comparing them cannot show that either ranking is better.', "tab:targets")
 
     body = []
     for task, display in tasks:
@@ -241,7 +241,7 @@ def main():
             body.append(display + " & " + check + " & " + counts(base + "vision", f"table:sanity:{task}:{check}:counts") + " & " + " & ".join(
                 estimate(base + modality, f"table:sanity:{task}:{check}:{modality}") for modality in ("vision", "language")))
     table("sanity", "llrrll", r"Task & Check & Calls & Episodes & Vision $\rho$ & Language $\rho$", body,
-        r"Results from Month 7 model randomization (C1) and input shuffle (C2), using all recorded calls. The table shows median Spearman correlation with conditional 95\% episode intervals. The checks measure different forms of dependence. Low C2 correlation does not establish dependence on learned model weights, while C1 changes the integration budget as well as the weights.", "tab:sanity")
+        'Month 7 model randomization (C1) and input shuffle (C2) results use all recorded calls. Values are median Spearman correlations with conditional 95\\% episode intervals. The checks measure different forms of dependence. Low C2 correlation does not establish dependence on learned model weights, while C1 changes the integration budget as well as the weights.', "tab:sanity")
 
     body = []
     for weighting, label in (("call_weighted", "Median over calls"), ("episode_equal", "Median of episode medians")):
@@ -251,7 +251,7 @@ def main():
                 estimate(base + "insertion_auc", f"table:oneb:{weighting}:{modality}:insertion") + " & " +
                 estimate(base + "deletion_auc", f"table:oneb:{weighting}:{modality}:deletion"))
     table("oneb", "llll", "Estimand & Modality & Insertion AUC & Deletion AUC", body,
-        r"Results from the saved RDT-1B PickCube campaign. Both quantities use \OneBCalls{} source calls and \OneBEpisodes{} episodes. The first gives equal weight to every call. The second gives equal weight to each episode's median. The conditional 95\% episode intervals describe the released mixture. The evaluation seeds share a checkpoint, and the pooled language population includes two recorded baseline provenances.", "tab:oneb")
+        'Results from the saved RDT-1B PickCube campaign. Both quantities use \\OneBCalls{} source calls and \\OneBEpisodes{} episodes. The first gives equal weight to calls, while the second gives equal weight to episode medians. The conditional 95\\% episode intervals describe this released mixture. The evaluation seeds share a checkpoint, and the pooled language population includes two recorded baseline provenances.', "tab:oneb")
 
     body = []
     for variant in ("frozen", "cascade"):
@@ -261,7 +261,7 @@ def main():
                 estimate(base + "vision", f"table:variants:{variant}:{grouping}:vision") + " & " +
                 estimate(base + "language", f"table:variants:{variant}:{grouping}:language"))
     table("variants", "llrrll", r"Variant & Grouping & Calls & Groups & Vision $\rho$ & Language $\rho$", body,
-        r"Results from the saved backbone-randomization variants. The shared-context grouping joins nominal task and episode keys across recorded seeds to check sensitivity to dependence. It does not establish that the inputs were shared. Each interval is conditional on its stated grouping. Learned encoders and adaptors remain in place, while sidecar reuse and language-baseline deviations remain unresolved.", "tab:variants")
+        'Results for the saved backbone-randomization variants. The shared-context grouping joins nominal task and episode keys across recorded seeds to check sensitivity to dependence. It does not establish that the inputs were shared. Intervals are conditional on each stated grouping. Learned encoders and adaptors remain in place, while sidecar reuse and language-baseline deviations remain unresolved.', "tab:variants")
 
     body = []
     for task in ("PickCube", "StackCube"):
@@ -270,7 +270,7 @@ def main():
             estimate(base + pair, "table:baseline:" + task + ":" + pair, interval=False)
             for pair in ("black_gray", "black_blur", "gray_blur")))
     table("baseline", "lrrlll", "Task & Calls & Groups & Black/gray & Black/blur & Gray/blur", body,
-        r"Correlations between the saved baseline rankings. Only two nominal episode groups are available for each task. The analysis artifact retains interval outputs to describe the resampling results, but we do not present them here as calibrated uncertainty. A positive correlation alone does not mean that the baselines can be used interchangeably.", "tab:baseline")
+        'We compare correlations between saved baseline rankings. For each task there are only two nominal episode groups. The artifact reports intervals to describe the resampling results, but we do not present them as calibrated uncertainty. A positive correlation alone does not show that the baselines can be used interchangeably.', "tab:baseline")
 
     body = []
     for task, display in (tasks[0], tasks[2]):
@@ -282,7 +282,7 @@ def main():
     body.append(r"PegInsertion (conflicts excluded) & 142 & " + counts(key, "table:m128:conflict:counts", "conflict_excluded") + " & " +
                 estimate(key, "table:m128:conflict:rate", digits=1, view="conflict_excluded"))
     table("budget", "lrrrl", r"Task & Seed & Calls & Groups & Vision residual $\leq3\%$ (\%)", body,
-        r"Results for the $m=128$ cohorts that can be reconstructed. The conditional intervals describe the recorded cohorts. They do not show convergence under paired contexts. The final row removes every conflicting repeated key. The missing original PickCube and StackCube subsets have not been reconstructed or replaced with constants.", "tab:m128")
+        'Results for the $m=128$ cohorts that can be reconstructed. The intervals are conditional on the recorded cohorts and do not show convergence under paired contexts. The final row omits every conflicting repeated key. The missing original PickCube and StackCube subsets have not been reconstructed or replaced with constants.', "tab:m128")
 
     for name, rank, response in (("RescoreQDeletionQ", "Q", "Q"), ("RescoreQDeletionL", "Q", "L2"),
                                  ("RescoreLDeletionL", "L2", "L2"), ("RescoreLDeletionQ", "L2", "Q")):

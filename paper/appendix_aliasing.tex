@@ -2,9 +2,9 @@
 \label{sec:appendix-aliasing}
 
 Finitely many integration grids can agree while giving inaccurate coordinate
-integrals. Exact completeness and unchanged perturbation curves do not remove
-this limitation. The following construction shows why without a model
-experiment. All equalities in the construction are statements in real arithmetic.
+integrals. Exact completeness and unchanged perturbation curves do not rule
+this out. This construction shows why without a model experiment.
+All equalities in the construction are statements in real arithmetic.
 
 For a positive integer $M$, define the smooth scalar policy and target
 \begin{align}
@@ -13,51 +13,51 @@ For a positive integer $M$, define the smooth scalar policy and target
  Q(x,y)&=-\frac12\bigl(\mu(x,y)-1\bigr)^2.
 \end{align}
 Take baseline $(0,0)$, actual input $(1,1)$ and the fixed own-reference action
-$\mu(1,1)=1$. This gives the same quadratic self-reference form as the main
+$\mu(1,1)=1$. This has the same quadratic self-reference form as the main
 target, with one active action entry and $\sigma^2=1$.
 Along the straight path $(t,t)$, the transverse term in $\mu$ vanishes.
-As a result, $\mu(t,t)=t$, $Q(t,t)=-(1-t)^2/2$, and
+Thus $\mu(t,t)=t$, $Q(t,t)=-(1-t)^2/2$, and
 \begin{equation}
  \nabla Q(t,t)=(1-t)\left(\frac25+h(t),\frac35-h(t)\right).
  \label{eq:aliasing-gradient}
 \end{equation}
 The endpoint score gap is $1/2$. Both coordinate integrals are positive,
-and their exact values differ.
+but their exact values differ.
 
 Let $T_m$ denote componentwise composite trapezoidal integration with $m$
-intervals. Whenever $m$ divides $M$, every node $t=k/m$ has $h(t)=0$.
-The remaining coordinate functions are linear, so
+intervals. If $m$ divides $M$, every node $t=k/m$ has $h(t)=0$.
+The remaining coordinate functions are linear, giving
 \begin{equation}
  T_m=\left(\frac15,\frac3{10}\right),\qquad
  \mathbf{1}^{\mathsf T}T_m=\frac12=Q(1,1)-Q(0,0).
  \label{eq:aliasing-coarse}
 \end{equation}
-Every such grid therefore has zero completeness residual and the same strict
-absolute-coordinate ranking, which places feature 2 first. Under a fixed
-deterministic ranking rule, this shared order produces identical insertion and
-deletion masks. Evaluating those masks on the same policy then gives identical
-response curves, even when the coordinate integrals are inaccurate.
+Every such grid has zero completeness residual and the same strict
+absolute-coordinate ranking, with feature 2 first. Under a fixed
+deterministic ranking rule, this order gives identical insertion and
+deletion masks. Evaluating them on the same policy therefore produces identical
+response curves, even though the coordinate integrals are inaccurate.
 
-At the same time, $h(1-t)=h(t)$ and $\int_0^1h(t)\,dt=1/5$, which give
+At the same time, $h(1-t)=h(t)$ and $\int_0^1h(t)\,dt=1/5$, so
 \begin{equation}
  \int_0^1(1-t)h(t)\,dt=\frac1{10},\qquad
  \operatorname{IG}(Q)=\left(\frac3{10},\frac15\right).
  \label{eq:aliasing-exact}
 \end{equation}
 The exact ranking places feature 1 first. The coarse-grid errors are
-$(-1/10,1/10)$. Their sum cancels exactly, but their coordinate $L_1$ norm is
-$1/5$, or $40\%$ of the exact map's $L_1$ norm. The path score itself is a
-quadratic polynomial. The unresolved variation is in how its gradient is
-divided between coordinates, which a scalar completeness check cannot recover.
+$(-1/10,1/10)$. They cancel in the sum, but their coordinate $L_1$ norm is
+$1/5$, or $40\%$ of the exact map's $L_1$ norm. The path score is a
+quadratic polynomial. The grids miss how its gradient is divided between
+coordinates, which a scalar completeness check cannot recover.
 
-For this construction, the $2M$ grid resolves the discrepancy because its
-sampled $h$ values alternate between $0$ and $2/5$, giving $T_{2M}h=1/5$.
-Grid symmetry gives $T_{2M}[(1-t)h]=\tfrac12T_{2M}h=1/10$, which recovers
+For this construction, the $2M$ grid resolves the discrepancy. Its sampled
+$h$ values alternate between $0$ and $2/5$, giving $T_{2M}h=1/5$.
+Grid symmetry gives $T_{2M}[(1-t)h]=\tfrac12T_{2M}h=1/10$, recovering
 Equation~\ref{eq:aliasing-exact}. This does not make doubling a universally
 sufficient rule. For any fixed finite list of uniform interval counts, choosing
 $M$ as a common multiple places every grid in Equation~\ref{eq:aliasing-coarse}.
-The example supplies no derivative bound to control the variation that the
-grids do not resolve.
+The example provides no derivative bound to control the variation that these
+grids miss.
 
 \paragraph{Exact integration and perturbation quality are different questions.}
 For the displayed $M=128$, $h(1/2)=0$, so whole-feature interventions give
@@ -69,20 +69,20 @@ The exact-IG feature-1-first ordering instead has insertion AUC $0.57$ and
 deletion AUC $0.67$.
 The inaccurate map's ranking therefore scores better on both conventional
 criteria in this toy: larger insertion AUC and smaller deletion AUC.
-This occurs because the finite off-path interventions measure a different
+This happens because the finite off-path interventions measure a different
 property from the diagonal path integral. The transverse policy term changes
-the coordinate gradients without changing these Boolean intervention values.
+the coordinate gradients without changing the Boolean intervention values.
 Neither completeness nor exact integration guarantees an optimal perturbation
 score. This separation is specific to the toy and does not establish RDT ranking efficacy.
 
 The standalone artifact
-\texttt{analysis/revision/nested\_grid\_aliasing.py} evaluates the unchanged
-production trapezoidal IG kernel on this CPU toy with $M=128$, in FP32 and
-FP64. Budgets $32,64,128$ reproduce the incorrect order, while $256$ reproduces
+\texttt{analysis/revision/nested\_grid\_aliasing.py} evaluates this CPU toy through
+the unchanged production trapezoidal IG kernel with $M=128$, in FP32 and
+FP64. Budgets $32,64,128$ give the incorrect order, while $256$ reproduces
 the analytic order to numerical tolerance. The report retains measured
 coordinate errors, completeness residuals, repeated-run equality and common
 response curves. It does not replace finite-precision results with the exact
 equalities above. The two-coordinate example uses no RDT weights or observations.
-It explains why finite-grid agreement alone cannot certify the integral.
+It shows why finite-grid agreement alone cannot certify the integral.
 It does not explain why any particular PickSingleYCB diagnostic failed or
 approve a production integration setting.
