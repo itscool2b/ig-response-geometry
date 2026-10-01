@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from experiment_io import file_hash, strict_json
+from experiment_io import file_hash, object_hash, strict_json
 from scripts import run_probe_queue as queue
 
 
@@ -88,7 +88,8 @@ def test_source_or_frozen_decision_change_prevents_new_job(tmp_path,monkeypatch)
         queue.worker(args)
 
 
-def test_queue_preserves_named_snapshot_checkpoint_identity(tmp_path, monkeypatch):
+@pytest.mark.parametrize('selection', [None, {'rule':'uniform_executed_calls_v1','seed':930001}])
+def test_queue_preserves_named_snapshot_checkpoint_identity(tmp_path, monkeypatch, selection):
     """HF symlink resolution must not replace a recorded checkpoint filename."""
     import paired_comparison as paired
     from scripts import validate_fp32_probe
@@ -102,12 +103,24 @@ def test_queue_preserves_named_snapshot_checkpoint_identity(tmp_path, monkeypatc
     assert snapshot.resolve().name != snapshot.name
     protocol = root / 'selection.json'
     queue.exclusive_json(protocol, dict(recorded_before_execution=True, decision_id='E01',
-        protocol_version=6, source_collection_protocol_sha256='collection', validation={},
+        protocol_version=6, source_collection_protocol_sha256='collection', validation={}, uniform_call_selection=selection,
         strata=[dict(id='one', task='PickCube-v1', model='1b', checkpoint_mode='authors', checkpoint_sha256='bytes')]))
     bank = dict(task='PickCube-v1', model='1b', pipeline=dict(checkpoint_mode='authors', checkpoint=dict(sha256='bytes')),
         selection=dict(collector_protocol_sha256='collection'),
         contexts=[dict(episode=0, policy_call_idx=0, status='available', context_id='context')])
-    monkeypatch.setattr(paired, 'make_bank', lambda metrics: bank)
+    metrics = tmp_path / 'bank/one/metrics.jsonl'
+    metrics.parent.mkdir(parents=True)
+    metrics.write_text('authenticated metrics fixture\n')
+    manifest_dir = Path(str(metrics) + '.run')
+    manifest_dir.mkdir()
+    config = dict(protocol_sha256='collection')
+    queue.exclusive_json(manifest_dir/'manifest.json',dict(configuration=config,configuration_sha256=object_hash(config)))
+    bank.update(source_configuration_sha256=object_hash(config),source_metrics_sha256=file_hash(metrics))
+    selections = []
+    def authenticated_bank(metrics, selection=None):
+        selections.append(selection)
+        return bank
+    monkeypatch.setattr(paired, 'make_bank', authenticated_bank)
     monkeypatch.setattr(validate_fp32_probe, 'validate_decision', lambda *args: None)
     output = tmp_path / 'built'
     queue.build(SimpleNamespace(protocol=protocol, bank_root=tmp_path / 'bank', output=output,
@@ -116,3 +129,21 @@ def test_queue_preserves_named_snapshot_checkpoint_identity(tmp_path, monkeypatc
     actual = arguments[arguments.index('--checkpoint-path') + 1]
     assert actual == str(snapshot.absolute())
     assert Path(actual).name == 'mp_rank_00_model_states.pt'
+    assert selections == [selection]
+
+
+def test_collection_identity_works_for_uniform_banks_and_rejects_stale_manifest(tmp_path):
+    metrics = tmp_path / 'metrics.jsonl'
+    metrics.write_text('fixed complete episode export\n')
+    directory = Path(str(metrics) + '.run')
+    directory.mkdir()
+    config = dict(protocol_sha256='heldout-collection', call_selection='all stored calls')
+    manifest = dict(configuration=config,configuration_sha256=object_hash(config))
+    queue.exclusive_json(directory/'manifest.json',manifest)
+    bank = dict(selection=dict(rule='uniform_executed_calls_v1'),
+                source_configuration_sha256=object_hash(config),source_metrics_sha256=file_hash(metrics))
+    assert queue.collection_protocol_hash(metrics,bank) == 'heldout-collection'
+    config['protocol_sha256'] = 'different-collection'
+    (directory/'manifest.json').write_bytes(queue.canonical_json(manifest))
+    with pytest.raises(ValueError,match='configuration hash'):
+        queue.collection_protocol_hash(metrics,bank)

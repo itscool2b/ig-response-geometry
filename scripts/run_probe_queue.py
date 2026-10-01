@@ -14,7 +14,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from experiment_io import atomic_bytes, canonical_json, file_hash, strict_json
+from experiment_io import atomic_bytes, canonical_json, file_hash, object_hash, strict_json
 
 SOURCE_FILES = ('paired_comparison.py', 'fp32_probe_cache.py', 'faithfulness.py',
                 'integrated_gradients.py', 'experiment_io.py', 'pipeline.py',
@@ -44,6 +44,19 @@ def verify_completion(path, queue_hash):
     return prior
 
 
+def collection_protocol_hash(metrics, bank):
+    """Authenticate the collection protocol independently of call-selection mode."""
+    manifest = strict_json(Path(str(metrics) + '.run') / 'manifest.json')
+    config = manifest['configuration']
+    if object_hash(config) != manifest['configuration_sha256']:
+        raise ValueError('Collection configuration hash differs from its manifest')
+    if manifest['configuration_sha256'] != bank['source_configuration_sha256']:
+        raise ValueError('Bank and collection configuration differ')
+    if file_hash(metrics) != bank['source_metrics_sha256']:
+        raise ValueError('Collection changed after bank authentication')
+    return config['protocol_sha256']
+
+
 def build(args):
     import paired_comparison as paired
     protocol = strict_json(args.protocol)
@@ -56,14 +69,15 @@ def build(args):
     jobs = []
     for stratum in protocol['strata']:
         metrics = args.bank_root.resolve() / stratum['id'] / 'metrics.jsonl'
-        bank = paired.make_bank(metrics)
+        selection = stratum.get('uniform_call_selection', protocol.get('uniform_call_selection'))
+        bank = paired.make_bank(metrics, selection=selection)
         if bank['task'] != stratum['task'] or bank['model'] != stratum['model']:
             raise ValueError('Source stratum differs from the recorded scope')
         if bank['pipeline']['checkpoint_mode'] != stratum['checkpoint_mode']:
             raise ValueError('Source checkpoint mode differs from the recorded stratum')
         if stratum.get('checkpoint_sha256') and bank['pipeline']['checkpoint']['sha256'] != stratum['checkpoint_sha256']:
             raise ValueError('Source checkpoint bytes differ from the recorded stratum')
-        if bank['selection']['collector_protocol_sha256'] != protocol['source_collection_protocol_sha256']:
+        if collection_protocol_hash(metrics, bank) != protocol['source_collection_protocol_sha256']:
             raise ValueError('Context source collection protocol differs')
         bank_file = output / 'banks' / (stratum['id'] + '.json')
         exclusive_json(bank_file, bank)
