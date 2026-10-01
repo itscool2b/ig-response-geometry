@@ -12,7 +12,7 @@ A black RGB image is passed through the same preprocessing. Its normalized chann
 
 The display computes `abs(sum_channels(attr))`, then rescales by its maximum. This differs from `sum_channels(abs(attr))`; opposite signs can cancel before magnitude is taken. Sign carries directional information about the chosen score and baseline. Discarding it is a visualization choice.
 
-The historical overlay stretches the entire original photograph to a square while the model sees an aspect-preserving resize and crop. These geometries are not aligned. An accurate replacement must display the actual model crop or explicitly map its coordinates back to the source image.
+The historical overlay stretched the entire original photograph to a square while the model saw an aspect-preserving resize and crop. Those geometries were not aligned. The current optional script displays the actual preprocessed model crop after inverting normalization; it requires explicit image, budget and fresh output arguments. Historical figures were not regenerated. See [legacy workflow disposition](legacy_workflows.md).
 
 ## Numerical interpretation
 

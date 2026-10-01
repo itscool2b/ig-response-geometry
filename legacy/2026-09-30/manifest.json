@@ -1,0 +1,169 @@
+{
+  "date": "2026-09-30",
+  "source_repository": "public canonical repository only",
+  "source_head": "110dd32a028452f1067a399e4984ae3faaf25948",
+  "files": [
+    {
+      "source": "eval_maniskill.py",
+      "archive": "legacy/2026-09-30/eval_maniskill.py.txt",
+      "sha256": "40764ae820df7b30d0864746f4e101dbd0370f25e744011de5d42d6e51cf4c49",
+      "bytes": 4082
+    },
+    {
+      "source": "finetune_rdt.py",
+      "archive": "legacy/2026-09-30/finetune_rdt.py.txt",
+      "sha256": "fc61773978883f7a9bd7ced9af2c969c6f508434eaec78656be3cb58ea55ff3b",
+      "bytes": 7355
+    },
+    {
+      "source": "generate_demos.py",
+      "archive": "legacy/2026-09-30/generate_demos.py.txt",
+      "sha256": "5eb2029d60c0bafe2046977a1f43d1122ba19a45655fd62ff65b31c33fd96918",
+      "bytes": 4601
+    },
+    {
+      "source": "verify_models.py",
+      "archive": "legacy/2026-09-30/verify_models.py.txt",
+      "sha256": "383a971f20902d31c5d919a99706586c4da99898edd61dac0ae1171f748a528b",
+      "bytes": 1938
+    },
+    {
+      "source": "ig_llava.py",
+      "archive": "legacy/2026-09-30/ig_llava.py.txt",
+      "sha256": "9ff2789cae5aa9cf9fc02ee2b99f49c09037bd79c019c43d7b526564716c3bc7",
+      "bytes": 6024
+    },
+    {
+      "source": "ig_tinyllama.py",
+      "archive": "legacy/2026-09-30/ig_tinyllama.py.txt",
+      "sha256": "e40800d620cdacdf6cd5d53411ef927e04edff48390b22a1248f289b9ea5547b",
+      "bytes": 3107
+    },
+    {
+      "source": "ig_resnet.py",
+      "archive": "legacy/2026-09-30/ig_resnet.py.txt",
+      "sha256": "21c9291774d3beb0300295b5f4ea6db1c951ccd1971eb39d8c5c63a716e3df83",
+      "bytes": 2459
+    },
+    {
+      "source": "ig_vit.py",
+      "archive": "legacy/2026-09-30/ig_vit.py.txt",
+      "sha256": "43c6af39389bde77fd44324e8c0c711a36680092c3ccb90609f1621540967da1",
+      "bytes": 2460
+    },
+    {
+      "source": "overlays.py",
+      "archive": "legacy/2026-09-30/overlays.py.txt",
+      "sha256": "f6a46898f4b2d33d3dad17cff5dd796f4554410851a4677752654e8505ad2413",
+      "bytes": 9885
+    },
+    {
+      "source": "generate_overlays.py",
+      "archive": "legacy/2026-09-30/generate_overlays.py.txt",
+      "sha256": "966c8d9afb9415bd3db396e8272ffc263fc27269150e849ba710119c071c9514",
+      "bytes": 5031
+    },
+    {
+      "source": "make_annotations.py",
+      "archive": "legacy/2026-09-30/make_annotations.py.txt",
+      "sha256": "70cecfe8f031653655d3c7a01c089bfaa9c12313737c0ae2363efdfff9b9c237",
+      "bytes": 11997
+    },
+    {
+      "source": "audit.py",
+      "archive": "legacy/2026-09-30/audit.py.txt",
+      "sha256": "c35f3eba2f38776bc53c71b245c380ad6d3631c25319fcf6dab56d8263cde32c",
+      "bytes": 12369
+    },
+    {
+      "source": "analyze_month4.py",
+      "archive": "legacy/2026-09-30/analyze_month4.py.txt",
+      "sha256": "2ad659ba487fc04cd7152f6f17d55abd422150facd9626293e118c3160f132a6",
+      "bytes": 4927
+    },
+    {
+      "source": "bootstrap_ci.py",
+      "archive": "legacy/2026-09-30/bootstrap_ci.py.txt",
+      "sha256": "41e8d1b34e387d4f46394627986a360adf9e328e0d4e78a5d81e11efcf441c90",
+      "bytes": 15382
+    },
+    {
+      "source": "make_month4_figs.py",
+      "archive": "legacy/2026-09-30/make_month4_figs.py.txt",
+      "sha256": "c1b6a5a0947683c21c0b84ed0e62f2d3404cf2aa942b0942fd56c1af7ccd1f81",
+      "bytes": 11187
+    },
+    {
+      "source": "make_month5_figs.py",
+      "archive": "legacy/2026-09-30/make_month5_figs.py.txt",
+      "sha256": "db2a9549c9c4e92137a2bde751845e380979e05902f4d8a89e19cb2dc9ec71b4",
+      "bytes": 10012
+    },
+    {
+      "source": "make_paper_figs.py",
+      "archive": "legacy/2026-09-30/make_paper_figs.py.txt",
+      "sha256": "b90b64c1c1c31ed54216569014058c3fe5b380851825fef0bc29955c6518d433",
+      "bytes": 10086
+    },
+    {
+      "source": "patch_nb_alttarget.py",
+      "archive": "legacy/2026-09-30/patch_nb_alttarget.py.txt",
+      "sha256": "f405be88b21896e54b57f77ae4b8f9c9d0a0f2c775c1a1d96d88d14f9ec7bc93",
+      "bytes": 2819
+    },
+    {
+      "source": "scripts/run_all.sh",
+      "archive": "legacy/2026-09-30/scripts/run_all.sh.txt",
+      "sha256": "894b149c985026f0e525588d626aa4bc20372f6667821801d9d6ba754ae9a639",
+      "bytes": 1877
+    },
+    {
+      "source": "scripts/run_full_pass.sh",
+      "archive": "legacy/2026-09-30/scripts/run_full_pass.sh.txt",
+      "sha256": "16f205e8d8da5b5124cd6de85da7c1d4e444184ce445f065449f53ba24462c50",
+      "bytes": 1194
+    },
+    {
+      "source": "scripts/run_paper_experiments.sh",
+      "archive": "legacy/2026-09-30/scripts/run_paper_experiments.sh.txt",
+      "sha256": "3875bff85ba60e831f35b67d53b6c554fa7dcd1580aa73b10d8991ca9aa54dc1",
+      "bytes": 6805
+    },
+    {
+      "source": "scripts/run_overlays.sh",
+      "archive": "legacy/2026-09-30/scripts/run_overlays.sh.txt",
+      "sha256": "dfd92309253f66f5cec976084086431e89ab577a42e8ef49bba5e8d92b54b645",
+      "bytes": 1522
+    },
+    {
+      "source": "scripts/run_faithfulness.sh",
+      "archive": "legacy/2026-09-30/scripts/run_faithfulness.sh.txt",
+      "sha256": "cdc8d50281b41e8f3dbd072bf9c818bedb956864fdd54828d65a11e0e55fff27",
+      "bytes": 2549
+    },
+    {
+      "source": "scripts/run_sanity.sh",
+      "archive": "legacy/2026-09-30/scripts/run_sanity.sh.txt",
+      "sha256": "559215055d0e6b89ec903f29db928e6460d98f82a7f9260dffbe74384f48467a",
+      "bytes": 2552
+    },
+    {
+      "source": "scripts/run_displacement.sh",
+      "archive": "legacy/2026-09-30/scripts/run_displacement.sh.txt",
+      "sha256": "ca70e9bcc60b47b0929c2ce7cbccd460cf5426f3a9f79d55c42680fe8b7e2e5f",
+      "bytes": 2538
+    },
+    {
+      "source": "scripts/run_target_ablation.sh",
+      "archive": "legacy/2026-09-30/scripts/run_target_ablation.sh.txt",
+      "sha256": "4913a90dd670b4b30e50f3b73063ea6cfa282d2ef531106e6b751a7ca00c1fce",
+      "bytes": 2924
+    },
+    {
+      "source": "scripts/run_verification.sh",
+      "archive": "legacy/2026-09-30/scripts/run_verification.sh.txt",
+      "sha256": "f8229f3a6bac5035e12ce0b25389e5ef4f87e8f7edb677967e1c2418c8c55a4e",
+      "bytes": 3559
+    }
+  ]
+}

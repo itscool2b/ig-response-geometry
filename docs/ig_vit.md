@@ -22,4 +22,4 @@ The old classifier output was German shepherd with logit 9.15 and probability 89
 
 The heatmap sums signed RGB-channel attributions per pixel, then takes magnitude. The tensor is still a 224 by 224 pixel map unless explicitly aggregated into patches. Its old patch-grid attribution label did not reflect such an aggregation.
 
-The model's preprocessing crop and the stretched original-image overlay have different geometry. A corrected replacement must use or map the actual model crop. The original photograph and derivative figure remain covered by the exception in `NOTICE`, not this repository's MIT license.
+The historical model crop and stretched original-image overlay had different geometry. The current optional script displays the actual preprocessed crop after inverting normalization and labels pixel-coordinate IG correctly. It requires explicit image, budget and fresh output arguments; historical figures were not regenerated. See [legacy workflow disposition](legacy_workflows.md). The original photograph and derivative figure remain covered by the exception in `NOTICE`, not this repository's MIT license.

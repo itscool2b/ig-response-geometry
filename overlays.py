@@ -16,6 +16,7 @@ No RDT or SigLIP import here, these run on any machine with matplotlib
 """
 
 import os
+from pathlib import Path
 from typing import Iterable, Optional
 
 import numpy as np
@@ -23,7 +24,6 @@ import torch
 from PIL import Image
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
-from scipy.ndimage import zoom
 
 from per_step_attribution import MANISKILL_INDICES, JOINT_NAMES
 
@@ -34,13 +34,44 @@ POS_COLOR = "#d32f2f"  # red
 NEG_COLOR = "#1976d2"  # blue
 
 
+def observation_array(value):
+    """The supported collector saves the exact 384-square RGB input image."""
+    if isinstance(value, torch.Tensor):
+        value = value.detach().cpu().numpy()
+    value = np.asarray(value)
+    if value.shape != (384, 384, 3) or value.dtype != np.uint8:
+        raise ValueError("Expected the recorded 384x384 RGB uint8 observation; unknown crop geometry is not inferred")
+    return value
+
+
+def model_input_rgb(tensor, mean, std):
+    """Display the exact normalized image coordinates used by a vision model."""
+    value = tensor.detach().float().cpu().squeeze(0)
+    if value.ndim != 3 or value.shape[0] != 3 or not torch.isfinite(value).all():
+        raise ValueError("Expected a finite three-channel model input")
+    value = value * torch.tensor(std).reshape(3, 1, 1) + torch.tensor(mean).reshape(3, 1, 1)
+    return value.permute(1, 2, 0).clamp(0, 1).numpy()
+
+
+def save_new_figure(figure, path, **kwargs):
+    """Refuse to overwrite any historical or existing image."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("xb") as stream:
+        figure.savefig(stream, format="png", **kwargs)
+
+
 def extract_vision_heatmap(vision_attr):
     """(1, 4374, H) -> (GRID_SIZE, GRID_SIZE) normalized to [0, 1] from the
     external-camera slot. vision_attr can be bf16 or float, on any device."""
-    per_pos = vision_attr.squeeze(0).sum(dim=-1).detach().cpu().float().numpy()
+    if vision_attr.ndim != 3 or vision_attr.shape[0] != 1 or vision_attr.shape[1] != 6 * NUM_PATCHES or not torch.isfinite(vision_attr).all():
+        raise ValueError("Expected finite attribution for six 729-patch image slots")
+    # Signed hidden-coordinate sum followed by absolute value is a plotting
+    # convention, distinct from the evaluator's sum of absolute coordinates.
+    per_pos = vision_attr.detach().float().squeeze(0).sum(dim=-1).cpu().numpy()
     ext = per_pos[EXT_CAM_SLOT * NUM_PATCHES:(EXT_CAM_SLOT + 1) * NUM_PATCHES]
     grid = np.abs(ext).reshape(GRID_SIZE, GRID_SIZE)
-    return grid / (grid.max() + 1e-8)
+    return grid / grid.max() if grid.max() else grid
 
 
 def extract_language_per_token(lang_attr, lang_attn_mask=None, n_real=None):
@@ -48,17 +79,40 @@ def extract_language_per_token(lang_attr, lang_attn_mask=None, n_real=None):
     (1, 1024, H) -> (n_real,) per-token attribution (sum over hidden dim).
     Pass either `lang_attn_mask` (1, 1024) bool tensor, or `n_real` int.
     """
-    if n_real is None:
-        assert lang_attn_mask is not None, "need lang_attn_mask or n_real"
-        n_real = int(lang_attn_mask.sum().item())
-    per_tok = lang_attr.squeeze(0)[:n_real].sum(dim=-1).detach().cpu().float().numpy()
+    if lang_attr.ndim != 3 or lang_attr.shape[0] != 1 or not torch.isfinite(lang_attr).all():
+        raise ValueError("Expected finite language attribution")
+    values = lang_attr.detach().float().squeeze(0).sum(dim=-1)
+    if lang_attn_mask is not None:
+        mask = torch.as_tensor(lang_attn_mask, device=values.device).bool().reshape(-1)
+        if mask.numel() != values.numel():
+            raise ValueError("Language attention mask length differs from attribution")
+        values = values[mask]
+    else:
+        if type(n_real) is not int or not 0 < n_real <= values.numel():
+            raise ValueError("Supply the exact mask or a valid historical prefix length")
+        values = values[:n_real]
+    per_tok = values.cpu().numpy()
     return per_tok
 
 
 def extract_state_per_joint(state_attr):
     """(1, 1, 128) -> (8,) per-joint attribution at MANISKILL_INDICES."""
+    if tuple(state_attr.shape) != (1, 1, 128) or not torch.isfinite(state_attr).all():
+        raise ValueError("Expected finite raw-state attribution with shape (1,1,128)")
     flat = state_attr.squeeze(0).squeeze(0).detach().cpu().float().numpy()
     return flat[MANISKILL_INDICES]
+
+
+def selected_token_labels(labels, mask):
+    mask = torch.as_tensor(mask).bool().reshape(-1)
+    indices = mask.nonzero().flatten().tolist()
+    if labels is None:
+        return [f"position_{index}" for index in indices]
+    if len(labels) == mask.numel():
+        return [labels[index] for index in indices]
+    if indices == list(range(len(indices))) and len(labels) == len(indices):
+        return list(labels)
+    raise ValueError("Token labels do not map to the recorded attended positions")
 
 
 def render_vision_panel(ax, obs_image, heatmap_grid, title="vision patch attribution"):
@@ -67,17 +121,14 @@ def render_vision_panel(ax, obs_image, heatmap_grid, title="vision patch attribu
     matplotlib axis. `heatmap_grid` is the GRID_SIZE x GRID_SIZE normalized
     heatmap returned by extract_vision_heatmap.
     """
-    target_size = 384
-    zoom_factor = target_size / heatmap_grid.shape[0]
-    heatmap_up = zoom(heatmap_grid, (zoom_factor, zoom_factor), order=1)
-    #Fallback: if scipy produces a slightly off-size array, crop or pad.
-    if heatmap_up.shape != (target_size, target_size):
-        zoomed = np.zeros((target_size, target_size))
-        h, w = min(target_size, heatmap_up.shape[0]), min(target_size, heatmap_up.shape[1])
-        zoomed[:h, :w] = heatmap_up[:h, :w]
-        heatmap_up = zoomed
-    ax.imshow(np.array(obs_image))
-    im = ax.imshow(heatmap_up, cmap="hot", alpha=0.5)
+    observation = observation_array(obs_image)
+    if heatmap_grid.shape != (GRID_SIZE, GRID_SIZE) or not np.isfinite(heatmap_grid).all():
+        raise ValueError("Expected a finite 27x27 representation map")
+    # Put both arrays in the same coordinate extent. Nearest display preserves
+    # patch boundaries and does not claim pixel-level attribution within a patch.
+    extent = (-.5, 383.5, 383.5, -.5)
+    ax.imshow(observation, extent=extent)
+    im = ax.imshow(heatmap_grid, cmap="hot", alpha=0.5, interpolation="nearest", extent=extent)
     ax.set_title(title, fontsize=11)
     ax.axis("off")
     return im
@@ -136,7 +187,9 @@ def render_step_figure(sidecar, lang_attn_mask, token_labels, out_path,
                  else int(np.asarray(lang_attn_mask).sum())
     else:
         n_real = len(token_labels) if token_labels is not None else sidecar["lang_attr"].shape[1]
-    lang_per_tok = extract_language_per_token(sidecar["lang_attr"], n_real=n_real)
+    lang_per_tok = extract_language_per_token(sidecar["lang_attr"], lang_attn_mask=lang_attn_mask, n_real=n_real)
+    if lang_attn_mask is not None:
+        token_labels = selected_token_labels(token_labels, lang_attn_mask)
     state_per_joint = extract_state_per_joint(sidecar["state_attr"])
     obs_image = Image.fromarray(sidecar["obs_image"]) \
                 if isinstance(sidecar["obs_image"], np.ndarray) else sidecar["obs_image"]
@@ -159,7 +212,7 @@ def render_step_figure(sidecar, lang_attn_mask, token_labels, out_path,
 
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     plt.tight_layout()
-    plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
+    save_new_figure(fig, out_path, dpi=dpi, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -176,20 +229,22 @@ def render_overlay_only_png(sidecar, out_path, dpi=150):
     render_vision_panel(ax, obs_image, heatmap, title="")
     ax.set_title("")
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-    plt.savefig(out_path, dpi=dpi, bbox_inches="tight", pad_inches=0)
+    save_new_figure(fig, out_path, dpi=dpi, bbox_inches="tight", pad_inches=0)
     plt.close(fig)
 
 
-def render_tokens_only_figure(sidecar, token_labels, out_path, n_real=None, dpi=150):
+def render_tokens_only_figure(sidecar, token_labels, out_path, n_real=None, dpi=150, lang_attn_mask=None):
     """Just the language bar chart. n_real defaults to len(token_labels)."""
     if n_real is None:
         n_real = len(token_labels) if token_labels is not None else sidecar["lang_attr"].shape[1]
-    lang_per_tok = extract_language_per_token(sidecar["lang_attr"], n_real=n_real)
-    fig, ax = plt.subplots(figsize=(6, max(4, 0.3 * n_real)), dpi=dpi)
+    lang_per_tok = extract_language_per_token(sidecar["lang_attr"], lang_attn_mask=lang_attn_mask, n_real=n_real)
+    if lang_attn_mask is not None:
+        token_labels = selected_token_labels(token_labels, lang_attn_mask)
+    fig, ax = plt.subplots(figsize=(6, max(4, 0.3 * len(lang_per_tok))), dpi=dpi)
     render_language_panel(ax, lang_per_tok, token_labels)
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     plt.tight_layout()
-    plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
+    save_new_figure(fig, out_path, dpi=dpi, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -201,7 +256,9 @@ def render_episode_summary(sidecars_in_order: Iterable[dict], out_path,
     """
     sidecars = list(sidecars_in_order)
     if len(sidecars) == 0:
-        return
+        raise ValueError("Cannot render an empty episode")
+    if type(n_frames) is not int or n_frames < 2:
+        raise ValueError("Episode summaries require at least two requested frames")
     if len(sidecars) <= n_frames:
         picks = list(range(len(sidecars)))
     else:
@@ -219,13 +276,13 @@ def render_episode_summary(sidecars_in_order: Iterable[dict], out_path,
         obs_image = Image.fromarray(sc["obs_image"]) \
                     if isinstance(sc["obs_image"], np.ndarray) else sc["obs_image"]
         heatmap = extract_vision_heatmap(sc["vision_attr"])
-        axes[0, col].imshow(np.array(obs_image))
-        axes[0, col].set_title(f"call {idx}", fontsize=10)
+        axes[0, col].imshow(observation_array(obs_image))
+        axes[0, col].set_title(f"call {sc.get('policy_call_idx', idx)}", fontsize=10)
         axes[0, col].axis("off")
         render_vision_panel(axes[1, col], obs_image, heatmap,
-                            title=f"attribution (call {idx})")
+                            title=f"attribution (call {sc.get('policy_call_idx', idx)})")
 
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     plt.tight_layout()
-    plt.savefig(out_path, dpi=dpi, bbox_inches="tight")
+    save_new_figure(fig, out_path, dpi=dpi, bbox_inches="tight")
     plt.close(fig)
