@@ -19,8 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.build_paper import validate_revision_assets
 
 IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
-               'the-readout-not-the-denoiser-repo', 'ig-work-2026-private-full',
-               'users/megag', 'users\\megag')
+               'the-readout-not-the-denoiser-repo')
 
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
@@ -90,6 +89,8 @@ def assert_anonymous(text, name):
     hits = [value for value in IDENTIFIERS if value in lowered]
     if hits:
         raise ValueError('Identifying text in ' + name + ': ' + ', '.join(hits))
+    if re.search(r'(?i)(?:[a-z]:[\\/](?:users|home)[\\/]|/(?:Users|home|workspace)/)', text):
+        raise ValueError('Local machine path in ' + name)
 
 
 def member_name(name):

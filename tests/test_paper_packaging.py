@@ -4,7 +4,7 @@ import zipfile
 
 import pytest
 
-from scripts.package_paper_sources import anonymous_source, build
+from scripts.package_paper_sources import anonymous_source, assert_anonymous, build
 
 
 def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
@@ -41,3 +41,9 @@ def test_changed_author_or_malformed_conditionals_fail_closed():
         anonymous_source(r'\ifanonymous unclosed')
     with pytest.raises(ValueError,match='author declaration'):
         anonymous_source(r'\author{Different syntax}')
+
+
+@pytest.mark.parametrize('path', [r'C:\Users\example\paper.tex', '/home/example/paper.tex', '/workspace/project/paper.tex'])
+def test_machine_paths_are_rejected_without_hardcoding_a_private_username(path):
+    with pytest.raises(ValueError,match='Local machine path'):
+        assert_anonymous(path, 'fixture.tex')
