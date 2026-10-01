@@ -34,7 +34,7 @@ def test_in_paper_dependency_alias_cannot_escape_output_tree(tmp_path,monkeypatc
     root=toy_root(tmp_path,monkeypatch)
     # The temporary absolute path can contain the workstation username. The
     # path boundary must reject it independently of the identity blacklist.
-    monkeypatch.setattr(package,'IDENTIFIERS',())
+    monkeypatch.setattr(package,'assert_anonymous',lambda *args: None)
     name=(root/'paper/references.bib').as_posix() if absolute else '../paper/references.bib'
     (root/'paper/paper.tex').write_text(manuscript(r'\input{'+name+'}'))
     before={p.name:p.read_bytes() for p in (root/'paper').iterdir()}
