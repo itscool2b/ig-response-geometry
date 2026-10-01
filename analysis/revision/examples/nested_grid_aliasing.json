@@ -1,0 +1,918 @@
+{
+  "active_entries": 1,
+  "actual": [
+    1,
+    1
+  ],
+  "aliased_coordinate_l1_error": "1/5",
+  "aliased_grid_ig": [
+    "1/5",
+    "3/10"
+  ],
+  "aliased_ranking": [
+    1,
+    0
+  ],
+  "aliased_relative_coordinate_l1_error": "2/5",
+  "aliased_signed_coordinate_error": [
+    "-1/10",
+    "1/10"
+  ],
+  "baseline": [
+    0,
+    0
+  ],
+  "budgets": [
+    32,
+    64,
+    128,
+    256
+  ],
+  "environment": {
+    "device": "cpu",
+    "torch": "2.14.1+cpu"
+  },
+  "exact_endpoint_gap": "1/2",
+  "exact_ig": [
+    "3/10",
+    "1/5"
+  ],
+  "exact_ranking": [
+    0,
+    1
+  ],
+  "fixed_own_reference": 1,
+  "frequency": 128,
+  "kind": "smooth_nested_grid_aliasing_counterexample",
+  "limits": [
+    "Perfect exact-grid equalities do not imply bitwise equal FP32 or FP64 quadrature outputs; their measured residuals are retained.",
+    "The 2M grid resolves this particular sinusoidal construction, not every smooth target.",
+    "Common response curves agree because the coarse maps select the same ordered masks on the same policy.",
+    "No claim is made that this mechanism caused the observed PickSingleYCB failures."
+  ],
+  "observations": [
+    {
+      "dtype": "torch.float32",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 32,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.2000000089406967,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.20000000298023224,
+        0.30000001192092896
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.4000000178813934,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float32",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 64,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.2000000089406967,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.20000000298023224,
+        0.30000001192092896
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.4000000178813934,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float32",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 128,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.2000000238418579,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.19999998807907104,
+        0.30000001192092896
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.4000000476837158,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float32",
+      "exact_grid_ig": [
+        "3/10",
+        "1/5"
+      ],
+      "intervals": 256,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 1.4901161193847656e-08,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.30000001192092896,
+        0.20000000298023224
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 2.9802322387695312e-08,
+      "ranking": [
+        0,
+        1
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.6,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.84,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.08000000000000002,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.4,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.4,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.64,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.18,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.6,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float64",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 32,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.19999999999999996,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.2,
+        0.3
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.3999999999999999,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float64",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 64,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.19999999999999998,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.19999999999999998,
+        0.3
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.39999999999999997,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float64",
+      "exact_grid_ig": [
+        "1/5",
+        "3/10"
+      ],
+      "intervals": 128,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 0.2,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.2,
+        0.30000000000000004
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 0.4,
+      "ranking": [
+        1,
+        0
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.4,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.64,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.18,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.6,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.6,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.84,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.08000000000000002,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.4,
+            0.0
+          ]
+        }
+      }
+    },
+    {
+      "dtype": "torch.float64",
+      "exact_grid_ig": [
+        "3/10",
+        "1/5"
+      ],
+      "intervals": 256,
+      "measured_absolute_completeness_residual": 0.0,
+      "measured_attribution_sum": 0.5,
+      "measured_coordinate_l1_error": 2.7755575615628914e-17,
+      "measured_gap": 0.5,
+      "measured_ig": [
+        0.3,
+        0.20000000000000004
+      ],
+      "measured_relative_completeness_residual": 0.0,
+      "measured_relative_coordinate_l1_error": 5.551115123125783e-17,
+      "ranking": [
+        0,
+        1
+      ],
+      "repeat_bitwise_equal": true,
+      "response_curves": {
+        "deletion": {
+          "action": [
+            1.0,
+            0.6,
+            0.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            1.0,
+            0.84,
+            0.0
+          ],
+          "points": [
+            [
+              1.0,
+              1.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "quadratic": [
+            -0.0,
+            -0.08000000000000002,
+            -0.5
+          ],
+          "raw_rms": [
+            0.0,
+            0.4,
+            1.0
+          ]
+        },
+        "insertion": {
+          "action": [
+            0.0,
+            0.4,
+            1.0
+          ],
+          "fractions": [
+            0.0,
+            0.5,
+            1.0
+          ],
+          "normalized_quadratic": [
+            0.0,
+            0.64,
+            1.0
+          ],
+          "points": [
+            [
+              0.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "quadratic": [
+            -0.5,
+            -0.18,
+            -0.0
+          ],
+          "raw_rms": [
+            1.0,
+            0.6,
+            0.0
+          ]
+        }
+      }
+    }
+  ],
+  "scope": "Analytic construction with CPU kernel checks; not an RDT failure diagnosis or a numerical-setting approval.",
+  "sigma_squared": 1,
+  "source_sha256": {
+    "analysis/revision/nested_grid_aliasing.py": "3e4fcb2677d14c55d5a03fa697442ddeb949ca9e73d967573f7b186c369fef6c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2"
+  },
+  "version": 1
+}
