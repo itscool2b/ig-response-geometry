@@ -36,13 +36,15 @@ The output directory must be new. The canonical registry contains 284 results an
 The separate [paired rescoring analysis](analysis/paired_rescoring/README.md) measures `AUC_Q - AUC_L2` within each saved curve, with equal-episode mean effects and a paired-call median sensitivity. It retains all eight ranking/modality/direction cases, endpoint orientation, undefined gaps and sampled overshoots. Its conditional episode-bootstrap intervals do not compare the two unauthenticated ranking cohorts or test ranking superiority.
 All eight paired medians are positive, while six means are negative because extreme overshooting interventions dominate those means. The paper reports both summaries and traces their disagreement to the saved curves, without trimming the tail.
 
+The aliasing toy and manuscript asset regeneration also require PyTorch, which is absent from the minimal `requirements.txt`. They were checked in the recorded full CPU environment with `torch==2.14.1+cpu` and `torch.version.cuda is None`. Activate that CPU environment before running:
+
 ```bash
 python -m analysis.revision.nested_grid_aliasing --output runs/nested-grid-aliasing.json
 ```
 
 The paper's practical evaluation procedure separates attribution target, evaluation response, matched ranking controls, numerical checks and the unit of statistical analysis. A chosen response defines the comparison; passing finite numerical checks does not universally certify an integration budget.
 
-The CPU revision environment used Python 3.12.14. `requirements-cpu-lock.txt` records its full installed package set, including CPU Torch and test dependencies. `requirements.txt` is the smaller pinned analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
+The CPU revision environment used Python 3.12.14. `requirements-cpu-lock.txt` records the installed package versions, including Torch and test dependencies; it is an environment snapshot, not a CPU-wheel-index installation recipe or a fresh-install guarantee. `requirements.txt` is the smaller pinned saved-data analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
 
 ## Revised GPU runtime
 

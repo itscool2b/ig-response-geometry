@@ -250,6 +250,10 @@ See analysis/numerical_case/README.md for the CPU reproducer and evidence limits
 Additional CPU evidence is documented in analysis/paired_rescoring/README.md:
 
     python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+
+The aliasing toy and manuscript asset regeneration require the recorded full
+CPU environment with torch2.14.1+cpu, beyond the minimal requirements.txt:
+
     python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
 
 The paired analysis retains all eight cases and reports conditional episode
@@ -301,10 +305,17 @@ or GPU validation. The included numerical case reproduces a frozen partial audit
 and selected saved tensors; it does not repeat model evaluation or approve a
 production setting. Prospective comparisons and their broader claims are deferred.
 See analysis/numerical_case/README.md. Final manuscript/package review remains open.
-The additional paired response analysis and smooth aliasing toy run on CPU:
+The additional paired response analysis uses the minimal saved-data environment:
 
     python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+
+The aliasing toy and manuscript asset regeneration require the recorded full
+CPU environment with torch2.14.1+cpu, beyond the minimal requirements.txt:
+
     python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
+
+requirements-cpu-lock.txt records package versions; it is not a CPU-wheel-index
+installation recipe or evidence of a newly tested installation.
 
 See analysis/paired_rescoring/README.md for all cases, endpoint rules and interval
 limitations. These additions do not approve a production budget or ranking method.

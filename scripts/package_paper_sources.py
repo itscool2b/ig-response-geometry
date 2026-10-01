@@ -154,7 +154,9 @@ def build(root, output):
     validate_revision_assets(root)
     if output.exists():
         raise FileExistsError('Choose a fresh package directory')
-    source = (root / 'paper/paper.tex').read_text(encoding='utf-8')
+    # Apply the same exact-byte decoding as the research supplement. Universal
+    # newline conversion here would give two different anonymous source files.
+    source = (root / 'paper/paper.tex').read_bytes().decode('utf-8')
     transformed = anonymous_source(source)
     files = {'paper.tex': transformed.encode('utf-8')}
     names = manuscript_dependencies(transformed, top_level=True)

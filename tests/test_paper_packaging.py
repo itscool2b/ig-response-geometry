@@ -26,6 +26,7 @@ def test_source_package_is_curated_and_does_not_include_private_provenance(tmp_p
     assert first['package_sha256'] == second['package_sha256']
     with zipfile.ZipFile(tmp_path/'first/anonymous-manuscript-sources-draft.zip') as archive:
         names = archive.namelist()
+        assert archive.read('paper.tex') == anonymous_source(original.decode('utf-8')).encode('utf-8')
         assert 'private-provenance.json' not in names
         assert 'tmlr-LICENSE' in names and 'tmlr-source.json' in names
         assert not any('legacy' in n or 'lineage' in n or 'paper.pdf' in n for n in names)
