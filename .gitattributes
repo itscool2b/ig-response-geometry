@@ -9,9 +9,14 @@ analysis/numerical_case/** -text
 # Manuscript lineage authenticates exact generated and source bytes too.
 paper/paper.tex -text
 paper/appendix_aliasing.tex -text
+paper/references.bib -text
 paper/arxiv_abstract.txt -text
 paper/tables_revision/** -text
 paper/figures_revision/** -text
+paper/tmlr.sty -text
+paper/tmlr.bst -text
+paper/tmlr-LICENSE -text
+paper/tmlr-source.json -text
 scripts/build_revision_assets.py -text
 # Preserved source files have an exact-byte archive manifest.
 legacy/** -text

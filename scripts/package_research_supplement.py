@@ -18,6 +18,9 @@ import subprocess
 import sys
 import zipfile
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts.validate_template_provenance import validate_template_bytes
+
 
 ENTRYPOINTS = (
     "analysis/revision/__init__.py", "analysis/revision/analyze.py", "analysis/revision/verify.py", "audit.py",
@@ -33,6 +36,7 @@ ENTRYPOINTS = (
     # static import discovery cannot establish that dependency.
     "scripts/run_weight_arrangement_control.py",
     "scripts/audit_numerical_cohort.py", "scripts/build_revision_assets.py", "scripts/build_paper.py",
+    "scripts/validate_template_provenance.py",
 )
 PENDING_ADDITIONS = (
     "paired_study_analysis.py", "scripts/calibrate_paired_intervals.py",
@@ -49,7 +53,7 @@ DOCUMENTS = (
     "data/README.md", "data/README-historical-2026-09-30.md",
     "docs/integrated_gradients.md", "docs/per_step_ig.md", "docs/ig_rdt.md",
     "docs/ig_resnet.md", "docs/ig_vit.md", "docs/ig_tinyllama.md", "docs/runtime_verification.md",
-    "docs/legacy_workflows.md", "scripts/build_paper.md", "paper/arxiv_abstract.txt",
+    "docs/legacy_workflows.md", "docs/cpu_reproduction.md", "scripts/build_paper.md", "paper/arxiv_abstract.txt",
     "scripts/setup_runtime.sh", "scripts/run_full_pass.sh", "scripts/run_faithfulness.sh",
     "scripts/run_sanity.sh", "scripts/run_displacement.sh", "scripts/run_overlays.sh",
     "paper/paper.tex", "paper/appendix_aliasing.tex", "paper/references.bib", "paper/tmlr.sty", "paper/tmlr.bst",
@@ -62,7 +66,7 @@ RESULT_FILES = ("diagnostics.json", "duplicate_population_sensitivity.json", "du
     "population_membership.json.gz", "provenance.json", "random_order_counterexample.json",
     "raw_line_ledger.csv.gz", "reconciliation.json", "results.csv", "solver_endpoint_sensitivity.json", "summary.json")
 PAPER_ASSETS = tuple("paper/tables_revision/" + name + ".tex" for name in
-    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants", "numerical_roster", "numerical_diagnostics", "paired_rescoring")) + (
+    ("baseline", "budget", "completeness", "faithfulness", "macros", "oneb", "rescore", "sanity", "variants", "numerical_roster", "numerical_diagnostics", "paired_rescoring", "episode_influence")) + (
     "paper/figures_revision/lineage.json", "paper/figures_revision/response_geometry.pdf",
     "paper/figures_revision/response_geometry.png", "paper/figures_revision/solver_endpoint.pdf",
     "paper/figures_revision/solver_endpoint.png")
@@ -222,6 +226,9 @@ def collect(root, revision, extra_identifiers=()):
 GUIDE = """# Identified research supplement working draft
 
 This package preserves the identified author license and third-party notices.
+The exact pinned TMLR files retain the upstream repository Apache-2.0 license
+and the bibliography header's LPPL-1.0-or-later notice. Neither overrides the
+other by assertion here; see paper/tmlr-source.json and paper/tmlr-LICENSE.
 It is not an anonymous submission. No model weights, private audit material,
 historical photograph, old notebook, or old rendered attribution is included.
 
@@ -250,15 +257,21 @@ See analysis/numerical_case/README.md for the CPU reproducer and evidence limits
 Additional CPU evidence is documented in analysis/paired_rescoring/README.md:
 
     python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+    python -m analysis.paired_rescoring.influence --output runs/episode-influence
+    python -m analysis.paired_rescoring.influence --verify runs/episode-influence
 
-The aliasing toy and manuscript asset regeneration require the recorded full
+The aliasing toy and manuscript asset regeneration require the full
 CPU environment with torch2.14.1+cpu, beyond the minimal requirements.txt:
 
     python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
 
 The paired analysis retains all eight cases and reports conditional episode
-intervals. The toy aliasing example concerns recovery of exact IG, not ranking
-efficacy or the cause of actual-model failures. Both leave canonical v2 intact.
+intervals. The separate exploratory influence artifact retains all 240 whole-
+episode omissions without changing the untrimmed primary results. Its ranges
+are not confidence intervals. The toy separates exact IG from perturbation
+scores and does not establish RDT efficacy or explain actual-model failures.
+All these additions leave canonical v2 intact. See docs/cpu_reproduction.md
+for the explicit fresh Windows CPU installation route, including wheel index.
 
 Historical legacy executables and their tests are intentionally omitted. Tests
 in this package concern retained code. Archive-only documentation links may
@@ -271,6 +284,9 @@ ANONYMOUS_GUIDE = """# Private anonymous research supplement candidate
 This is a local review candidate, unapproved for external distribution or
 submission. Its proposed own-author copyright attribution is pending review;
 MIT permission/disclaimer terms and all third-party notices are preserved.
+The exact pinned TMLR files retain the upstream repository Apache-2.0 license
+and the bibliography header's LPPL-1.0-or-later notice. Neither overrides the
+other by assertion here; see paper/tmlr-source.json and paper/tmlr-LICENSE.
 
 The package contains the complete 99-file historical JSONL input inventory,
 strict retrospective analysis, canonical numerical results, current runtime,
@@ -308,14 +324,20 @@ See analysis/numerical_case/README.md. Final manuscript/package review remains o
 The additional paired response analysis uses the minimal saved-data environment:
 
     python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
+    python -m analysis.paired_rescoring.influence --output runs/episode-influence
+    python -m analysis.paired_rescoring.influence --verify runs/episode-influence
 
-The aliasing toy and manuscript asset regeneration require the recorded full
+The aliasing toy and manuscript asset regeneration require the full
 CPU environment with torch2.14.1+cpu, beyond the minimal requirements.txt:
 
     python -m analysis.revision.nested_grid_aliasing --output runs/aliasing.json
 
-requirements-cpu-lock.txt records package versions; it is not a CPU-wheel-index
-installation recipe or evidence of a newly tested installation.
+requirements-cpu-lock.txt records package versions. docs/cpu_reproduction.md
+supplies the explicit CPU-wheel index and installation procedure checked in
+a new isolated Windows x86-64 Python3.12.14 environment. No new Linux or TeX
+installation is implied. The influence ranges describe all 240 whole-episode
+omissions; they are exploratory diagnostics, not confidence intervals or a
+replacement for the original paired results.
 
 See analysis/paired_rescoring/README.md for all cases, endpoint rules and interval
 limitations. These additions do not approve a production budget or ranking method.
@@ -369,6 +391,7 @@ def build(root, revision, output, extra_identifiers=(), *, private_anonymous_can
     contents, audit = collect(root, revision, extra_identifiers)
     if private_anonymous_candidate:
         contents, audit["anonymous_candidate"] = anonymous_candidate(contents, extra_identifiers)
+    audit["template_provenance"] = validate_template_bytes(contents)
     contents["SUPPLEMENT_README.md"] = (ANONYMOUS_GUIDE if private_anonymous_candidate else GUIDE).encode()
     # This supplements the unchanged embedded notice and also covers the
     # configuration derived from the same pinned upstream project.

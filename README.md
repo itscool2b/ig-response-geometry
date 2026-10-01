@@ -12,13 +12,15 @@ Normalized random-order AUC is not universally 0.5. A finite quadratic counterex
 
 The exact Q/L2 gradient relation has a positive, path-dependent scale factor. A smooth two-feature construction shows that this factor can reverse the integrated feature ranking, including at the implemented L2 stabilizer. This is an analytic existence result, not an observed RDT ranking improvement.
 
-A separate smooth construction shows that perfect completeness, identical rankings and identical response curves across several nested integration grids can still disagree with the exact IG ranking. Its coordinate error is 40% in relative L1 despite zero exact completeness error. The CPU example isolates a limitation of finite-grid checks; it does not diagnose the cause of the RDT failures or establish which ranking has better perturbation performance.
+A separate smooth construction shows that perfect completeness, identical rankings and identical response curves across several nested integration grids can still disagree with the exact IG ranking. Its coordinate error is 40% in relative L1 despite zero exact completeness error. On the same response and interventions, the inaccurate ranking scores better on both perturbation metrics in this toy. Numerical recovery of an integral and perturbation quality are distinct questions; the example neither diagnoses RDT failures nor establishes useful RDT rankings.
 
 The last fully audited numerical snapshot covers 12 completed 170M contexts out of 21 available and 24 planned contexts. All 2,880 repeat-related equality and coverage checks pass, including 1,800 equality checks, while 302 dependent numerical criteria violate their predeclared tolerances. The incomplete roster and failed checks are retained. Repeatability does not establish convergence, and no production integration setting is approved. Broader numerical qualification and prospective ranking/control studies are deferred; their source code and protocols do not constitute experimental results.
 
 Original observation/attribution sidecars, exact historical checkpoint binaries and some primary raw records are unavailable. Scalar fingerprint agreement can detect inconsistencies but cannot authenticate those missing artifacts. Newly downloaded weights, embeddings and collected contexts are identified as new evidence.
 
 ## Reproduce the saved-data analysis on CPU
+
+For the complete CPU environment, use the [fresh-install procedure](docs/cpu_reproduction.md), checked on Windows x86-64 with Python 3.12.14. It explicitly selects the official Torch CPU wheel before installing the pinned dependencies. No GPU or model download is needed for these reproduction commands.
 
 The active analysis reads all 99 preserved JSONL inputs through an immutable manifest. It records every physical line, quarantines the one known corrupted line by hash, retains all duplicate occurrences, and reports explicit primary and sensitivity populations. Point estimates and episode-bootstrap intervals share population identities. See [analysis/revision/README.md](analysis/revision/README.md).
 
@@ -36,7 +38,7 @@ The output directory must be new. The canonical registry contains 284 results an
 The separate [paired rescoring analysis](analysis/paired_rescoring/README.md) measures `AUC_Q - AUC_L2` within each saved curve, with equal-episode mean effects and a paired-call median sensitivity. It retains all eight ranking/modality/direction cases, endpoint orientation, undefined gaps and sampled overshoots. Its conditional episode-bootstrap intervals do not compare the two unauthenticated ranking cohorts or test ranking superiority.
 All eight paired medians are positive, while six means are negative because extreme overshooting interventions dominate those means. The paper reports both summaries and traces their disagreement to the saved curves, without trimming the tail.
 
-The aliasing toy and manuscript asset regeneration also require PyTorch, which is absent from the minimal `requirements.txt`. They were checked in the recorded full CPU environment with `torch==2.14.1+cpu` and `torch.version.cuda is None`. Activate that CPU environment before running:
+The aliasing toy and manuscript asset regeneration also require PyTorch, which is absent from the minimal `requirements.txt`. Install and activate the [checked full CPU environment](docs/cpu_reproduction.md), with `torch==2.14.1+cpu` and `torch.version.cuda is None`, before running:
 
 ```bash
 python -m analysis.revision.nested_grid_aliasing --output runs/nested-grid-aliasing.json
@@ -44,7 +46,9 @@ python -m analysis.revision.nested_grid_aliasing --output runs/nested-grid-alias
 
 The paper's practical evaluation procedure separates attribution target, evaluation response, matched ranking controls, numerical checks and the unit of statistical analysis. A chosen response defines the comparison; passing finite numerical checks does not universally certify an integration budget.
 
-The CPU revision environment used Python 3.12.14. `requirements-cpu-lock.txt` records the installed package versions, including Torch and test dependencies; it is an environment snapshot, not a CPU-wheel-index installation recipe or a fresh-install guarantee. `requirements.txt` is the smaller pinned saved-data analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
+The [exploratory episode-influence supplement](analysis/paired_rescoring/influence_results/2026-10-01-v1/methods_results.md) retains all eight cases and all 240 whole-episode omissions. Every negative insertion mean retains its sign after each single-episode omission; two language-deletion signs can change. These are influence diagnostics, not confidence intervals, independent replications or a reason to trim the primary analysis.
+
+The CPU revision environment uses Python 3.12.14. `requirements-cpu-lock.txt` records installed package versions; [the installation procedure](docs/cpu_reproduction.md) supplies the explicit CPU index and was checked in a new isolated Windows environment. `requirements.txt` is the smaller pinned saved-data analysis layer. Historical notebooks and `make_*_figs.py` generators are archival workflows; their hardcoded constants and saved outputs do not authenticate missing primary data. Do not run historical notebooks over the preserved figures.
 
 ## Revised GPU runtime
 

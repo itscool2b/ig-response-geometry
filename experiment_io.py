@@ -11,9 +11,14 @@ import json
 import os
 from pathlib import Path
 import platform
+import time
 import uuid
 
 from filelock import FileLock
+
+
+_WINDOWS = os.name == 'nt'
+_REPLACE_RETRY_DELAYS = (0.01, 0.05, 0.20)
 
 
 def canonical_json(value):
@@ -41,18 +46,55 @@ def tensor_hash(tensor):
 
 
 def atomic_bytes(path, content):
+    """Publish complete bytes atomically, retaining a failed replacement candidate.
+
+    Windows access-denied errors can clear on a later attempt, but the error
+    alone does not identify their cause. Retry only the observed WinError 5
+    class, for at most 0.26 seconds of scheduled waiting. Other errors and
+    persistent failures propagate. A retained ``.tmp`` is evidence, never a
+    committed record or an automatically recoverable transaction.
+    """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
+    candidate_sha256 = hashlib.sha256(content).hexdigest()
+    owned = False
     try:
         with temp.open('xb') as handle:
+            owned = True
             handle.write(content)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temp, path)
-    finally:
-        if temp.exists():
-            temp.unlink()
+    except BaseException as error:
+        # Do not delete a pre-existing name if exclusive creation failed, or
+        # replace the primary write/fsync exception with a cleanup exception.
+        if owned:
+            try:
+                temp.unlink(missing_ok=True)
+            except OSError as cleanup_error:
+                error.add_note(f'Incomplete atomic-write candidate retained at {temp}; '
+                               f'cleanup failed: {cleanup_error!r}')
+        raise
+
+    attempts = 0
+    try:
+        while True:
+            attempts += 1
+            try:
+                os.replace(temp, path)
+                return
+            except PermissionError as error:
+                if not (_WINDOWS and getattr(error, 'winerror', None) == 5
+                        and attempts <= len(_REPLACE_RETRY_DELAYS)):
+                    raise
+                time.sleep(_REPLACE_RETRY_DELAYS[attempts - 1])
+    except BaseException as error:
+        # Keep the complete pending report even when retry waiting is
+        # interrupted. Never delete the destination or use a copying fallback.
+        error.add_note(f'Atomic replacement failed after {attempts} attempt(s); '
+                       f'uncommitted candidate retained at {temp}; '
+                       f'candidate_sha256={candidate_sha256}; destination={path}')
+        raise
 
 
 def strict_json(path):

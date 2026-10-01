@@ -59,6 +59,22 @@ common multiple places all of those grids in Equation~\ref{eq:aliasing-coarse}.
 The example supplies no derivative bound that would otherwise control the
 unresolved variation.
 
+\paragraph{Exact integration and perturbation quality are different questions.}
+For the displayed $M=128$, $h(1/2)=0$, so the whole-feature interventions have
+$\mu(1,0)=2/5$ and $\mu(0,1)=3/5$.
+With the same normalized $Q$ response and grid $\{0,1/2,1\}$, the aliased
+feature-2-first ordering has insertion ordinates $(0,0.84,1)$ and deletion
+ordinates $(1,0.64,0)$, giving AUCs $0.67$ and $0.57$.
+The exact-IG feature-1-first ordering instead has insertion AUC $0.57$ and
+deletion AUC $0.67$.
+Thus the inaccurate map's ranking scores better under both conventional
+preferences, larger insertion AUC and smaller deletion AUC, in this toy.
+The finite off-path interventions measure a different property from the
+diagonal path integral: the transverse policy term changes its coordinate
+gradients without changing these Boolean intervention values.
+Neither completeness nor exact integration guarantees an optimal perturbation
+score. This is a toy-specific separation, not evidence of RDT ranking efficacy.
+
 The standalone artifact
 \texttt{analysis/revision/nested\_grid\_aliasing.py} evaluates the unchanged
 production trapezoidal IG kernel on this CPU toy with $M=128$, in FP32 and

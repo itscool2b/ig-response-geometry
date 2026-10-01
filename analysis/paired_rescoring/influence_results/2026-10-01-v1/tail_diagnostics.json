@@ -1,0 +1,986 @@
+{
+  "Q:vision:insertion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 89,
+    "negative_call_mass": 12894.001563617476,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:151:2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837"
+        ],
+        "magnitude": 4438.838595082339,
+        "share": 0.3442560925079492
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:151:2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:51:70f85d3cc635c98265444291a8a20cc91193456db0683ea738d2d238097cd6fe"
+        ],
+        "magnitude": 10271.902213560772,
+        "share": 0.7966419239892615
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:151:2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:51:70f85d3cc635c98265444291a8a20cc91193456db0683ea738d2d238097cd6fe",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:326:781a4a55728374ddf103362eebfb6f6ba60ca4d0b5db9a211898d8864ca97da2",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:301:34e082bc6e86537cd93f5287a5721692535b1f375568ee3073fdf235a649932c"
+        ],
+        "magnitude": 12151.505982552451,
+        "share": 0.9424154264755096
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:151:2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:51:70f85d3cc635c98265444291a8a20cc91193456db0683ea738d2d238097cd6fe",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:326:781a4a55728374ddf103362eebfb6f6ba60ca4d0b5db9a211898d8864ca97da2",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:301:34e082bc6e86537cd93f5287a5721692535b1f375568ee3073fdf235a649932c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:101:95ccfd435d277fea30b9ec542a2176a8e45733f42da53700b60a2d307881e803",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:202:357fe1267bcab3c3ecad05f5b5e3206d54ac4d475342904f00a2edb12aee2b72",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:251:ecf714031533bf4b907ab29069473936eb8f4e1a50100b65cb5b30e57653a824",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:226:4299c2eeb2d20233b3f7159e678dde4b30ccdb09bd0507caa29bcbf50d883943"
+        ],
+        "magnitude": 12850.99997106275,
+        "share": 0.9966649924507485
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:151:2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+      "source_sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+      "line": 151,
+      "line_sha256": "2b3a2c52ae0f0daf20fe08c08fd643a8de2582ca85313d332d5e7375efbc5837",
+      "episode_id": "1f0b52cbb142d1064d714d4fd72127415ca7d7d39233449337d33eb733a5ab92",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "PickCube-v1",
+        "170m",
+        148,
+        6
+      ],
+      "policy_call_idx": 0,
+      "delta": -4438.838595082339,
+      "auc_q": -4464.908191741731,
+      "auc_l2": -26.069596659391074,
+      "gap_q": 1.701122528174892e-05,
+      "gap_l2": 0.13198193332666497,
+      "native_actual": -0.0,
+      "native_baseline": -1.701122528174892e-05,
+      "native_curve": [
+        -1.701122528174892e-05,
+        -2.4620199837954715e-05,
+        -1.7430731531931087e-05,
+        -0.16255931556224823,
+        -0.6377466320991516,
+        -6.206380930962041e-06,
+        -4.447151695785578e-06,
+        -2.1677997210645117e-06,
+        -0.0
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 0.017419494688510895,
+      "residual_points": [
+        0.017419494688510895,
+        0.025211084634065628,
+        0.017849069088697433,
+        166.4607391357422,
+        653.0525512695312,
+        0.00635533407330513,
+        0.004553883336484432,
+        0.00221982691437006,
+        0.0
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 653.0525512695312,
+    "maximum_to_baseline_squared_residual_ratio": 37489.75288590058,
+    "baseline_weak_empirical_percentile": 0.13333333333333333,
+    "maximum_residual_weak_empirical_percentile": 98.4,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "Q:vision:deletion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 56,
+    "negative_call_mass": 12.982492107996588,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:104:6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68"
+        ],
+        "magnitude": 1.8966727976428848,
+        "share": 0.14609466209300648
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:104:6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:152:0d3cbdd478726e827755d4cf9af0c9f6f712c00d53ca3bcda730e459185c9f48",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:89:e5b7c4823cc8f2320617b55d0c969205fad42b485ac623645898488b9cbaa15d"
+        ],
+        "magnitude": 4.768993622482981,
+        "share": 0.3673403829412314
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:104:6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:152:0d3cbdd478726e827755d4cf9af0c9f6f712c00d53ca3bcda730e459185c9f48",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:89:e5b7c4823cc8f2320617b55d0c969205fad42b485ac623645898488b9cbaa15d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:352:ab9a3f9940b4c4dff27a7b17b24b7078dd714abecae041adc937a98ceef838f4",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:144:d7687a21c6cabb70c6db2451a6d7daca47fa51f999f73ca3b4e3d39e2903f34a"
+        ],
+        "magnitude": 6.946623694074397,
+        "share": 0.535076288611461
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:104:6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:152:0d3cbdd478726e827755d4cf9af0c9f6f712c00d53ca3bcda730e459185c9f48",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:89:e5b7c4823cc8f2320617b55d0c969205fad42b485ac623645898488b9cbaa15d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:352:ab9a3f9940b4c4dff27a7b17b24b7078dd714abecae041adc937a98ceef838f4",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:144:d7687a21c6cabb70c6db2451a6d7daca47fa51f999f73ca3b4e3d39e2903f34a",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:83:391058a40dabb86280df1050af07e61ce930e938fe5b8034d4dab5240039e3a1",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:88:05d6f83ae46d640d9d15a492855ee5d39049434cd4e299d802c957bc73c1765a",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:145:66ab273fc47b789f4b94b1ebb9ed73e6bd5cb1951ebaf66529e145d25c585103",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:351:8ba266c75706d9c800ce04872a953b47a64935e254348300759f213a48d75def",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:126:eb55f9cdbe440cc41370d05c43a11e1c7132ca3c5aa8d01bfc920ee746589154"
+        ],
+        "magnitude": 9.20715620849225,
+        "share": 0.7091979052943993
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:104:6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+      "source_sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+      "line": 104,
+      "line_sha256": "6328c894a18b0b314feca629c4344f96f16c89053f4eca2bf5e835cc9e378e68",
+      "episode_id": "720fde762f6c62dae4e5af8dd651c00e581445d595da3e14a0d7c45688473c5c",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "PickCube-v1",
+        "170m",
+        146,
+        4
+      ],
+      "policy_call_idx": 3,
+      "delta": -1.8966727976428848,
+      "auc_q": -2.4089027365338542,
+      "auc_l2": -0.5122299388909695,
+      "gap_q": 0.006626321002840996,
+      "gap_l2": 2.604869957823089,
+      "native_actual": -0.0,
+      "native_baseline": -0.006626321002840996,
+      "native_curve": [
+        -0.0,
+        -0.00011409006401663646,
+        -0.00028358324198052287,
+        -0.000892129959538579,
+        -0.0018721347441896796,
+        -0.002392229624092579,
+        -0.025616254657506943,
+        -0.061471860855817795,
+        -0.006626321002840996
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 6.78535270690918,
+      "residual_points": [
+        0.0,
+        0.11682822555303574,
+        0.2903892397880554,
+        0.9135410785675049,
+        1.917065978050232,
+        2.449643135070801,
+        26.23104476928711,
+        62.94718551635742,
+        6.78535270690918
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 62.94718551635742,
+    "maximum_to_baseline_squared_residual_ratio": 9.276921662784236,
+    "baseline_weak_empirical_percentile": 26.266666666666666,
+    "maximum_residual_weak_empirical_percentile": 92.4,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "Q:lang:insertion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 183,
+    "negative_call_mass": 207.08383042529073,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b"
+        ],
+        "magnitude": 71.82663807049408,
+        "share": 0.34684812388771635
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:206:3239d5e81fdbea2e6462503d51911e1fb0b3997e9478866be9501b22c6939b67",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:207:14f5edd57a2177a0a8951904576b4dc5f05fe2bc331a0cdc34258bb2a01895dc"
+        ],
+        "magnitude": 114.20323365638012,
+        "share": 0.5514831043149988
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:206:3239d5e81fdbea2e6462503d51911e1fb0b3997e9478866be9501b22c6939b67",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:207:14f5edd57a2177a0a8951904576b4dc5f05fe2bc331a0cdc34258bb2a01895dc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:276:be38388f73b3943d0b5b4f7e0ff7c27e4d9263fb07c7d8abe7c3189b6844bc2c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:279:ef03fcf08413b6b9ffdb3922b1dfb74df5ffe83774cec0927a7f6cfb3c05e8dc"
+        ],
+        "magnitude": 127.65617948811853,
+        "share": 0.6164468719066544
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:206:3239d5e81fdbea2e6462503d51911e1fb0b3997e9478866be9501b22c6939b67",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:207:14f5edd57a2177a0a8951904576b4dc5f05fe2bc331a0cdc34258bb2a01895dc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:276:be38388f73b3943d0b5b4f7e0ff7c27e4d9263fb07c7d8abe7c3189b6844bc2c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:279:ef03fcf08413b6b9ffdb3922b1dfb74df5ffe83774cec0927a7f6cfb3c05e8dc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:83:226985f3fdd72ca3a56869197a9bc630ccf8ad2513d6932990cbbcd100852a20",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:85:f7047f1ab32ac68a933f145d814435167013b2b45e4c6c1071f9b63b040a827e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:303:ea9fb08caa95d4b0bd60d820a4a6cf91b7900bd43a32f8761c0cc0956e37f38c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:175:e57a9909ed2d290616d98543a428df546daea12261d78985db8a3797622348ea",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:108:4b50f5af05ae15c48bd21715247952152832d4c9752a9ae7e43324aa8623b5b0"
+        ],
+        "magnitude": 146.11746355929108,
+        "share": 0.7055957157988036
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:126:ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+      "source_sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+      "line": 126,
+      "line_sha256": "ba6a8e89fe0a7a082d03ab4e5f3210a690bd806f485a7319fdae6ea7f28abe4b",
+      "episode_id": "de3cff0cb7342bf6d9929bf9a0c84c6e235c358972351add982e1fa1df7ffc39",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "PickCube-v1",
+        "170m",
+        147,
+        5
+      ],
+      "policy_call_idx": 0,
+      "delta": -71.82663807049408,
+      "auc_q": -75.88171008618188,
+      "auc_l2": -4.055072015687794,
+      "gap_q": 0.00047895233728922904,
+      "gap_l2": 0.700318351000078,
+      "native_actual": -0.0,
+      "native_baseline": -0.00047895233728922904,
+      "native_curve": [
+        -0.00047895233728922904,
+        -0.0011562719009816647,
+        -0.0011562719009816647,
+        -0.016186699271202087,
+        -0.0007367960643023252,
+        -3.532408663886599e-05,
+        -1.463435728510376e-05,
+        -0.14177227020263672,
+        -0.0
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 0.49044719338417053,
+      "residual_points": [
+        0.49044719338417053,
+        1.1840224266052246,
+        1.1840224266052246,
+        16.575180053710938,
+        0.754479169845581,
+        0.036171864718198776,
+        0.014985581859946251,
+        145.1748046875,
+        0.0
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 145.1748046875,
+    "maximum_to_baseline_squared_residual_ratio": 296.00496576556736,
+    "baseline_weak_empirical_percentile": 0.9333333333333333,
+    "maximum_residual_weak_empirical_percentile": 97.33333333333333,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "Q:lang:deletion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 86,
+    "negative_call_mass": 86.79639771748346,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb"
+        ],
+        "magnitude": 23.812007530095805,
+        "share": 0.27434326949376764
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:176:de71ba923646fd9144a4408621483b7d421aec2eacc47a1f31b2ecb1f669fc6c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:85:f7047f1ab32ac68a933f145d814435167013b2b45e4c6c1071f9b63b040a827e"
+        ],
+        "magnitude": 53.378084035864305,
+        "share": 0.6149804074773523
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:176:de71ba923646fd9144a4408621483b7d421aec2eacc47a1f31b2ecb1f669fc6c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:85:f7047f1ab32ac68a933f145d814435167013b2b45e4c6c1071f9b63b040a827e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:206:3239d5e81fdbea2e6462503d51911e1fb0b3997e9478866be9501b22c6939b67",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:232:ad7fe92a8e16cfd87d0437cc1a26bf61434ac65440a9507cdffe2afb95e52315"
+        ],
+        "magnitude": 63.6509051654687,
+        "share": 0.7333357931817424
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:176:de71ba923646fd9144a4408621483b7d421aec2eacc47a1f31b2ecb1f669fc6c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:85:f7047f1ab32ac68a933f145d814435167013b2b45e4c6c1071f9b63b040a827e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:206:3239d5e81fdbea2e6462503d51911e1fb0b3997e9478866be9501b22c6939b67",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:232:ad7fe92a8e16cfd87d0437cc1a26bf61434ac65440a9507cdffe2afb95e52315",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:78:42661f7d56bb6d5aaef47da4320710a954a444246408463282fbf2a9e03fe237",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:258:d9325c44b0f773b90637aa98878ac402f8f588ae6df0e0e5b0567baf62701270",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:276:be38388f73b3943d0b5b4f7e0ff7c27e4d9263fb07c7d8abe7c3189b6844bc2c",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl:279:ef03fcf08413b6b9ffdb3922b1dfb74df5ffe83774cec0927a7f6cfb3c05e8dc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:357:11c4530cb17a2f41ba79c13f169d41e5212713064b3e44c0ea65fa31281aca1f"
+        ],
+        "magnitude": 73.62053774738658,
+        "share": 0.8481980783006291
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl:1:96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+      "source_sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+      "line": 1,
+      "line_sha256": "96d035b5087fb896807a50dd28a22b957a7984d2d71575fa3e2c0cee208bd3cb",
+      "episode_id": "b17c407676aa2a563999504b2144d16b3b51a39b0d34995b1114c6968b39e43c",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "PickCube-v1",
+        "170m",
+        42,
+        0
+      ],
+      "policy_call_idx": 0,
+      "delta": -23.812007530095805,
+      "auc_q": -26.639001463129542,
+      "auc_l2": -2.826993933033738,
+      "gap_q": 0.007121472619473934,
+      "gap_l2": 2.7004411790407414,
+      "native_actual": -0.0,
+      "native_baseline": -0.007121472619473934,
+      "native_curve": [
+        -0.0,
+        -0.5230135917663574,
+        -0.5230135917663574,
+        -0.5412995219230652,
+        -0.36981114745140076,
+        -0.5257607698440552,
+        -0.005961394868791103,
+        -0.006180993746966124,
+        -0.007121472619473934
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 7.292387962341309,
+      "residual_points": [
+        0.0,
+        535.56591796875,
+        535.56591796875,
+        554.2907104492188,
+        378.6866149902344,
+        538.3790283203125,
+        6.10446834564209,
+        6.3293375968933105,
+        7.292387962341309
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 554.2907104492188,
+    "maximum_to_baseline_squared_residual_ratio": 76.00949281794068,
+    "baseline_weak_empirical_percentile": 44.8,
+    "maximum_residual_weak_empirical_percentile": 99.46666666666667,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "L2:vision:insertion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 75,
+    "negative_call_mass": 13993.514201800215,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217"
+        ],
+        "magnitude": 5242.86956016156,
+        "share": 0.3746642540647212
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:51:2d6aa8dd976bc36c0c7e1f014fa1535d284f1c6c28adf8111bd2df9119b8269d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db"
+        ],
+        "magnitude": 11922.296707154863,
+        "share": 0.851987323214429
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:51:2d6aa8dd976bc36c0c7e1f014fa1535d284f1c6c28adf8111bd2df9119b8269d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:101:cd438d3b54f8bfe3088fb97aeca056ce7d0fd733d4bda2bce4de85f2beb75edf",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:350:12463597b216df03faf47bab571a6c4429ea9a9daaaa0032b2a3a43dc46291bc"
+        ],
+        "magnitude": 12960.489529744787,
+        "share": 0.9261783239607866
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:51:2d6aa8dd976bc36c0c7e1f014fa1535d284f1c6c28adf8111bd2df9119b8269d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:101:cd438d3b54f8bfe3088fb97aeca056ce7d0fd733d4bda2bce4de85f2beb75edf",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:350:12463597b216df03faf47bab571a6c4429ea9a9daaaa0032b2a3a43dc46291bc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:203:c8269162f560b631409e6fbbab9f864f8695c01037ed2b95a0d8a5d7c99bfcc0",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:325:89cefeaceccd1444c8c63faf2e8b62f283961484b8335c198f2c0013b2e6b31e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:202:cb08013c27bd66bce362629b397bb0d9044480fe5f346d0fcbb7b06d5dabe109",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:251:9dd64405aa16f22982434832cde4d0088012f234d6ab847c6ef1da5315abbe23",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:226:993db296ebf82602de15a46d1c08d435cea0311ed7f985b52aab6cd998f3730c"
+        ],
+        "magnitude": 13957.24965285903,
+        "share": 0.9974084744962406
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+      "source_sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+      "line": 151,
+      "line_sha256": "0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+      "episode_id": "2b9c0717e3d744841d5419f0f59691c6a193bad395b90a7b2ba4315a0e2272e0",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "PickCube-v1",
+        "170m",
+        148,
+        6
+      ],
+      "policy_call_idx": 0,
+      "delta": -5242.86956016156,
+      "auc_q": -5272.0701071904405,
+      "auc_l2": -29.200547028880095,
+      "gap_q": 1.560851010617556e-05,
+      "gap_l2": 0.12642334239387765,
+      "native_actual": -9.999999974752427e-07,
+      "native_baseline": -0.12642434239387512,
+      "native_curve": [
+        -0.12642434239387512,
+        -0.15320232510566711,
+        -0.1552601158618927,
+        -16.2496337890625,
+        -25.391075134277344,
+        -0.08436515182256699,
+        -0.08708137273788452,
+        -0.06611183285713196,
+        -9.999999974752427e-07
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 0.015983114348723772,
+      "residual_points": [
+        0.015983114348723772,
+        0.02347095241678252,
+        0.024105703576448347,
+        264.0505982786407,
+        644.7066964745162,
+        0.007117478841044777,
+        0.007583165476914377,
+        0.004370774442729352,
+        0.0
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 644.7066964745162,
+    "maximum_to_baseline_squared_residual_ratio": 40336.73803541267,
+    "baseline_weak_empirical_percentile": 0.13333333333333333,
+    "maximum_residual_weak_empirical_percentile": 98.8,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "L2:vision:deletion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 43,
+    "negative_call_mass": 91.54733176424928,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db"
+        ],
+        "magnitude": 80.46298162770127,
+        "share": 0.8789221933295425
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:152:27eef238e2edc9b56411d525d12a7d2247ecf383298ca1d6918b86eaeaf9921e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:352:3e6cbf9ef6c4b7e99008e585e50a13773a70f53bebca16268c277ccb7dd56a5f"
+        ],
+        "magnitude": 85.16702834791924,
+        "share": 0.9303059598420579
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:152:27eef238e2edc9b56411d525d12a7d2247ecf383298ca1d6918b86eaeaf9921e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:352:3e6cbf9ef6c4b7e99008e585e50a13773a70f53bebca16268c277ccb7dd56a5f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:106:dc114a5545562e2e8b50a2070ed5f88182e5796756d0a3f256905863338344ff",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:301:6832d3d40f23bb4ea72048c33ae014491a5b18ad99608afe0b4048921dab0e0f"
+        ],
+        "magnitude": 86.73711531200229,
+        "share": 0.9474565084580056
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:152:27eef238e2edc9b56411d525d12a7d2247ecf383298ca1d6918b86eaeaf9921e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:352:3e6cbf9ef6c4b7e99008e585e50a13773a70f53bebca16268c277ccb7dd56a5f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:106:dc114a5545562e2e8b50a2070ed5f88182e5796756d0a3f256905863338344ff",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:301:6832d3d40f23bb4ea72048c33ae014491a5b18ad99608afe0b4048921dab0e0f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:177:99e3ca80e092fbe3261f7b56f686a5b3593412cfd8100bdc5120fe3a35345003",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:351:2a1730dbfd69635b8f69fe3be84468e022ee18900f6b623dc3f903caa59c0a4e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:151:0da34d16f6ba39e7aba34114434f39ca130ef20507af096d76656579de282217",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:126:6fa5b21f81a3e2e63057c3798766077740d2966d88fa4466b562402451ccad9d",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:101:cd438d3b54f8bfe3088fb97aeca056ce7d0fd733d4bda2bce4de85f2beb75edf"
+        ],
+        "magnitude": 88.8804447795882,
+        "share": 0.970868763367907
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+      "source_sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+      "line": 126,
+      "line_sha256": "218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+      "episode_id": "bcbf2755c5ba45133d58caed68a4e5b515a2040e9a00cfa301785998dbde936f",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "PickCube-v1",
+        "170m",
+        147,
+        5
+      ],
+      "policy_call_idx": 0,
+      "delta": -80.46298162770127,
+      "auc_q": -83.85564316312352,
+      "auc_l2": -3.392661535422245,
+      "gap_q": 0.00010128700690733008,
+      "gap_l2": 0.32205162780189767,
+      "native_actual": -9.999999974752427e-07,
+      "native_baseline": -0.32205262780189514,
+      "native_curve": [
+        -9.999999974752427e-07,
+        -0.0706396996974945,
+        -0.1782730519771576,
+        -0.2270858883857727,
+        -0.26391080021858215,
+        -7.61962366104126,
+        -0.37804585695266724,
+        -0.3727741837501526,
+        -0.32205262780189514
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 0.103717895073106,
+      "residual_points": [
+        0.0,
+        0.004989967172352205,
+        0.031781281060250334,
+        0.05156800070295562,
+        0.06964891047101238,
+        58.05866473589881,
+        0.14291866995807653,
+        0.13896059206959252,
+        0.103717895073106
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 58.05866473589881,
+    "maximum_to_baseline_squared_residual_ratio": 559.7748073751006,
+    "baseline_weak_empirical_percentile": 1.6,
+    "maximum_residual_weak_empirical_percentile": 90.93333333333334,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "L2:lang:insertion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 119,
+    "negative_call_mass": 107.0587595625192,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:208:8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91"
+        ],
+        "magnitude": 13.327426637808886,
+        "share": 0.12448702649152268
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:208:8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:375:979956e2718fc3072cac2b0eb24375b431a49966e90d426c7c6a981dacba95e8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:157:8d6c34f4cb54bb7c4f4c87a8c98f04ea7da3a5ea5eb98b94e4577f1161ba9600"
+        ],
+        "magnitude": 37.08120560276616,
+        "share": 0.3463631164259083
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:208:8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:375:979956e2718fc3072cac2b0eb24375b431a49966e90d426c7c6a981dacba95e8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:157:8d6c34f4cb54bb7c4f4c87a8c98f04ea7da3a5ea5eb98b94e4577f1161ba9600",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:258:befdc164060a6044ee919d657d1c591fcd1c54691042c03ec05fca2859ac08d8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:326:7a83cb8274e7efbee25a89842eb142e6a4dc140d10d802340df3e98559c89b8e"
+        ],
+        "magnitude": 54.28112877291073,
+        "share": 0.5070218354361946
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:208:8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:375:979956e2718fc3072cac2b0eb24375b431a49966e90d426c7c6a981dacba95e8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:157:8d6c34f4cb54bb7c4f4c87a8c98f04ea7da3a5ea5eb98b94e4577f1161ba9600",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:258:befdc164060a6044ee919d657d1c591fcd1c54691042c03ec05fca2859ac08d8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:326:7a83cb8274e7efbee25a89842eb142e6a4dc140d10d802340df3e98559c89b8e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:5:30d9f05a964720c2a60042adcba3edec143f70caebbcedc2ce13ba9c8220cea6",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:84:49aedeaa0e20df69d88ab187903c63bbde0a823af1f0774bc9a74e7a6e23454e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:233:44711776c27b6c0d0a430f7a5ed96fdf4a3104d23468560fdd390beb0f1a7d71",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:279:c60daa1d7399e35c92fbcf898c17388c26b13926ccab3255a5824e2b2aa468e9",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:282:4c20c5258aa28a1c534b997aa2e6d5e7402f2fd3e9f829d11804e868abdbf4ee"
+        ],
+        "magnitude": 71.99042307822438,
+        "share": 0.672438419540851
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:208:8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+      "source_sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+      "line": 208,
+      "line_sha256": "8d1cfe2cf05b98eddf96dbac731ba24cef9c89860c51894a936fa69ac6b3ae91",
+      "episode_id": "e950613bb1901a8cfbfe491f9ec8b7ab8a3104dbdef76984399c552f7442587d",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "PickCube-v1",
+        "170m",
+        50,
+        8
+      ],
+      "policy_call_idx": 7,
+      "delta": -13.327426637808886,
+      "auc_q": -14.592015437749934,
+      "auc_l2": -1.2645887999410488,
+      "gap_q": 0.0023818435082247017,
+      "gap_l2": 1.5617312921752955,
+      "native_actual": -9.999999974752427e-07,
+      "native_baseline": -1.561732292175293,
+      "native_curve": [
+        -1.561732292175293,
+        -7.423368453979492,
+        -7.423368453979492,
+        -19.735029220581055,
+        -3.033428907394409,
+        -4.752762794494629,
+        -1.530415654182434,
+        -0.6740303635597229,
+        -9.999999974752427e-07
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 2.4390077524220946,
+      "residual_points": [
+        2.4390077524220946,
+        55.106399203536874,
+        55.106399203536874,
+        389.47137833718705,
+        9.201690936215039,
+        22.588754180731396,
+        2.3421720745656476,
+        0.45431693099945225,
+        0.0
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 389.47137833718705,
+    "maximum_to_baseline_squared_residual_ratio": 159.68435440617867,
+    "baseline_weak_empirical_percentile": 8.133333333333333,
+    "maximum_residual_weak_empirical_percentile": 99.06666666666666,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  },
+  "L2:lang:deletion": {
+    "selection": "minimum paired call difference, physical-record-ID tie break, within this case only",
+    "n_negative_calls": 126,
+    "negative_call_mass": 1108.6538799136151,
+    "top_negative_call_mass": [
+      {
+        "requested_count": 1,
+        "included_count": 1,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db"
+        ],
+        "magnitude": 1055.1376332152797,
+        "share": 0.9517286254367275
+      },
+      {
+        "requested_count": 3,
+        "included_count": 3,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:350:12463597b216df03faf47bab571a6c4429ea9a9daaaa0032b2a3a43dc46291bc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:176:96f06aaa4b14616f7d7c9ac3b55bb2fc81172b8c634467a739cdefede6229f0f"
+        ],
+        "magnitude": 1084.8919748148194,
+        "share": 0.9785668859061339
+      },
+      {
+        "requested_count": 5,
+        "included_count": 5,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:350:12463597b216df03faf47bab571a6c4429ea9a9daaaa0032b2a3a43dc46291bc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:176:96f06aaa4b14616f7d7c9ac3b55bb2fc81172b8c634467a739cdefede6229f0f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:352:3e6cbf9ef6c4b7e99008e585e50a13773a70f53bebca16268c277ccb7dd56a5f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:152:27eef238e2edc9b56411d525d12a7d2247ecf383298ca1d6918b86eaeaf9921e"
+        ],
+        "magnitude": 1090.2643123915882,
+        "share": 0.9834127062961617
+      },
+      {
+        "requested_count": 10,
+        "included_count": 10,
+        "record_ids": [
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:350:12463597b216df03faf47bab571a6c4429ea9a9daaaa0032b2a3a43dc46291bc",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl:176:96f06aaa4b14616f7d7c9ac3b55bb2fc81172b8c634467a739cdefede6229f0f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:352:3e6cbf9ef6c4b7e99008e585e50a13773a70f53bebca16268c277ccb7dd56a5f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:152:27eef238e2edc9b56411d525d12a7d2247ecf383298ca1d6918b86eaeaf9921e",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:232:b400d05f13c5b44e6bdfaee66c16067af1d3fc913de08fd7bca9da0b0683334f",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:101:33cedb898395011efd0266c3d56f3a80c4bd5d0ecc587f406e4932135e56efc8",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:106:dc114a5545562e2e8b50a2070ed5f88182e5796756d0a3f256905863338344ff",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:226:8e8bbb757c2ad78cd964c94078ffbc6031b8d9b96340a6055c320772eab5b499",
+          "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:253:3c65bf22eb1aa7c3b2611dd4f45ff61c07193252816bb037c2532671d354b14c"
+        ],
+        "magnitude": 1095.809964867771,
+        "share": 0.9884148558188017
+      }
+    ],
+    "example": {
+      "record_id": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl:126:218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+      "source": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+      "source_sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+      "line": 126,
+      "line_sha256": "218fa9b094f643eb6388ab86fd6e69dc8a9d42686bb2fb0863d00a062589f5db",
+      "episode_id": "bcbf2755c5ba45133d58caed68a4e5b515a2040e9a00cfa301785998dbde936f",
+      "episode_key": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "PickCube-v1",
+        "170m",
+        147,
+        5
+      ],
+      "policy_call_idx": 0,
+      "delta": -1055.1376332152797,
+      "auc_q": -1071.0300655283804,
+      "auc_l2": -15.892432313100654,
+      "gap_q": 0.00010501556354106369,
+      "gap_l2": 0.3279257251491572,
+      "native_actual": -9.999999974752427e-07,
+      "native_baseline": -0.32792672514915466,
+      "native_curve": [
+        -9.999999974752427e-07,
+        -0.2682630121707916,
+        -0.2682630121707916,
+        -0.12533245980739594,
+        -19.301977157592773,
+        -22.799720764160156,
+        -0.3010866641998291,
+        -0.20957837998867035,
+        -0.32792672514915466
+      ],
+      "grid_percent": [
+        0,
+        1,
+        5,
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "residual_actual": 0.0,
+      "residual_baseline": 0.10753593706604922,
+      "residual_points": [
+        0.0,
+        0.07196504369794629,
+        0.07196504369794629,
+        0.01570822548037252,
+        372.5663221922322,
+        519.8272669236748,
+        0.09065317935798065,
+        0.0439230973576755,
+        0.10753593706604922
+      ],
+      "orientation": "baseline_farther"
+    },
+    "maximum_saved_squared_residual": 519.8272669236748,
+    "maximum_to_baseline_squared_residual_ratio": 4833.986489599228,
+    "baseline_weak_empirical_percentile": 0.13333333333333333,
+    "maximum_residual_weak_empirical_percentile": 99.6,
+    "absolute_q_gap_exceeds_historical_cutoff": true,
+    "historical_gap_cutoff_for_description_only": 1e-09
+  }
+}

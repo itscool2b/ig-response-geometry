@@ -1,12 +1,36 @@
 {
+  "schema_version": 2,
   "source": "https://github.com/JmlrOrg/tmlr-style-file",
   "commit": "7bf90efe3a0debbba703c05c43f3ff7e4d4a2992",
   "retrieved": "2026-09-30",
-  "license": "Apache-2.0",
+  "upstream_bytes_verified": "2026-10-01",
   "files": {
-    "tmlr.sty": "a067e8286a3cf8e3ad292e3d8bc5feb4690e62bc100fa6d903a5e22f947ea6cb",
-    "tmlr.bst": "ded3dbf610d9db328c4c1bc07fc24957c034b722de9a663c0350912f044676c8",
-    "tmlr-LICENSE": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+    "tmlr.sty": "816214ff5919aa457b6b443bee52b15d9561421417b7f8a50cc84651519f0002",
+    "tmlr.bst": "306fd454cf40771bee01293eeb98d2c1cd5f4e11ed0cd7296b335f354fc45206",
+    "tmlr-LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
   },
-  "modifications": "None to upstream style, bibliography style or license. System fancyhdr is used."
+  "representation": "Exact pinned upstream Git-blob bytes with LF line endings.",
+  "historical_checkout": {
+    "representation": "CRLF checkout conversion of the same upstream bytes; these were the hashes recorded in the original manifest.",
+    "files": {
+      "tmlr.sty": "a067e8286a3cf8e3ad292e3d8bc5feb4690e62bc100fa6d903a5e22f947ea6cb",
+      "tmlr.bst": "ded3dbf610d9db328c4c1bc07fc24957c034b722de9a663c0350912f044676c8",
+      "tmlr-LICENSE": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+    },
+    "accepted_for_build_or_package": false
+  },
+  "license_notices": {
+    "upstream_repository": {
+      "license": "Apache-2.0",
+      "file": "tmlr-LICENSE",
+      "upstream_path": "LICENSE"
+    },
+    "bibliography_header": {
+      "license": "LPPL-1.0-or-later",
+      "file": "tmlr.bst",
+      "notice_lines": "15-18"
+    },
+    "interpretation": "The upstream repository license and the bibliography file's retained license notice are both preserved. No claim is made that one overrides the other."
+  },
+  "modifications": "No changes to upstream style, bibliography style or license bytes. System fancyhdr is used."
 }

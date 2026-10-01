@@ -13,11 +13,19 @@ import tempfile
 
 def validate_revision_assets(root: Path) -> None:
     """Reject stale manuscript/display inputs before producing a candidate."""
+    # Support both module imports and direct `python scripts/build_paper.py`.
+    if __package__:
+        from .validate_template_provenance import validate_template_provenance
+    else:
+        from validate_template_provenance import validate_template_provenance
+    validate_template_provenance(root)
     registry_path = root / "paper/figures_revision/lineage.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     expected = dict(registry["generated_sha256"])
+    expected.update(registry.get("manuscript_inputs_sha256", {}))
     expected.update(registry.get("numerical_case_inputs_sha256", {}))
     expected.update(registry.get("strengthening_inputs_sha256", {}))
+    expected.update(registry.get("influence_inputs_sha256", {}))
     expected["paper/paper.tex"] = registry["manuscript_source_sha256"]
     mismatches = [name for name, digest in expected.items()
                   if not (root / name).is_file()

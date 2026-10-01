@@ -1,4 +1,5 @@
 """Fail-closed dependency and archive-member regressions on toy manuscripts."""
+from pathlib import Path
 import zipfile
 
 import pytest
@@ -23,7 +24,10 @@ def manuscript(extra=''):
 def toy_root(tmp_path, monkeypatch, extra=''):
     root=tmp_path/'repository';paper=root/'paper';paper.mkdir(parents=True)
     for name in package.BASE_FILES:
-        (paper/name).write_text('benign toy dependency\n')
+        if name.startswith('tmlr'):
+            (paper/name).write_bytes((Path(__file__).resolve().parents[1]/'paper'/name).read_bytes())
+        else:
+            (paper/name).write_text('benign toy dependency\n')
     (paper/'paper.tex').write_text(manuscript(extra))
     monkeypatch.setattr(package,'validate_revision_assets',lambda root:None)
     return root
@@ -78,18 +82,21 @@ def test_reviewed_appendix_is_included_but_cannot_hide_nested_load(tmp_path, mon
     assert not (tmp_path/'rejected').exists()
 
 
-def test_changed_strengthening_evidence_blocks_pdf_build(tmp_path):
+@pytest.mark.parametrize('family', ['strengthening_inputs_sha256', 'influence_inputs_sha256', 'manuscript_inputs_sha256'])
+def test_changed_bound_evidence_blocks_pdf_build(tmp_path, family):
     import hashlib
     import json
     from scripts.build_paper import validate_revision_assets
     paper = tmp_path/'paper'
     (paper/'figures_revision').mkdir(parents=True)
+    for name in ('tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'):
+        (paper/name).write_bytes((Path(__file__).resolve().parents[1]/'paper'/name).read_bytes())
     (paper/'paper.tex').write_bytes(b'manuscript')
     appendix = paper/'appendix_aliasing.tex'
     appendix.write_bytes(b'reviewed proof')
     registry = dict(generated_sha256={},
-                    manuscript_source_sha256=hashlib.sha256(b'manuscript').hexdigest(),
-                    strengthening_inputs_sha256={'paper/appendix_aliasing.tex': hashlib.sha256(b'reviewed proof').hexdigest()})
+                    manuscript_source_sha256=hashlib.sha256(b'manuscript').hexdigest())
+    registry[family] = {'paper/appendix_aliasing.tex': hashlib.sha256(b'reviewed proof').hexdigest()}
     (paper/'figures_revision/lineage.json').write_text(json.dumps(registry))
     validate_revision_assets(tmp_path)
     appendix.write_bytes(b'changed proof')
@@ -117,3 +124,12 @@ def test_toy_package_all_members_are_normalized_and_generated_templates_present(
     with zipfile.ZipFile(output/'anonymous-manuscript-sources-draft.zip') as archive:
         assert all(package.member_name(name)==name for name in archive.namelist())
         assert {'paper.tex','README.txt','manifest.json'}<=set(archive.namelist())
+
+
+def test_source_packager_rejects_untrusted_template_before_output(tmp_path, monkeypatch):
+    root = toy_root(tmp_path, monkeypatch)
+    (root/'paper/tmlr.bst').write_bytes(b'Unreviewed style')
+    output = tmp_path/'source-package'
+    with pytest.raises(ValueError, match='template byte mismatch'):
+        package.build(root, output)
+    assert not output.exists()

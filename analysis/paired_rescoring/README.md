@@ -26,6 +26,8 @@ All 1,524 physical faithfulness occurrences are authenticated; the canonical las
 
 ## Reproduce
 
+The separately versioned [exploratory episode-influence analysis](influence_results/2026-10-01-v1/methods_results.md) preserves these original primary results. It records all eight cases, all 240 omissions of an entire recorded episode, and the finite endpoint denominators of selected tail examples. Its protocol discloses the preceding exploratory audit; it is not an outcome-blind preregistration. Run `python -m analysis.paired_rescoring.influence --output <new-empty-directory>` and verify with `python -m analysis.paired_rescoring.influence --verify <result-directory>`. See [CPU installation](../../docs/cpu_reproduction.md) for the checked full environment.
+
 From the repository root:
 
 ```text

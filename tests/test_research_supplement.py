@@ -9,6 +9,7 @@ import zipfile
 import pytest
 
 from scripts import package_research_supplement as package
+from scripts.validate_template_provenance import FILE_SHA256
 
 
 @pytest.mark.parametrize("name", ["../LICENSE", "data/../LICENSE", "/LICENSE", "C:/LICENSE", "data\\x",
@@ -80,6 +81,9 @@ def test_build_preserves_notices_and_creates_deterministic_archive(tmp_path,monk
     sampler=b'"""Original sampler license:\nMIT License\nCopyright (c) 2024 TSAIL group\nPermission notice preserved.\n"""\n'
     contents={"LICENSE":b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n",
               "rdt_sampling.py":sampler,"data/fixture.jsonl":b'{"value":1}\n'}
+    root = Path(__file__).resolve().parents[1]
+    for name in (*FILE_SHA256, "tmlr-source.json"):
+        contents["paper/"+name] = (root/"paper"/name).read_bytes()
     def collect(*args):
         return dict(contents),dict(commit="a"*40,raw_inputs=1,pending_uncommitted_additions=[])
     monkeypatch.setattr(package,"collect",collect)
@@ -89,6 +93,8 @@ def test_build_preserves_notices_and_creates_deterministic_archive(tmp_path,monk
     with zipfile.ZipFile(tmp_path/"a"/first["archive"]["file"]) as archive:
         assert archive.read("LICENSE")==contents["LICENSE"]
         assert archive.read("rdt_sampling.py")==sampler
+        assert archive.read("paper/tmlr.bst")==contents["paper/tmlr.bst"]
+        assert b"LPPL-1.0-or-later" in archive.read("SUPPLEMENT_README.md")
         assert b"Copyright (c) 2024 TSAIL group" in archive.read("THIRD_PARTY_NOTICES.txt")
         manifest=json.loads(archive.read("SUPPLEMENT_MANIFEST.json"))
         assert manifest["status"]=="working_draft_not_submission"
@@ -125,3 +131,15 @@ def test_private_candidate_changes_only_reviewed_members_and_preserves_terms():
 def test_private_candidate_cannot_be_written_inside_public_repository(tmp_path):
     with pytest.raises(ValueError,match="outside the canonical public"):
         package.build(tmp_path,"HEAD",tmp_path/"candidate",private_anonymous_candidate=True)
+
+
+def test_research_packager_rejects_actual_committed_member_bytes_before_output(tmp_path, monkeypatch):
+    root = Path(__file__).resolve().parents[1]
+    contents = {'paper/'+name: (root/'paper'/name).read_bytes()
+                for name in (*FILE_SHA256, 'tmlr-source.json')}
+    contents['paper/tmlr.sty'] += b'Changed committed blob'
+    monkeypatch.setattr(package, 'collect', lambda *args: (contents, {}))
+    output = tmp_path/'research-package'
+    with pytest.raises(ValueError, match='template byte mismatch'):
+        package.build(tmp_path, 'HEAD', output)
+    assert not output.exists()

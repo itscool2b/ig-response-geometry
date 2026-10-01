@@ -17,6 +17,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.build_paper import validate_revision_assets
+from scripts.validate_template_provenance import validate_template_bytes
 
 IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
                'the-readout-not-the-denoiser-repo')
@@ -24,7 +25,7 @@ IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                         ('baseline', 'budget', 'completeness', 'faithfulness', 'macros',
-                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring'))
+                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring', 'episode_influence'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
                           'figures_revision/solver_endpoint.pdf'})
 FRAGMENT_FILES = TABLE_FILES | frozenset({'appendix_aliasing.tex'})
@@ -173,10 +174,13 @@ def build(root, output):
             manuscript_dependencies(data.decode('utf-8'), top_level=False)
         files[name] = data
         inputs['paper/' + name] = digest(data)
+    template_provenance = validate_template_bytes(files)
     files['README.txt'] = (
         'Anonymous manuscript source component, working draft.\n'
         'Build: pdflatex paper.tex; bibtex paper; pdflatex paper.tex; pdflatex paper.tex.\n'
-        'The official TMLR style and its Apache2 license are preserved unchanged.\n'
+        'Exact pinned TMLR files and both upstream license notices are preserved.\n'
+        'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
+        'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
         'This contains manuscript sources, not the complete code/data supplement.\n'
         'Scientific validation and final submission review remain open.\n'
     ).encode()
@@ -201,7 +205,8 @@ def build(root, output):
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
             package.writestr(info,data)
-    provenance = dict(canonical_inputs_sha256=inputs, source_transform='anonymous_branch_only_comments_and_author_removed',
+    provenance = dict(canonical_inputs_sha256=inputs, template_provenance=template_provenance,
+                      source_transform='anonymous_branch_only_comments_and_author_removed',
                       package_sha256=digest(archive.read_bytes()), files=len(files),
                       further_checks=['compile_exact_derivative','all_page_render_review','PDF_text_metadata_links_embedded_assets',
                                       'complete_anonymous_code_data_supplement','scientific_and_author_specific_submission_gates'])

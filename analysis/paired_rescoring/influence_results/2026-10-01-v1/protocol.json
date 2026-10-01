@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "analysis_version": "2026-10-01-v1",
+  "status": "exploratory_saved_data_influence_supplement",
+  "recorded_before_versioned_production_generation": true,
+  "prior_information": "A separate exploratory audit already examined the saved data and these influence diagnostics. This protocol freezes their portable production specification; it is not prospective outcome-blind preregistration.",
+  "paired_results": "analysis/paired_rescoring/results/2026-10-01-v1",
+  "paired_provenance_sha256": "2cedd28dbc9cb3b09bc7516ab9420cdf456deb80ebe1555b4725ecff42771573",
+  "paired_protocol": "analysis/paired_rescoring/protocol.json",
+  "input_manifest": "analysis/revision/input_manifest.json",
+  "ranking_order": ["Q", "L2"],
+  "modality_order": ["vision", "lang"],
+  "direction_order": ["insertion", "deletion"],
+  "roster_per_case": {"raw_calls": 750, "defined_calls": 750, "recorded_episodes": 30, "calls_per_episode": 25},
+  "primary_preserved": "The existing equal-episode mean of within-call AUC_Q minus AUC_stabilized_L2 differences and the existing paired-call median remain unchanged. No primary point, interval, exclusion, or frozen source artifact is replaced.",
+  "episode_key": ["source", "task", "model", "seed", "episode"],
+  "single_episode_omissions": "For all eight cases, omit every recorded episode once, retain all calls in every other episode, and recompute the equal-episode mean. Report all 240 omitted identities, their physical record IDs, retained-population hashes, remaining means, extrema, and exact sign agreement with the full mean. Zero is a separate sign.",
+  "negative_mass": {
+    "call_denominator": "Sum of absolute negative paired call differences within one case, excluding zero and positive terms.",
+    "episode_denominator": "Sum of absolute negative within-episode mean differences within one case, excluding zero and positive terms. This is not the signed net mean or raw call total.",
+    "concentration": "Largest negative episode-mean magnitude divided by negative episode-mean mass; top 1, 3, 5 and 10 negative call magnitudes divided by negative call mass. Ties use physical record ID or episode ID. No negative mass gives a null share.",
+    "top_call_counts": [1, 3, 5, 10]
+  },
+  "tail_examples": "For every case select the minimum paired call difference, breaking ties by physical record ID. Retain physical and episode identities, both AUCs, native endpoints, both normalization gaps, actual/baseline/saved squared residuals, maximum residual, maximum-to-baseline ratio when baseline is positive, and weak empirical percentiles 100*count(value<=example)/n within the same case for baseline and per-call maximum residual.",
+  "historical_gap_cutoff_for_description_only": 1e-9,
+  "authentication": "Authenticate the frozen paired provenance anchor, every declared paired artifact and source/protocol hash, canonical provenance/code/outputs, original input manifest/raw bytes and selected physical records. Check all saved call identities, episode memberships, values and full summary points before deriving influence results.",
+  "scope_limits": [
+    "Exploratory deterministic influence diagnostics, not new confidence intervals, p-values, coverage calibration or population inference.",
+    "No trimming, outcome-dependent primary exclusions, changed eligibility threshold or replacement estimand.",
+    "No cross-ranking-arm join or authentication, even when nominal episode/call labels match.",
+    "Recorded episodes are grouping labels, not authenticated independent experimental units or training replications.",
+    "Finite saved ordinates do not identify unobserved continuous interventions, realized masks, physical action importance, ranking efficacy or task success.",
+    "No model inference, simulator, GPU, new experimental sample or paid operation."
+  ]
+}

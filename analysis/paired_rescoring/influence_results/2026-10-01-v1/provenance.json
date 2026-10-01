@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "analysis_version": "2026-10-01-v1",
+  "interpretation": "exploratory_deterministic_influence_not_new_primary_inference",
+  "protocol_sha256": "4c691f433ca33fddc0f4aa4c54e1ed59926e110c24d70f3e03febb7e6defbd9a",
+  "source_sha256": {
+    "analysis/paired_rescoring/influence/__init__.py": "5fc7fb081e9ab1aabc0f5fcb81fda93770ab53a5ebd8ae722ffe8237d4fc7db2",
+    "analysis/paired_rescoring/influence/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2"
+  },
+  "inputs": {
+    "paired_provenance_sha256": "2cedd28dbc9cb3b09bc7516ab9420cdf456deb80ebe1555b4725ecff42771573",
+    "paired_artifacts_sha256": {
+      "audit.json": "be0342044d47df0b272497bbfaf6069f7df2b79d1bdfc8c9fa399314329dd7fe",
+      "calls.csv.gz": "bcf06c972db579805b06f6050de3a74141b0c84bfaebb691656186eaf6a4a2ae",
+      "episodes.csv": "717b4d0e293f4fcf21ba1a1c996e6277aa7faad6c704cf3f94ee7bf817914d86",
+      "geometry.csv": "7125cd1d82186820814c533b4f88ea2c71c1ff47d8e674b4a34e1397c9724e57",
+      "membership.json.gz": "b47df3d1410afd18daf63655e3f5ab24ad2f17db9323e611fdbbc2f20d764cd6",
+      "methods_results.md": "d5e4f6f9588e69d9ac4358043d630f86ce2da98575ff805e6106174f4a63008a",
+      "paired_rescoring.tex": "93f606d9bb8b4f5d116fd8bf8f6d5a84d0393682b20c4e295c42c469c71a2908",
+      "summary.csv": "aa8657ffdadd7e19f6ce450c9c9cbcc57e09ac88757cbdb3fb8a3b2d26363521"
+    },
+    "paired_source_sha256": {
+      "__init__.py": "ed8e7079f68ed6ec2c2575b37b9cf41dd1ccbc48f72905973042b1f290fc2efa",
+      "analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61"
+    },
+    "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+    "input_manifest_sha256": "3738e57f2b812c8ae335cceb04b5c25a5aa5b044b175d495bff12963feefabd1",
+    "raw_inputs": [
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+        "git_crlf_checkout_sha256": "f8e7ea8a48235351fce5859af66845951c2dbfc45d35e307c0ef2e53ded37f3a",
+        "bytes": 665552,
+        "physical_lines": 375,
+        "valid_records": 375,
+        "quarantine": []
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+        "git_crlf_checkout_sha256": "d8dc1d4d2d9a0869a8c97fcdb0481c86948e067c6735a7d98a48b07ba687d9d1",
+        "bytes": 665638,
+        "physical_lines": 375,
+        "valid_records": 375,
+        "quarantine": []
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+        "git_crlf_checkout_sha256": "dc00a17c5b33d8b6323e348baff34eceb20e84ec74044affb6224b95268cb35b",
+        "bytes": 706356,
+        "physical_lines": 399,
+        "valid_records": 399,
+        "quarantine": []
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+        "git_crlf_checkout_sha256": "301832c6829466656fdf785bb138c951ef4502a15ab17962fe1e4dbc3a4d591e",
+        "bytes": 663256,
+        "physical_lines": 375,
+        "valid_records": 375,
+        "quarantine": []
+      }
+    ],
+    "n_raw_occurrences": 1524,
+    "n_selected_occurrences": 1500,
+    "canonical_verification": {
+      "artifact_hashes": 10,
+      "results": 284,
+      "populations": 57,
+      "valid_physical_records": 22966
+    }
+  },
+  "n_cases": 8,
+  "n_episode_omissions": 240,
+  "artifacts_sha256": {
+    "protocol.json": "4c691f433ca33fddc0f4aa4c54e1ed59926e110c24d70f3e03febb7e6defbd9a",
+    "case_summary.csv": "a970c8849c43c801836eab2b1f5c60627de337d17e4fcacf1ec4e38f286c246e",
+    "episode_omissions.csv": "3af883154b0f33c9b74cff91480469c94984e483db537a2a68e2e43b5472cb70",
+    "tail_diagnostics.json": "aa1782bd6ab224f5127617b740ca7768b28d7110da31ba500b0208fd60165820",
+    "influence_table.tex": "ef0e7796bf77126415f06b702b52d3e448809ba9ef401a1744f73d8f7b8a49dd",
+    "methods_results.md": "9695f702c18942bae98ec0c29479a502046ef3428ce7b3af6069f1a4a7723c9e"
+  },
+  "environment": {
+    "python": "3.12.14"
+  },
+  "command": "python -m analysis.paired_rescoring.influence --output <new-empty-directory>"
+}

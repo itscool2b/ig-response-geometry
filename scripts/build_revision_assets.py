@@ -92,6 +92,26 @@ def strengthening_assets(tables):
     return {path.relative_to(ROOT).as_posix(): sha(path) for path in paths}
 
 
+def influence_assets(tables):
+    """Independently regenerate the explicitly exploratory appendix artifact."""
+    from analysis.paired_rescoring.influence import run, verify as verify_influence
+    directory = ROOT / "analysis/paired_rescoring/influence_results/2026-10-01-v1"
+    verify_influence(directory, root=ROOT)
+    provenance_path = directory / "provenance.json"
+    provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+    with tempfile.TemporaryDirectory(prefix="tmlr-influence-display-") as scratch:
+        reproduced = Path(scratch) / "results"
+        run(reproduced, root=ROOT)
+        for name, expected in provenance["artifacts_sha256"].items():
+            if Path(name).name != name or sha(reproduced / name) != expected:
+                raise ValueError("Episode influence output does not reproduce: " + name)
+        (tables / "episode_influence.tex").write_bytes((reproduced / "influence_table.tex").read_bytes())
+    paths = [provenance_path, ROOT / "analysis/paired_rescoring/influence_protocol.json",
+             *(ROOT / name for name in provenance["source_sha256"]),
+             *(directory / name for name in provenance["artifacts_sha256"])]
+    return {path.relative_to(ROOT).as_posix(): sha(path) for path in paths}
+
+
 def main():
     import matplotlib
     matplotlib.use("Agg")
@@ -108,7 +128,21 @@ def main():
     tables.mkdir(exist_ok=True)
     numerical_inputs = numerical_case_assets(tables)
     strengthening_inputs = strengthening_assets(tables)
+    influence_inputs = influence_assets(tables)
     lineage, macros, macro_displays = [], [], {}
+    influence_results = ROOT / "analysis/paired_rescoring/influence_results/2026-10-01-v1"
+    with (influence_results / "case_summary.csv").open(encoding="utf-8", newline="") as stream:
+        for row in csv.DictReader(stream):
+            lineage.append({"location": "table:episode-influence",
+                            "source": (influence_results / "case_summary.csv").relative_to(ROOT).as_posix(),
+                            "result": row, "interpretation": "exploratory_omission_range_not_confidence_interval",
+                            "membership_source": "analysis/paired_rescoring/results/2026-10-01-v1/membership.json.gz",
+                            "protocol_source": "analysis/paired_rescoring/influence_protocol.json"})
+    tails = json.loads((influence_results / "tail_diagnostics.json").read_text(encoding="utf-8"))
+    lineage.append({"location": "text:episode-influence-normalization-example",
+                    "source": (influence_results / "tail_diagnostics.json").relative_to(ROOT).as_posix(),
+                    "case": "Q:vision:insertion", "result": tails["Q:vision:insertion"]["example"],
+                    "interpretation": "within_cohort_finite_endpoint_normalization_not_physical_importance"})
     paired_results = ROOT / "analysis/paired_rescoring/results/2026-10-01-v1"
     for filename, location in (("summary.csv", "table:paired-rescoring"),
                                ("geometry.csv", "text:paired-rescoring-geometry")):
@@ -325,8 +359,10 @@ def main():
                 "analysis_directory": source.relative_to(ROOT).as_posix(), "analysis_verification": verification,
                 "builder_sha256": sha(Path(__file__)),
                 "manuscript_source_sha256": sha(manuscript),
+                "manuscript_inputs_sha256": {"paper/references.bib": sha(ROOT / "paper/references.bib")},
                 "numerical_case_inputs_sha256": numerical_inputs,
                 "strengthening_inputs_sha256": strengthening_inputs,
+                "influence_inputs_sha256": influence_inputs,
                 "input_sha256": {name: sha(source / name) for name in ("results.csv", "summary.json", "diagnostics.json", "random_order_counterexample.json", "solver_endpoint_sensitivity.json", "population_membership.json.gz", "raw_line_ledger.csv.gz", "provenance.json")},
                 "entries": lineage,
                 "generated_sha256": {p.relative_to(ROOT).as_posix(): sha(p) for p in [abstract_path, *tables.glob("*.tex"), *figures.glob("*.png"), *figures.glob("*.pdf")]}}

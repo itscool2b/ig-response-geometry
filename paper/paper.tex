@@ -52,17 +52,16 @@
 Attribution evaluation depends on both the ranking that selects interventions and the response that scores them.
 We analyze this distinction for Integrated Gradients (IG) of a fixed-noise diffusion policy's predicted action chunk.
 For quadratic and stabilized negative-$\ell_2$ action-discrepancy targets, we derive an exact normalized-response relation and the positive, path-dependent factor relating their gradients.
-A smooth two-feature construction reverses the IG ranking despite pointwise collinearity of the nonzero gradients, including at the implemented stabilizer.
-On the historical nine-point grid, a 100-feature equal-contribution policy gives quadratic-response insertion and deletion AUC of \RandomGridAUC{} for every ordering, ruling out a universal random-ranking reference of 0.5.
-A canonical reanalysis of \ArchiveFiles{} saved Robotics Diffusion Transformer files then separates fixed-ranking response changes from unauthenticated cross-target comparisons.
-For the same recorded quadratic-target rankings, changing only the response changes median deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} without changing a selected feature.
-Conversely, quadratic rescoring changes the recorded $\ell_2$ rankings' deletion AUC from \RescoreLDeletionL{} to \RescoreLDeletionQ{}.
-Paired response changes reveal a further distinction: their medians are positive in all eight reported cases, while overshooting tails make their means negative in six.
-Existing actual-model diagnostics additionally show repeatable computations with unresolved integration-budget sensitivity in an explicitly incomplete cohort.
-They do not qualify a production numerical setting.
-Together these results distinguish response geometry, numerical reliability and ranking quality.
-They establish neither improved attribution rankings nor explanations of task success or learned-weight dependence.
-The artifact links reconstructed results to preserved records, retains provenance limitations and numerical failures, and provides the analytic checks.
+A smooth construction reverses the IG ranking despite pointwise collinearity of the nonzero gradients.
+A finite-grid counterexample also rules out a universal random-ranking AUC reference of 0.5.
+Reanalysis of \ArchiveFiles{} preserved Robotics Diffusion Transformer files shows the practical effect: changing only the response changes median vision deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{} for the same recorded quadratic-target rankings.
+Across eight paired rescoring cases, every median response change is positive, but overshooting tails make six means negative.
+Exploratory episode-omission checks leave insertion-mean signs unchanged but can reverse language-deletion signs.
+A second smooth construction shows that several integration grids can agree in completeness, ranking and perturbation curves while reversing the exact IG order; the inaccurate order even scores better on both perturbation metrics in this example.
+Existing actual-model diagnostics likewise separate repeatability from unresolved integration-budget sensitivity in an incomplete cohort.
+These results establish distinct roles for response geometry, numerical accuracy and ranking quality.
+They do not qualify a production numerical setting, demonstrate superior attribution rankings, or explain task success or learned-weight dependence.
+The artifact preserves the raw-record lineage, analytic checks, adverse results and provenance limits.
 \end{abstract}
 
 %% ================================================================
@@ -111,6 +110,11 @@ Later work has addressed limitations of the vanilla method.
 \citet{jha2021smoother} computed attributions over neural stochastic differential equation models to produce smoother attribution maps, and later showed that shaping the injected noise further improves robustness~\citep{jha2022shaping}.
 \citet{walker2024idg} observed that gradients from saturation regions contribute noise and proposed Integrated Decision Gradients, which concentrates integration on the decision-relevant portion of the path.
 For vision transformers, metric-driven attributions~\citep{walker2025metric} and information-flow decompositions~\citep{walker2025infoflow} improve patch-level explanations. Guided IG~\citep{kapishnikov2021guided} adapts the integration path to reduce pixel-level noise.
+Integration-budget sensitivity has also been studied directly.
+\citet{makino2024integration} examine instance-dependent completeness residuals, nonmonotone changes with step count and unresolved path gradients.
+\citet{singhi2024strengthening} investigate step-count sensitivity in IG variants and the Important Direction Gradient Integration (IDGI) framework; their reported stability experiment compares JPEG-compressed and uncompressed inputs.
+Our fixed-context diagnostics separately examine repeatability and coordinate changes across budgets.
+The smooth construction in Appendix~\ref{sec:appendix-aliasing} supplies a limitation on certification: agreement on finitely many grids and exact scalar completeness do not establish accurate coordinate integrals.
 \citet{petsiuk2018rise} introduced the insertion and deletion curves we adopt as ranking-based faithfulness metrics.
 The reliability of perturbation metrics is itself an active concern.
 \citet{hooker2019roar} evaluate attributions by retraining on ablated inputs.
@@ -426,6 +430,9 @@ Table~\ref{tab:paired-rescoring} shows why a central summary alone is insufficie
 All eight paired-call medians are positive, ranging from $0.1041$ to $0.1590$, whereas six equal-episode means are negative.
 For Q-ranking vision insertion, the median paired change is $0.1042$ but the mean is $-17.0966$, with conditional interval $[-33.8210,-3.9746]$.
 The most negative paired change in that case is $-4438.8386$; these finite extremes are retained without clipping or trimming.
+An exploratory influence check, reported for all eight cases in Appendix~\ref{sec:episode-influence}, finds that all four negative insertion means remain negative after any one recorded episode is omitted.
+The two negative language-deletion means can change sign; their conditional intervals already cross zero.
+This diagnoses concentration in the recorded cohort, not population robustness, and does not change the untrimmed primary estimands.
 
 \begin{table}[htbp]
 \centering\small
@@ -621,16 +628,16 @@ Misinterpreting attractive maps, low completeness residuals or uncalibrated AUCs
 The retrospective analysis parses a hash-authenticated raw inventory, records occurrence decisions, and links each result to physical source records.
 The revised tables and figures are generated from the same canonical artifact, with identical point/interval populations and a manuscript lineage registry.
 It retains conflicting-key exclusions, action-norm strata, endpoint/tail diagnostics, alternative episode weightings and conditional grouping sensitivities.
-The separate paired rescoring artifact provides its pre-computation analysis protocol, all eight cases, paired call and episode summaries, bootstrap membership, and an exact decomposition by saved-node geometry. The smooth nested-grid example includes an analytic proof and repeated FP32/FP64 CPU checks through the unchanged trapezoidal kernel.
+The separate paired rescoring artifact provides its pre-computation analysis protocol, all eight cases, paired call and episode summaries, bootstrap membership, and an exact decomposition by saved-node geometry. A separately versioned exploratory supplement records every single-episode omission and its source identities without changing those primary results. The smooth nested-grid example includes an analytic proof and repeated FP32/FP64 CPU checks through the unchanged trapezoidal kernel.
 These operations reproduce arithmetic over saved records; they do not recover missing models, sidecars or original observations.
 The portable numerical projection retains the full planned roster, recorded checks and metrics, report hashes, and selected YCB FP32 tensors with their tensor hashes; it does not include all raw artifacts for the 72 completed target-modality cells.
 Its CPU reproducer recomputes the reported diagnostics and saved-tensor checks from this projection, not the complete original raw-artifact audit or a new model execution.
 The new runtime separately records immutable context, source, checkpoint, language, environment and noise identities, and fails explicitly on nonfinite attribution rather than sanitizing coordinates.
 A candidate PDF or a successful script run alone does not constitute an authenticated scientific replication.
 \ifanonymous
-The identified repository URL is omitted from this draft. An anonymous review supplement must be assembled and inspected after the scientific gates are complete.
+The identified repository URL is omitted from this draft. Local anonymous manuscript-source and research-supplement packages accompany this author-review candidate; final author and distribution checks remain pending.
 \else
-Code, raw records and the canonical analysis are available at \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}.
+The canonical repository is \url{https://github.com/itscool2b/the-readout-not-the-denoiser-repo}. This local revision and its review packages await the author's publication decision; the repository URL alone does not identify the current local candidate.
 The active retrospective artifact is \texttt{analysis/revision/results/2026-09-30-v2}; the manuscript registry is \texttt{paper/figures\_revision/lineage.json}.
 \fi
 
@@ -727,6 +734,52 @@ These observations therefore identify neither a causal contraction mechanism nor
 \label{fig:displacement}
 \end{figure}
 
+\section{Exploratory Episode Influence}
+\label{sec:episode-influence}
+
+The paired summaries in Table~\ref{tab:paired-rescoring} are sensitive to large
+finite response changes. To locate that sensitivity, we omit each of the 30
+recorded episodes in turn, retain all calls in the other 29 episodes, and
+recompute their equally weighted episode mean. Table~\ref{tab:episode-influence}
+reports every case. This analysis followed an exploratory audit of the same
+records; its separately saved protocol is not an outcome-blind preregistration.
+The omission ranges are deterministic influence summaries, not confidence
+intervals or evidence that the recorded episodes form an independent sample.
+The full untrimmed means, medians and conditional intervals remain unchanged.
+
+\begin{table}[htbp]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\input{tables_revision/episode_influence.tex}
+\caption{Exploratory omissions of one complete recorded episode. The range spans
+all 30 omission means; ``Same sign'' counts agreement with the full-cohort mean.
+Each case uses 750 calls in 30 episodes before omission; rows in a ranking
+cohort reuse calls. These ranges are not confidence intervals. All 240 omission
+records and their retained-population hashes are supplied in the separate
+influence artifact.}
+\label{tab:episode-influence}
+\end{table}
+
+All four negative insertion means remain negative under every individual
+omission. The Q language-deletion mean changes sign in 3 of 30 omissions and
+the L2 language-deletion mean in 1 of 30; both already have conditional
+bootstrap intervals spanning zero. In the latter case the most negative
+episode contributes $97.29\%$ of the sum of magnitudes of negative episode
+means. This is a concentration measure, not a share of the signed net mean
+and not a reason to exclude that episode.
+
+The extreme vision-insertion changes also have a concrete normalization
+explanation. For the most negative Q-ranking call, the baseline squared
+residual is $0.0174195$, the smallest in its 750-call cohort, whereas the
+maximum saved perturbed residual is $653.053$. Their ratio is about $37{,}490$.
+The finite Q endpoint gap is $1.7011\times10^{-5}$, above the historical
+$10^{-9}$ cutoff; the native Q AUC is $-4464.9082$ and its L2 rescore is
+$-26.0696$. A small baseline discrepancy and a large intervention response
+therefore coexist. These values are not an undefined or machine-zero division
+and do not provide an action-unit calibration of physical importance.
+The artifact gives the same diagnostics within each separate ranking cohort;
+matching nominal episode labels do not authenticate a cross-arm pair.
+
 \section{Additional Retrospective Diagnostics}
 \label{sec:appendix-diagnostics}
 The frozen-reference and backbone-cascade analyses retain learned encoders/adaptors and historical context uncertainty.
@@ -736,6 +789,7 @@ Table~\ref{tab:baseline} reports baseline-ranking point summaries; the small gro
 \input{tables_revision/baseline.tex}
 \FloatBarrier
 
+\clearpage
 \section{Saved Integration-Budget Cohorts}
 \label{sec:appendix-budget}
 \label{sec:budget}

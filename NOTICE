@@ -12,8 +12,13 @@ LaTeX template and bibliography style files, included only to build the paper.
 They are third-party template files and are not covered by the MIT license.
 
 Exception: paper/tmlr.sty and paper/tmlr.bst come from the official TMLR
-template. They are covered by the upstream Apache 2.0 license reproduced in
-paper/tmlr-LICENSE. paper/tmlr-source.json records their pinned source and hashes.
+template repository. Its repository-level Apache 2.0 license is reproduced in
+paper/tmlr-LICENSE. The original paper/tmlr.bst header separately retains a
+LaTeX Project Public License notice, version 1 or later, with its original
+copyright notices. Both notices are preserved; this repository does not assert
+that one overrides the other. These third-party files are not covered by the
+repository's MIT license. paper/tmlr-source.json records the pinned source,
+exact upstream byte hashes, and separately labeled historical CRLF hashes.
 
 The redistribution provenance of the demonstration photograph and derivative
 figures listed above has not been established. They are historical artifacts,
