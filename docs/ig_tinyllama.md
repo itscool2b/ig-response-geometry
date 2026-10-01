@@ -2,6 +2,8 @@
 
 Updated September 30, 2026. `ig_tinyllama.py` is a historical TinyLlama-1.1B-Chat next-token demonstration. It attributes a selected log-softmax score to continuous input embeddings, not discrete token IDs. The recorded prompt was “The capital of France is” and selected continuation was “Paris” (recorded token ID 3681).
 
+Current verification, October 1, 2026 UTC: the revised script completed a CPU-only `m=4` smoke run with a pinned model snapshot and the new prompt `A robot moves a cube.`. Raw embedding attributions were finite, but the relative completeness residual was 6.155900. This establishes execution only; attribution accuracy and GPU execution remain unverified. See [the E09 CPU verification summary](runtime_verification.md) for exact model identity, runtime and limitations.
+
 The script loads fp32 weights, looks up input embeddings, and uses learned PAD/EOS embeddings as its reference. PAD/EOS has semantics; it is not guaranteed information-free. Approximately 4.4 GB of model weights does not establish total IG memory usage.
 
 ## Positive-epsilon normalization
@@ -30,4 +32,4 @@ The revised core fails on nonfinite values with diagnostics. It does not hide de
 
 This historical endpoint-average sweep improved scalar accounting at the measured budgets. It does not isolate SiLU or dimensionality as the cause, guarantee behavior on other prompts, or prove map convergence. The claim that m=1000 was needed applies only to the tested candidates and historical criterion.
 
-Per-token bars sum signed embedding-coordinate attribution. Sign describes the selected scalar difference relative to the chosen reference. Historical output: `output/ig_tinyllama.png`. The optional current script requires explicit prompt, budget and fresh output arguments, uses evaluation mode and checks its PAD reference. It has not been rerun on a real model in this revision; see [legacy workflow disposition](legacy_workflows.md). See [the current numerical contract](integrated_gradients.md) for revised precision, quadrature and failure semantics.
+Per-token bars sum signed embedding-coordinate attribution. Sign describes the selected scalar difference relative to the chosen reference. Historical output: `output/ig_tinyllama.png`. The optional current script requires explicit prompt, budget and fresh output arguments, uses evaluation mode and checks its PAD reference. The current CPU smoke described above does not replace this historical example; see [legacy workflow disposition](legacy_workflows.md). See [the current numerical contract](integrated_gradients.md) for revised precision, quadrature and failure semantics.

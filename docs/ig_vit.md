@@ -2,6 +2,8 @@
 
 Updated September 30, 2026. `ig_vit.py` attributes an ImageNet log-softmax score to input pixels. It uses `ViT_B_16_Weights.IMAGENET1K_V1`, evaluation mode and a black reference processed through the model transforms. Its original measurements are historical.
 
+Current verification, October 1, 2026 UTC: the revised script completed a CPU-only `m=4` smoke run on a newly generated RGB fixture, with finite raw pixel attributions and verified model-crop display geometry. Its relative completeness residual was 0.498183, so this establishes execution only. The historical photograph was not reused; attribution accuracy and GPU execution remain unverified. See [the E09 CPU verification summary](runtime_verification.md) for the exact model identity, runtime and limitations.
+
 ViT-B/16 divides the 224 by 224 image into 196 patches, each 16 by 16 pixels, and projects each patch into a 768-coordinate token. The script computes pixel attributions. A dense patch projection has different weight columns for different pixel/channel coordinates, so sharing the projection does not require equal attribution within a patch. Visible patch-shaped patterns are observations, not a guarantee.
 
 ## Historical comparison

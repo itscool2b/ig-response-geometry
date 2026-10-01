@@ -2,6 +2,8 @@
 
 Updated September 30, 2026. `ig_resnet.py` is a historical ImageNet example. Recorded results below were not rerun by this documentation correction.
 
+Current verification, October 1, 2026 UTC: the revised script completed a CPU-only `m=4` smoke run on a newly generated RGB fixture, with finite raw attributions and verified model-crop display geometry. Its relative completeness residual was 1.802543, so this establishes execution only. The historical photograph was not reused; attribution accuracy and GPU execution remain unverified. See [the E09 CPU verification summary](runtime_verification.md) for the exact model identity, runtime and limitations.
+
 The script uses `ResNet50_Weights.IMAGENET1K_V2`, evaluation mode, frozen parameters and the predicted class's log-softmax score. Freezing parameters avoids their gradient storage; it does not alter the input chain-rule derivative.
 
 Preprocessing resizes the shorter image side to 232, center-crops to 224 by 224, and applies ImageNet normalization. The old photograph example recorded German shepherd, logit 6.24, probability 32.7%.
