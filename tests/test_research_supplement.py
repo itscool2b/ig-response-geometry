@@ -168,6 +168,7 @@ def test_working_snapshot_only_adds_reviewed_new_paths_and_reads_current_bytes(t
         'docs/manuscript_revision/claim_map.md',
         'docs/manuscript_revision/factual_corrections.md',
         'docs/manuscript_revision/revision_checklist.md',
+        'docs/manuscript_revision/exact_edits_checklist.md',
     )
     for name in reviewed_documents:
         (tmp_path / name).write_text('Reviewed document\n')

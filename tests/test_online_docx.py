@@ -116,8 +116,11 @@ def test_author_affiliation_and_correspondence_are_native_paragraphs():
     assert [p.text for p in doc.paragraphs] == ["Arjun Bajpai1*", "1Windermere Preparatory School, Windermere, Florida, United States", "*Corresponding author: arjunbajpai2009@gmail.com"]
     assert not paragraph._p.xpath(".//w:br")
     assert doc.paragraphs[0].runs[-2].font.superscript
-    assert not doc.paragraphs[0].runs[-1].font.superscript
+    assert doc.paragraphs[0].runs[-1].font.superscript
     assert doc.paragraphs[1].runs[0].font.superscript
+    assert paragraph.runs[0].text == "*" and paragraph.runs[0].font.superscript
+    assert paragraph.runs[1].text.startswith("Corresponding author:")
+    assert not paragraph.runs[1].font.superscript
     assert all(p.paragraph_format.first_line_indent.pt == 0 for p in doc.paragraphs)
 
 

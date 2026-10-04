@@ -244,6 +244,10 @@ def test_prose_macros_have_the_same_rounding_as_the_table(saved):
     assert macros["NumericalVisionNResidual"]["display"] == "0.045"
     assert macros["NumericalVisionQCoord"]["display"] == "2.05"
     assert macros["NumericalVisionNCoord"]["display"] == "1.23"
+    insertion_change = macros["PickCubeVisionNInsertionChange"]
+    assert insertion_change["value"] == pytest.approx(0.010178517126680608)
+    assert insertion_change["display"] == "0.0102"
+    assert float(insertion_change["display"]) > 0.01
     assert macros["TailDiscrepancyRatio"]["display"] == "37{,}500"
     assert macros["NormVisionInsertionFirstMedian"]["display"] == "-0.845"
     table = figures.paired_table(report)

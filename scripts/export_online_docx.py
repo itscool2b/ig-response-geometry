@@ -238,11 +238,12 @@ def format_author_block(paragraph):
     affiliation = paragraph.insert_paragraph_before(style=paragraph.style)
     author.add_run("Arjun Bajpai")
     author.add_run("1").font.superscript = True
-    author.add_run("*").font.superscript = False
+    author.add_run("*").font.superscript = True
     affiliation.add_run("1").font.superscript = True
     affiliation.add_run("Windermere Preparatory School, Windermere, Florida, United States")
     paragraph.clear()
-    paragraph.add_run("*Corresponding author: arjunbajpai2009@gmail.com")
+    paragraph.add_run("*").font.superscript = True
+    paragraph.add_run("Corresponding author: arjunbajpai2009@gmail.com").font.superscript = False
     for item in (author, affiliation, paragraph):
         item.alignment = WD_ALIGN_PARAGRAPH.CENTER
         item.paragraph_format.line_spacing = 1

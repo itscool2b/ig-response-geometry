@@ -2,7 +2,7 @@
 
 These corrections preserve the audit's intended revision while checking its assertions against the actual source evidence.
 
-The [Final-v5 ledger](final_v5_checklist.md) controls current action status; the Round 3 ledger and entries below retain their historical context. The evidence interpretations below explain the corrected manuscript; source, display and package acceptance is bound separately to the final delivery manifest and verification receipts.
+The [exact-edits ledger](exact_edits_checklist.md) controls current action status; the Final-v5 and Round 3 ledgers and entries below retain their historical context. The evidence interpretations below explain the corrected manuscript; source, display and package acceptance is bound separately to the final delivery manifest and verification receipts.
 
 1. Across all eight cases, calls with at least one saved overshoot range from 16.0% to 74.0%. Insertion cases range from 38.9% to 74.0%. The audit's shorter 42% to 74% description is not the all-case range.
 2. A deleted language position receives the matching adapted baseline representation. Zero-padded encoder outputs pass through the learned adaptor, so the substituted vector need not be zero. The contextual encoder is not rerun.
@@ -61,3 +61,15 @@ The final scientific review also corrected nominal versus realized intervention 
 6. The endpoint-inclusive coarse-grid identity in Appendix B.1 establishes the coarse ordering failure. Its 2K-grid equation has the correct order but inexact values. An exact-attribution label must not call these exact values aliased.
 
 7. The publication clarification explicitly states that no budget is selected, quotes the saved rank and curve thresholds with their near-zero conditions, and identifies one active state coordinate per group. Headline PickCube rescoring is limited to vision and language; numerical diagnostics include state. The extreme normalized response combines a small baseline residual with large intermediate residuals. Figure 5 now names equality checks. These clarifications do not change the sealed result statuses or scientific inputs.
+
+## October 4 exact-edits corrections
+
+1. Q-ranked episode records directly store five solver steps on 375 step records in each seed file. N-ranked records omit this field. Full run configurations remain unavailable, but it is inaccurate to call both cohorts' step counts inferred.
+2. The language 0.004 sensitivity is a bound on the observed movement of median paired differences. Separate median AUC movement reaches about 0.005436. Equal 1% and 5% values still do not authenticate masks.
+3. The numerical comparison set contains all three budget pairs. Adjacent pairs contribute 3,840 checks and 153 violations; smallest-to-largest pairs contribute 1,920 and 126; 288 completeness checks contribute 23 violations. Their sum retains 6,048 budget checks and 302 violations. All 144 not-applicable overlap checks belong to state.
+4. RMS endpoint-normalized equality with unstabilized N is valid for B > 0. Positive epsilon smooths the norm, not arbitrary nonsmoothness in the action map. The continuity statement therefore retains a smooth-action-map condition.
+5. Completeness is required conditionally at a budget selected for final use. No such budget is selected. Retaining failures at all tested budgets as diagnostic counts does not approve a failed setting or automatically reject a different finer setting.
+6. In each saved vision-insertion cohort, 17 calls have B < 0.5. Seven Q-ranked and eight N-ranked calls have Delta < -100; no other call does. Their maximum intermediate squared residuals span 205.91165161132812-824.558349609375 and 191.0387344779182-787.433790098762, respectively. Other small-B maxima are 8.369850158691406 and 5.863368812696956. Both sets of extreme calls occupy the same seven episode labels. These facts do not establish a causal mechanism or an out-of-sample necessity claim.
+7. Figure 5 plots adjacent coordinate changes. Three of four finest-pair vision-N failures instead concern unplotted response criteria. The PickCube insertion-AUC change 0.010178517126680608 must display as 0.0102 when compared with the 0.01 criterion.
+8. Reference 2 now has official ICML 2026 proceedings metadata: PMLR 306, pages 159526-159549. The proceedings URL replaces the arXiv DOI, with the citation key and authors unchanged.
+9. Equation 8 already has no explicit spacing before its full stop, so E7 requires no source edit. Existing author facts and AI disclosure are preserved. Source changes precede fresh output verification; no old render receipt is treated as acceptance of new bytes.

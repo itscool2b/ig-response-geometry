@@ -81,6 +81,7 @@ REVISION_FILES = (
     "docs/manuscript_revision/revision_checklist.md",
     "docs/manuscript_revision/round3_checklist.md",
     "docs/manuscript_revision/final_v5_checklist.md",
+    "docs/manuscript_revision/exact_edits_checklist.md",
     "analysis/manuscript_revision/__init__.py", "analysis/manuscript_revision/report.py",
     "analysis/manuscript_revision/figures.py", "analysis/manuscript_revision/README.md",
 ) + tuple(f"paper/figures_revision/{name}.{extension}" for name in

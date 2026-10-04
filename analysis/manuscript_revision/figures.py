@@ -415,7 +415,7 @@ def facts(report):
                         and row["candidate_m"] == 256 and row["reference_m"] == 512
                         and row["criterion"] == "normalized_auc_difference"
                         and row["direction"] == "insertion" and row["response"] == "Q")
-    add("PickCubeVisionNInsertionChange", pickcube_auc["value"], 3)
+    add("PickCubeVisionNInsertionChange", pickcube_auc["value"], 4)
     values["PickCubeVisionNInsertionChange"]["report_sha256"] = pickcube_auc["report_sha256"]
     # Prose should not imply precision unsupported by its rounded input values.
     ratio = values["TailDiscrepancyRatio"]["value"]

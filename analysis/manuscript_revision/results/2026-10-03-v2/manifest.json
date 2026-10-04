@@ -172,7 +172,7 @@
   "schema_version": 1,
   "source_sha256": {
     "analysis/manuscript_revision/__init__.py": "2d3bf0e351d19b82dce148c72d1be9db63d8c7ea8ddedbbbbed3b370bd1821d5",
-    "analysis/manuscript_revision/figures.py": "8532d948844ffa61a66322e3640a42e90544f8c645fd88a74fae4112f064cf09",
+    "analysis/manuscript_revision/figures.py": "40924f9d2ed7a96f28c6c542c74f3935bb4ed9ec5eab179e8c774779edb0cadc",
     "analysis/manuscript_revision/report.py": "16013adc39b8ac7fea4fb3cbce7e2d782589b324a8b3393e7da056f9827e7656"
   }
 }
