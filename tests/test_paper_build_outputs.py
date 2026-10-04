@@ -1,6 +1,7 @@
 """Current paper filenames stay synchronized without requiring a TeX install."""
 from pathlib import Path
 from types import SimpleNamespace
+import json
 import sys
 
 import pytest
@@ -113,3 +114,80 @@ def test_failed_compilation_preserves_both_identified_outputs(builder, monkeypat
         run()
     for name in ("paper.pdf", "paper-revision.pdf"):
         assert (root / "paper" / name).read_bytes() == b"previous identified PDF"
+
+
+def test_tectonic_build_uses_cache_only_and_retains_anonymous_wrapper(builder, monkeypatch):
+    root, calls, run = builder
+    original = build_paper.subprocess.run
+
+    def inspect(command, *, cwd, **kwargs):
+        assert (cwd / "revision.tex").read_text() == "\\def\\TMLRAnonymous{1}\\input{paper.tex}\n"
+        return original(command, cwd=cwd, **kwargs)
+
+    monkeypatch.setattr(build_paper.subprocess, "run", inspect)
+    run("--anonymous", "--engine", "tectonic")
+    assert len(calls) == 1
+    assert {"--only-cached", "--untrusted", "--keep-logs", "--reruns"} <= set(calls[0])
+    assert (root / "paper/paper-anonymous-draft.pdf").read_bytes() == b"new compiled PDF"
+
+
+def test_fontspec_cannot_be_silently_compiled_with_pdflatex(builder):
+    root, calls, run = builder
+    (root / "paper/paper.tex").write_text(r"\usepackage{fontspec}")
+    with pytest.raises(SystemExit):
+        run("--engine", "pdflatex")
+    assert not calls
+
+
+def test_explicit_tectonic_path_is_accepted_without_path_install(tmp_path, monkeypatch):
+    engine = tmp_path / "installed" / "tectonic.exe"
+    engine.parent.mkdir()
+    engine.write_bytes(b"fixture")
+    monkeypatch.setattr(build_paper.shutil, "which", lambda value: None)
+    kind, actual = build_paper.resolve_engine(str(engine), r"\usepackage{fontspec}")
+    assert kind == "tectonic" and actual == str(engine.resolve())
+
+
+def test_missing_engine_fails_before_compilation(builder, monkeypatch):
+    root, calls, run = builder
+    monkeypatch.setattr(build_paper.shutil, "which", lambda value: None)
+    with pytest.raises(SystemExit):
+        run("--engine", root / "missing/tectonic.exe")
+    assert not calls
+
+
+def test_explicit_resource_fetch_flag_and_intermediate_identities(builder):
+    root, calls, run = builder
+    retained = root / 'local-review/identified'
+    run('--engine', 'tectonic', '--allow-resource-downloads', '--keep-intermediates-dir', retained)
+    assert '--only-cached' not in calls[0]
+    record = json.loads((retained / 'build.json').read_text())
+    assert record['engine'] == 'tectonic' and record['resource_downloads_allowed']
+    assert 'revision.log' in record['intermediates_sha256']
+    assert record['pdf_sha256']
+    before = len(calls)
+    with pytest.raises(SystemExit):
+        run('--keep-intermediates-dir', retained)
+    assert len(calls) == before
+
+
+def test_intermediates_cannot_be_written_under_protected_history(builder):
+    root, calls, run = builder
+    with pytest.raises(SystemExit):
+        run('--keep-intermediates-dir', root / 'legacy/pre-response-geometry/new')
+    assert not calls
+
+
+def test_concurrent_source_change_does_not_publish_stale_pdf(builder, monkeypatch):
+    root, _, run = builder
+    compile_original = build_paper.subprocess.run
+
+    def changing(command, *, cwd, **kwargs):
+        result = compile_original(command, cwd=cwd, **kwargs)
+        (root / 'paper/paper.tex').write_text('changed during compilation')
+        return result
+
+    monkeypatch.setattr(build_paper.subprocess, 'run', changing)
+    with pytest.raises(RuntimeError, match='changed during compilation'):
+        run('--engine', 'tectonic')
+    assert (root / 'paper/paper.pdf').read_bytes() == b'previous identified PDF'

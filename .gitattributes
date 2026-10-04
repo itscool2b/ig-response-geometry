@@ -6,6 +6,8 @@ analysis/revision/examples/** -text
 analysis/paired_rescoring/** -text
 # Saved numerical projections and their reproducer use exact-byte manifests.
 analysis/numerical_case/** -text
+analysis/manuscript_revision/** -text
+paper/nhsjs.bst -text
 # Manuscript lineage authenticates exact generated and source bytes too.
 paper/paper.tex -text
 paper/appendix_aliasing.tex -text

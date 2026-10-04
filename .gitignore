@@ -52,3 +52,9 @@ paper/AUDIT_REPORT.md
 paper/REVIEW_NOTES.md
 .precompaction_context.md
 .notes_data_worksheet.md
+
+# Local manuscript candidates, dependency downloads and rendered QA.
+local_revision/
+
+# Reviewed local document delivery.
+/artifacts/current/

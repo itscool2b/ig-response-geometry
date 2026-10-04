@@ -1,4 +1,4 @@
-"""Build curated research working drafts from committed Git blobs.
+"""Build curated research drafts from committed blobs or an explicit local snapshot.
 
 The default preserves identified notices. An explicit private anonymous
 candidate mode proposes the own-author attribution only for local review and
@@ -60,7 +60,8 @@ DOCUMENTS = (
     "paper/tmlr-LICENSE", "paper/tmlr-source.json",
 )
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
-    "tests/test_paper_packaging_paths.py", "tests/test_research_supplement.py"})
+    "tests/test_paper_packaging_paths.py", "tests/test_research_supplement.py",
+    "tests/test_approved_assembly.py"})
 OUTPUT_PREFIX = "analysis/revision/results/2026-09-30-v2/"
 RESULT_FILES = ("diagnostics.json", "duplicate_population_sensitivity.json", "duplicates.json",
     "population_membership.json.gz", "provenance.json", "random_order_counterexample.json",
@@ -70,6 +71,21 @@ PAPER_ASSETS = tuple("paper/tables_revision/" + name + ".tex" for name in
     "paper/figures_revision/lineage.json", "paper/figures_revision/response_geometry.pdf",
     "paper/figures_revision/response_geometry.png", "paper/figures_revision/solver_endpoint.pdf",
     "paper/figures_revision/solver_endpoint.png")
+REVISION_FILES = (
+    "paper/nhsjs.bst", "paper/tables_revision/revision_facts.tex", "paper/tables_revision/paired_results.tex",
+    "CITATION.cff", "paper/README.md", "paper/ijcai26.sty", "paper/named.bst", "scripts/export_online_docx.py",
+    "docs/manuscript_revision/README.md", "docs/manuscript_revision/claim_map.md",
+    "docs/manuscript_revision/factual_corrections.md", "docs/manuscript_revision/template_contract.md",
+    "docs/manuscript_revision/final_local_verification.md",
+    "docs/manuscript_revision/final_semantic_audit.md",
+    "docs/manuscript_revision/revision_checklist.md",
+    "docs/manuscript_revision/round3_checklist.md",
+    "docs/manuscript_revision/final_v5_checklist.md",
+    "analysis/manuscript_revision/__init__.py", "analysis/manuscript_revision/report.py",
+    "analysis/manuscript_revision/figures.py", "analysis/manuscript_revision/README.md",
+) + tuple(f"paper/figures_revision/{name}.{extension}" for name in
+          ("pipeline", "response_mechanism", "paired_effects", "analytic_toys", "numerical_diagnostics")
+          for extension in ("pdf", "png"))
 RIGHTS_EXCLUDED = frozenset({"image.jpg", "output/ig_resnet50.png", "output/ig_vit.png", "output/ig_llava.png"})
 IDENTIFIERS = ("arjun bajpai", "arjunbajpai2009", "itscool2b",
                "the-readout-not-the-denoiser-repo", "ig-response-geometry", "22133507")
@@ -107,6 +123,37 @@ def snapshot(root, revision):
             continue
         blobs[name] = (mode.decode(), oid.decode())
     return commit, blobs
+
+
+def working_file(root, name):
+    """Read one regular, contained file without following aliases or junctions."""
+    root = Path(root).resolve()
+    path = root / member_name(name)
+    current = root
+    for part in Path(name).parts:
+        current = current / part
+        if current.is_symlink() or (hasattr(current, "is_junction") and current.is_junction()):
+            raise ValueError("Working-copy aliases are not package inputs: " + name)
+    if not path.resolve().is_relative_to(root) or not path.is_file():
+        raise ValueError("Required regular working-copy file is missing: " + name)
+    return path.read_bytes()
+
+
+def working_snapshot(root, revision="HEAD"):
+    """Add only reviewed new paths to the tracked inventory; never sweep a tree."""
+    root = Path(root).resolve()
+    commit, index = snapshot(root, revision)
+    candidates = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | set(PENDING_ADDITIONS) | set(REVISION_FILES)
+    reporting = root / "analysis/manuscript_revision"
+    if reporting.is_dir():
+        candidates.update(path.relative_to(root).as_posix() for path in reporting.rglob("*")
+                          if path.is_file() and path.suffix in {".py", ".md", ".json", ".csv"}
+                          and "__pycache__" not in path.parts)
+    candidates.update(path.relative_to(root).as_posix() for path in (root / "tests").glob("test_*.py"))
+    for name in candidates:
+        if (root / name).is_file():
+            index.setdefault(member_name(name), ("100644", None))
+    return commit, index
 
 
 def import_dependencies(path, data, available):
@@ -167,31 +214,48 @@ def privacy_findings(contents, extra_identifiers=()):
     return result
 
 
-def collect(root, revision, extra_identifiers=()):
+def collect(root, revision, extra_identifiers=(), *, working_copy=False):
     extra_identifiers = audit_tokens(extra_identifiers)
-    commit, index = snapshot(root, revision)
+    commit, index = working_snapshot(root, revision) if working_copy else snapshot(root, revision)
     cache = {}
     def read(name):
         member_name(name)
         if name not in index:
-            raise ValueError("Required file absent from committed source: " + name)
+            raise ValueError("Required file absent from source snapshot: " + name)
         if name not in cache:
-            cache[name] = git(root, "cat-file", "blob", index[name][1])
+            cache[name] = working_file(root, name) if working_copy else git(root, "cat-file", "blob", index[name][1])
         return cache[name]
     manifest_path = "analysis/revision/input_manifest.json"
     manifest = json.loads(read(manifest_path))
+    if working_copy and index[manifest_path][1] is not None:
+        baseline_manifest = json.loads(git(root, "cat-file", "blob", index[manifest_path][1]))
+        if manifest != baseline_manifest:
+            raise ValueError("The immutable historical input manifest differs from the base commit")
     selected = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | {manifest_path}
     selected.update(p for p in index if p.startswith("analysis/numerical_case/"))
     selected.update(p for p in index if p.startswith("analysis/paired_rescoring/"))
+    if b"\\bibliographystyle{nhsjs}" in read("paper/paper.tex"):
+        selected.update(REVISION_FILES)
+        selected.update(p for p in index if p.startswith("analysis/manuscript_revision/")
+                        and p.endswith((".py", ".md", ".json", ".csv")))
     selected.update(OUTPUT_PREFIX + name for name in RESULT_FILES)
     selected.update(p for p in index if p.startswith("tests/") and p.endswith(".py") and p not in OMITTED_TESTS)
     selected.update(p for p in PENDING_ADDITIONS if p in index)
+    raw_input_representations = {}
     for item in manifest["files"]:
         path = member_name(item["path"])
         if not path.startswith("data/") or not path.endswith(".jsonl") or path in selected:
             raise ValueError("Unexpected or repeated raw input path")
-        if digest(read(path)) != item["sha256"]:
-            raise ValueError("Committed raw input differs from immutable analysis manifest: " + path)
+        raw = read(path)
+        representation = "canonical"
+        if digest(raw) != item["sha256"]:
+            # Match the frozen loader's exact, separately declared Windows
+            # checkout variant. Never normalize or replace exported bytes.
+            if (digest(raw) != item.get("git_crlf_checkout_sha256")
+                    or digest(raw.replace(b"\r\n", b"\n")) != item["sha256"]):
+                raise ValueError("Raw input differs from immutable analysis manifest: " + path)
+            representation = "declared_git_crlf_checkout"
+        raw_input_representations[path] = representation
         selected.add(path)
     dependencies, external = {}, set()
     queue = sorted(selected)
@@ -208,19 +272,37 @@ def collect(root, revision, extra_identifiers=()):
     if selected & RIGHTS_EXCLUDED or any(p.startswith(("legacy/", "notebooks/", "out/", "output/")) for p in selected):
         raise ValueError("Curated scope contains a historical or rights-excluded artifact")
     contents = {name: read(name) for name in sorted(selected)}
+    if working_copy:
+        frozen_prefixes = (OUTPUT_PREFIX, "analysis/paired_rescoring/results/",
+                           "analysis/paired_rescoring/influence_results/", "analysis/numerical_case/2026-10-01-v1/inputs/",
+                           "analysis/numerical_case/2026-10-01-v1/outputs/")
+        for name, data in contents.items():
+            if name.startswith(frozen_prefixes) and index[name][1] is not None:
+                if data != git(root, "cat-file", "blob", index[name][1]):
+                    raise ValueError("Frozen scientific artifact differs from the base commit: " + name)
     provenance = json.loads(contents[OUTPUT_PREFIX + "provenance.json"])
     for name, expected in provenance["artifacts_sha256"].items():
         if digest(contents[OUTPUT_PREFIX + member_name(name)]) != expected:
             raise ValueError("Canonical analysis artifact hash mismatch: " + name)
+    if working_copy:
+        changed = [name for name, data in contents.items() if working_file(root, name) != data]
+        if changed:
+            raise ValueError("Working copy changed while its snapshot was captured: " + ", ".join(changed))
+    hashes = {name: digest(data) for name, data in sorted(contents.items())}
     return contents, dict(commit=commit, scope="identified_working_draft_not_submission",
-        raw_inputs=len(manifest["files"]), import_dependencies=dependencies,
+        source_kind="working_copy_snapshot" if working_copy else "committed_git_blobs",
+        snapshot_sha256=digest(json.dumps(hashes, sort_keys=True, separators=(",", ":")).encode()),
+        raw_inputs=len(manifest["files"]), raw_input_representations=raw_input_representations,
+        import_dependencies=dependencies,
         external_import_roots=sorted(external),
         pending_uncommitted_additions=[p for p in PENDING_ADDITIONS if p not in index],
         additional_audit_tokens_sha256=digest(json.dumps(extra_identifiers,separators=(",", ":")).encode()),
         additional_audit_token_count=len(extra_identifiers),
         privacy_findings=privacy_findings(contents, extra_identifiers),
         excluded_tracked_paths=sorted(set(index)-selected),
-        source_members={name:dict(sha256=digest(data),bytes=len(data),mode=index[name][0],git_blob=index[name][1]) for name,data in contents.items()})
+        source_members={name:dict(sha256=digest(data),bytes=len(data),mode=index[name][0],
+                                 **({"base_git_blob": index[name][1]} if working_copy else {"git_blob": index[name][1]}))
+                        for name,data in contents.items()})
 
 
 GUIDE = """# Identified research supplement working draft
@@ -320,7 +402,9 @@ The included CPU demonstrations establish bounded execution only, not accuracy
 or GPU validation. The included numerical case reproduces a frozen partial audit
 and selected saved tensors; it does not repeat model evaluation or approve a
 production setting. Prospective comparisons and their broader claims are deferred.
-See analysis/numerical_case/README.md. Final manuscript/package review remains open.
+See analysis/numerical_case/README.md. Technical validation of this exact archive
+is recorded in the accompanying local verification. Human submission review
+remains open.
 The additional paired response analysis uses the minimal saved-data environment:
 
     python -m analysis.paired_rescoring.analyze --output runs/paired-rescoring
@@ -371,6 +455,11 @@ def anonymous_candidate(contents, extra_identifiers):
     if lineage["manuscript_source_sha256"] != digest(contents["paper/paper.tex"]):
         raise ValueError("Canonical manuscript lineage differs before transformation")
     lineage["manuscript_source_sha256"] = digest(transformed["paper/paper.tex"])
+    manuscript_inputs = lineage.get("manuscript_inputs_sha256", {})
+    if "paper/paper.tex" in manuscript_inputs:
+        if manuscript_inputs["paper/paper.tex"] != digest(contents["paper/paper.tex"]):
+            raise ValueError("Canonical manuscript input hash differs before transformation")
+        manuscript_inputs["paper/paper.tex"] = digest(transformed["paper/paper.tex"])
     transformed[lineage_path] = (json.dumps(lineage, indent=2)+"\n").encode()
     findings = privacy_findings(transformed, extra_identifiers)
     if any(row["category"] == "identifying_text" for row in findings):
@@ -385,14 +474,42 @@ def anonymous_candidate(contents, extra_identifiers):
         third_party_notices="preserved_exactly",canonical_public_license="unchanged")
 
 
-def build(root, revision, output, extra_identifiers=(), *, private_anonymous_candidate=False):
+def build(root, revision, output, extra_identifiers=(), *, private_anonymous_candidate=False, working_copy=False):
     if private_anonymous_candidate and Path(output).resolve().is_relative_to(Path(root).resolve()):
         raise ValueError("Private anonymous candidate output must be outside the canonical public repository")
-    contents, audit = collect(root, revision, extra_identifiers)
+    contents, audit = (collect(root, revision, extra_identifiers, working_copy=True) if working_copy
+                       else collect(root, revision, extra_identifiers))
     if private_anonymous_candidate:
         contents, audit["anonymous_candidate"] = anonymous_candidate(contents, extra_identifiers)
     audit["template_provenance"] = validate_template_bytes(contents)
     contents["SUPPLEMENT_README.md"] = (ANONYMOUS_GUIDE if private_anonymous_candidate else GUIDE).encode()
+    if "analysis/manuscript_revision/report.py" in contents:
+        contents["SUPPLEMENT_README.md"] += b"""
+
+The manuscript build entry point is the already assembled paper/paper.tex.
+This package supports scientific reproduction and compilation of that source.
+Compile the current source directly. Historical reconstruction tools and
+their preparation records are not required and are not included.
+
+The current article's separate reporting layer is analysis/manuscript_revision/.
+In a fresh extraction, run python scripts/build_revision_assets.py --reproduce
+to regenerate its summaries and displays while checking the frozen evidence.
+The current presentation uses a 12-point article layout and nhsjs.bst; the
+preserved TMLR files document the historical template and retain their notices.
+Build with python scripts/build_paper.py --engine tectonic, or provide its path.
+Times New Roman and the public TeX resources must already be available locally.
+For first-time TeX setup only, --allow-resource-downloads allows public resource
+fetches into Tectonic's cache. It does not upload manuscript files.
+Current technical documentation includes the claim map, factual corrections,
+template contract, final local verification and scientific meaning audit.
+Historical archive paths mentioned in those documents are not build inputs
+and are not included. This package does not perform a journal submission.
+"""
+    if working_copy:
+        contents["SUPPLEMENT_README.md"] = contents["SUPPLEMENT_README.md"].replace(
+            b"Exported code is committed Git-blob bytes.", b"Exported code is an explicit hashed working-copy snapshot.")
+        contents["SUPPLEMENT_README.md"] += ("\nSource: exact local working-copy bytes; the recorded commit is a base reference, not the exported source.\n"
+            "Snapshot SHA-256: " + audit["snapshot_sha256"] + "\n").encode()
     # This supplements the unchanged embedded notice and also covers the
     # configuration derived from the same pinned upstream project.
     sampler = contents["rdt_sampling.py"].decode("utf-8")
@@ -401,6 +518,8 @@ def build(root, revision, output, extra_identifiers=(), *, private_anonymous_can
         "Source: https://github.com/thu-ml/RoboticsDiffusionTransformer/tree/cd79363a1387e8f81c7724d070ef7e45fd23150f\n\n" + notice + "\n").encode()
     package_manifest = dict(kind="private_anonymous_research_supplement_candidate" if private_anonymous_candidate else "identified_research_supplement",
         status="unapproved_for_external_distribution_or_submission" if private_anonymous_candidate else "working_draft_not_submission",
+        source_kind=audit.get("source_kind", "committed_git_blobs"),
+        source_snapshot_sha256=audit.get("snapshot_sha256"),
         members={p:dict(sha256=digest(b),bytes=len(b)) for p,b in sorted(contents.items())})
     contents["SUPPLEMENT_MANIFEST.json"] = (json.dumps(package_manifest,indent=2)+"\n").encode()
     output = Path(output)
@@ -425,7 +544,9 @@ def build(root, revision, output, extra_identifiers=(), *, private_anonymous_can
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root",type=Path,default=Path(__file__).resolve().parents[1])
-    parser.add_argument("--commit",required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--commit", help="Export the exact files in this Git commit")
+    source.add_argument("--working-copy", action="store_true", help="Export current curated files, including reviewed new revision paths, with a byte-hashed snapshot; HEAD is recorded only as the base")
     parser.add_argument("--out",type=Path,required=True)
     parser.add_argument("--audit-tokens-file",type=Path,
         help="Optional private JSON list of additional identity tokens. The file is never packaged; findings stay in the external audit.")
@@ -433,7 +554,8 @@ def main():
         help="Prepare a private local candidate with proposed own-author attribution. This is not an approved license change or distribution.")
     args=parser.parse_args()
     extra_identifiers = audit_tokens(json.loads(args.audit_tokens_file.read_bytes())) if args.audit_tokens_file else ()
-    result=build(args.root,args.commit,args.out,extra_identifiers,private_anonymous_candidate=args.private_anonymous_candidate)
+    result=build(args.root,args.commit or "HEAD",args.out,extra_identifiers,
+                 private_anonymous_candidate=args.private_anonymous_candidate,working_copy=args.working_copy)
     print(json.dumps({k:result[k] for k in ("commit","raw_inputs","packaged_members","archive","pending_uncommitted_additions")},indent=2))
 
 

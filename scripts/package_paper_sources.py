@@ -25,13 +25,17 @@ IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
 BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'})
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                         ('baseline', 'budget', 'completeness', 'faithfulness', 'macros',
-                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring', 'episode_influence'))
+                         'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring', 'episode_influence',
+                         'revision_facts', 'paired_results'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
-                          'figures_revision/solver_endpoint.pdf'})
+                          'figures_revision/solver_endpoint.pdf',
+                          *(f'figures_revision/{name}.pdf' for name in
+                            ('pipeline', 'response_mechanism', 'paired_effects', 'analytic_toys', 'numerical_diagnostics'))})
 FRAGMENT_FILES = TABLE_FILES | frozenset({'appendix_aliasing.tex'})
 TEX_PACKAGES = frozenset({'tmlr', 'url', 'hyperref', 'inputenc', 'caption', 'graphicx',
                           'placeins', 'amsmath', 'amssymb', 'amsthm', 'booktabs',
-                          'algorithm', 'algorithmic', 'microtype', 'xcolor'})
+                          'algorithm', 'algorithmic', 'microtype', 'xcolor', 'fontspec',
+                          'geometry', 'natbib', 'tabularx', 'array'})
 DATA_DIRECTIVES = ('input', 'includegraphics', 'bibliography', 'bibliographystyle',
                    'documentclass', 'usepackage')
 
@@ -45,6 +49,9 @@ def anonymous_source(text):
     # that extension until the transformation has a corresponding parser.
     if re.search(r'\\begin\{(?:verbatim\*?|lstlisting|minted)\}', text):
         raise ValueError('Literal environments require a reviewed anonymization parser')
+    # Removing a comment-only line must not introduce a blank paragraph, which
+    # breaks caption arguments containing source review trace markers.
+    text = re.sub(r'(?m)^[ \t]*%[^\n]*(?:\n|$)', '', text)
     text = re.sub(r'(?<!\\)%[^\n]*', '', text)
     text = re.sub(r'\\newif\\ifanonymous\s*', '', text)
     token = re.compile(r'\\ifdefined\\TMLRAnonymous\b|\\ifanonymous\b|\\else\b|\\fi\b')
@@ -77,10 +84,13 @@ def anonymous_source(text):
         pieces.append(text[start:])
     text = ''.join(pieces)
     text = re.sub(r'\\anonymoustrue\s*', '', text)
-    # This explicit source boundary fails closed if author syntax changes.
+    # Preserve the old reviewed TMLR syntax, and accept the article's one
+    # already-anonymous declaration only after selecting anonymous branches.
     text, count = re.subn(r'\\author\{\\name [^\n]*\n\\addr [^\n]*\}',
                          lambda _: r'\author{\name Anonymous authors}', text)
-    if count != 1:
+    article_author = re.findall(r'\\author\{(?:Anonymous author|)\}', text)
+    author_commands = re.findall(r'\\author\b', text)
+    if count != 1 and not (count == 0 and len(article_author) == len(author_commands) == 1):
         raise ValueError('Expected exactly one reviewed author declaration')
     assert_anonymous(text, 'paper.tex')
     return text
@@ -128,14 +138,23 @@ def manuscript_dependencies(text, *, top_level):
         if any(found.values()):
             raise ValueError('Nested manuscript data directives require explicit review')
         return set()
-    if found['bibliography'] != ['references'] or found['bibliographystyle'] != ['tmlr']:
+    if found['bibliography'] != ['references'] or found['bibliographystyle'] not in (['tmlr'], ['nhsjs']):
         raise ValueError('Changed bibliography or style target requires explicit review')
     if found['documentclass'] != ['article']:
         raise ValueError('Changed document class requires explicit review')
     packages = [name for group in found['usepackage'] for name in group.split(',')]
-    if not packages or 'tmlr' not in packages or any(name not in TEX_PACKAGES for name in packages):
+    required = {'tmlr'} if found['bibliographystyle'] == ['tmlr'] else {'fontspec', 'natbib', 'geometry'}
+    if not required <= set(packages) or any(name not in TEX_PACKAGES for name in packages):
         raise ValueError('Unreviewed template package or package path')
+    if 'fontspec' in packages:
+        if (directives(text, 'setmainfont') != ['Times New Roman']
+                or len(re.findall(r'\\setmainfont\{Times New Roman\}', text)) != 1):
+            raise ValueError('Unreviewed manuscript main font')
+        if re.search(r'\\(?:setotherlanguage|newfontfamily|fontspec|setmathfont|setsansfont|setmonofont)\b', text):
+            raise ValueError('Unreviewed manuscript font-loading directive')
     names = set(BASE_FILES)
+    if found['bibliographystyle'] == ['nhsjs']:
+        names.add('nhsjs.bst')
     for name in found['input']:
         name = member_name(name)
         name = name if Path(name).suffix else name + '.tex'
@@ -177,12 +196,14 @@ def build(root, output):
     template_provenance = validate_template_bytes(files)
     files['README.txt'] = (
         'Anonymous manuscript source component, working draft.\n'
-        'Build: pdflatex paper.tex; bibtex paper; pdflatex paper.tex; pdflatex paper.tex.\n'
+        'Build the article with Tectonic: tectonic --only-cached --untrusted --reruns 3 paper.tex.\n'
+        'Requires installed Times New Roman and an already populated TeX package cache.\n'
+        'The legacy TMLR source can also use pdflatex, bibtex, then two pdflatex passes.\n'
         'Exact pinned TMLR files and both upstream license notices are preserved.\n'
         'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
         'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
         'This contains manuscript sources, not the complete code/data supplement.\n'
-        'Scientific validation and final submission review remain open.\n'
+        'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n'
     ).encode()
     manifest = dict(kind='anonymous_manuscript_sources', status='working_draft_not_submission_ready',
                     artifacts_sha256={name:digest(data) for name,data in sorted(files.items())})

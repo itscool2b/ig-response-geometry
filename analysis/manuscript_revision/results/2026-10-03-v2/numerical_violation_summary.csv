@@ -1,0 +1,7 @@
+modality,target,completed_arms,arms_with_finest_pair_violation
+language,L2,12,0
+language,Q,12,0
+state,L2,12,2
+state,Q,12,2
+vision,L2,12,4
+vision,Q,12,1

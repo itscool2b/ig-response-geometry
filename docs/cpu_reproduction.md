@@ -39,10 +39,13 @@ Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
 .\.venv-cpu\Scripts\python.exe analysis/numerical_case/2026-10-01-v1/summarize.py --output runs/reproduce-numerical
 .\.venv-cpu\Scripts\python.exe -m analysis.revision.nested_grid_aliasing --output runs/reproduce-aliasing.json
 .\.venv-cpu\Scripts\python.exe scripts/build_revision_assets.py
+.\.venv-cpu\Scripts\python.exe scripts/build_revision_assets.py --reproduce
 .\.venv-cpu\Scripts\python.exe scripts/validate_template_provenance.py
 ```
 
 Choose fresh output destinations for every reproduction. The frozen source outputs remain unchanged. Asset regeneration writes current display files and their lineage registry; run it in a copied extraction if preserving the unpacked archive byte for byte. PDF compilation is a separate step described in [build_paper.md](../scripts/build_paper.md).
+
+The current reporting layer, version `2026-10-03-v2`, in `analysis/manuscript_revision` preserves the original mean-primary protocol and adds a separately versioned descriptive presentation. `--reproduce` regenerates the canonical, paired, influence, numerical and aliasing families into fresh temporary directories and records byte comparisons for all 36 scientific outputs. Its report derives all eight cases, whole-episode bootstrap intervals, positive-change shares, overshoots, tail decomposition and episode-omission signs. Ordinary refresh validates the reproduction receipt without rerunning an unchanged analysis. The numerical display keeps IG and path-gradient results separate. Neither route executes a model.
 
 The influence supplement is explicitly exploratory and keeps all original paired results. CPU unit tests include synthetic model substitutes; passing them does not replicate the GPU campaigns, qualify an IG budget, authenticate missing historical contexts or demonstrate useful rankings. If a command fails, retain its output and report the actual failure rather than replacing it with a later successful retry.
 

@@ -82,7 +82,7 @@ def test_reviewed_appendix_is_included_but_cannot_hide_nested_load(tmp_path, mon
     assert not (tmp_path/'rejected').exists()
 
 
-@pytest.mark.parametrize('family', ['strengthening_inputs_sha256', 'influence_inputs_sha256', 'manuscript_inputs_sha256'])
+@pytest.mark.parametrize('family', ['strengthening_inputs_sha256', 'influence_inputs_sha256', 'manuscript_inputs_sha256', 'reporting_inputs_sha256'])
 def test_changed_bound_evidence_blocks_pdf_build(tmp_path, family):
     import hashlib
     import json
@@ -133,3 +133,40 @@ def test_source_packager_rejects_untrusted_template_before_output(tmp_path, monk
     with pytest.raises(ValueError, match='template byte mismatch'):
         package.build(root, output)
     assert not output.exists()
+
+
+def test_new_article_dependencies_include_only_reviewed_revision_assets():
+    source = '\n'.join([r'\documentclass[12pt,letterpaper]{article}',
+        r'\usepackage{fontspec}', r'\setmainfont{Times New Roman}',
+        r'\usepackage[margin=1in]{geometry}', r'\usepackage[super,sort&compress]{natbib}',
+        r'\bibliographystyle{nhsjs}', r'\bibliography{references}',
+        r'\input{tables_revision/revision_facts.tex}', r'\input{tables_revision/paired_results.tex}',
+        r'\includegraphics[width=\linewidth]{figures_revision/paired_effects.pdf}'])
+    names = package.manuscript_dependencies(source, top_level=True)
+    assert {'nhsjs.bst', 'tables_revision/revision_facts.tex', 'tables_revision/paired_results.tex',
+            'figures_revision/paired_effects.pdf'} <= names
+    with pytest.raises(ValueError, match='Unreviewed manuscript main font'):
+        package.manuscript_dependencies(source.replace('Times New Roman', '../private/font'), top_level=True)
+    with pytest.raises(ValueError, match='Unreviewed manuscript main font'):
+        package.manuscript_dependencies(source.replace(r'\setmainfont{', r'\setmainfont[Path=../private/]{'), top_level=True)
+
+
+def test_changed_asset_builder_blocks_pdf_build(tmp_path):
+    import hashlib
+    import json
+    from scripts.build_paper import validate_revision_assets
+    paper = tmp_path / 'paper'
+    (paper / 'figures_revision').mkdir(parents=True)
+    for name in ('tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE', 'tmlr-source.json'):
+        (paper / name).write_bytes((Path(__file__).resolve().parents[1] / 'paper' / name).read_bytes())
+    (paper / 'paper.tex').write_bytes(b'manuscript')
+    (tmp_path / 'scripts').mkdir()
+    builder = tmp_path / 'scripts/build_revision_assets.py'
+    builder.write_bytes(b'reviewed builder')
+    registry = dict(generated_sha256={}, manuscript_source_sha256=hashlib.sha256(b'manuscript').hexdigest(),
+                    builder_sha256=hashlib.sha256(builder.read_bytes()).hexdigest())
+    (paper / 'figures_revision/lineage.json').write_text(json.dumps(registry))
+    validate_revision_assets(tmp_path)
+    builder.write_bytes(b'changed builder')
+    with pytest.raises(RuntimeError, match='build_revision_assets.py'):
+        validate_revision_assets(tmp_path)

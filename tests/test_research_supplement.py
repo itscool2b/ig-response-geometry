@@ -143,3 +143,162 @@ def test_research_packager_rejects_actual_committed_member_bytes_before_output(t
     with pytest.raises(ValueError, match='template byte mismatch'):
         package.build(tmp_path, 'HEAD', output)
     assert not output.exists()
+
+
+def test_working_snapshot_only_adds_reviewed_new_paths_and_reads_current_bytes(tmp_path):
+    def git(*args):
+        return subprocess.run(['git', '-C', str(tmp_path), *args], check=True, stdout=subprocess.PIPE).stdout
+    git('init', '-q')
+    (tmp_path / 'tracked.py').write_text('value = 1\n')
+    git('add', 'tracked.py')
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'fixture')
+    (tmp_path / 'tracked.py').write_bytes(b'value = 2\n')
+    report = tmp_path / 'analysis/manuscript_revision/report.py'
+    report.parent.mkdir(parents=True)
+    report.write_text('value = 3\n')
+    exporter = tmp_path / 'scripts/export_online_docx.py'
+    exporter.parent.mkdir(parents=True)
+    exporter.write_text('def export(): pass\n')
+    private_review = tmp_path / 'docs/manuscript_revision/review_build.md'
+    private_review.parent.mkdir(parents=True)
+    private_review.write_text('private review narrative\n')
+    reviewed_documents = (
+        'docs/manuscript_revision/final_local_verification.md',
+        'docs/manuscript_revision/final_semantic_audit.md',
+        'docs/manuscript_revision/claim_map.md',
+        'docs/manuscript_revision/factual_corrections.md',
+        'docs/manuscript_revision/revision_checklist.md',
+    )
+    for name in reviewed_documents:
+        (tmp_path / name).write_text('Reviewed document\n')
+    (tmp_path / 'private.txt').write_text('private material')
+    _, index = package.working_snapshot(tmp_path)
+    assert 'analysis/manuscript_revision/report.py' in index
+    assert 'scripts/export_online_docx.py' in index
+    assert set(reviewed_documents) <= set(index)
+    assert 'docs/manuscript_revision/review_build.md' not in index
+    assert 'private.txt' not in index
+    assert package.working_file(tmp_path, 'tracked.py') == b'value = 2\n'
+    assert index['analysis/manuscript_revision/report.py'][1] is None
+
+
+def working_collection_fixture(tmp_path, monkeypatch):
+    def git(*args):
+        return subprocess.run(['git', '-C', str(tmp_path), *args], check=True, stdout=subprocess.PIPE).stdout
+    files = {
+        'module.py': b'value = 1\n', 'paper/paper.tex': b'legacy manuscript\n',
+        'data/fixture.jsonl': b'{"value":1}\n',
+        'analysis/revision/results/2026-09-30-v2/provenance.json': b'{"artifacts_sha256":{}}\n',
+    }
+    files['analysis/revision/input_manifest.json'] = json.dumps({'files': [
+        {'path': 'data/fixture.jsonl', 'sha256': hashlib.sha256(files['data/fixture.jsonl']).hexdigest(),
+         'git_crlf_checkout_sha256': hashlib.sha256(files['data/fixture.jsonl'].replace(b'\n', b'\r\n')).hexdigest()}]}).encode()
+    git('init', '-q')
+    for name, data in files.items():
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    git('add', '.')
+    git('-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'fixture')
+    monkeypatch.setattr(package, 'ENTRYPOINTS', ('module.py',))
+    monkeypatch.setattr(package, 'DOCUMENTS', ('paper/paper.tex',))
+    monkeypatch.setattr(package, 'PAPER_ASSETS', ())
+    monkeypatch.setattr(package, 'RESULT_FILES', ('provenance.json',))
+    monkeypatch.setattr(package, 'PENDING_ADDITIONS', ())
+    return files
+
+
+def test_working_collection_freezes_current_bytes_and_records_base_separately(tmp_path, monkeypatch):
+    working_collection_fixture(tmp_path, monkeypatch)
+    (tmp_path / 'module.py').write_bytes(b'value = 2\n')
+    contents, audit = package.collect(tmp_path, 'HEAD', working_copy=True)
+    assert contents['module.py'] == b'value = 2\n'
+    assert audit['source_kind'] == 'working_copy_snapshot'
+    assert audit['source_members']['module.py']['sha256'] == hashlib.sha256(b'value = 2\n').hexdigest()
+    assert 'base_git_blob' in audit['source_members']['module.py']
+    assert 'git_blob' not in audit['source_members']['module.py']
+    assert len(audit['snapshot_sha256']) == 64
+    committed, _ = package.collect(tmp_path, 'HEAD')
+    assert committed['module.py'] == b'value = 1\n'
+
+
+def test_canonical_package_omits_local_historical_replay_dependency(tmp_path, monkeypatch):
+    working_collection_fixture(tmp_path, monkeypatch)
+    local_files = {
+        'scripts/assemble_approved_manuscript.py': b'BASELINE = "local_revision/private-baseline"\n',
+        'tests/test_approved_assembly.py': b'from scripts import assemble_approved_manuscript\n',
+    }
+    for name, data in local_files.items():
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    subprocess.run(['git', '-C', str(tmp_path), 'add', *local_files], check=True)
+    subprocess.run(['git', '-C', str(tmp_path), '-c', 'user.name=Fixture',
+                    '-c', 'user.email=fixture@example.invalid', 'commit', '-qm', 'local review files'], check=True)
+    contents, _ = package.collect(tmp_path, 'HEAD', working_copy=True)
+    assert contents['paper/paper.tex'] == b'legacy manuscript\n'
+    assert not set(local_files) & set(contents)
+
+
+def test_package_guide_compiles_already_assembled_source(tmp_path, monkeypatch):
+    root = Path(__file__).resolve().parents[1]
+    contents = {'paper/' + name: (root / 'paper' / name).read_bytes()
+                for name in (*FILE_SHA256, 'tmlr-source.json')}
+    contents['rdt_sampling.py'] = b'"""Original sampler license:\nMIT License\nPermission notice preserved.\n"""\n'
+    contents['analysis/manuscript_revision/report.py'] = b'# reporting entry point\n'
+    monkeypatch.setattr(package, 'collect', lambda *args: (dict(contents), {}))
+    audit = package.build(tmp_path, 'HEAD', tmp_path / 'package')
+    with zipfile.ZipFile(tmp_path / 'package' / audit['archive']['file']) as archive:
+        guide = archive.read('SUPPLEMENT_README.md').decode()
+    assert 'build entry point is the already assembled paper/paper.tex' in guide
+    assert 'Compile the current source directly.' in guide
+    assert 'preparation records are not required and are not included' in guide
+    assert 'approval ledger' not in guide and 'final coverage' not in guide
+    assert 'prior verification history' not in guide
+    assert 'python scripts/build_paper.py --engine tectonic' in guide
+    assert 'python scripts/assemble_approved_manuscript.py' not in guide
+
+
+def test_working_collection_preserves_only_declared_exact_checkout_bytes(tmp_path, monkeypatch):
+    files = working_collection_fixture(tmp_path, monkeypatch)
+    path = tmp_path / 'data/fixture.jsonl'
+    checkout = files['data/fixture.jsonl'].replace(b'\n', b'\r\n')
+    path.write_bytes(checkout)
+    contents, audit = package.collect(tmp_path, 'HEAD', working_copy=True)
+    assert contents['data/fixture.jsonl'] == checkout
+    assert audit['raw_input_representations']['data/fixture.jsonl'] == 'declared_git_crlf_checkout'
+    path.write_bytes(checkout + b'\n')
+    with pytest.raises(ValueError, match='Raw input differs'):
+        package.collect(tmp_path, 'HEAD', working_copy=True)
+
+
+@pytest.mark.parametrize('kind', ['raw', 'manifest', 'frozen_result'])
+def test_working_collection_rejects_rewritten_historical_evidence(tmp_path, monkeypatch, kind):
+    working_collection_fixture(tmp_path, monkeypatch)
+    if kind == 'raw':
+        (tmp_path / 'data/fixture.jsonl').write_bytes(b'{"value":2}\n')
+    elif kind == 'manifest':
+        (tmp_path / 'analysis/revision/input_manifest.json').write_text('{"files":[]}')
+    else:
+        (tmp_path / 'analysis/revision/results/2026-09-30-v2/provenance.json').write_text('{"artifacts_sha256":{},"changed":true}')
+    with pytest.raises(ValueError, match='manifest|Frozen scientific artifact'):
+        package.collect(tmp_path, 'HEAD', working_copy=True)
+
+
+def test_working_collection_rejects_concurrent_changes(tmp_path, monkeypatch):
+    working_collection_fixture(tmp_path, monkeypatch)
+    original = package.working_file
+    calls = 0
+
+    def unstable(root, name):
+        nonlocal calls
+        data = original(root, name)
+        if name == 'module.py':
+            calls += 1
+            if calls > 1:
+                return b'value = 3\n'
+        return data
+
+    monkeypatch.setattr(package, 'working_file', unstable)
+    with pytest.raises(ValueError, match='changed while its snapshot was captured'):
+        package.collect(tmp_path, 'HEAD', working_copy=True)

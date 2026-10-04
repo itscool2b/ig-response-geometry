@@ -1,6 +1,9 @@
 cff-version: 1.2.0
-message: "If you use the revised code or analysis, cite the current manuscript below. For the historical release, use DOI 10.5281/zenodo.22133507 and its original title."
-title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study (code and records)"
+message: "This citation describes the manuscript snapshot tagged manuscript-2026-10-03, with reporting version 2026-10-03-v2. The tag identifies the source, manuscript and saved-data reporting files. No new DOI is claimed. For the historical release, use DOI 10.5281/zenodo.22133507 and its original title."
+version: "manuscript-2026-10-03"
+date-released: 2026-10-03
+url: "https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-03"
+title: "How Scoring Responses Change Attribution Evaluation in a Diffusion Policy (code and records)"
 authors:
   - family-names: Bajpai
     given-names: Arjun
@@ -8,8 +11,7 @@ repository-code: "https://github.com/itscool2b/ig-response-geometry"
 license: MIT
 preferred-citation:
   type: article
-  title: "Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study"
-  url: "https://github.com/itscool2b/ig-response-geometry/blob/main/paper/paper.pdf"
+  title: "How Scoring Responses Change Attribution Evaluation in a Diffusion Policy"
   year: 2026
   authors:
     - family-names: Bajpai

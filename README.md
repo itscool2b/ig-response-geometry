@@ -1,34 +1,25 @@
-# Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study
+# How Scoring Responses Change Attribution Evaluation in a Diffusion Policy
 
-This repository contains the current general research preprint, preserved historical records, and reproducible analysis of those records. The paper combines exact response-geometry results, a retrospective within-ranking analysis, and an explicitly incomplete numerical case study. It does not claim ranking superiority, learned-weight specificity or behavioral improvement. The preprint is not a journal acceptance or a completed journal submission.
+This repository contains the manuscript, immutable saved records and reproducible CPU analysis for the [October 3, 2026 snapshot](https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-03). The study asks how changing the scoring response changes evaluation when rankings and interventions remain fixed. It combines an exact response identity, descriptive saved-curve analysis and separate analytic and numerical checks. It does not establish ranking superiority or improved task success.
 
-The sole current author is Arjun Bajpai. Read the [current paper](paper/paper.pdf), its [LaTeX source](paper/paper.tex), or the [anonymous audit copy](paper/paper-anonymous-draft.pdf). The existing [Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) and the archived `legacy/pre-response-geometry/paper.pdf` are historical versions titled *The Readout, Not the Denoiser*. The deposit has not been changed by this revision. The current paper is a 25-page general preprint. `paper/paper.pdf` is the canonical download, and `paper/paper-revision.pdf` is an identical compatibility copy. The template does not imply submission to TMLR.
+The sole author is Arjun Bajpai. The [canonical source](paper/paper.tex), [identified paper](paper/paper.pdf) and [blinded Standard copy](paper/paper-anonymous-draft.pdf) describe the same revision. The blinded Standard PDF has 18 pages, the identified reading copy has 19 and the Online Word document has 20. The one-paragraph abstract contains 245 words. Six keywords are retained. Both formats retain five figures, two numbered tables and 17 references.
 
-See [current verification and scope](docs/preprint_status.md) for the CPU checks, manuscript consistency review and public-artifact boundaries.
+The [reporting layer](analysis/manuscript_revision/README.md), version `2026-10-03-v2`, adds descriptive range prevalence, full-mean first-call contributions, cohort comparisons, nominal-grid sensitivity and numerical summaries while preserving the original mean-primary protocol and outputs. The [revision guide](docs/manuscript_revision/README.md), [Final-v5 ledger](docs/manuscript_revision/final_v5_checklist.md), [claim map](docs/manuscript_revision/claim_map.md) and [verification](docs/manuscript_revision/final_local_verification.md) document the current scope.
 
-## Repository guide
+The tag `manuscript-2026-10-03` identifies the manuscript and reporting snapshot. The separate local delivery, `artifacts/current`, includes title-named PDFs, Online Word, figures, anonymous manuscript sources, an identified research supplement and exact-byte verification manifests. That submission package is not tracked in Git. Earlier receipts identify only their earlier bytes.
 
-| Location | Status |
-|---|---|
-| [paper/](paper/README.md) | Current manuscript, source and clearly named PDF copies. |
-| [analysis/revision/](analysis/revision/README.md) and [analysis/paired_rescoring/](analysis/paired_rescoring/README.md) | Current retrospective analyses and their explicit limits. |
-| [data/](data/README.md) | Immutable historical inputs with current interpretation documented separately. |
-| [notebooks/](notebooks/README.md), [out/](out/README.md), [output/](output/README.md), [paper/figures/](paper/figures/README.md) | Historical notebooks and displays, not current findings or reproduction entrypoints. |
-| [legacy/](legacy/README.md) | Superseded paper and retired original source files. |
+The [historical Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) retains The Readout, Not the Denoiser. A preceding 25-page public draft was Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study. Their histories and licenses remain preserved.
 
-## What the evidence establishes
+The author has supplied affiliation, contribution, funding and competing-interest declarations and confirmed both mentors' approval of the acknowledgments and submission. AI-policy handling, journal eligibility and form requirements, journal answers and an independent scientist's cold read remain pending. Repository publication does not constitute journal submission or acceptance.
 
-The historical `logpi` target is an auxiliary quadratic discrepancy from one fixed-noise predicted action chunk. It is not the diffusion policy's log likelihood. Rescoring the same recorded ranking and interventions changes median vision deletion AUC from 0.447903 under Q to 0.290759 under stabilized L2. This demonstrates response-geometry sensitivity; it does not establish a better ranking.
+## Evidence guide
 
-Prior work by [Hama, Mase and Owen](https://jmlr.org/papers/v24/22-0560.html) establishes that interactions affect the random-order reference for insertion and deletion scores. The paper's finite-grid example illustrates this concern for an action-discrepancy response. With 100 equal additive policy features, the quadratic response gives 0.65976 for every ordering on the historical nine-point grid. Evaluating all feature prefixes instead gives `2/3 - 1/(6n^2)` for `n` features; 2/3 is the continuous-fraction idealization and the limit as `n` increases, not the exact finite-grid area. The policy is additive, but the quadratic response introduces interactions. Actual efficacy comparisons need matched empirical controls. Changing solver step count measures solver-resolution sensitivity and does not exclude denoiser contraction.
+- `analysis/revision` and `analysis/paired_rescoring` preserve the original analyses, populations and protocols.
+- `analysis/manuscript_revision` contains the current descriptive reporting version and the preserved earlier version.
+- `data` contains the 99 immutable saved JSONL inputs; historical notebooks, displays and `legacy` records remain separately labeled.
+- `paper` contains the manuscript, generated displays and proofs. The private repository retains additional research material and is synchronized only for reviewed shared files.
 
-The exact Q/L2 gradient relation has a positive, path-dependent scale factor. A smooth two-feature construction shows that this factor can reverse the integrated feature ranking, including at the implemented L2 stabilizer. This is an analytic existence result, not an observed RDT ranking improvement.
-
-A separate smooth construction shows that perfect completeness, identical rankings and identical response curves across several nested integration grids can still disagree with the exact IG ranking. Its coordinate error is 40% in relative L1 despite zero exact completeness error. On the same response and interventions, the inaccurate ranking scores better on both perturbation metrics in this toy. Numerical recovery of an integral and perturbation quality are distinct questions; the example neither diagnoses RDT failures nor establishes useful RDT rankings.
-
-The last fully audited numerical snapshot covers 12 completed 170M contexts out of 21 available and 24 planned contexts. All 2,880 repeat-related equality and coverage checks pass, including 1,800 equality checks, while 302 dependent numerical criteria violate their predeclared tolerances. The incomplete roster and failed checks are retained. Repeatability does not establish convergence, and no production integration setting is approved. Broader numerical qualification and prospective ranking/control studies are deferred; their source code and protocols do not constitute experimental results.
-
-Original observation/attribution sidecars, exact historical checkpoint binaries and some primary raw records are unavailable. Scalar fingerprint agreement can detect inconsistencies but cannot authenticate those missing artifacts. Newly downloaded weights, embeddings and collected contexts are identified as new evidence.
+The quadratic response Q is an auxiliary discrepancy, not the policy log likelihood. For a fixed ranking, normalized insertion and deletion AUC scored with N are no greater than those scored with Q on fully in-range curves. Strict decrease requires positive AUC weight on a squared residual r with 0 < r < B, where B is the all-baseline squared residual. The conventional quality implications are opposite for insertion and deletion. Observed overshoots can reverse the mean difference. The random-order reference is analytic rather than a measured RDT control. The target-reversal and aliasing constructions are existence examples, not evidence of superior RDT rankings.
 
 ## Reproduce the saved-data analysis on CPU
 
@@ -47,8 +38,8 @@ python -m analysis.revision.verify runs/saved-data-reanalysis
 
 The output directory must be new. The canonical registry contains 284 results and 57 source populations. A clean-input rerun reproduced all ten scientific/lineage artifacts byte-for-byte; environment/checkout provenance describes the actual execution. Git preserves hashed output bytes across platforms.
 
-The separate [paired rescoring analysis](analysis/paired_rescoring/README.md) measures `AUC_Q - AUC_L2` within each saved curve, with equal-episode mean effects and a paired-call median sensitivity. It retains all eight ranking/modality/direction cases, endpoint orientation, undefined gaps and sampled overshoots. Its conditional episode-bootstrap intervals do not compare the two unauthenticated ranking cohorts or test ranking superiority.
-All eight paired medians are positive, while six means are negative because extreme overshooting interventions dominate those means. The paper reports both summaries and traces their disagreement to the saved curves, without trimming the tail.
+The separate [paired rescoring analysis](analysis/paired_rescoring/README.md) measures `AUC_Q - AUC_L2` within each saved curve. Its frozen protocol remains mean-primary. The new [reporting layer](analysis/manuscript_revision/README.md) leads with paired-call medians and positive-change shares, while retaining means, intervals, full tails and episode influence. This is an explicitly retrospective presentation choice. All eight cases, endpoint orientation, undefined gaps and sampled overshoots are retained. The manuscript calls the norm target N. The conditional episode-bootstrap intervals do not compare the two unpaired ranking cohorts or test ranking superiority.
+All eight paired medians are positive. Six means are negative, and three of those have descriptive episode-bootstrap intervals spanning zero. First calls carry most of the vision-insertion overshoot contribution. The paper retains all calls and reports both summaries without trimming the tail.
 
 The aliasing toy and manuscript asset regeneration also require PyTorch, which is absent from the minimal `requirements.txt`. Install and activate the [checked full CPU environment](docs/cpu_reproduction.md), with `torch==2.14.1+cpu` and `torch.version.cuda is None`, before running:
 
@@ -108,14 +99,15 @@ Vision attribution is post-image-adaptor, language attribution is post-language-
 - `pipeline.py`, `per_step_attribution.py`, `rdt_sampling.py`, `experiment_io.py`: revised loading, attribution, sampling and storage.
 - `faithfulness.py`, `sanity.py`, `baseline_sensitivity.py`, `displacement.py`: controlled replay/evaluation entrypoints. Check each current `--help`; historical shell wrappers are not an execution specification for the revised protocol.
 - `scripts/validate_*.py`: targeted numerical diagnostics requiring recorded decisions and authenticated contexts.
-- `paper/`: current preprint source and PDFs, official TMLR style/license, and preserved historical assets.
+- `paper/`: current NHSJS-format source and PDFs, retained TMLR files and licenses, and preserved historical assets.
 - `docs/`: current contracts and explicitly bounded historical demonstrations.
 
 See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymous builds. The historical PDF is preserved under `legacy/pre-response-geometry/`. Identified builds update both current PDF filenames together. Final paper and supplement checks include source provenance, anonymity, rights, numerical/statistical validity and full rendered inspection. This repository does not claim journal acceptance or completed submission.
 
 ## Citation and licenses
 
-`CITATION.cff` identifies the current manuscript and repository. The current revision has no newly assigned DOI or release version. When referring specifically to the earlier released paper or records, cite [the historical Zenodo version](https://doi.org/10.5281/zenodo.22133507) and its original title instead.
+`CITATION.cff` identifies the manuscript snapshot tagged `manuscript-2026-10-03`, with reporting version `2026-10-03-v2`. No new DOI has been assigned. When referring specifically to the earlier released paper or records, cite [the historical Zenodo version](https://doi.org/10.5281/zenodo.22133507) and its original title instead.
 
 Code and original project records are MIT licensed. The third-party demonstration photograph `image.jpg` and its three Month 2 derivative figures have unresolved redistribution provenance. They have been removed from the current public tree and are excluded from research packages. Existing repository history has not been rewritten and does not grant permission to reuse them. The TMLR template repository's Apache 2.0 license and the bibliography file's separate LPPL notice are both retained. The historical IJCAI template has its own provenance. See [NOTICE](NOTICE) and [template provenance](paper/tmlr-source.json).
 
+Historical paths beginning with `previous-runs/` refer to the separate local records archive outside this repository. They are not build dependencies.

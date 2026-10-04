@@ -1,27 +1,58 @@
-# General research-paper builds
+# Local manuscript builds
 
-The default build is the identified general research paper. The anonymous flag removes author metadata, the public repository URL and acknowledgments for independent audit. Both use the pinned template in its neutral preprint mode, with no journal submission or review-status header. The historical filenames and TMLRAnonymous switch remain for compatibility. Neither build implies submission to a journal. The identified acknowledgment records the eight-month research project. The author requested removal of the prior AI disclosure and will supply a replacement manually.
+The current source uses a 12-point Letter article layout with one-inch margins and Times New Roman. It has NHSJS Standard citations, five figures, two numbered tables, 17 references and two proof appendices. The blinded Standard PDF has 18 pages, the identified reading copy has 19 and the Online Word document has 20. The one-paragraph abstract contains 245 words. Six keywords are retained. See the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md) and [Final-v5 ledger](../docs/manuscript_revision/final_v5_checklist.md) for document and package checks. Formatting and local build success do not imply journal approval or completed submission.
 
-With Python 3 and TeX Live (`texlive-latex-extra`, `texlive-fonts-recommended`, `texlive-science`, `lmodern` on Debian/Ubuntu):
+## Compile the canonical source
 
-```sh
-python scripts/build_paper.py
-python scripts/build_paper.py --anonymous
+The portable build entry point is the already assembled `paper/paper.tex`. Later authorized corrections are applied to that source. Use the asset and compilation commands below; replaying the historical approval assembly is not part of a manuscript build or research-package reproduction.
+
+Historical assembly tools, baselines and review records are preserved in the separate local records archive. They are not required for current builds. Restoring an older source would discard later corrections and invalidate current asset lineage and PDF receipts.
+
+## CPU assets and cached Tectonic
+
+Use the [full CPU environment](../docs/cpu_reproduction.md). No model, training or simulator run is needed.
+
+```powershell
+python scripts/build_revision_assets.py --reproduce
+python scripts/build_paper.py --engine auto --keep-intermediates-dir runs/identified-build
+python scripts/build_paper.py --anonymous --engine auto --keep-intermediates-dir runs/blinded-build
 ```
 
-Retrospective tables and figures come from the verified artifact at `analysis/revision/results/2026-09-30-v2`. Run `python scripts/build_revision_assets.py` in the analysis environment after any manuscript source, analysis artifact or display-code change. This first verifies the artifact, then writes `paper/tables_revision`, `paper/figures_revision`, the plain-text abstract and the complete cell/figure lineage registry `paper/figures_revision/lineage.json`. The registry contains source and display hashes, result identifiers, physical-record population hashes, estimands, units, grouping and limits. The PDF builder refuses to compile stale manuscript or generated display hashes. It does not turn missing historical context/checkpoint identities into authenticated ones. Older figures remain preserved in `paper/figures` and are not included by the revised manuscript.
+Use fresh intermediate directories. Asset generation reproduces all 36 retained scientific artifacts when `--reproduce` is supplied. Ordinary refresh verifies the retained reproduction receipt and current inputs. Reporting version `2026-10-03-v2` creates figures, table, prose macros, abstract and lineage without changing frozen protocols or outputs.
 
-The default identified output is `paper/paper.pdf`. The builder also writes the byte-identical compatibility alias `paper/paper-revision.pdf`, with matching build logs beside both files. Explicitly selecting either identified filename with `--output` updates both. Other custom output paths receive only the requested PDF and log. The anonymous default remains `paper/paper-anonymous-draft.pdf`, and anonymous builds cannot overwrite either identified filename. The reserved anonymous filename requires `--anonymous`, so an identified build cannot replace it. The historical PDF is preserved at `legacy/pre-response-geometry/paper.pdf`; the builder rejects every output path inside that archive. Intermediate TeX files are isolated in a temporary directory. Run both builds after scientific edits and inspect rendered pages, citation resolution, anonymity, links and metadata.
+`--engine auto` locates an installed Tectonic or the existing Windows cache at `~/.cache/tmlr-tectonic-0.17.0/tectonic.exe`. An absolute executable path is also accepted. Default builds use `--only-cached` and `--untrusted`. Missing public TeX resources cause failure. The explicit `--allow-resource-downloads` option permits initial cache setup using public TeX resources. It does not upload the manuscript. This fontspec source cannot use pdfLaTeX. The older engine route remains available for compatible archived sources.
 
-The two numerical tables are regenerated from the frozen partial snapshot in `analysis/numerical_case/2026-10-01-v1`. The asset builder runs its CPU-only reproducer, checks every recorded output hash, and copies the resulting TeX fragments. Manuscript lineage also binds the numerical input projection, reproducer and derived files. This checks the saved-data reporting; it does not rerun the GPU model, recover missing historical artifacts, or certify numerical accuracy.
+The builder checks manuscript, display, reporting and frozen-evidence hashes before and after compilation. Stale assets fail instead of producing a misleading PDF. AUX and BBL files can be preserved for Word conversion, with their source and PDF hashes.
 
-The additional paired rescoring table and nested-grid counterexample are separate CPU artifacts. Their source, declared protocol, results and the appendix fragment are included in the manuscript lineage. They leave the canonical retrospective v2 outputs and the partial numerical snapshot unchanged. The curated source archive includes the appendix explicitly and rejects nested file-loading directives inside it.
-Asset regeneration executes the aliasing toy and requires the full CPU environment, including PyTorch `2.14.1+cpu`; the minimal saved-data `requirements.txt` does not install Torch. The lock file remains a version snapshot. Follow the [checked Windows CPU installation procedure](../docs/cpu_reproduction.md) for explicit CPU-wheel selection and installation into a new isolated environment.
+## Names and protected paths
 
-The exploratory episode-influence supplement is separate from the frozen paired primary analysis. Its producer authenticates the original inputs and records all eight cases and 240 whole-episode omissions. Asset regeneration verifies and reproduces this supplement before copying its appendix table and binding its source, protocol, outputs and recorded values into manuscript lineage. Omission ranges are influence diagnostics, not confidence intervals.
+An identified build to `paper/paper.pdf` or `paper/paper-revision.pdf` updates both with identical bytes and corresponding logs. A custom output receives only that file. The anonymous default is `paper/paper-anonymous-draft.pdf`. Anonymous builds cannot overwrite identified names and identified builds cannot overwrite the reserved anonymous name. The historical `legacy/pre-response-geometry` archive is protected. Temporary compiler files never replace historical sources.
 
-The official TMLR style, bibliography and license files preserve the exact upstream LF bytes from the commit recorded in `paper/tmlr-source.json`. The manifest separately retains the original CRLF checkout hashes as historical provenance; those are not accepted build or package identities. Git attributes prevent checkout newline conversion for these files. Run `python scripts/validate_template_provenance.py` to check the exact files and complete pinned metadata offline. Both package builders check the actual members before writing output. The build validator uses the same check before compilation.
+The final local delivery is under `artifacts/current`; completed checks belong in the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md). The preceding `2026-10-02` and `2026-10-02-humanized` delivery folders are historical. A blinded PDF does not make the complete repository anonymous. Check source packages, metadata, links and figure files separately.
 
-The upstream repository's Apache 2.0 license is reproduced in `paper/tmlr-LICENSE`. The original `paper/tmlr.bst` header also retains its LPPL version 1 or later notice and copyright attributions. Both are preserved, with no assertion that one overrides the other; the public repository's MIT license does not relicense these third-party files. The source uses the TeX distribution's `fancyhdr` dependency. The official template requires the anonymous option for review and the `preprint` option for identified preprints. The build preserves the disclosure content, if any, supplied in the author source.
+## Online Word export
 
-The anonymous PDF alone does not make the repository or a source archive anonymous. Local manuscript-source and research-supplement candidates are separately assembled and inspected for identities, paths, asset metadata and links after changes. They remain subject to human author and distribution review. No accepted-paper flag or fabricated OpenReview identifier is used.
+The Online Word document contains three native table components representing two numbered tables, repeated full citations and literal equation source. The checked 20-page export was regenerated from the same corrected manuscript as the 18-page blinded Standard PDF. Repeated full citations and literal TeX equations affect pagination; both formats are checked against the 20-page template limit. Earlier Word files remain historical.
+
+Use local Pandoc and the bundled document Python with python-docx. The reference document is the official Online template. Source and bibliography must match the compiled intermediate files.
+
+```powershell
+python scripts/export_online_docx.py --pandoc PATH_TO_PANDOC --template PATH_TO_ONLINE_TEMPLATE --intermediates runs/identified-build --output "runs/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx"
+```
+
+This creates native Word tables, embeds current PNG figures and repeats full bibliography entries at every citation. Reference parity is checked against the compiled bibliography count, currently 17; missing or extra entries fail export. Equations retain literal TeX source as requested for the journal's LaTeX route. Content and export-verification JSON files are also written. Render Word locally and inspect every page. The Windows document renderer uses native LibreOffice and bundled Poppler.
+
+## Source and research packages
+
+The 17-member Final-v5 source archive rebuilt to the same 18-page blinded output in text and pixels. All 57 pages across the blinded PDF, identified PDF and rendered Online Word document passed visual inspection. The current research archive uses an explicit working-copy snapshot. Final archive extraction, manifests and rebuild checks are recorded beside the delivery. The packages in preceding delivery folders remain historical. The unchanged scientific inputs retain their separately verified reproduction evidence.
+
+```powershell
+python scripts/package_paper_sources.py --out runs/source-package
+python scripts/package_research_supplement.py --working-copy --out runs/research-package
+```
+
+Each destination must be new. The source package exports an anonymized manuscript, allowlisted dependencies and required third-party notices. The research package's explicit `--working-copy` option captures exact current bytes, including the already assembled canonical manuscript and reviewed reporting files. Its scope is scientific reproduction and compilation of that source, not historical prose replay. Its manifest hashes every member and the complete snapshot. The recorded Git commit is a base reference, not a claim that uncommitted changes came from that commit. Concurrent changes invalidate packaging. Use `--commit REVISION` only when the committed version is intended.
+
+Both routes preserve raw input and historical-output checks. Extract each archive into a fresh directory, verify its manifest, rebuild the manuscript and reproduce scientific outputs. Review the exact delivered bytes and record hashes. Local completion remains separate from author and journal decisions.
+
+The official TMLR files remain pinned and verified for historical compatibility. Their Apache 2.0 and separate LPPL notices are preserved. The new `nhsjs.bst` is a project-specific numbered bibliography style. See [NOTICE](../NOTICE) and [template provenance](../paper/tmlr-source.json).
