@@ -102,7 +102,9 @@ Attribution covers 64 predicted timesteps and eight action dimensions, so $d_a=5
 
 \subsection{The function being explained}
 
-Fix context $c$: model, diffusion noise and other modalities. Let $\mathcal{M}$ denote vision, language or state, with input representation $x$ and baseline $x'$. Let $g_{c,\mathcal{M}}(u)$ predict the active action chunk after replacement by $u$, with reference $a_c=g_{c,\mathcal{M}}(x)$ computed once. Define
+Fix context $c$: model, diffusion noise and other modalities. Let $\mathcal{M}$ denote vision, language or state, with input representation $x$ and baseline $x'$. Let $g_{c,\mathcal{M}}(u)$ predict the active action chunk after replacement by $u$, with reference $a_c=g_{c,\mathcal{M}}(x)$ computed once.
+
+Define
 \begin{equation}
 \begin{aligned}
 r(u)&=\|a_c-g_{c,\mathcal{M}}(u)\|_2^2,\\
@@ -165,7 +167,7 @@ This assigns zero to the all-baseline input and one to the actual input. Self-re
 
 Area under the curve (AUC) integrates normalized values over the fraction of groups intervened on. Higher insertion AUC and lower deletion AUC are conventionally better. The saved nominal fractions are 0, 1, 5, 10, 20, 30, 50, 75 and 100\%. For $0=q_0\le\cdots\le q_J=1$, with $J=8$ fraction intervals and integer group count $k_j$ at fraction $q_j$, we use
 \begin{equation}
-\operatorname{AUC}_S=\sum_{j=1}^{J}\frac{q_j-q_{j-1}}2
+\mathrm{AUC}_S=\sum_{j=1}^{J}\frac{q_j-q_{j-1}}2
 \left[C_S(x_{k_j})+C_S(x_{k_{j-1}})\right].
 \label{eq:auc}
 \end{equation}
@@ -173,7 +175,7 @@ Actual fractions $k_j/G$ can differ from the nominal schedule; the realized mask
 
 The paired response effect is
 \begin{equation}
-\Delta=\operatorname{AUC}_Q-\operatorname{AUC}_N.
+\Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N.
 \label{eq:paired-change}
 \end{equation}
 Positive $\Delta$ means scoring with N lowers that AUC. Ranking, interventions, predicted actions, baseline and schedule remain fixed within each pair. The median of paired differences need not equal the difference of the two marginal medians.
@@ -218,7 +220,7 @@ E_m=\frac{|\sum_i A_{i,m}-(F(x)-F(x'))|}{|F(x)-F(x')|},\qquad
 D_m=\frac{\|A_m-A_{2m}\|_1}{\|A_{2m}\|_1}.
 \label{eq:diagnostics}
 \end{equation}
-Comparisons cover all three pairs of budgets: the two adjacent pairs, as in Equation~\ref{eq:diagnostics}, and the smallest with the largest budget, for which the largest budget's map replaces $A_{2m}$ in $D_m$. Zero denominators are undefined. The numerical sample also scores curves with the root-mean-square action discrepancy $\mathrm{RMS}(u)=\sqrt{r(u)/d_a}$, whose endpoint-normalized curve, when $B>0$, equals that of $N$ with $\epsilon=0$. Absolute endpoint changes at or below $10^{-12}$ for Q, or $10^{-8}$ for N and RMS, are flagged near-zero. A budget selected for final use would require a relative completeness residual at most 1\% when its endpoint change exceeds the cutoff; none is selected here. Mean path-gradient maps omit the IG factor $x-x'$. Both map comparisons require relative coordinate $L_1$ change at most 1\%, Spearman at least 0.99 for nonconstant group scores, and top-five-percent overlap at least 0.95, replaced by matching top-one for an empty subset. Maximum RMS-curve and absolute raw RMS-area changes must be at most 1\% and 0.5\% of all-baseline RMS, respectively. Absolute normalized-AUC changes must be at most 0.01 under each common Q, N or RMS response when its endpoint gap exceeds the cutoff; Section~\ref{sec:numerical-results}'s examples use Q. These are sensitivity criteria, not exact-IG error bounds. Budget-check violations count all failed comparisons and recorded completeness-threshold failures, including at coarse budgets. Finest-pair counts include a context when any IG or mean path-gradient comparison between its two largest budgets fails.
+Comparisons cover all three pairs of budgets: the two adjacent pairs, as in Equation~\ref{eq:diagnostics}, and the smallest with the largest budget, for which the largest budget's map replaces $A_{2m}$ in $D_m$. Zero denominators are undefined. The numerical sample also scores curves with the root-mean-square action discrepancy $\mathrm{RMS}(u)=(r(u)/d_a)^{1/2}$, whose endpoint-normalized curve, when $B>0$, equals that of N with $\epsilon=0$. Absolute endpoint changes at or below $10^{-12}$ for Q, or $10^{-8}$ for N and RMS, are flagged near-zero. A budget selected for final use would require a relative completeness residual at most 1\% when its endpoint change exceeds the cutoff; none is selected here. Mean path-gradient maps omit the IG factor $x-x'$. Both map comparisons require relative coordinate $L_1$ change at most 1\%, Spearman at least 0.99 for nonconstant group scores, and top-five-percent overlap at least 0.95, replaced by matching top-one for an empty subset. Maximum RMS-curve and absolute raw RMS-area changes must be at most 1\% and 0.5\% of all-baseline RMS, respectively. Absolute normalized-AUC changes must be at most 0.01 under each common Q, N or RMS response when its endpoint gap exceeds the cutoff; Section~\ref{sec:numerical-results}'s examples use Q. These are sensitivity criteria, not exact-IG error bounds. Budget-check violations count all failed comparisons and recorded completeness-threshold failures, including at coarse budgets. Finest-pair counts include a context when any IG or mean path-gradient comparison between its two largest budgets fails.
 
 \subsection{Ethical considerations}
 
@@ -272,7 +274,7 @@ Overshoot points occur in \OvershootShareMin{}\% to \OvershootShareMax{}\% of ca
 
 \begin{table}[htbp]
 \centering
-\caption{\textbf{Typical response effects and tail contributions differ.} All cases use the saved PickCube runs and $\Delta=\operatorname{AUC}_Q-\operatorname{AUC}_N$; positive values mean scoring with N lowers that AUC. \textbf{A)} Paired median, descriptive 95\% episode-bootstrap interval, positive-call share and share of calls with any overshoot. \textbf{B)} Equal-episode mean, in-range and overshoot contributions, and single-episode omissions preserving the mean's sign. Values are rounded independently.}
+\caption{\textbf{Typical response effects and tail contributions differ.} All cases use the saved PickCube runs and $\Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N$; positive values mean scoring with N lowers that AUC. \textbf{A)} Paired median, descriptive 95\% episode-bootstrap interval, positive-call share and share of calls with any overshoot. \textbf{B)} Equal-episode mean, in-range and overshoot contributions, and single-episode omissions preserving the mean's sign. Values are rounded independently.}
 \label{tab:paired}
 \input{tables_revision/paired_results.tex}
 \end{table}
@@ -315,11 +317,10 @@ The sample tests the separate offline fp32 function, not saved $m=64$, bf16, end
 
 Between the two finest budgets, state IG changes reach \NumericalStateQCoord{}\% for Q and \NumericalStateNCoord{}\% for N; finest completeness residuals reach \NumericalStateQResidual{}\% and \NumericalStateNResidual{}\%. Both state contexts from the only completed \mbox{PickSingleYCB} episode (episode 1) exceed the 1\% completeness threshold under both targets, with endpoint target changes above the near-zero cutoffs; their $m=256$ Q residuals exceed 100\%. At that episode's call 0, vision changes by \NumericalVisionQCoord{}\% under Q and \NumericalVisionNCoord{}\% under N between 256 and 512 intervals. Its finest-budget ($m=512$) completeness residuals are only \NumericalVisionQResidual{}\% and \NumericalVisionNResidual{}\%, so passing completeness at the finest budget does not establish coordinate convergence.
 
-For state at the same episode's call 0, Q-target rankings at 256 versus 512 intervals have Spearman agreement \YCBStateCoarseRankAgreement{}; insertion AUC changes by \YCBStateCoarseInsertionChange{} and deletion AUC by \YCBStateCoarseDeletionChange{} under a common Q response. That insertion change is as large as the response-only shifts. Conversely, its call-12 Q-target state map changes by \YCBStateLaterCoordinateChange{}\% between the two finest budgets with zero curve change. Even a \PickCubeVisionNCoordinateChange{}\% coordinate change between 256 and 512 intervals for PickCube episode 1, call 0, vision N moves Q-response insertion AUC by \PickCubeVisionNInsertionChange{}, just above the 0.01 criterion. Integration error can alter evaluation outcomes or remain invisible to them. For a smooth action map, positive $\epsilon$ makes $N$'s gradient continuous; these sampled budgets cannot establish an asymptotic order. Empirically, N residuals typically halve under doubling while Q residuals fall roughly fourfold, consistent with an unresolved narrow N transition.
+For state at the same episode's call 0, Q-target rankings at 256 versus 512 intervals have Spearman agreement \YCBStateCoarseRankAgreement{}; insertion AUC changes by \YCBStateCoarseInsertionChange{} and deletion AUC by \YCBStateCoarseDeletionChange{} under a common Q response. That insertion change is as large as the response-only shifts. Conversely, its call-12 Q-target state map changes by \YCBStateLaterCoordinateChange{}\% between the two finest budgets with zero curve change. Even a \PickCubeVisionNCoordinateChange{}\% coordinate change between 256 and 512 intervals for PickCube episode 1, call 0, vision N moves Q-response insertion AUC by \PickCubeVisionNInsertionChange{}, just above the 0.01 criterion. Integration error can alter evaluation outcomes or remain invisible to them. For a smooth action map, positive $\epsilon$ makes N's gradient continuous; these sampled budgets cannot establish an asymptotic order. Empirically, N residuals typically halve under doubling while Q residuals fall roughly fourfold, consistent with an unresolved narrow N transition.
 
 The smooth aliasing construction in Appendix~\ref{sec:aliasing-proof} sets $h(\alpha)=\tfrac25\sin^2(\pi K\alpha)$, $K=128$, in a two-feature policy. Uniform grids with 32, 64 and 128 intervals give trapezoidal attributions $(1/5,3/10)$ instead of exact $(3/10,1/5)$ (Equations~\ref{eq:aliasing-coarse}--\ref{eq:aliasing-exact}; Figure~\ref{fig:toys}B). Equal and opposite errors cancel in completeness but cause 40\% relative $L_1$ error and reverse the order. Appendix~\ref{sec:aliasing-proof}'s argument for $m$ dividing $K$ shows that the endpoint-inclusive rule also gives Equation~\ref{eq:aliasing-coarse}. The inaccurate order scores better by insertion and deletion in this example (Appendix~\ref{sec:aliasing-quality}). Thus even exact IG need not optimize perturbation scores, as the target-reversal example also shows. Budget and completeness checks detect problems but agreeing finite uniform grids cannot certify coordinates without assumptions controlling unresolved variation.
 
-\FloatBarrier
 \section{Discussion}
 
 For question one, response choice substantially changes fixed-ranking evaluations; overshoots can dominate means. For question two, finite numerical agreement does not certify integration. Question three, ranking utility, remains unresolved. Separately, attribution target changes can reverse exact feature order.
@@ -354,7 +355,7 @@ The accompanying archives contain saved curves, episode records, analysis and fi
 \ifanonymous
 Repository link withheld for review.
 \else
-The public repository is \url{https://github.com/itscool2b/ig-response-geometry}; release \href{https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04}{manuscript-2026-10-04} contains this manuscript, its data, and the analysis and figure scripts.
+The public repository is \url{https://github.com/itscool2b/ig-response-geometry}; release \href{https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04-polish}{manuscript-2026-10-04-polish} contains this manuscript, its data, and the analysis and figure scripts.
 \fi
 
 \ifanonymous\else

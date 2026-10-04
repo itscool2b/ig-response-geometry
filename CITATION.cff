@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "This citation describes the manuscript snapshot tagged manuscript-2026-10-04, with reporting version 2026-10-03-v2. The tag identifies the source, manuscript and saved-data reporting files. No new DOI is claimed. For the historical release, use DOI 10.5281/zenodo.22133507 and its original title."
-version: "manuscript-2026-10-04"
+message: "This citation describes the manuscript snapshot tagged manuscript-2026-10-04-polish, with reporting version 2026-10-03-v2. The tag identifies the source, manuscript and saved-data reporting files. No new DOI is claimed. For the historical release, use DOI 10.5281/zenodo.22133507 and its original title."
+version: "manuscript-2026-10-04-polish"
 date-released: 2026-10-04
-url: "https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04"
+url: "https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04-polish"
 title: "How Scoring Responses Change Attribution Evaluation in a Diffusion Policy (code and records)"
 authors:
   - family-names: Bajpai

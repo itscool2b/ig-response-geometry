@@ -1,6 +1,6 @@
 # Local manuscript builds
 
-The current source uses a 12-point Letter article layout with one-inch margins and Times New Roman. It has NHSJS Standard citations, five figures, two numbered tables, 17 references and two proof appendices. The blinded Standard PDF has 18 pages, the identified reading copy has 19 and the Online Word document has 20. The one-paragraph abstract contains 245 words. Six keywords are retained. See the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md) and [Final-v5 ledger](../docs/manuscript_revision/final_v5_checklist.md) for document and package checks. Formatting and local build success do not imply journal approval or completed submission.
+The current source uses a 12-point Letter article layout with one-inch margins and Times New Roman. It has NHSJS Standard citations, five figures, two numbered tables, 17 references and two proof appendices. The blinded Standard PDF has 19 pages, the identified reading copy has 19 and the Online Word document has 20. The one-paragraph abstract contains 248 words. Six keywords are retained. See the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md) and [Final-v5 ledger](../docs/manuscript_revision/final_v5_checklist.md) for document and package checks. Formatting and local build success do not imply journal approval or completed submission.
 
 ## Compile the canonical source
 
@@ -32,7 +32,7 @@ The final local delivery is under `artifacts/current`; completed checks belong i
 
 ## Online Word export
 
-The Online Word document contains three native table components representing two numbered tables, repeated full citations and literal equation source. The checked 20-page export was regenerated from the same corrected manuscript as the 18-page blinded Standard PDF. Repeated full citations and literal TeX equations affect pagination; both formats are checked against the 20-page template limit. Earlier Word files remain historical.
+The Online Word document contains three native table components representing two numbered tables, repeated full citations and literal equation source. The checked 20-page export was regenerated from the same polished manuscript as the 19-page blinded Standard PDF. Repeated full citations and literal TeX equations affect pagination; both formats are checked against the 20-page template limit. Earlier Word files remain historical.
 
 Use local Pandoc and the bundled document Python with python-docx. The reference document is the official Online template. Source and bibliography must match the compiled intermediate files.
 
@@ -44,7 +44,7 @@ This creates native Word tables, embeds current PNG figures and repeats full bib
 
 ## Source and research packages
 
-The 17-member Final-v5 source archive rebuilt to the same 18-page blinded output in text and pixels. All 57 pages across the blinded PDF, identified PDF and rendered Online Word document passed visual inspection. The current research archive uses an explicit working-copy snapshot. Final archive extraction, manifests and rebuild checks are recorded beside the delivery. The packages in preceding delivery folders remain historical. The unchanged scientific inputs retain their separately verified reproduction evidence.
+The historical 17-member Final-v5 source archive rebuilt to the same 18-page blinded output in text and pixels. Its 57 pages across the blinded PDF, identified PDF and rendered Online Word document passed visual inspection. The current polished source and research archives rebuild to the accepted 19-page blinded PDF in text and pixels. All 58 current document pages are reviewed. The current research archive uses an explicit working-copy snapshot. Final archive extraction, manifests and rebuild checks are recorded beside the delivery. The packages in preceding delivery folders remain historical. The unchanged scientific inputs retain their separately verified reproduction evidence.
 
 ```powershell
 python scripts/package_paper_sources.py --out runs/source-package
