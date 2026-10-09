@@ -8,9 +8,11 @@ The [reporting layer](analysis/manuscript_revision/README.md), version `2026-10-
 
 The tag `manuscript-2026-10-04-polish` identifies the manuscript and reporting snapshot. The separate local delivery, `artifacts/current`, includes title-named PDFs, Online Word, figures, anonymous manuscript sources, an identified research supplement and exact-byte verification manifests. That submission package is not tracked in Git. Earlier receipts identify only their earlier bytes.
 
-The [historical Zenodo deposit](https://doi.org/10.5281/zenodo.22133507) retains The Readout, Not the Denoiser. A preceding 25-page public draft was Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study. Their histories and licenses remain preserved.
+The identified 19-page preprint was published on October 9, 2026 as [Zenodo version 3.0](https://doi.org/10.5281/zenodo.23269517), with the exact PDF bytes of `paper/paper.pdf` and Arjun Bajpai named as sole author. The blinded journal copy, `paper/paper-anonymous-draft.pdf`, remains a separate file.
 
-The author has supplied affiliation, contribution, funding and competing-interest declarations and confirmed both mentors' approval of the acknowledgments and submission. AI-policy handling, journal eligibility and form requirements, journal answers and an independent scientist's cold read remain pending. Repository publication does not constitute journal submission or acceptance.
+The earlier Zenodo versions retain their own titles and DOIs: [Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study](https://doi.org/10.5281/zenodo.23091579) is version 2, and [The Readout, Not the Denoiser: Per-Step Integrated Gradients for Diffusion-Policy Vision-Language-Action Models](https://doi.org/10.5281/zenodo.22133507) is version 1. Their histories and licenses remain preserved.
+
+The author has supplied affiliation, contribution, funding and competing-interest declarations and confirmed both mentors' approval of the acknowledgments and submission. The author has confirmed that the selected manuscript's AI-use statement is accurate. Journal eligibility and form requirements, journal answers and an independent scientist's cold read remain pending. Repository publication does not constitute journal submission or acceptance.
 
 ## Evidence guide
 
@@ -106,8 +108,8 @@ See [scripts/build_paper.md](scripts/build_paper.md) for identified and anonymou
 
 ## Citation and licenses
 
-`CITATION.cff` identifies the manuscript snapshot tagged `manuscript-2026-10-04-polish`, with reporting version `2026-10-03-v2`. No new DOI has been assigned. When referring specifically to the earlier released paper or records, cite [the historical Zenodo version](https://doi.org/10.5281/zenodo.22133507) and its original title instead.
+`CITATION.cff` retains the code snapshot tagged `manuscript-2026-10-04-polish`, with reporting version `2026-10-03-v2`, and gives [Zenodo version 3.0](https://doi.org/10.5281/zenodo.23269517) as the preferred manuscript citation. Cite an earlier version with its own DOI and title when referring specifically to that version.
 
-Code and original project records are MIT licensed. The third-party demonstration photograph `image.jpg` and its three Month 2 derivative figures have unresolved redistribution provenance. They have been removed from the current public tree and are excluded from research packages. Existing repository history has not been rewritten and does not grant permission to reuse them. The TMLR template repository's Apache 2.0 license and the bibliography file's separate LPPL notice are both retained. The historical IJCAI template has its own provenance. See [NOTICE](NOTICE) and [template provenance](paper/tmlr-source.json).
+The current [Zenodo preprint](https://doi.org/10.5281/zenodo.23269517) is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). Code and original project records are MIT licensed. The third-party demonstration photograph `image.jpg` and its three Month 2 derivative figures have unresolved redistribution provenance. They have been removed from the current public tree and are excluded from research packages. Existing repository history has not been rewritten and does not grant permission to reuse them. The TMLR template repository's Apache 2.0 license and the bibliography file's separate LPPL notice are both retained. The historical IJCAI template has its own provenance. See [NOTICE](NOTICE) and [template provenance](paper/tmlr-source.json).
 
 Historical paths beginning with `previous-runs/` refer to the separate local records archive outside this repository. They are not build dependencies.
