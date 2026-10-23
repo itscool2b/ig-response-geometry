@@ -12,6 +12,22 @@ import subprocess
 import tempfile
 
 
+def checkout_digests(blob: bytes) -> set[str]:
+    """SHA-256 of blob and of its uniform Git LF/CRLF checkout counterpart.
+
+    Lineage records the bytes of the checkout that produced it. A text file can
+    differ only by Git's line-ending conversion on another platform, so the
+    exact bytes and the uniformly converted counterpart are both accepted.
+    Mixed line endings have no counterpart and must match exactly.
+    """
+    found = {hashlib.sha256(blob).hexdigest()}
+    if b"\r" not in blob:
+        found.add(hashlib.sha256(blob.replace(b"\n", b"\r\n")).hexdigest())
+    elif blob.count(b"\r") == blob.count(b"\r\n") == blob.count(b"\n"):
+        found.add(hashlib.sha256(blob.replace(b"\r\n", b"\n")).hexdigest())
+    return found
+
+
 def validate_revision_assets(root: Path) -> None:
     """Reject stale manuscript/display inputs before producing a candidate."""
     # Support both module imports and direct `python scripts/build_paper.py`.
@@ -35,7 +51,7 @@ def validate_revision_assets(root: Path) -> None:
         raise RuntimeError("Manuscript lineage contains a path outside the repository")
     mismatches = [name for name, digest in expected.items()
                   if not (root / name).is_file()
-                  or hashlib.sha256((root / name).read_bytes()).hexdigest() != digest]
+                  or digest not in checkout_digests((root / name).read_bytes())]
     if mismatches:
         raise RuntimeError("Stale or missing manuscript assets: " + ", ".join(mismatches)
                            + ". Run scripts/build_revision_assets.py before compiling.")
