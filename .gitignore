@@ -48,6 +48,14 @@ archive/
 .playwright-mcp/
 CLAUDE.md
 AGENTS.md
+docs/tmlr-readiness/
+docs/nhsjs-revision/
+TMLR_HANDOFF.md
+SUBMISSION_RESTORATION.md
+image.jpg
+output/ig_llava.png
+output/ig_resnet50.png
+output/ig_vit.png
 AUDIT_REPORT.md
 paper/AUDIT_REPORT.md
 paper/REVIEW_NOTES.md
