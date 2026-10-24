@@ -421,3 +421,18 @@ def test_advantage_figure_skips_cells_and_figures_without_an_estimate(tmp_path):
         interval={"a": {"interval": [0.0, 0.2]}, "b": {"interval": [-0.3, -0.1]}})
     written = figures.advantage_figure(partial, tmp_path, "partial")
     assert sorted(written) == ["partial.pdf", "partial.png"]
+
+
+def test_budget_figure_panels_draw_every_point_over_the_same_contexts():
+    from analysis.revision_gpu.v1 import figures
+    rows = [dict(modality="vision", target="Q", arm="A1", rule="T", budget=b, context=c, value=1.0)
+            for c in ("c1", "c2", "c3") for b in (16, 64)]
+    rows += [dict(modality="vision", target="Q", arm="A0", rule="E", budget=64, context=c, value=2.0) for c in ("c1", "c2", "c3")]
+    # An fp32 rule compared on the pod only where its reference matched: c3 lacks it, so c3 leaves the panel.
+    rows += [dict(modality="vision", target="Q", arm="A2", rule="M", budget=32, context=c, value=3.0) for c in ("c1", "c2")]
+    rows += [dict(modality="vision", target="Q", arm="A2", rule="T", budget=8, context="c3", value=4.0),
+             dict(modality="language", target="Q", arm="A1", rule="T", budget=16, context="c3", value=float("nan"))]
+    points, shared = figures.panel_population(rows, "vision", "Q", "value", 16)
+    assert shared == ["c1", "c2"]
+    assert set(points) == {("A1", "T", 16), ("A1", "T", 64), ("A0", None, 64), ("A2", "M", 32)}
+    assert figures.panel_population(rows, "language", "Q", "value", 16)[1] == []

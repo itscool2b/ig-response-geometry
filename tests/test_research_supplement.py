@@ -139,20 +139,20 @@ def test_private_candidate_removes_current_identity_statements_and_omits_identit
             b"## Citation and licenses\n\n`CITATION.cff` retains the snapshot and gives [Zenodo version 3.0](https://doi.org/10.5281/zenodo.1).\n\n"
             b"The current [Zenodo preprint](https://doi.org/10.5281/zenodo.1) is licensed under [Creative Commons Attribution 4.0 "
             b"International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). Code is MIT licensed.\n")
-    figure=b"%PDF-1.4\n%\xff\xff\xff\xff\n1 0 obj\nstream\n"+zlib.compress(b"plain figure")+b"\nendstream\n"
+    figure=b"\xff\xfebinary\n"+zlib.compress(b"plain figure")+b"\n"
     original={"LICENSE":license,"README.md":readme,"paper/paper.tex":paper,
         "paper/figures_revision/lineage.json":json.dumps({"manuscript_source_sha256":package.digest(paper)}).encode(),
         "CITATION.cff":b"authors:\n- family-names: Bajpai\n","scripts/export_online_docx.py":b"AUTHOR = 'Arjun Bajpai'\n",
-        "tests/test_online_docx.py":b"from scripts.export_online_docx import AUTHOR\n","figure.pdf":figure}
+        "tests/test_online_docx.py":b"from scripts.export_online_docx import AUTHOR\n","figure.bin":figure}
     result,audit=package.anonymous_candidate(original,[])
     text=result["README.md"].decode()
     assert "This holds the October 4, 2026 polished snapshot. It asks." in text
     assert "The [canonical source](paper/paper.tex) stays." in text and "Pinned runtime recipe survives." in text
     assert "Code is MIT licensed." in text and "github.com" not in text and "zenodo" not in text.lower() and "Bajpai" not in text
     assert set(audit["omitted_members"])=={"CITATION.cff","scripts/export_online_docx.py","tests/test_online_docx.py"}
-    assert not set(audit["omitted_members"])&set(result) and result["figure.pdf"]==figure
+    assert not set(audit["omitted_members"])&set(result) and result["figure.bin"]==figure
     assert set(audit["transformations"])=={"LICENSE","README.md","paper/paper.tex","paper/figures_revision/lineage.json"}
-    hidden=dict(original,**{"figure.pdf":figure.replace(zlib.compress(b"plain figure"),zlib.compress(b"/Author (A. Bajpai)"))})
+    hidden=dict(original,**{"figure.bin":figure.replace(zlib.compress(b"plain figure"),zlib.compress(b"/Author (A. Bajpai)"))})
     with pytest.raises(ValueError,match="identifying text"):
         package.anonymous_candidate(hidden,[])
     importer=dict(original,**{"analysis/tool.py":b"from scripts import export_online_docx\n"})
@@ -161,6 +161,34 @@ def test_private_candidate_removes_current_identity_statements_and_omits_identit
     partial=dict(original,**{"README.md":readme.replace(b"The earlier Zenodo versions",b"Earlier versions")})
     with pytest.raises(ValueError,match="Root guide identity"):
         package.anonymous_candidate(partial,[])
+
+
+def test_private_candidate_scan_reads_paths_utf16_compressed_chunks_nested_zips_and_pdf_text(tmp_path):
+    import io as _io
+    from PIL import Image, PngImagePlugin
+    paper=b"\\author{\\name Arjun Bajpai\n\\addr Independent Researcher}\nScientific body.\n"
+    clean={"LICENSE":b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n","paper/paper.tex":paper,
+        "README.md":b"The sole current author is Arjun Bajpai.\n`CITATION.cff` identifies the deposit.\nRecipe.\n",
+        "paper/figures_revision/lineage.json":json.dumps({"manuscript_source_sha256":package.digest(paper)}).encode()}
+    package.anonymous_candidate(clean,[])
+    png=_io.BytesIO(); info=PngImagePlugin.PngInfo(); info.add_text("Author","A. Bajpai",zip=True)
+    Image.new("RGB",(2,2)).save(png,format="PNG",pnginfo=info)
+    nested=_io.BytesIO()
+    with zipfile.ZipFile(nested,"w",compression=zipfile.ZIP_DEFLATED) as inner:
+        inner.writestr("word/document.xml","<w:t>Bajpai</w:t>"*50)
+    planted={"people/bajpai.txt":b"clean text\n","notes.txt":"Arjun Bajpai".encode("utf-16-le"),
+             "figure.png":png.getvalue(),"letter.docx":nested.getvalue()}
+    if package.pdf_reader_available():
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        with matplotlib.rc_context({"pdf.fonttype":42}):
+            fig=plt.figure(); fig.text(0.5,0.5,"Bajpai"); pdf=_io.BytesIO(); fig.savefig(pdf,format="pdf"); plt.close(fig)
+        assert b"bajpai" not in pdf.getvalue().lower()  # glyph ids only: invisible to a byte scan
+        planted["figure.pdf"]=pdf.getvalue()
+    for name,data in planted.items():
+        with pytest.raises(ValueError,match="identifying text"):
+            package.anonymous_candidate(dict(clean,**{name:data}),[])
 
 
 def test_private_candidate_cannot_be_written_inside_public_repository(tmp_path):

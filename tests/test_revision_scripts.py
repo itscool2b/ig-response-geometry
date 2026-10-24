@@ -69,9 +69,31 @@ def test_numbers_sheet_verification_goes_stale_when_a_source_changes():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     record = dict(id_prefix="audit/", status="re-derived", by="verifier", date="2026-10-23",
-                  sources_sha256={"a.csv": "1" * 64})
-    row = dict(id="audit/x/value", source="a.csv", source_sha256="1" * 64)
-    assert module.verification_for(row, [record]) == "re-derived (verifier, 2026-10-23)"
-    assert module.verification_for(dict(row, source_sha256="2" * 64), [record]).startswith("stale: a.csv changed")
-    assert module.verification_for(dict(row, id="other/x"), [record]) == "not yet independently verified"
-    assert module.verification_for(row, [dict(record, sources_sha256={})]).startswith("stale:")
+                  sources_sha256={"a.csv": "1" * 64}, sheet_commit="c1")
+    sheets = {"c1": {"audit/x/value": "5"}}
+    row = dict(id="audit/x/value", source="a.csv", source_sha256="1" * 64, value="5")
+
+    def check(item, records=(record,)):
+        return module.verification_for(item, list(records), sheet_of=sheets.__getitem__)
+
+    assert check(row) == "re-derived (verifier, 2026-10-23)"
+    assert check(dict(row, source_sha256="2" * 64)).startswith("stale: a.csv changed")
+    assert check(dict(row, value="6")).startswith("stale: the value changed")
+    # A row added later under the checked prefix, a source the check never read, an unbound check:
+    assert check(dict(row, id="audit/y/value")) == "not yet independently verified"
+    assert check(dict(row, source="b.csv")) == "not yet independently verified"
+    assert check(row, [{k: v for k, v in record.items() if k != "sheet_commit"}]) == "not yet independently verified"
+    assert check(dict(row, id="other/x")) == "not yet independently verified"
+
+
+@pytest.mark.skipif(not NUMBERS_TOOL.is_file(), reason="the numbers sheet tool is private-only")
+def test_numbers_sheet_keeps_the_unprefixed_bf16_comparator_rules_but_not_the_comparator_itself():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("numbers_sheet", NUMBERS_TOOL)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    keep = module.r1_comparison
+    family = "bf16_vs_A1_comparator"
+    assert all(keep(dict(family=family, candidate=name)) for name in ("T16", "E64", "M128", "E512", "A0m64"))
+    assert not any(keep(dict(family=family, candidate=name)) for name in ("T512", "RT16", "E8", "S16"))
+    assert keep(dict(family="fp32_vs_A2T512", candidate="A2T256")) and not keep(dict(family="fp32_vs_A2T512", candidate="T256"))

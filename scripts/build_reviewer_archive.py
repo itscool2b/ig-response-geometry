@@ -19,16 +19,17 @@ Layout under OUT:
   README.md       what each directory holds and what the archive alone can and cannot check
   MANIFEST.sha256 every file above
 
-With --anonymous every file is scanned, as UTF-8 or else Latin-1 (gzip members unpacked), for the
-identifiers of the research-supplement packager, the surname, any --identifier token and personal
-machine paths (/Users/<name>/, /home/<name>/, C:\\Users\\); /workspace and /root are the pod mounts
-every RunPod container has and are not flagged. Any hit stops the build and removes the partial output.
+With --anonymous every file's path and bytes are scanned for the research-supplement packager's
+identifiers and anonymous-candidate tokens, any --identifier token and personal machine paths
+(/Users/<name>/, /home/<name>/, C:\\Users\\), through the packager's identity_views: raw and
+NUL-stripped bytes, gzip and compressed zip members, zlib streams of binaries, and PDF drawn text.
+/workspace and /root are the pod mounts every RunPod container has and are not flagged. Any hit
+stops the build and removes the partial output.
 
 Usage: python scripts/build_reviewer_archive.py --results DIR --runs DIR --identity DIR
          [--collection NAME=DIR ...] [--kit DIR] [--anonymous [--identifier TOKEN ...]] --out DIR
 """
 import argparse
-import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -38,10 +39,10 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.package_research_supplement import IDENTIFIERS, audit_tokens  # noqa: E402
+from scripts.package_research_supplement import ANONYMOUS_TOKENS, IDENTIFIERS, audit_tokens, identity_views  # noqa: E402
 
 RECORD_FILES = ("record.json", "rankings.json", "completion.json")
-ARCHIVE_IDENTIFIERS = (*IDENTIFIERS, "bajpai")
+ARCHIVE_IDENTIFIERS = (*IDENTIFIERS, *ANONYMOUS_TOKENS)
 PERSONAL_PATH = re.compile(r"[A-Za-z]:[\\/]Users[\\/]|/Users/[^/\s\"']+/|/home/[^/\s\"']+/", re.I)
 INVENTORY_FILES = ("identities.json", "identities.md", "reproducibility_classification.json",
                    "reproducibility_classification.md", "rec4_facts.csv")
@@ -64,7 +65,7 @@ def copy_runs(runs, destination):
     event logs, and the failure records of failed attempts with a hash list of what else they kept."""
     runs = Path(runs)
     destination.mkdir(parents=True, exist_ok=True)
-    tensors, tensor_bytes = [], 0
+    tensors, tensor_bytes, kinds = [], 0, {}
     for completion in sorted(runs.glob("*/e*-c*/*/completion.json")):
         phase_dir = completion.parent
         target = destination / phase_dir.relative_to(runs)
@@ -76,6 +77,11 @@ def copy_runs(runs, destination):
         tensors += [f"{digest}  {(phase_dir / name).relative_to(runs)}\n" for name, digest in sorted(bound.items())
                     if name not in RECORD_FILES]
         tensor_bytes += sum((phase_dir / name).stat().st_size for name in bound if name not in RECORD_FILES)
+        for name in bound:
+            if name not in RECORD_FILES:
+                kind = ("map files" if name == "maps.pt" else "node-gradient files" if name.startswith("nodes-")
+                        else "source caches" if name.startswith("source-cache") else "other files")
+                kinds[kind] = kinds.get(kind, 0) + 1
     (destination / "TENSORS.sha256").write_text("".join(tensors))
     for log in sorted(runs.glob("*/workers/*.jsonl")):
         target = destination / log.relative_to(runs)
@@ -97,29 +103,21 @@ def copy_runs(runs, destination):
         else:
             kept.append(f"{sha256(path)}  {relative}\n")
     (destination / "ATTEMPTS.sha256").write_text("".join(kept))
-    return len(tensors), failures, tensor_bytes
+    return len(tensors), failures, tensor_bytes, kinds
 
 
 def identifying_hits(root, extra=()):
-    """Files holding an identifier or a personal machine path; undecodable bytes are read as Latin-1."""
+    """Files whose path or any view of whose bytes holds an identifier or a personal machine path."""
     tokens = (*ARCHIVE_IDENTIFIERS, *audit_tokens(list(extra)))
     hits = []
     for path in sorted(p for p in Path(root).rglob("*") if p.is_file()):
-        data = path.read_bytes()
-        if path.suffix == ".gz":
-            try:
-                data = gzip.decompress(data)
-            except OSError:
-                pass
-        try:
-            text = data.decode("utf-8")
-        except UnicodeDecodeError:
-            text = data.decode("latin-1")
-        found = [token for token in tokens if token in text.lower()]
-        if PERSONAL_PATH.search(text):
+        relative = str(path.relative_to(root))
+        texts = [relative] + [view.decode("latin-1") for view in identity_views(path.read_bytes())]
+        found = [token for token in tokens if any(token in text.lower() for text in texts)]
+        if any(PERSONAL_PATH.search(text) for text in texts):
             found.append("personal machine path")
         if found:
-            hits.append((str(path.relative_to(root)), found))
+            hits.append((relative, found))
     return hits
 
 
@@ -143,7 +141,7 @@ files first, from this directory:
 | `identity/` | The identity captures of the campaign machines, and `phase_hosts.csv`, the machine that computed each phase. |
 | `inventories/` | The identity inventory and the reproducibility classification of every reported result. |
 
-The {tensors} map and gradient tensors ({gigabytes:.1f} GB) are not included. `runs/TENSORS.sha256` lists
+The {tensors} tensor files ({kinds}; {gigabytes:.1f} GB) are not included. `runs/TENSORS.sha256` lists
 each with the hash its completion record binds. The analysis loader authenticates every file a completion
 record binds, so re-running the registered analysis, or the CPU check of a whole bank, needs those
 tensors. Without them, each phase's recorded values can be read and compared with the result tables.
@@ -164,7 +162,7 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
     try:
         copy_tree(sources["protocols"], out / "protocols")
         copy_tree(results, out / "results")
-        tensors, failures, tensor_bytes = copy_runs(Path(runs), out / "runs")
+        tensors, failures, tensor_bytes, kinds = copy_runs(Path(runs), out / "runs")
         for name, source in collections:
             copy_tree(source, out / "collections" / name)
         if kit:
@@ -176,7 +174,9 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
         (out / "inventories").mkdir()
         for name in INVENTORY_FILES:
             shutil.copyfile(Path(sources["inventories"]) / name, out / "inventories" / name)
-        (out / "README.md").write_text(README.format(tensors=tensors, gigabytes=tensor_bytes / 1e9))
+        listed = [f"{count} {kind}" for kind, count in sorted(kinds.items())]
+        kinds_text = ", ".join(listed[:-1]) + (" and " if len(listed) > 1 else "") + listed[-1] if listed else "none"
+        (out / "README.md").write_text(README.format(tensors=tensors, kinds=kinds_text, gigabytes=tensor_bytes / 1e9))
         if anonymous:
             hits = identifying_hits(out, identifiers)
             if hits:

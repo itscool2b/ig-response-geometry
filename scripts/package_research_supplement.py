@@ -11,6 +11,7 @@ import argparse
 import ast
 import gzip
 import hashlib
+import io
 import json
 from pathlib import Path
 import re
@@ -505,14 +506,80 @@ def anonymous_readme(text):
     raise ValueError("Root guide identity paragraphs differ from the reviewed transformation")
 
 
-def binary_identity_hits(data, tokens):
-    """Tokens in a binary member's raw bytes or in any zlib stream it holds (PDF metadata and content)."""
-    views = [data.lower()]
-    for match in re.finditer(rb"stream\r?\n", data):
+ZLIB_HEADER = re.compile(rb"(?=[\x08\x18\x28\x38\x48\x58\x68\x78][\x00-\xff])", re.S)
+
+
+def zlib_streams(data):
+    """Every zlib stream in data, found at any offset with a valid header: PDF objects, PNG chunks."""
+    view, streams = memoryview(data), []
+    for match in ZLIB_HEADER.finditer(data):
+        cmf, flg = data[match.start()], data[match.start() + 1]
+        if (cmf << 8 | flg) % 31 or flg & 0x20:
+            continue
         try:
-            views.append(zlib.decompressobj().decompress(data[match.end():]).lower())
+            stream = zlib.decompressobj().decompress(view[match.start():], 1 << 26)
         except zlib.error:
+            continue
+        if stream:
+            streams.append(stream)
+    return streams
+
+
+def pdf_reader_available():
+    try:
+        import fitz  # noqa: F401 (PyMuPDF)
+    except ImportError:
+        return False
+    return True
+
+
+def pdf_text(data):
+    """The drawn text and metadata of a PDF, when PyMuPDF is installed; None when it is not."""
+    if not pdf_reader_available():
+        return None
+    import fitz
+    try:
+        with fitz.open(stream=data, filetype="pdf") as document:
+            return ("\n".join(page.get_text() for page in document) + json.dumps(document.metadata)).encode()
+    except Exception as error:  # an unreadable PDF cannot be cleared, so it stops the scan
+        raise ValueError(f"PDF that the identity scan cannot read ({error})") from error
+
+
+def identity_views(data, depth=0):
+    """Byte views of a member in which identifying text can hide: the raw bytes and the bytes without
+    NULs (UTF-16 text); the decompressed content of gzip data and of compressed zip members (stored
+    members are already in the raw bytes); every zlib stream of other binary data (PDF objects, PNG
+    text chunks); and a PDF's drawn text, which embedded TrueType fonts keep only as glyph ids."""
+    views = [data, data.replace(b"\x00", b"")]
+    if depth > 3:
+        return views
+    if data.startswith(b"\x1f\x8b"):
+        return views + identity_views(gzip.decompress(data), depth + 1)
+    if data.startswith(b"PK\x03\x04"):
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            for info in archive.infolist():
+                views.append(info.filename.encode())
+                if info.compress_type != zipfile.ZIP_STORED:
+                    views += identity_views(archive.read(info), depth + 1)
+        return views
+    if data.startswith(b"%PDF"):
+        text = pdf_text(data)
+        views += [text] if text is not None else []
+    elif not data.startswith(b"\x89PNG"):
+        try:
+            data.decode("utf-8")
+            return views
+        except UnicodeDecodeError:
             pass
+    return views + zlib_streams(data)
+
+
+def identity_hits(name, data, tokens):
+    """The tokens found in a member's path or in any of its views."""
+    try:
+        views = [name.encode().lower()] + [view.lower() for view in identity_views(data)]
+    except ValueError as error:
+        raise ValueError(f"{name}: {error}") from error
     return sorted(token for token in tokens if any(token.encode() in view for view in views))
 
 
@@ -556,14 +623,11 @@ def anonymous_candidate(contents, extra_identifiers):
     transformed[lineage_path] = (json.dumps(lineage, indent=2)+"\n").encode()
     tokens = audit_tokens([*extra_identifiers, *ANONYMOUS_TOKENS])
     findings = privacy_findings(transformed, tokens)
-    for row in findings:
-        if row["category"] == "binary_requires_format_review":
-            data = transformed[row["path"]]
-            hits = binary_identity_hits(gzip.decompress(data) if row["path"].endswith(".gz") else data,
-                                        (*IDENTIFIERS, *tokens))
-            if hits:
-                findings.append(dict(path=row["path"], category="identifying_binary_content", identifiers=hits))
-    if any(row["category"] in ("identifying_text", "identifying_binary_content") for row in findings):
+    for name, data in sorted(transformed.items()):
+        hits = identity_hits(name, data, (*IDENTIFIERS, *tokens))
+        if hits:
+            findings.append(dict(path=name, category="identifying_content", identifiers=hits))
+    if any(row["category"] in ("identifying_text", "identifying_content") for row in findings):
         raise ValueError("Known identifying text remains in the private anonymous candidate")
     changes = {name:dict(source_sha256=digest(contents[name]),candidate_sha256=digest(data))
                for name,data in transformed.items() if data != contents[name]}
@@ -571,7 +635,7 @@ def anonymous_candidate(contents, extra_identifiers):
         raise ValueError("Anonymous candidate changed an unreviewed source member")
     return transformed, dict(transformations=changes,privacy_findings=findings,
         omitted_members={name: dict(source_sha256=digest(contents[name])) for name in omitted},
-        anonymous_token_count=len(tokens),
+        anonymous_token_count=len(tokens), pdf_drawn_text_scanned=pdf_reader_available(),
         manuscript_transform_sha256=digest(Path(package_paper_sources.__file__).read_bytes()),
         licensing_status="proposed_review_copy_attribution_not_approved_for_external_distribution",
         third_party_notices="preserved_exactly",canonical_public_license="unchanged")

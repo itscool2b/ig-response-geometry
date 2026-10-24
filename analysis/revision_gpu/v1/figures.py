@@ -71,13 +71,33 @@ def save(fig, out, name):
     return paths
 
 
+def panel_population(rows, modality, target, field, min_budget):
+    """The plotted points of one budget-figure panel and the contexts every point is drawn over.
+
+    points maps (arm, rule, budget) to {context: value}, with ("A0", None, 64) for the historical star;
+    shared is the sorted contexts that have a finite value at every one of those points.
+    """
+    points = defaultdict(dict)
+    for r in rows:
+        if not (r["modality"] == modality and r["target"] == target and isinstance(r.get(field), float)
+                and math.isfinite(r[field])):
+            continue
+        if r["arm"] in ("A1", "A2") and r["rule"] in RULE_COLOR and r["budget"] and r["budget"] >= min_budget:
+            points[(r["arm"], r["rule"], r["budget"])][r["context"]] = r[field]
+        elif r["arm"] == "A0" and r["budget"] == 64:
+            points[("A0", None, 64)][r["context"]] = r[field]
+    shared = sorted(set.intersection(*(set(v) for v in points.values()))) if points else []
+    return points, shared
+
+
 def budget_figure(rows, bank, out, name, field, ylabel, min_budget=16):
     """Median of a per-context quantity against budget, per modality (rows) and target (columns).
 
     Colour identifies the rule (trapezoid, endpoint-inclusive average, midpoint); line style the
     forward precision (solid fp32, dashed bf16); the star is the historical bf16 kernel at m = 64.
-    When the bank has fp32 (A2) rows, every arm is drawn on those contexts only, so the bf16 and
-    fp32 medians describe the same population.
+    When the bank has fp32 (A2) rows, only those contexts are drawn. Within a panel every point is a
+    median over the same contexts: those with a value at every plotted point of the panel (a rule
+    compared on the pod only against its own reference can lack some). Panel titles give the count.
     """
     rows = [r for r in rows if r["bank"] == bank]
     fp32_contexts = {r["context"] for r in rows if r["arm"] == "A2"}
@@ -89,36 +109,30 @@ def budget_figure(rows, bank, out, name, field, ylabel, min_budget=16):
     for i, modality in enumerate(modalities):
         for j, target in enumerate(("Q", "N")):
             ax = axes[i][j]
-            for arm, linestyle in (("A2", "-"), ("A1", "--")):
-                for rule in ("T", "E", "M"):
-                    by_budget = defaultdict(list)
-                    for r in rows:
-                        if (r["bank"] == bank and r["modality"] == modality and r["target"] == target and r["arm"] == arm
-                                and r["rule"] == rule and isinstance(r.get(field), float) and math.isfinite(r[field])
-                                and r["budget"] and r["budget"] >= min_budget):
-                            by_budget[r["budget"]].append(max(r[field], 1e-12))
-                    if not by_budget:
-                        continue
-                    xs = sorted(by_budget)
-                    ys = [float(np.median(by_budget[x])) for x in xs]
-                    # A series kept at fewer than three budgets is drawn as points: a line would imply values between them.
-                    sparse = len(xs) < 3
-                    ax.plot(xs, ys, linestyle="none" if sparse else linestyle, color=RULE_COLOR[rule], lw=1.6,
-                            marker="o", ms=4 if sparse else 2.5,
-                            mfc="white" if sparse and arm == "A1" else RULE_COLOR[rule])
-                    drawn_sparse = drawn_sparse or sparse
-                    drawn_rules.add(rule)
-                    drawn_arms.add(arm)
-            historical = [r[field] for r in rows if r["bank"] == bank and r["modality"] == modality and r["target"] == target
-                          and r["arm"] == "A0" and isinstance(r.get(field), float) and math.isfinite(r[field])
-                          and r["budget"] == 64]
-            if historical:
-                ax.plot([64], [max(float(np.median(historical)), 1e-12)], marker="*", ms=9, color=INK, ls="none")
-                drawn_historical = True
+            points, shared = panel_population(rows, modality, target, field, min_budget)
+            ax.set_title(f"{modality}, target {target} ({len(shared)} contexts)", loc="left")
+            if shared:
+                for arm, linestyle in (("A2", "-"), ("A1", "--")):
+                    for rule in ("T", "E", "M"):
+                        xs = sorted(b for a, ru, b in points if a == arm and ru == rule)
+                        if not xs:
+                            continue
+                        ys = [float(np.median([max(points[(arm, rule, x)][c], 1e-12) for c in shared])) for x in xs]
+                        # A series kept at fewer than three budgets is drawn as points: a line would imply values between them.
+                        sparse = len(xs) < 3
+                        ax.plot(xs, ys, linestyle="none" if sparse else linestyle, color=RULE_COLOR[rule], lw=1.6,
+                                marker="o", ms=4 if sparse else 2.5,
+                                mfc="white" if sparse and arm == "A1" else RULE_COLOR[rule])
+                        drawn_sparse = drawn_sparse or sparse
+                        drawn_rules.add(rule)
+                        drawn_arms.add(arm)
+                if ("A0", None, 64) in points:
+                    star = float(np.median([points[("A0", None, 64)][c] for c in shared]))
+                    ax.plot([64], [max(star, 1e-12)], marker="*", ms=9, color=INK, ls="none")
+                    drawn_historical = True
             ax.set_xscale("log", base=2)
             ax.set_yscale("log")
             ax.grid(True, which="major", color=GRID, lw=0.5)
-            ax.set_title(f"{modality}, target {target}", loc="left")
             if i == len(modalities) - 1:
                 ax.set_xlabel("integration budget m (intervals)")
     rule_names = {"T": "trapezoid T_m", "E": "endpoint-inclusive E_m", "M": "midpoint M_n"}
@@ -130,8 +144,7 @@ def budget_figure(rows, bank, out, name, field, ylabel, min_budget=16):
         handles.append(Line2D([], [], color=INK, marker="*", ms=8, ls="none", label="historical bf16 kernel, m=64 (A0)"))
     fig.legend(handles=handles, loc="upper center", ncol=3, frameon=False, bbox_to_anchor=(0.5, 1.0))
     fig.supylabel(ylabel, fontsize=9)
-    contexts = len({r["context"] for r in rows})
-    note = f"{contexts} contexts" + (", all with an fp32 phase" if fp32_contexts else "")
+    note = "each panel: the contexts with every plotted point" + (", all with an fp32 phase" if fp32_contexts else "")
     if drawn_sparse:
         note += "; points without a line: maps kept at those budgets only (open points: bf16)"
     fig.text(0.99, 0.005, note, ha="right", fontsize=7, color=MUTED)

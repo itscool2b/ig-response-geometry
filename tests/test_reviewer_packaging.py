@@ -63,7 +63,7 @@ def test_reviewer_archive_keeps_records_lists_tensors_and_screens_identifiers(tm
     assert (out / "runs/P/e0000-c001/bf16/record.json").is_file() and not (out / "runs/P/e0000-c001/bf16/maps.pt").exists()
     assert (out / "runs/TENSORS.sha256").read_text() == f"{sha(b'tensor bytes')}  P/e0000-c001/bf16/maps.pt\n"
     assert report["tensors_listed"] == 1 and "MANIFEST.sha256" not in (out / "MANIFEST.sha256").read_text()
-    assert "The 1 map and gradient tensors (0.0 GB)" in (out / "README.md").read_text()
+    assert "The 1 tensor files (1 map files; 0.0 GB)" in (out / "README.md").read_text()
     assert "  README.md\n" in (out / "MANIFEST.sha256").read_text()
     write_tree(tmp_path / "identity", {"named.json": ('{"author": "%s"}' % archive.ARCHIVE_IDENTIFIERS[0].title()).encode()})
     with pytest.raises(ValueError, match="Identifying text"):
@@ -93,7 +93,8 @@ def test_reviewer_archive_keeps_worker_logs_and_failures_and_scans_every_encodin
                                                              "P/e0000-c002/attempts/bf16-2/\tinterrupted, empty\n")
     assert report["attempt_failures"] == 1
     cases = {"latin1.bin": "caf\xe9 Bajpai".encode("latin-1"), "path.json": b'{"cwd": "/Users/someone/project"}',
-             "token.txt": b"contact: secret-token-7"}
+             "token.txt": b"contact: secret-token-7", "utf16.txt": "Windermere".encode("utf-16-le"),
+             "bajpai-notes.json": b"{}"}
     for k, (name, data) in enumerate(cases.items()):
         write_tree(tmp_path / f"identity{k}", {name: data})
         with pytest.raises(ValueError, match="Identifying text"):
