@@ -1,0 +1,433 @@
+
+=== README step 2 01:43:58Z
+manifest ok: 1702 files
+
+=== README step 3 01:43:59Z
+
+=== README step 4 01:43:59Z
+code ok
+
+=== README step 5 01:43:59Z
+Cloning into '/workspace/tmlr/rdt-upstream'...
+HEAD is now at cd79363 Merge pull request #120 from xwjahahahaha/main
+
+=== README step 6 01:44:00Z
+Collecting absl_py==2.5.0 (from -r /root/kit/requirements-r1-venv.txt (line 1))
+  Downloading absl_py-2.5.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting accelerate==0.30.1 (from -r /root/kit/requirements-r1-venv.txt (line 2))
+  Downloading accelerate-0.30.1-py3-none-any.whl.metadata (18 kB)
+Collecting arm_pytorch_utilities==0.5.0 (from -r /root/kit/requirements-r1-venv.txt (line 3))
+  Downloading arm_pytorch_utilities-0.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting cloudpickle==3.1.2 (from -r /root/kit/requirements-r1-venv.txt (line 4))
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting contourpy==1.3.3 (from -r /root/kit/requirements-r1-venv.txt (line 5))
+  Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+Collecting cycler==0.12.1 (from -r /root/kit/requirements-r1-venv.txt (line 6))
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting dacite==1.9.2 (from -r /root/kit/requirements-r1-venv.txt (line 7))
+  Downloading dacite-1.9.2-py3-none-any.whl.metadata (17 kB)
+Collecting diffusers==0.27.2 (from -r /root/kit/requirements-r1-venv.txt (line 8))
+  Downloading diffusers-0.27.2-py3-none-any.whl.metadata (18 kB)
+Collecting docstring_parser==0.18.0 (from -r /root/kit/requirements-r1-venv.txt (line 9))
+  Downloading docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+Collecting farama_notifications==0.0.6 (from -r /root/kit/requirements-r1-venv.txt (line 10))
+  Downloading farama_notifications-0.0.6-py3-none-any.whl.metadata (729 bytes)
+Collecting filelock==3.16.1 (from -r /root/kit/requirements-r1-venv.txt (line 11))
+  Downloading filelock-3.16.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting fonttools==4.66.1 (from -r /root/kit/requirements-r1-venv.txt (line 12))
+  Downloading fonttools-4.66.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (130 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.1/130.1 kB 2.2 MB/s eta 0:00:00
+Collecting gitdb==4.0.12 (from -r /root/kit/requirements-r1-venv.txt (line 13))
+  Downloading gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB)
+Collecting gitpython==3.2.0 (from -r /root/kit/requirements-r1-venv.txt (line 14))
+  Downloading gitpython-3.2.0-py3-none-any.whl.metadata (13 kB)
+Collecting gymnasium==1.3.0 (from -r /root/kit/requirements-r1-venv.txt (line 15))
+  Downloading gymnasium-1.3.0-py3-none-any.whl.metadata (10 kB)
+Collecting h5py==3.12.1 (from -r /root/kit/requirements-r1-venv.txt (line 16))
+  Downloading h5py-3.12.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.5 kB)
+Collecting huggingface_hub==0.25.2 (from -r /root/kit/requirements-r1-venv.txt (line 17))
+  Downloading huggingface_hub-0.25.2-py3-none-any.whl.metadata (13 kB)
+Collecting imageio==2.38.0 (from -r /root/kit/requirements-r1-venv.txt (line 18))
+  Downloading imageio-2.38.0-py3-none-any.whl.metadata (9.7 kB)
+Collecting imageio_ffmpeg==0.6.0 (from -r /root/kit/requirements-r1-venv.txt (line 19))
+  Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+Collecting importlib_metadata==9.0.1 (from -r /root/kit/requirements-r1-venv.txt (line 20))
+  Downloading importlib_metadata-9.0.1-py3-none-any.whl.metadata (4.5 kB)
+Collecting importlib_resources==7.1.0 (from -r /root/kit/requirements-r1-venv.txt (line 21))
+  Downloading importlib_resources-7.1.0-py3-none-any.whl.metadata (4.0 kB)
+Collecting iniconfig==2.3.0 (from -r /root/kit/requirements-r1-venv.txt (line 22))
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting kiwisolver==1.5.1 (from -r /root/kit/requirements-r1-venv.txt (line 23))
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting lxml==6.1.3 (from -r /root/kit/requirements-r1-venv.txt (line 24))
+  Downloading lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting mani_skill==3.0.1 (from -r /root/kit/requirements-r1-venv.txt (line 25))
+  Downloading mani_skill-3.0.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting matplotlib==3.9.2 (from -r /root/kit/requirements-r1-venv.txt (line 26))
+  Downloading matplotlib-3.9.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (11 kB)
+Collecting mplib==0.1.1 (from -r /root/kit/requirements-r1-venv.txt (line 27))
+  Downloading mplib-0.1.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.7 kB)
+Collecting numpy==1.26.4 (from -r /root/kit/requirements-r1-venv.txt (line 28))
+  Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.0/61.0 kB 2.2 MB/s eta 0:00:00
+Collecting nvidia_ml_py==13.615.71 (from -r /root/kit/requirements-r1-venv.txt (line 29))
+  Downloading nvidia_ml_py-13.615.71-py3-none-any.whl.metadata (9.7 kB)
+Collecting opencv_python==4.11.0.86 (from -r /root/kit/requirements-r1-venv.txt (line 30))
+  Downloading opencv_python-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+Collecting pandas==2.2.3 (from -r /root/kit/requirements-r1-venv.txt (line 31))
+  Downloading pandas-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (89 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 89.9/89.9 kB 7.2 MB/s eta 0:00:00
+Collecting peft==0.11.1 (from -r /root/kit/requirements-r1-venv.txt (line 32))
+  Downloading peft-0.11.1-py3-none-any.whl.metadata (13 kB)
+Collecting pluggy==1.6.0 (from -r /root/kit/requirements-r1-venv.txt (line 33))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pyperclip==1.11.0 (from -r /root/kit/requirements-r1-venv.txt (line 34))
+  Downloading pyperclip-1.11.0-py3-none-any.whl.metadata (2.4 kB)
+Collecting pytest==8.3.3 (from -r /root/kit/requirements-r1-venv.txt (line 35))
+  Downloading pytest-8.3.3-py3-none-any.whl.metadata (7.5 kB)
+Collecting pytorch_kinematics==0.7.6 (from -r /root/kit/requirements-r1-venv.txt (line 36))
+  Downloading pytorch_kinematics-0.7.6-py3-none-any.whl.metadata (15 kB)
+Collecting pytorch_seed==0.2.0 (from -r /root/kit/requirements-r1-venv.txt (line 37))
+  Downloading pytorch_seed-0.2.0-py3-none-any.whl.metadata (3.8 kB)
+Collecting pytz==2026.4 (from -r /root/kit/requirements-r1-venv.txt (line 38))
+  Downloading pytz-2026.4-py2.py3-none-any.whl.metadata (22 kB)
+Collecting PyYAML==6.0.2 (from -r /root/kit/requirements-r1-venv.txt (line 39))
+  Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.1 kB)
+Collecting regex==2026.9.29 (from -r /root/kit/requirements-r1-venv.txt (line 40))
+  Downloading regex-2026.9.29-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.6/40.6 kB 1.4 MB/s eta 0:00:00
+Collecting safetensors==0.4.5 (from -r /root/kit/requirements-r1-venv.txt (line 41))
+  Downloading safetensors-0.4.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.8 kB)
+Collecting sapien==3.0.3 (from -r /root/kit/requirements-r1-venv.txt (line 42))
+  Downloading sapien-3.0.3-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting scipy==1.14.1 (from -r /root/kit/requirements-r1-venv.txt (line 43))
+  Downloading scipy-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (60 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.8/60.8 kB 4.1 MB/s eta 0:00:00
+Collecting sentencepiece==0.2.0 (from -r /root/kit/requirements-r1-venv.txt (line 44))
+  Downloading sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.7 kB)
+Collecting smmap==5.0.3 (from -r /root/kit/requirements-r1-venv.txt (line 45))
+  Downloading smmap-5.0.3-py3-none-any.whl.metadata (4.6 kB)
+Collecting tabulate==0.10.0 (from -r /root/kit/requirements-r1-venv.txt (line 46))
+  Downloading tabulate-0.10.0-py3-none-any.whl.metadata (40 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.8/40.8 kB 3.5 MB/s eta 0:00:00
+Collecting timm==1.0.3 (from -r /root/kit/requirements-r1-venv.txt (line 47))
+  Downloading timm-1.0.3-py3-none-any.whl.metadata (43 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.6/43.6 kB 4.0 MB/s eta 0:00:00
+Collecting tokenizers==0.19.1 (from -r /root/kit/requirements-r1-venv.txt (line 48))
+  Downloading tokenizers-0.19.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
+Collecting toppra==0.6.10 (from -r /root/kit/requirements-r1-venv.txt (line 49))
+  Downloading toppra-0.6.10-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.6 kB)
+Collecting tqdm==4.70.1 (from -r /root/kit/requirements-r1-venv.txt (line 50))
+  Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.4/57.4 kB 5.1 MB/s eta 0:00:00
+Collecting transformers==4.41.0 (from -r /root/kit/requirements-r1-venv.txt (line 51))
+  Downloading transformers-4.41.0-py3-none-any.whl.metadata (43 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.8/43.8 kB 3.7 MB/s eta 0:00:00
+Collecting transforms3d==0.4.2 (from -r /root/kit/requirements-r1-venv.txt (line 52))
+  Downloading transforms3d-0.4.2-py3-none-any.whl.metadata (2.8 kB)
+Collecting trimesh==5.1.0 (from -r /root/kit/requirements-r1-venv.txt (line 53))
+  Downloading trimesh-5.1.0-py3-none-any.whl.metadata (13 kB)
+Collecting typeguard==4.6.0 (from -r /root/kit/requirements-r1-venv.txt (line 54))
+  Downloading typeguard-4.6.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting tyro==1.0.16 (from -r /root/kit/requirements-r1-venv.txt (line 55))
+  Downloading tyro-1.0.16-py3-none-any.whl.metadata (12 kB)
+Collecting tzdata==2026.4 (from -r /root/kit/requirements-r1-venv.txt (line 56))
+  Downloading tzdata-2026.4-py2.py3-none-any.whl.metadata (1.4 kB)
+Collecting zipp==4.1.0 (from -r /root/kit/requirements-r1-venv.txt (line 57))
+  Downloading zipp-4.1.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading absl_py-2.5.0-py3-none-any.whl (137 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 137.4/137.4 kB 9.5 MB/s eta 0:00:00
+Downloading accelerate-0.30.1-py3-none-any.whl (302 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 302.6/302.6 kB 11.2 MB/s eta 0:00:00
+Downloading arm_pytorch_utilities-0.5.0-py3-none-any.whl (41 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 41.1/41.1 kB 3.8 MB/s eta 0:00:00
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (362 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 362.6/362.6 kB 24.8 MB/s eta 0:00:00
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading dacite-1.9.2-py3-none-any.whl (16 kB)
+Downloading diffusers-0.27.2-py3-none-any.whl (2.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 52.6 MB/s eta 0:00:00
+Downloading docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+Downloading farama_notifications-0.0.6-py3-none-any.whl (2.9 kB)
+Downloading filelock-3.16.1-py3-none-any.whl (16 kB)
+Downloading fonttools-4.66.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 150.8 MB/s eta 0:00:00
+Downloading gitdb-4.0.12-py3-none-any.whl (62 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.8/62.8 kB 5.0 MB/s eta 0:00:00
+Downloading gitpython-3.2.0-py3-none-any.whl (228 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.5/228.5 kB 21.6 MB/s eta 0:00:00
+Downloading gymnasium-1.3.0-py3-none-any.whl (953 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 953.9/953.9 kB 90.7 MB/s eta 0:00:00
+Downloading h5py-3.12.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 38.8 MB/s eta 0:00:00
+Downloading huggingface_hub-0.25.2-py3-none-any.whl (436 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 436.6/436.6 kB 38.4 MB/s eta 0:00:00
+Downloading imageio-2.38.0-py3-none-any.whl (328 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 328.1/328.1 kB 36.7 MB/s eta 0:00:00
+Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.5/29.5 MB 190.4 MB/s eta 0:00:00
+Downloading importlib_metadata-9.0.1-py3-none-any.whl (27 kB)
+Downloading importlib_resources-7.1.0-py3-none-any.whl (37 kB)
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 110.8 MB/s eta 0:00:00
+Downloading lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 218.3 MB/s eta 0:00:00
+Downloading mani_skill-3.0.1-py3-none-any.whl (101.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 101.7/101.7 MB 111.7 MB/s eta 0:00:00
+Downloading matplotlib-3.9.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (8.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.3/8.3 MB 269.6 MB/s eta 0:00:00
+Downloading mplib-0.1.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.0/12.0 MB 179.2 MB/s eta 0:00:00
+Downloading numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.0/18.0 MB 300.2 MB/s eta 0:00:00
+Downloading nvidia_ml_py-13.615.71-py3-none-any.whl (58 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 kB 7.3 MB/s eta 0:00:00
+Downloading opencv_python-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (63.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.0/63.0 MB 148.5 MB/s eta 0:00:00
+Downloading pandas-2.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (12.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.7/12.7 MB 290.6 MB/s eta 0:00:00
+Downloading peft-0.11.1-py3-none-any.whl (251 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 251.6/251.6 kB 25.1 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading pyperclip-1.11.0-py3-none-any.whl (11 kB)
+Downloading pytest-8.3.3-py3-none-any.whl (342 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 342.3/342.3 kB 35.2 MB/s eta 0:00:00
+Downloading pytorch_kinematics-0.7.6-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 5.6 MB/s eta 0:00:00
+Downloading pytorch_seed-0.2.0-py3-none-any.whl (4.2 kB)
+Downloading pytz-2026.4-py2.py3-none-any.whl (506 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 506.7/506.7 kB 41.5 MB/s eta 0:00:00
+Downloading PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (767 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 767.5/767.5 kB 71.5 MB/s eta 0:00:00
+Downloading regex-2026.9.29-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.8/807.8 kB 81.7 MB/s eta 0:00:00
+Downloading safetensors-0.4.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (434 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 434.8/434.8 kB 45.9 MB/s eta 0:00:00
+Downloading sapien-3.0.3-cp312-cp312-manylinux_2_28_x86_64.whl (51.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 51.3/51.3 MB 57.8 MB/s eta 0:00:00
+Downloading scipy-1.14.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (40.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.8/40.8 MB 164.8 MB/s eta 0:00:00
+Downloading sentencepiece-0.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 83.0 MB/s eta 0:00:00
+Downloading smmap-5.0.3-py3-none-any.whl (24 kB)
+Downloading tabulate-0.10.0-py3-none-any.whl (39 kB)
+Downloading timm-1.0.3-py3-none-any.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 115.8 MB/s eta 0:00:00
+Downloading tokenizers-0.19.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 185.0 MB/s eta 0:00:00
+Downloading toppra-0.6.10-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (941 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 941.9/941.9 kB 75.2 MB/s eta 0:00:00
+Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.2/80.2 kB 7.5 MB/s eta 0:00:00
+Downloading transformers-4.41.0-py3-none-any.whl (9.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.1/9.1 MB 191.8 MB/s eta 0:00:00
+Downloading transforms3d-0.4.2-py3-none-any.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 115.3 MB/s eta 0:00:00
+Downloading trimesh-5.1.0-py3-none-any.whl (750 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 750.0/750.0 kB 45.1 MB/s eta 0:00:00
+Downloading typeguard-4.6.0-py3-none-any.whl (36 kB)
+Downloading tyro-1.0.16-py3-none-any.whl (216 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 216.9/216.9 kB 19.5 MB/s eta 0:00:00
+Downloading tzdata-2026.4-py2.py3-none-any.whl (347 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 347.5/347.5 kB 23.7 MB/s eta 0:00:00
+Downloading zipp-4.1.0-py3-none-any.whl (10 kB)
+Installing collected packages: toppra, sentencepiece, pytz, pyperclip, nvidia_ml_py, farama_notifications, zipp, tzdata, tyro, typeguard, trimesh, transforms3d, transformers, tqdm, tokenizers, timm, tabulate, smmap, scipy, sapien, safetensors, regex, PyYAML, pytorch_seed, pytorch_kinematics, pytest, pluggy, peft, pandas, opencv_python, numpy, mplib, matplotlib, mani_skill, lxml, kiwisolver, iniconfig, importlib_resources, importlib_metadata, imageio_ffmpeg, imageio, huggingface_hub, h5py, gymnasium, gitpython, gitdb, fonttools, filelock, docstring_parser, diffusers, dacite, cycler, contourpy, cloudpickle, arm_pytorch_utilities, accelerate, absl_py
+  Attempting uninstall: PyYAML
+    Found existing installation: PyYAML 6.0.3
+    Not uninstalling pyyaml at /usr/local/lib/python3.12/dist-packages, outside environment /workspace/tmlr/venv
+    Can't uninstall 'PyYAML'. No files were found to uninstall.
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.1.2
+    Not uninstalling numpy at /usr/local/lib/python3.12/dist-packages, outside environment /workspace/tmlr/venv
+    Can't uninstall 'numpy'. No files were found to uninstall.
+  Attempting uninstall: filelock
+    Found existing installation: filelock 3.20.0
+    Not uninstalling filelock at /usr/local/lib/python3.12/dist-packages, outside environment /workspace/tmlr/venv
+    Can't uninstall 'filelock'. No files were found to uninstall.
+Successfully installed PyYAML-6.0.2 absl_py-2.5.0 accelerate-0.30.1 arm_pytorch_utilities-0.5.0 cloudpickle-3.1.2 contourpy-1.3.3 cycler-0.12.1 dacite-1.9.2 diffusers-0.27.2 docstring_parser-0.18.0 farama_notifications-0.0.6 filelock-3.16.1 fonttools-4.66.1 gitdb-4.0.12 gitpython-3.2.0 gymnasium-1.3.0 h5py-3.12.1 huggingface_hub-0.25.2 imageio-2.38.0 imageio_ffmpeg-0.6.0 importlib_metadata-9.0.1 importlib_resources-7.1.0 iniconfig-2.3.0 kiwisolver-1.5.1 lxml-6.1.3 mani_skill-3.0.1 matplotlib-3.9.2 mplib-0.1.1 numpy-1.26.4 nvidia_ml_py-13.615.71 opencv_python-4.11.0.86 pandas-2.2.3 peft-0.11.1 pluggy-1.6.0 pyperclip-1.11.0 pytest-8.3.3 pytorch_kinematics-0.7.6 pytorch_seed-0.2.0 pytz-2026.4 regex-2026.9.29 safetensors-0.4.5 sapien-3.0.3 scipy-1.14.1 sentencepiece-0.2.0 smmap-5.0.3 tabulate-0.10.0 timm-1.0.3 tokenizers-0.19.1 toppra-0.6.10 tqdm-4.70.1 transformers-4.41.0 transforms3d-0.4.2 trimesh-5.1.0 typeguard-4.6.0 tyro-1.0.16 tzdata-2026.4 zipp-4.1.0
+
+=== README step 7 01:44:28Z
+models ok
+
+=== README step 8 01:44:51Z
+W: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+debconf: delaying package configuration, since apt-utils is not installed
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 49062 files and directories currently installed.)
+Preparing to unpack .../00-libglib2.0-data_2.80.0-6ubuntu3.10_all.deb ...
+Unpacking libglib2.0-data (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.4) ...
+Preparing to unpack .../01-libglib2.0-bin_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking libglib2.0-bin (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.4) ...
+Preparing to unpack .../02-gir1.2-glib-2.0_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.4) ...
+Preparing to unpack .../03-libglib2.0-0t64_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.4) ...
+Preparing to unpack .../04-libdrm-common_2.4.125-1ubuntu0.1~24.04.2_all.deb ...
+Unpacking libdrm-common (2.4.125-1ubuntu0.1~24.04.2) over (2.4.122-1~ubuntu0.24.04.1) ...
+Preparing to unpack .../05-libdrm2_2.4.125-1ubuntu0.1~24.04.2_amd64.deb ...
+Unpacking libdrm2:amd64 (2.4.125-1ubuntu0.1~24.04.2) over (2.4.122-1~ubuntu0.24.04.1) ...
+Preparing to unpack .../06-libdrm-amdgpu1_2.4.125-1ubuntu0.1~24.04.2_amd64.deb ...
+Unpacking libdrm-amdgpu1:amd64 (2.4.125-1ubuntu0.1~24.04.2) over (2.4.122-1~ubuntu0.24.04.1) ...
+Preparing to unpack .../07-libdrm-intel1_2.4.125-1ubuntu0.1~24.04.2_amd64.deb ...
+Unpacking libdrm-intel1:amd64 (2.4.125-1ubuntu0.1~24.04.2) over (2.4.122-1~ubuntu0.24.04.1) ...
+Preparing to unpack .../08-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+Unpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.4) over (25.0.7-0ubuntu0.24.04.2) ...
+Preparing to unpack .../09-libglx-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+Unpacking libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) over (25.0.7-0ubuntu0.24.04.2) ...
+Preparing to unpack .../10-libgbm1_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+Unpacking libgbm1:amd64 (25.2.8-0ubuntu0.24.04.4) over (25.0.7-0ubuntu0.24.04.2) ...
+Preparing to unpack .../11-mesa-libgallium_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+Unpacking mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.4) over (25.0.7-0ubuntu0.24.04.2) ...
+Selecting previously unselected package libegl-mesa0:amd64.
+Preparing to unpack .../12-libegl-mesa0_25.2.8-0ubuntu0.24.04.4_amd64.deb ...
+Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Selecting previously unselected package libegl1:amd64.
+Preparing to unpack .../13-libegl1_1.7.0-1build1_amd64.deb ...
+Unpacking libegl1:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libglx-dev:amd64.
+Preparing to unpack .../14-libglx-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libglx-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgl-dev:amd64.
+Preparing to unpack .../15-libgl-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libgl-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libegl-dev:amd64.
+Preparing to unpack .../16-libegl-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libegl-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgles1:amd64.
+Preparing to unpack .../17-libgles1_1.7.0-1build1_amd64.deb ...
+Unpacking libgles1:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgles2:amd64.
+Preparing to unpack .../18-libgles2_1.7.0-1build1_amd64.deb ...
+Unpacking libgles2:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libgles-dev:amd64.
+Preparing to unpack .../19-libgles-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libgles-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libopengl0:amd64.
+Preparing to unpack .../20-libopengl0_1.7.0-1build1_amd64.deb ...
+Unpacking libopengl0:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libopengl-dev:amd64.
+Preparing to unpack .../21-libopengl-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libopengl-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package vulkan-tools.
+Preparing to unpack .../22-vulkan-tools_1.3.275.0+dfsg1-1_amd64.deb ...
+Unpacking vulkan-tools (1.3.275.0+dfsg1-1) ...
+Selecting previously unselected package libglvnd-core-dev:amd64.
+Preparing to unpack .../23-libglvnd-core-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libglvnd-core-dev:amd64 (1.7.0-1build1) ...
+Selecting previously unselected package libglvnd-dev:amd64.
+Preparing to unpack .../24-libglvnd-dev_1.7.0-1build1_amd64.deb ...
+Unpacking libglvnd-dev:amd64 (1.7.0-1build1) ...
+Setting up libglvnd-core-dev:amd64 (1.7.0-1build1) ...
+Setting up vulkan-tools (1.3.275.0+dfsg1-1) ...
+Setting up libopengl0:amd64 (1.7.0-1build1) ...
+Setting up libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...
+Setting up libglib2.0-data (2.80.0-6ubuntu3.10) ...
+Setting up libgles2:amd64 (1.7.0-1build1) ...
+Setting up libgles1:amd64 (1.7.0-1build1) ...
+Setting up gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) ...
+Setting up libglx-dev:amd64 (1.7.0-1build1) ...
+Setting up libopengl-dev:amd64 (1.7.0-1build1) ...
+Setting up libdrm-common (2.4.125-1ubuntu0.1~24.04.2) ...
+Setting up libgl-dev:amd64 (1.7.0-1build1) ...
+Setting up libglib2.0-bin (2.80.0-6ubuntu3.10) ...
+Setting up libdrm2:amd64 (2.4.125-1ubuntu0.1~24.04.2) ...
+Setting up libdrm-amdgpu1:amd64 (2.4.125-1ubuntu0.1~24.04.2) ...
+Setting up libdrm-intel1:amd64 (2.4.125-1ubuntu0.1~24.04.2) ...
+Setting up mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Setting up libgbm1:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Setting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Setting up libegl1:amd64 (1.7.0-1build1) ...
+Setting up libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.4) ...
+Setting up libegl-dev:amd64 (1.7.0-1build1) ...
+Setting up libgles-dev:amd64 (1.7.0-1build1) ...
+Setting up libglvnd-dev:amd64 (1.7.0-1build1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+	deviceName         = NVIDIA RTX PRO 6000 Blackwell Server Edition
+cd79363a1387e8f81c7724d070ef7e45fd23150f
+name, uuid, driver_version, memory.total [MiB]
+NVIDIA RTX PRO 6000 Blackwell Server Edition, GPU-be9eb783-1eff-7523-58eb-19845e05fffb, 595.91.07, 97887 MiB
+Filesystem      Size  Used Avail Use% Mounted on
+overlay          80G  7.1G   73G   9% /
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+2.8.0+cu128 1.26.4 0.27.2 4.41.0
+
+=== README step 9 01:44:59Z
+loading SigLIP...
+OVERRIDE num_inference_timesteps 5 -> 5
+loading RDT-170m backbone from /workspace/nhsjs/code/nhsjs-r1-3/configs/base_170m.yaml...
+Diffusion params: 1.662299e+08
+gradient checkpointing DISABLED (14 blocks)
+{"bank": "P", "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition", "event": "worker_start", "fp32_conversion": null, "phases": ["bf16", "scoring"], "pid": 1638, "protocol_sha256": "da427aca9c0e48d42e473ede1665e809f5a190116950059ccce86240a86d0128", "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "sources": {"checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e", "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35", "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772", "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0", "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c", "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2", "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12", "per_step_attribution.py": "e52650f1fca058ca7cc30f8503c5f6dd292233dfe1a6c13256f7f8d209dcfaeb", "pipeline.py": "7ebdda90fa1c705c4e87434e6b2d4325b80ccac16c9662bc93190314b3fce32e", "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7", "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd", "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"}, "startup": {"effective_cublas_workspace_config": ":4096:8", "inherited_cublas_workspace_config": null, "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "torch_not_preimported": true}, "unix": 1792806310.3732922, "worker": 60, "workers": 120}
+{"context": "e0030-c017", "event": "phase_start", "phase": "bf16", "unix": 1792806310.3796604}
+{"context": "e0030-c017", "event": "phase_complete", "phase": "bf16", "unix": 1792806667.4240386, "wall_seconds": 357.04437912900175}
+{"context": "e0030-c017", "event": "phase_start", "phase": "scoring", "unix": 1792806667.4384985}
+{"context": "e0030-c017", "event": "phase_complete", "phase": "scoring", "unix": 1792806730.643255, "wall_seconds": 63.204755907994695}
+{"completed_phases": 2, "event": "worker_end", "unix": 1792806730.6466768}
+{
+ "command": [
+  "/workspace/tmlr/venv/bin/python",
+  "/workspace/nhsjs/code/nhsjs-r1-3/revision_numerics.py",
+  "--protocol",
+  "/workspace/nhsjs/protocols/r1-p.json",
+  "--bank",
+  "P",
+  "--phases",
+  "bf16,scoring",
+  "--worker",
+  "60",
+  "--workers",
+  "120",
+  "--out",
+  "/workspace/fresh"
+ ],
+ "context": "e0030-c017",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+ "kind": "gpu_regeneration",
+ "phases": {
+  "bf16": {
+   "maps": {
+    "differing": {},
+    "extra": [],
+    "identical": 596,
+    "missing": []
+   },
+   "rankings_bytes_equal": true,
+   "record_equal_without_timing": true
+  },
+  "scoring": {
+   "areas": {
+    "both_undefined": 0,
+    "compared": 2466,
+    "definedness_mismatch": [],
+    "max_abs_normalized": 0.0,
+    "max_abs_raw": 0.0,
+    "rankings_extra": [],
+    "rankings_missing": []
+   },
+   "record_equal_without_timing": true
+  }
+ },
+ "status": "bit_identical",
+ "tolerance": {
+  "abs_auc": 0.02,
+  "relative_l1": 0.05,
+  "spearman": 0.95
+ }
+}
+
+=== README step 10 01:52:12Z
+{
+ "bank": "P",
+ "contexts": 1,
+ "kind": "cpu_regeneration",
+ "modality_results_authenticated": 3,
+ "phases_authenticated": 2,
+ "rows_fingerprint_sha256": "0d9ace6e5d3b54791b362c24b19b5359b7da421a51078c8d08825ee818679fa3",
+ "vision_rows": 56
+}
+
+=== README step done 01:52:14Z
+GPU status: bit_identical | device: NVIDIA RTX PRO 6000 Blackwell Server Edition

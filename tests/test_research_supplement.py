@@ -303,3 +303,22 @@ def test_working_collection_rejects_concurrent_changes(tmp_path, monkeypatch):
     monkeypatch.setattr(package, 'working_file', unstable)
     with pytest.raises(ValueError, match='changed while its snapshot was captured'):
         package.collect(tmp_path, 'HEAD', working_copy=True)
+
+
+def test_revision_r1_paths_are_packaged_when_present_with_the_tokenizer_notice(tmp_path, monkeypatch):
+    sampler = b'"""Original sampler license:\nMIT License\nCopyright (c) 2024 TSAIL group\n"""\n'
+    contents = {"LICENSE": b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n", "rdt_sampling.py": sampler,
+                package.T5_TOKENIZER: b"\x00sentencepiece"}
+    root = Path(__file__).resolve().parents[1]
+    for name in (*FILE_SHA256, "tmlr-source.json"):
+        contents["paper/" + name] = (root / "paper" / name).read_bytes()
+    monkeypatch.setattr(package, "collect", lambda *args: (dict(contents), dict(commit="a" * 40, raw_inputs=0,
+                                                                               pending_uncommitted_additions=[])))
+    report = package.build(tmp_path, "HEAD", tmp_path / "out")
+    with zipfile.ZipFile(tmp_path / "out" / report["archive"]["file"]) as archive:
+        assert b"google/t5-v1_1-xxl" in archive.read("THIRD_PARTY_NOTICES.txt")
+        assert b"Apache License 2.0" in archive.read("THIRD_PARTY_NOTICES.txt")
+    selected = {"analysis/revision_gpu/v1/methods.py", "docs/nhsjs-revision/protocols/r1/plan.json",
+                "revision_numerics.py", "docs/nhsjs-revision/inputs/review.pdf"}
+    chosen = {p for p in selected if p.startswith(package.REVISION_R1_PREFIXES) or p in package.REVISION_R1_FILES}
+    assert chosen == selected - {"docs/nhsjs-revision/inputs/review.pdf"}

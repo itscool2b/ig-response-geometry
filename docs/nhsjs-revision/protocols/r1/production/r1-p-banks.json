@@ -1,0 +1,33 @@
+{
+ "P": {
+  "adaptive_contexts": "first_episodes:2",
+  "bank": "/workspace/nhsjs/banks/r1/P-bank.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1",
+  "fp32_contexts": "first_episodes:6",
+  "full_node_contexts": "first_contexts:1",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/nhsjs/banks/r1/P/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "170m",
+  "note": "Prospective end-to-end record on the public RDT-170M checkpoint (Must Fix 2, 5, 6)",
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PickCube-v1",
+  "verify_contexts": "first_contexts:1"
+ }
+}

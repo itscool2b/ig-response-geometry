@@ -1,0 +1,57 @@
+{
+ "B1": {
+  "adaptive_contexts": "none",
+  "bank": "/workspace/nhsjs/banks/r1/B1-bank.json",
+  "checkpoint_path": "/workspace/huggingface/hub/models--robotics-diffusion-transformer--maniskill-model/snapshots/9622afab2b7ce2312a6cf1febc526928589b77eb/rdt/mp_rank_00_model_states.pt",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1",
+  "fp32_contexts": "none",
+  "full_node_contexts": "none",
+  "full_node_modalities": [],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/nhsjs/banks/r1/B1/metrics.jsonl",
+  "modalities": [
+   "vision"
+  ],
+  "model": "1b",
+  "note": "RDT-1B authors checkpoint, PickCube; vision only",
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PickCube-v1",
+  "verify_contexts": "none"
+ },
+ "S": {
+  "adaptive_contexts": "none",
+  "bank": "/workspace/nhsjs/banks/r1/S-bank.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1",
+  "fp32_contexts": "none",
+  "full_node_contexts": "none",
+  "full_node_modalities": [],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/nhsjs/banks/r1/S/metrics.jsonl",
+  "modalities": [
+   "vision"
+  ],
+  "model": "170m",
+  "note": "RDT-170M StackCube; vision only",
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "StackCube-v1",
+  "verify_contexts": "none"
+ }
+}

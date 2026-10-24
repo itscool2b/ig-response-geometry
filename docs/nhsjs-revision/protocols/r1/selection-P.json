@@ -1,0 +1,9 @@
+{
+ "algorithm": "numpy_pcg64_permutation_v1",
+ "calls_per_episode": 2,
+ "locked_before_collection": true,
+ "max_episode_steps": 400,
+ "rule": "uniform_executed_calls_v1",
+ "seed": 930001,
+ "seed_namespace": "nhsjs-r1-call-selection"
+}

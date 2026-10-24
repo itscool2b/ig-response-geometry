@@ -1,0 +1,9 @@
+{
+ "bank": "P",
+ "contexts": 1,
+ "kind": "cpu_regeneration",
+ "modality_results_authenticated": 3,
+ "phases_authenticated": 2,
+ "rows_fingerprint_sha256": "0d9ace6e5d3b54791b362c24b19b5359b7da421a51078c8d08825ee818679fa3",
+ "vision_rows": 56
+}

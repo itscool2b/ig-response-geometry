@@ -1,0 +1,5 @@
+bank,context,status,modality,target,repeats,repeats_defined,repeats_bit_identical,pinned_status,pinned_trapezoid_bit_identical,pinned_outside_population_nonzero,archived_bit_identical,replica_failed_forwards,replica_nonfinite,all_gates_pass
+P,1d1ab09086ef70efb4ff481844c1c6ed25e97502304c8452d78f788a419cd717,loaded,vision,N,2,True,True,evaluated,True,0,True,0,0,True
+P,1d1ab09086ef70efb4ff481844c1c6ed25e97502304c8452d78f788a419cd717,loaded,vision,Q,2,True,True,evaluated,True,0,True,0,0,True
+M8-pickcube-170m,bb81d57f9e16bf591c45d8bcd003c3e11e9939bd03bafcef3d8607afc936b241,loaded,vision,N,2,True,True,evaluated,True,0,True,0,0,True
+M8-pickcube-170m,bb81d57f9e16bf591c45d8bcd003c3e11e9939bd03bafcef3d8607afc936b241,loaded,vision,Q,2,True,True,evaluated,True,0,True,0,0,True

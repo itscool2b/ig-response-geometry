@@ -1,0 +1,869 @@
+{
+ "normalized_auc": [
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.028038047453893187,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P1",
+   "interval": [
+    -3.541353596340533,
+    3.1199100583332546
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -4.452317394503866,
+      2.4970480523730987
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -3.241918940026117,
+      3.2979950349339036
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.4189974392775197,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P2",
+   "interval": [
+    0.32667121236055563,
+    0.5560837205739484
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.345436477271495,
+      0.633973166044273
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.2988134057394547,
+      0.5391814728155847
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 2.8893000656743038,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P3",
+   "interval": [
+    -3.4107624925709223,
+    14.557853660386657
+   ],
+   "interval_method": "percentile",
+   "method": "IG_N_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -1.7681040341244183,
+      24.965786926250146
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -7.3412035976023,
+      13.119803728950908
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.4656728190827605,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P4",
+   "interval": [
+    0.34140520441698236,
+    0.7039040825559274
+   ],
+   "interval_method": "percentile",
+   "method": "IG_N_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.3671762990489927,
+      0.8809718959989097
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.2660277691654642,
+      0.6653178690000567
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_method",
+   "control": "IG_N_A1T512",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -2.8612620182204114,
+   "excluded_episodes": {},
+   "extreme_episodes": 2,
+   "id": "P5",
+   "interval": [
+    -11.376343580143235,
+    -0.011461158846782442
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -19.821954986291313,
+      -0.017862984469818675
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -10.745189320852633,
+      5.022665284411811
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_method",
+   "control": "IG_N_A1T512",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -0.046675379805240814,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P6",
+   "interval": [
+    -0.14591167314527745,
+    -0.008456530960263045
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -0.2326020807821943,
+      -0.011762395910585784
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -0.1340894313182214,
+      0.04073867170773978
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "matched_calibrated",
+   "control": "IG_N_A1T512",
+   "control_response": "L2",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -0.4376347716288673,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P7",
+   "interval": [
+    -3.9133429656324,
+    2.43675392127681
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "method_response": "Q",
+   "metric": "normalized_auc",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -4.8977364467779365,
+      1.8255365109799249
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -3.566719488069702,
+      2.6914499448119678
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  }
+ ],
+ "normalized_auc_round": [
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.028038047453893187,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P1",
+   "interval": [
+    -3.541353596340533,
+    3.1199100583332546
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -4.452317394503866,
+      2.4970480523730987
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -3.241918940026117,
+      3.2979950349339036
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.4189974392775197,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P2",
+   "interval": [
+    0.32667121236055563,
+    0.5560837205739484
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.345436477271495,
+      0.633973166044273
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.2988134057394547,
+      0.5391814728155847
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 2.8893000656743038,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P3",
+   "interval": [
+    -3.4107624925709223,
+    14.557853660386657
+   ],
+   "interval_method": "percentile",
+   "method": "IG_N_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -1.7681040341244183,
+      24.965786926250146
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -7.3412035976023,
+      13.119803728950908
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_random",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": 0.4656728190827605,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P4",
+   "interval": [
+    0.34140520441698236,
+    0.7039040825559274
+   ],
+   "interval_method": "percentile",
+   "method": "IG_N_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.3671762990489927,
+      0.8809718959989097
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      0.2660277691654642,
+      0.6653178690000567
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_method",
+   "control": "IG_N_A1T512",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -2.8612620182204114,
+   "excluded_episodes": {},
+   "extreme_episodes": 2,
+   "id": "P5",
+   "interval": [
+    -11.376343580143235,
+    -0.011461158846782442
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "Q",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -19.821954986291313,
+      -0.017862984469818675
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -10.745189320852633,
+      5.022665284411811
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "method_minus_method",
+   "control": "IG_N_A1T512",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -0.046675379805240814,
+   "excluded_episodes": {},
+   "extreme_episodes": 1,
+   "id": "P6",
+   "interval": [
+    -0.14591167314527745,
+    -0.008456530960263045
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "response": "L2",
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -0.2326020807821943,
+      -0.011762395910585784
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -0.1340894313182214,
+      0.04073867170773978
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  },
+  {
+   "alpha": 0.0071428571428571435,
+   "contrast": "matched_calibrated",
+   "control": "IG_N_A1T512",
+   "control_response": "L2",
+   "direction": "deletion",
+   "episodes": 60,
+   "estimate": -0.4376347716288673,
+   "excluded_episodes": {},
+   "extreme_episodes": 6,
+   "id": "P7",
+   "interval": [
+    -3.9133429656324,
+    2.43675392127681
+   ],
+   "interval_method": "percentile",
+   "method": "IG_Q_A1T512",
+   "method_response": "Q",
+   "metric": "normalized_auc_round",
+   "modality": "vision",
+   "planned_episodes": 60,
+   "sensitivity": {
+    "bca": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -4.8977364467779365,
+      1.8255365109799249
+     ],
+     "interval_method": "bca",
+     "simulated_coverage": {
+      "lognormal_skew": 0.9695,
+      "normal": 0.988,
+      "rare_extreme_negative": 0.945,
+      "student_t3": 0.9735,
+      "two_point_outlier": 0.954
+     }
+    },
+    "t": {
+     "alpha": 0.0071428571428571435,
+     "episodes": 60,
+     "interval": [
+      -3.566719488069702,
+      2.6914499448119678
+     ],
+     "interval_method": "t",
+     "simulated_coverage": {
+      "lognormal_skew": 0.957,
+      "normal": 0.9935,
+      "rare_extreme_negative": 0.9185,
+      "student_t3": 0.9945,
+      "two_point_outlier": 0.956
+     }
+    }
+   },
+   "simulated_coverage": {
+    "lognormal_skew": 0.9615,
+    "normal": 0.989,
+    "rare_extreme_negative": 0.933,
+    "student_t3": 0.9855,
+    "two_point_outlier": 0.956
+   }
+  }
+ ],
+ "role": "primary family, Bonferroni over 7"
+}

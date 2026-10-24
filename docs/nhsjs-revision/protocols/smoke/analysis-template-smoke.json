@@ -1,0 +1,90 @@
+{
+ "decision_id": "NHSJS-R1-SMOKE",
+ "evaluation": {
+  "count_rule": "max1_round",
+  "denominator_min": {
+   "L2": 1e-08,
+   "Q": 1e-12,
+   "RMS": 1e-08
+  },
+  "grid_percent": [
+   0,
+   1,
+   5,
+   10,
+   20,
+   30,
+   50,
+   75,
+   100
+  ],
+  "random_permutations": {
+   "language": 64,
+   "vision": 32
+  },
+  "random_seed": 950007
+ },
+ "numerics": {
+  "adaptive": {
+   "max_intervals": 9,
+   "rtol": 0.0001,
+   "snapshot_evaluations": [
+    105,
+    210
+   ]
+  },
+  "comparator_rule": "T64",
+  "gauss_legendre": [
+   32,
+   64
+  ],
+  "historical_budgets": [
+   64
+  ],
+  "levels": 6,
+  "qualification_triple": [
+   "A4",
+   "A3GL64",
+   "A2T64"
+  ],
+  "store_rules": {
+   "language": "all",
+   "state": "all",
+   "vision": [
+    "T64",
+    "E64"
+   ]
+  }
+ },
+ "purpose": "Non-scientific smoke: bit-identity gates, repeatability, timings, memory and the Month 8 replay settings.",
+ "rankings": {
+  "fp32_rules": [
+   "A2T64",
+   "A3GL64",
+   "A4"
+  ],
+  "ig_rules": [
+   "T64",
+   "E64"
+  ],
+  "path_gradient_rules": [
+   "T64"
+  ]
+ },
+ "recorded_before_execution": true,
+ "schema": "nhsjs_revision_gpu_protocol_v1",
+ "strict_settings": {
+  "cublas_workspace_config": ":4096:8",
+  "cuda_matmul_allow_tf32": false,
+  "cudnn_allow_tf32": false,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "deterministic_algorithms": true,
+  "deterministic_warn_only": false,
+  "float32_matmul_precision": "highest"
+ },
+ "verification": {
+  "levels": 6,
+  "repeats": 3
+ }
+}

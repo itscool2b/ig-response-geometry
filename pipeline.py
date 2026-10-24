@@ -20,6 +20,7 @@ kept separate because faithfulness and sanity iterate over tasks.
 """
 
 import os
+import re
 import sys
 import subprocess
 from pathlib import Path
@@ -34,6 +35,20 @@ from experiment_io import file_hash, object_hash
 from per_step_attribution import MANISKILL_INDICES
 
 CONTROL_FREQ = 25
+CONFIG_170M = Path(__file__).resolve().parent / "configs" / "base_170m.yaml"
+FULL_REVISION = re.compile(r"[0-9a-f]{40}")
+
+
+def resolve_revision(hub, repo_id, revision):
+    """Return the commit for revision; a full commit id needs no network call.
+
+    A pinned 40-character commit is used as given, so a run whose models are
+    already cached works with HF_HUB_OFFLINE=1. Branch and tag names still
+    resolve through model_info.
+    """
+    if isinstance(revision, str) and FULL_REVISION.fullmatch(revision):
+        return revision
+    return hub.model_info(repo_id, revision=revision).sha
 
 
 def load_pipeline(model="170m", enable_checkpoint=True, solver_steps=None, *,
@@ -91,7 +106,7 @@ def load_pipeline(model="170m", enable_checkpoint=True, solver_steps=None, *,
     from huggingface_hub import HfApi, snapshot_download, hf_hub_download
     hub = HfApi()
     vision_id = "google/siglip-so400m-patch14-384"
-    vision_revision = hub.model_info(vision_id, revision=vision_revision).sha
+    vision_revision = resolve_revision(hub, vision_id, vision_revision)
     vision_path = snapshot_download(vision_id, revision=vision_revision,
                                    allow_patterns=["*.json", "*.safetensors", "*.bin", "*.model"])
     print("loading SigLIP...")
@@ -119,7 +134,7 @@ def load_pipeline(model="170m", enable_checkpoint=True, solver_steps=None, *,
         img_tokens_baseline = baseline_tokens.reshape(1, -1, vision_model.hidden_size)
 
     if model == "170m":
-        config_path = "configs/base_170m.yaml"
+        config_path = str(CONFIG_170M)
     else:
         config_path = str(source / "configs/base.yaml")
     with open(config_path) as f:
@@ -157,7 +172,7 @@ def load_pipeline(model="170m", enable_checkpoint=True, solver_steps=None, *,
         identity["checkpoint"] = load_checkpoint(runner, checkpoint_path)
     else:
         model_id = f"robotics-diffusion-transformer/rdt-{model}"
-        model_revision = hub.model_info(model_id, revision=model_revision).sha
+        model_revision = resolve_revision(hub, model_id, model_revision)
         weight_path = hf_hub_download(model_id, "pytorch_model.bin", revision=model_revision)
         identity.update(model_repository=model_id, model_revision=model_revision)
         identity["checkpoint"] = load_checkpoint(runner, weight_path)

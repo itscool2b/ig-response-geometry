@@ -59,6 +59,17 @@ DOCUMENTS = (
     "paper/paper.tex", "paper/appendix_aliasing.tex", "paper/references.bib", "paper/tmlr.sty", "paper/tmlr.bst",
     "paper/tmlr-LICENSE", "paper/tmlr-source.json",
 )
+# NHSJS revision R1 (2026-10-23): the CPU revision analyses, the GPU campaign code and its protocols.
+# Each is packaged when present, so earlier commits still package exactly as before.
+REVISION_R1_PREFIXES = ("analysis/completeness_audit/", "analysis/language_groups/", "analysis/revision_gpu/",
+                        "docs/nhsjs-revision/protocols/", "docs/nhsjs-revision/regeneration/")
+REVISION_R1_FILES = (
+    "revision_numerics.py", "ig_quadrature.py", "scripts/regenerate_result.py", "scripts/capture_identity.py",
+    "scripts/launch_strict.py", "scripts/prepare_pinned_models.py", "scripts/build_regeneration_kit.py",
+    "scripts/build_regeneration_code.py", "scripts/build_reviewer_archive.py", "scripts/make_revision_protocol.py",
+    "scripts/build_m8_overlay.py", "scripts/build_deploy_archive.py", "scripts/revision_pod.sh",
+)
+T5_TOKENIZER = "analysis/language_groups/vendor/spiece.model"
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
     "tests/test_paper_packaging_paths.py", "tests/test_research_supplement.py",
     "tests/test_approved_assembly.py"})
@@ -144,7 +155,12 @@ def working_snapshot(root, revision="HEAD"):
     """Add only reviewed new paths to the tracked inventory; never sweep a tree."""
     root = Path(root).resolve()
     commit, index = snapshot(root, revision)
-    candidates = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | set(PENDING_ADDITIONS) | set(REVISION_FILES)
+    candidates = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | set(PENDING_ADDITIONS) | set(REVISION_FILES) | \
+        set(REVISION_R1_FILES)
+    for prefix in REVISION_R1_PREFIXES:
+        if (root / prefix).is_dir():
+            candidates.update(path.relative_to(root).as_posix() for path in (root / prefix).rglob("*")
+                              if path.is_file() and "__pycache__" not in path.parts)
     reporting = root / "analysis/manuscript_revision"
     if reporting.is_dir():
         candidates.update(path.relative_to(root).as_posix() for path in reporting.rglob("*")
@@ -235,6 +251,7 @@ def collect(root, revision, extra_identifiers=(), *, working_copy=False):
     selected = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | {manifest_path}
     selected.update(p for p in index if p.startswith("analysis/numerical_case/"))
     selected.update(p for p in index if p.startswith("analysis/paired_rescoring/"))
+    selected.update(p for p in index if p.startswith(REVISION_R1_PREFIXES) or p in REVISION_R1_FILES)
     if b"\\bibliographystyle{nhsjs}" in read("paper/paper.tex"):
         selected.update(REVISION_FILES)
         selected.update(p for p in index if p.startswith("analysis/manuscript_revision/")
@@ -517,6 +534,11 @@ and are not included. This package does not perform a journal submission.
     notice = sampler.split("Original sampler license:\n", 1)[1].split('"""', 1)[0].strip()
     contents["THIRD_PARTY_NOTICES.txt"] = ("rdt_sampling.py and configs/base_170m.yaml derive from the official RDT project.\n"
         "Source: https://github.com/thu-ml/RoboticsDiffusionTransformer/tree/cd79363a1387e8f81c7724d070ef7e45fd23150f\n\n" + notice + "\n").encode()
+    if T5_TOKENIZER in contents:
+        contents["THIRD_PARTY_NOTICES.txt"] += (
+            "\n" + T5_TOKENIZER + " is the SentencePiece model of google/t5-v1_1-xxl at revision\n"
+            "3db67ab1af984cf10548a73467f0e5bca2aaaeb2 (https://huggingface.co/google/t5-v1_1-xxl),\n"
+            "distributed under the Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0).\n").encode()
     package_manifest = dict(kind="private_anonymous_research_supplement_candidate" if private_anonymous_candidate else "identified_research_supplement",
         status="unapproved_for_external_distribution_or_submission" if private_anonymous_candidate else "working_draft_not_submission",
         source_kind=audit.get("source_kind", "committed_git_blobs"),

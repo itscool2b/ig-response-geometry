@@ -1,0 +1,51 @@
+{
+ "command": [
+  "/workspace/tmlr/venv/bin/python",
+  "/workspace/nhsjs/code/nhsjs-r1-3-anonymous/revision_numerics.py",
+  "--protocol",
+  "/workspace/nhsjs/protocols/r1-p.json",
+  "--bank",
+  "P",
+  "--phases",
+  "bf16,scoring",
+  "--worker",
+  "60",
+  "--workers",
+  "120",
+  "--out",
+  "/workspace/fresh-anonymous"
+ ],
+ "context": "e0030-c017",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+ "kind": "gpu_regeneration",
+ "phases": {
+  "bf16": {
+   "maps": {
+    "differing": {},
+    "extra": [],
+    "identical": 596,
+    "missing": []
+   },
+   "rankings_bytes_equal": true,
+   "record_equal_without_timing": true
+  },
+  "scoring": {
+   "areas": {
+    "both_undefined": 0,
+    "compared": 2466,
+    "definedness_mismatch": [],
+    "max_abs_normalized": 0.0,
+    "max_abs_raw": 0.0,
+    "rankings_extra": [],
+    "rankings_missing": []
+   },
+   "record_equal_without_timing": true
+  }
+ },
+ "status": "bit_identical",
+ "tolerance": {
+  "abs_auc": 0.02,
+  "relative_l1": 0.05,
+  "spearman": 0.95
+ }
+}

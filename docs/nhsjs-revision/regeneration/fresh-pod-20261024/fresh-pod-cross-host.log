@@ -1,0 +1,150 @@
+=== e0008-c024 GPU 02:00:10Z
+loading SigLIP...
+OVERRIDE num_inference_timesteps 5 -> 5
+loading RDT-170m backbone from /workspace/nhsjs/code/nhsjs-r1-3/configs/base_170m.yaml...
+Diffusion params: 1.662299e+08
+gradient checkpointing DISABLED (14 blocks)
+{"bank": "P", "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition", "event": "worker_start", "fp32_conversion": null, "phases": ["bf16", "scoring"], "pid": 4799, "protocol_sha256": "da427aca9c0e48d42e473ede1665e809f5a190116950059ccce86240a86d0128", "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "sources": {"checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e", "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35", "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772", "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0", "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c", "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2", "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12", "per_step_attribution.py": "e52650f1fca058ca7cc30f8503c5f6dd292233dfe1a6c13256f7f8d209dcfaeb", "pipeline.py": "7ebdda90fa1c705c4e87434e6b2d4325b80ccac16c9662bc93190314b3fce32e", "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7", "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd", "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"}, "startup": {"effective_cublas_workspace_config": ":4096:8", "inherited_cublas_workspace_config": null, "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "torch_not_preimported": true}, "unix": 1792807220.4432192, "worker": 17, "workers": 120}
+{"context": "e0008-c024", "event": "phase_start", "phase": "bf16", "unix": 1792807220.4486754}
+{"context": "e0008-c024", "event": "phase_complete", "phase": "bf16", "unix": 1792807571.7652817, "wall_seconds": 351.31660506498883}
+{"context": "e0008-c024", "event": "phase_start", "phase": "scoring", "unix": 1792807571.7788885}
+{"context": "e0008-c024", "event": "phase_complete", "phase": "scoring", "unix": 1792807635.1586113, "wall_seconds": 63.37972270700266}
+{"completed_phases": 2, "event": "worker_end", "unix": 1792807635.1615882}
+{
+ "command": [
+  "/workspace/tmlr/venv/bin/python",
+  "/workspace/nhsjs/code/nhsjs-r1-3/revision_numerics.py",
+  "--protocol",
+  "/workspace/nhsjs/protocols/r1-p.json",
+  "--bank",
+  "P",
+  "--phases",
+  "bf16,scoring",
+  "--worker",
+  "17",
+  "--workers",
+  "120",
+  "--out",
+  "/workspace/fresh-e0008-c024"
+ ],
+ "context": "e0008-c024",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+ "kind": "gpu_regeneration",
+ "phases": {
+  "bf16": {
+   "maps": {
+    "differing": {},
+    "extra": [],
+    "identical": 596,
+    "missing": []
+   },
+   "rankings_bytes_equal": true,
+   "record_equal_without_timing": true
+  },
+  "scoring": {
+   "areas": {
+    "both_undefined": 0,
+    "compared": 2466,
+    "definedness_mismatch": [],
+    "max_abs_normalized": 0.0,
+    "max_abs_raw": 0.0,
+    "rankings_extra": [],
+    "rankings_missing": []
+   },
+   "record_equal_without_timing": true
+  }
+ },
+ "status": "bit_identical",
+ "tolerance": {
+  "abs_auc": 0.02,
+  "relative_l1": 0.05,
+  "spearman": 0.95
+ }
+}
+e0008-c024 GPU status: bit_identical | device: NVIDIA RTX PRO 6000 Blackwell Server Edition
+=== e0008-c024 CPU 02:07:17Z
+{
+ "bank": "P",
+ "contexts": 1,
+ "kind": "cpu_regeneration",
+ "modality_results_authenticated": 3,
+ "phases_authenticated": 2,
+ "rows_fingerprint_sha256": "6304804ccb28146d007c6a75545aa51d0b2bb665f450b89b017e673f280cad8e",
+ "vision_rows": 56
+}
+=== e0009-c012 GPU 02:07:19Z
+loading SigLIP...
+OVERRIDE num_inference_timesteps 5 -> 5
+loading RDT-170m backbone from /workspace/nhsjs/code/nhsjs-r1-3/configs/base_170m.yaml...
+Diffusion params: 1.662299e+08
+gradient checkpointing DISABLED (14 blocks)
+{"bank": "P", "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition", "event": "worker_start", "fp32_conversion": null, "phases": ["bf16", "scoring"], "pid": 5561, "protocol_sha256": "da427aca9c0e48d42e473ede1665e809f5a190116950059ccce86240a86d0128", "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "sources": {"checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e", "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35", "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772", "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0", "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c", "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2", "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12", "per_step_attribution.py": "e52650f1fca058ca7cc30f8503c5f6dd292233dfe1a6c13256f7f8d209dcfaeb", "pipeline.py": "7ebdda90fa1c705c4e87434e6b2d4325b80ccac16c9662bc93190314b3fce32e", "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7", "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd", "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"}, "startup": {"effective_cublas_workspace_config": ":4096:8", "inherited_cublas_workspace_config": null, "settings": {"cublas_workspace_config": ":4096:8", "cuda_matmul_allow_tf32": false, "cudnn_allow_tf32": false, "cudnn_benchmark": false, "cudnn_deterministic": true, "deterministic_algorithms": true, "deterministic_warn_only": false, "float32_matmul_precision": "highest"}, "torch_not_preimported": true}, "unix": 1792807655.150114, "worker": 18, "workers": 120}
+{"context": "e0009-c012", "event": "phase_start", "phase": "bf16", "unix": 1792807655.1734343}
+{"context": "e0009-c012", "event": "phase_complete", "phase": "bf16", "unix": 1792808015.0442908, "wall_seconds": 359.8708579749946}
+{"context": "e0009-c012", "event": "phase_start", "phase": "scoring", "unix": 1792808015.05904}
+{"context": "e0009-c012", "event": "phase_complete", "phase": "scoring", "unix": 1792808078.747182, "wall_seconds": 63.688140929007204}
+{"completed_phases": 2, "event": "worker_end", "unix": 1792808078.7501867}
+{
+ "command": [
+  "/workspace/tmlr/venv/bin/python",
+  "/workspace/nhsjs/code/nhsjs-r1-3/revision_numerics.py",
+  "--protocol",
+  "/workspace/nhsjs/protocols/r1-p.json",
+  "--bank",
+  "P",
+  "--phases",
+  "bf16,scoring",
+  "--worker",
+  "18",
+  "--workers",
+  "120",
+  "--out",
+  "/workspace/fresh-e0009-c012"
+ ],
+ "context": "e0009-c012",
+ "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+ "kind": "gpu_regeneration",
+ "phases": {
+  "bf16": {
+   "maps": {
+    "differing": {},
+    "extra": [],
+    "identical": 596,
+    "missing": []
+   },
+   "rankings_bytes_equal": true,
+   "record_equal_without_timing": true
+  },
+  "scoring": {
+   "areas": {
+    "both_undefined": 0,
+    "compared": 2466,
+    "definedness_mismatch": [],
+    "max_abs_normalized": 0.0,
+    "max_abs_raw": 0.0,
+    "rankings_extra": [],
+    "rankings_missing": []
+   },
+   "record_equal_without_timing": true
+  }
+ },
+ "status": "bit_identical",
+ "tolerance": {
+  "abs_auc": 0.02,
+  "relative_l1": 0.05,
+  "spearman": 0.95
+ }
+}
+e0009-c012 GPU status: bit_identical | device: NVIDIA RTX PRO 6000 Blackwell Server Edition
+=== e0009-c012 CPU 02:14:41Z
+{
+ "bank": "P",
+ "contexts": 1,
+ "kind": "cpu_regeneration",
+ "modality_results_authenticated": 3,
+ "phases_authenticated": 2,
+ "rows_fingerprint_sha256": "d1e2e0a18911d85be8763b93d3376ea48f271a4f61074e1348754564c7c0a19d",
+ "vision_rows": 56
+}
+=== done 02:14:42Z
+ALLDONE

@@ -1,0 +1,182 @@
+"""Assemble the R1 reviewer archive for Must Fix 2: what a reviewer needs to check the R1 results.
+
+Layout under OUT:
+  protocols/      docs/nhsjs-revision/protocols/r1 (collection, selection, analysis plan and amendments,
+                  production protocols, banks)
+  results/        the R1 analysis directory (tables, figures, checks)
+  runs/           record.json, rankings.json and completion.json of every completed phase; the tensors
+                  stay out and runs/TENSORS.sha256 lists each one with the hash its completion record binds.
+                  Also every worker event log (<bank>/workers/*.jsonl) and the failure.json of every failed
+                  attempt; runs/ATTEMPTS.sha256 lists every other file left in an attempt directory, and
+                  runs/ATTEMPT_DIRECTORIES.txt every attempt directory with its state (failed, or interrupted
+                  with or without files), empty ones included
+  collections/    the collection runs named by --collection (every executed call's inputs and records)
+  kit/            the regeneration kit, when given
+  regeneration/   the fresh-pod regeneration reports, logs and identity (docs/nhsjs-revision/regeneration/fresh-pod-*)
+  month8/         docs/nhsjs-revision/month8 (the recovered Month 8 bank, code snapshots, language inputs)
+  identity/       the pod identity captures
+  inventories/    the Must Fix 2 identity inventory and reproducibility classification
+  MANIFEST.sha256 every file above
+
+With --anonymous every file is scanned, as UTF-8 or else Latin-1 (gzip members unpacked), for the
+identifiers of the research-supplement packager, the surname, any --identifier token and personal
+machine paths (/Users/<name>/, /home/<name>/, C:\\Users\\); /workspace and /root are the pod mounts
+every RunPod container has and are not flagged. Any hit stops the build and removes the partial output.
+
+Usage: python scripts/build_reviewer_archive.py --results DIR --runs DIR --identity DIR
+         [--collection NAME=DIR ...] [--kit DIR] [--anonymous [--identifier TOKEN ...]] --out DIR
+"""
+import argparse
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import re
+import shutil
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from scripts.package_research_supplement import IDENTIFIERS, audit_tokens  # noqa: E402
+
+RECORD_FILES = ("record.json", "rankings.json", "completion.json")
+ARCHIVE_IDENTIFIERS = (*IDENTIFIERS, "bajpai")
+PERSONAL_PATH = re.compile(r"[A-Za-z]:[\\/]Users[\\/]|/Users/[^/\s\"']+/|/home/[^/\s\"']+/", re.I)
+INVENTORY_FILES = ("identities.json", "identities.md", "reproducibility_classification.json",
+                   "reproducibility_classification.md", "rec4_facts.csv")
+
+
+def sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def copy_tree(source, destination):
+    shutil.copytree(source, destination, ignore=shutil.ignore_patterns("*.lock", "__pycache__", ".DS_Store"))
+
+
+def copy_runs(runs, destination):
+    """Phase records of every completed phase, the hash list of the tensors left out, the worker
+    event logs, and the failure records of failed attempts with a hash list of what else they kept."""
+    runs = Path(runs)
+    destination.mkdir(parents=True, exist_ok=True)
+    tensors = []
+    for completion in sorted(runs.glob("*/e*-c*/*/completion.json")):
+        phase_dir = completion.parent
+        target = destination / phase_dir.relative_to(runs)
+        target.mkdir(parents=True, exist_ok=True)
+        for name in RECORD_FILES:
+            if (phase_dir / name).is_file():
+                shutil.copyfile(phase_dir / name, target / name)
+        bound = json.loads(completion.read_text())["files_sha256"]
+        tensors += [f"{digest}  {(phase_dir / name).relative_to(runs)}\n" for name, digest in sorted(bound.items())
+                    if name not in RECORD_FILES]
+    (destination / "TENSORS.sha256").write_text("".join(tensors))
+    for log in sorted(runs.glob("*/workers/*.jsonl")):
+        target = destination / log.relative_to(runs)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(log, target)
+    kept, failures, states = [], 0, []
+    for directory in sorted(p for p in runs.glob("*/e*-c*/attempts/*") if p.is_dir()):
+        files = [p for p in directory.rglob("*") if p.is_file()]
+        state = ("failed (failure.json kept)" if (directory / "failure.json").is_file()
+                 else f"interrupted, {len(files)} files listed in ATTEMPTS.sha256" if files else "interrupted, empty")
+        states.append(f"{directory.relative_to(runs)}/\t{state}\n")
+    (destination / "ATTEMPT_DIRECTORIES.txt").write_text("".join(states))
+    for path in sorted(p for p in runs.glob("*/e*-c*/attempts/**/*") if p.is_file()):
+        relative = path.relative_to(runs)
+        if path.name == "failure.json":
+            (destination / relative).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(path, destination / relative)
+            failures += 1
+        else:
+            kept.append(f"{sha256(path)}  {relative}\n")
+    (destination / "ATTEMPTS.sha256").write_text("".join(kept))
+    return len(tensors), failures
+
+
+def identifying_hits(root, extra=()):
+    """Files holding an identifier or a personal machine path; undecodable bytes are read as Latin-1."""
+    tokens = (*ARCHIVE_IDENTIFIERS, *audit_tokens(list(extra)))
+    hits = []
+    for path in sorted(p for p in Path(root).rglob("*") if p.is_file()):
+        data = path.read_bytes()
+        if path.suffix == ".gz":
+            try:
+                data = gzip.decompress(data)
+            except OSError:
+                pass
+        try:
+            text = data.decode("utf-8")
+        except UnicodeDecodeError:
+            text = data.decode("latin-1")
+        found = [token for token in tokens if token in text.lower()]
+        if PERSONAL_PATH.search(text):
+            found.append("personal machine path")
+        if found:
+            hits.append((str(path.relative_to(root)), found))
+    return hits
+
+
+SOURCES = dict(protocols=ROOT / "docs/nhsjs-revision/protocols/r1", month8=ROOT / "docs/nhsjs-revision/month8",
+               inventories=ROOT / "docs/nhsjs-revision/mf2",
+               regeneration=ROOT / "docs/nhsjs-revision/regeneration/fresh-pod-20261024")
+
+
+def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=False, identifiers=(),
+          sources=SOURCES):
+    out = Path(out)
+    if out.exists():
+        raise FileExistsError(out)
+    out.mkdir(parents=True)
+    try:
+        copy_tree(sources["protocols"], out / "protocols")
+        copy_tree(results, out / "results")
+        tensors, failures = copy_runs(Path(runs), out / "runs")
+        for name, source in collections:
+            copy_tree(source, out / "collections" / name)
+        if kit:
+            copy_tree(kit, out / "kit")
+        if sources.get("regeneration") and Path(sources["regeneration"]).is_dir():
+            copy_tree(sources["regeneration"], out / "regeneration")
+        copy_tree(sources["month8"], out / "month8")
+        copy_tree(identity, out / "identity")
+        (out / "inventories").mkdir()
+        for name in INVENTORY_FILES:
+            shutil.copyfile(Path(sources["inventories"]) / name, out / "inventories" / name)
+        if anonymous:
+            hits = identifying_hits(out, identifiers)
+            if hits:
+                raise ValueError(f"Identifying text in the anonymous archive ({len(hits)} files): {hits[:10]}")
+        files = sorted(p for p in out.rglob("*") if p.is_file())
+        (out / "MANIFEST.sha256").write_text("".join(f"{sha256(p)}  {p.relative_to(out)}\n" for p in files))
+    except BaseException:
+        shutil.rmtree(out, ignore_errors=True)
+        raise
+    return dict(files=len(files), bytes=sum(p.stat().st_size for p in files), tensors_listed=tensors,
+                attempt_failures=failures)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--results", required=True)
+    parser.add_argument("--runs", required=True)
+    parser.add_argument("--identity", required=True)
+    parser.add_argument("--collection", action="append", default=[], help="NAME=DIR")
+    parser.add_argument("--kit")
+    parser.add_argument("--anonymous", action="store_true")
+    parser.add_argument("--identifier", action="append", default=[],
+                        help="extra token the anonymous scan must not find (case-insensitive)")
+    parser.add_argument("--out", required=True)
+    args = parser.parse_args()
+    collections = [tuple(item.split("=", 1)) for item in args.collection]
+    print(json.dumps(build(args.out, results=args.results, runs=args.runs, identity=args.identity,
+                           collections=collections, kit=args.kit, anonymous=args.anonymous,
+                           identifiers=args.identifier)))
+
+
+if __name__ == "__main__":
+    main()

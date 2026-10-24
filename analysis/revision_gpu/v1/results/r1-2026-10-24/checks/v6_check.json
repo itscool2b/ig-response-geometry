@@ -1,0 +1,1424 @@
+{
+ "contexts": {
+  "peginsertionside-170m-e000-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "peginsertionside-170m-e000-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "peginsertionside-170m-e001-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "peginsertionside-170m-e001-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "pickcube-170m-e000-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "pickcube-170m-e000-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "pickcube-170m-e001-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "pickcube-170m-e001-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "pickcube-1b-e001-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [],
+   "status": "compared"
+  },
+  "pickcube-1b-e001-c012": {
+   "status": "missing"
+  },
+  "picksingleycb-170m-e000-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [],
+   "status": "compared"
+  },
+  "picksingleycb-170m-e000-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [],
+   "status": "compared"
+  },
+  "picksingleycb-170m-e001-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "picksingleycb-170m-e001-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "stackcube-170m-e000-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "stackcube-170m-e000-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "stackcube-170m-e001-c000": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "stackcube-170m-e001-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "state/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [
+    "state/N/A2T1024",
+    "state/Q/A2T1024"
+   ],
+   "status": "compared"
+  },
+  "stackcube-1b-e001-c012": {
+   "cache": {
+    "action_mask": true,
+    "ctrl_freqs": true,
+    "img_adapted": true,
+    "img_adapted_bl": true,
+    "initial_noise": true,
+    "lang_adapted": true,
+    "lang_adapted_bl": true,
+    "lang_attn_mask": true,
+    "ref_action": true,
+    "state_input_actual": true,
+    "state_input_baseline": true,
+    "state_traj_actual": true
+   },
+   "maps": {
+    "language/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "language/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/N/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T128": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T256": {
+     "bit_identical": true,
+     "shape_equal": true
+    },
+    "vision/Q/A2T512": {
+     "bit_identical": true,
+     "shape_equal": true
+    }
+   },
+   "skipped_not_stored": [],
+   "status": "compared"
+  }
+ },
+ "summary": {
+  "bit_identical": 248,
+  "budgets_compared": [
+   128,
+   256,
+   512
+  ],
+  "budgets_skipped": [
+   1024
+  ],
+  "by_status": {
+   "compared": 18,
+   "missing": 1
+  },
+  "cache_keys_compared": 216,
+  "cache_keys_equal": 216,
+  "compared_contexts_with_no_map": [],
+  "contexts": 19,
+  "maps_compared": 248,
+  "maps_skipped_not_stored": 28,
+  "max_relative_l1": null,
+  "shape_mismatches": 0
+ }
+}

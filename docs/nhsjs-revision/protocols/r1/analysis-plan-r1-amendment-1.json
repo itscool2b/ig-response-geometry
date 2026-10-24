@@ -1,0 +1,20 @@
+{
+ "amendment": 1,
+ "amends": {
+  "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1.json",
+  "sha256": "742571af61b70a65012833a4ec562593e9a71ce2ebbed7d444d196560c3f7684"
+ },
+ "changes": [
+  "The percentile interval stays the primary interval for every contrast, as registered.",
+  "BCa and t intervals are added as sensitivity analyses for the seven primary contrasts and the decision rule's best-minus-second intervals.",
+  "Every reported interval is accompanied by the simulated coverage of its method at the realized episode count, from the file above.",
+  "The number of episodes with any call below -1 in each compared quantity is reported, so readers can see whether the rare-extreme regime applies."
+ ],
+ "decision_id": "NHSJS-R1",
+ "reason": "The pre-registered coverage check (analysis/revision_gpu/v1/coverage.py, results in analysis/revision_gpu/v1/results/coverage-before-unblinding.json, sha256 4b7a6db7b18c85ac0473282c85ab967128b1adec7eaae8baa8eed9e618b95588) found that percentile episode-bootstrap intervals undercover at 30 to 60 episodes when episode effects are skewed or include rare extreme negative episodes: nominal 95% gave 0.873 to 0.910 (lognormal skew) and 0.759 to 0.880 (5% extreme episodes). No interval type fixed this uniformly: the t interval was best for symmetric heavy tails, BCa for skew and rare extremes at 60 episodes.",
+ "recorded_before_unblinding": true,
+ "recorded_utc": "2026-10-23T20:31:12Z",
+ "schema": "nhsjs_revision_analysis_plan_amendment_v1",
+ "state_at_recording": "No production scoring or attribution record had been read. Only the non-scientific smoke outputs (seeds 950100-950699) had been inspected.",
+ "unchanged": "Methods, controls, responses, metrics, primary family, multiplicity rule, decision rule and populations."
+}

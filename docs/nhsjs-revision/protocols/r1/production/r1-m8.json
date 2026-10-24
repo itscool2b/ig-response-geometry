@@ -1,0 +1,512 @@
+{
+ "banks": {
+  "M8-peginsertionside-170m": {
+   "adaptive_contexts": "first_contexts:1",
+   "bank": "/workspace/nhsjs/banks/m8/peginsertionside-170m.json",
+   "bank_sha256": "2ef03111f5b1121501b8d82e6cff1b6c517f5c2b2eb8570a4f8e26083eac6f74",
+   "fp32_contexts": "all",
+   "full_node_contexts": "none",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/peginsertionside-170m/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "170m",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "historical_budgets": [
+     64,
+     128
+    ],
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "PegInsertionSide-v1",
+   "verify_contexts": "none"
+  },
+  "M8-pickcube-170m": {
+   "adaptive_contexts": "first_contexts:1",
+   "bank": "/workspace/nhsjs/banks/m8/pickcube-170m.json",
+   "bank_sha256": "96662cafad86b6004743bffc7d5798d4d6306431c3546d7328ad2e082f224db9",
+   "fp32_contexts": "all",
+   "full_node_contexts": "first_contexts:1",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/pickcube-170m/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "170m",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "PickCube-v1",
+   "verify_contexts": "first_contexts:1"
+  },
+  "M8-pickcube-1b": {
+   "adaptive_contexts": "none",
+   "bank": "/workspace/nhsjs/banks/m8/pickcube-1b.json",
+   "bank_sha256": "7bd1af938760d55b239bae5026dc1de2daae6dd7f86bd350c2d0ae527c2c4f37",
+   "checkpoint_path": "/workspace/huggingface/hub/models--robotics-diffusion-transformer--maniskill-model/snapshots/9622afab2b7ce2312a6cf1febc526928589b77eb/rdt/mp_rank_00_model_states.pt",
+   "fp32_contexts": "all",
+   "full_node_contexts": "none",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/pickcube-1b/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "1b",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "PickCube-v1",
+   "verify_contexts": "none"
+  },
+  "M8-picksingleycb-170m": {
+   "adaptive_contexts": "first_contexts:1",
+   "bank": "/workspace/nhsjs/banks/m8/picksingleycb-170m.json",
+   "bank_sha256": "6e87272dab138ce756f44154c827d7e40d289d781267d9f5e59713371cb763db",
+   "fp32_contexts": "all",
+   "full_node_contexts": "none",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/picksingleycb-170m/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "170m",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "historical_budgets": [
+     64,
+     128
+    ],
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "PickSingleYCB-v1",
+   "verify_contexts": "none"
+  },
+  "M8-stackcube-170m": {
+   "adaptive_contexts": "first_contexts:1",
+   "bank": "/workspace/nhsjs/banks/m8/stackcube-170m.json",
+   "bank_sha256": "ffd6137cb4e435985c7ef16ad57c4a7d7a8514d9e1f22d50fc5bba309cb31e0c",
+   "fp32_contexts": "all",
+   "full_node_contexts": "none",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/stackcube-170m/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "170m",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "StackCube-v1",
+   "verify_contexts": "none"
+  },
+  "M8-stackcube-1b": {
+   "adaptive_contexts": "none",
+   "bank": "/workspace/nhsjs/banks/m8/stackcube-1b.json",
+   "bank_sha256": "ac133110b435f66aeaa0962eabf1e7518b4429c4f1059450668e8ffe96dd67db",
+   "checkpoint_path": "/workspace/huggingface/hub/models--robotics-diffusion-transformer--maniskill-model/snapshots/9622afab2b7ce2312a6cf1febc526928589b77eb/rdt/mp_rank_00_model_states.pt",
+   "fp32_contexts": "all",
+   "full_node_contexts": "none",
+   "full_node_modalities": [
+    "state"
+   ],
+   "lang_dir": "/workspace/tmlr/lang-20260930",
+   "metrics": "/workspace/tmlr/context-bank-v1/stackcube-1b/metrics.jsonl",
+   "modalities": [
+    "vision",
+    "language",
+    "state"
+   ],
+   "model": "1b",
+   "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+   "numerics_override": {
+    "store_rules": {
+     "language": "all",
+     "state": "all",
+     "vision": [
+      "T16",
+      "T32",
+      "T64",
+      "T128",
+      "T256",
+      "T512",
+      "E16",
+      "E32",
+      "E64",
+      "E128",
+      "E256",
+      "E512",
+      "M64",
+      "M256"
+     ]
+    }
+   },
+   "source_replay_settings": {
+    "cublas_workspace_config": ":4096:8",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "cudnn_benchmark": false,
+    "cudnn_deterministic": true,
+    "deterministic_algorithms": true,
+    "deterministic_warn_only": false,
+    "float32_matmul_precision": "highest"
+   },
+   "source_sha256": {
+    "checkpoint_contract.py": "9ee97510bc702ecb8832d61fb358c4495cfa39a17f1432b7b98ede9e735c871e",
+    "experiment_io.py": "c1bb282e3d251c97cab493b026cdfdc929f0092d0cc691fd859d1bd787f53d35",
+    "faithfulness.py": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+    "fp32_probe_cache.py": "413fbfceb792ad7b4a9a68d38c73fce31ad622d0ade7bfda4e5bbe790cc397b0",
+    "ig_quadrature.py": "8c05ac0cffca097c91a4483ef324bd766878c87dda84af0045c28ae2bfec3b4c",
+    "integrated_gradients.py": "aa71d8cf9d32d3d7a8625658f2d6c47ec67e796a5a951d653e27d9e2ac3ab6b2",
+    "paired_comparison.py": "05513f0ba463545747778355df99422564a617f7dd4007d95baef1e1344f9b12",
+    "per_step_attribution.py": "137f4e44e08feb8bd2326224f392bcf5a25d65396bed08c0bd105577d34e2a73",
+    "pipeline.py": "a66c4b9fda9948a0b39b09ab8d04eeedb283ece0758a15dc3ba0e00cf767109a",
+    "rdt_sampling.py": "90cf039d082060a3c1693d02820a60c402db7b30dc39f65f4c5db821b27233d7",
+    "revision_numerics.py": "6ca04e5400ed5a978d651c4f8188dddb7ab8fa42b0aceeff71e97ecaca5e10fd",
+    "scripts/validate_downstream_precision.py": "f56526fe64fae17c36f6e9dc969e40315cfcd96c88df039c2ff2ef7af53afa79"
+   },
+   "task": "StackCube-v1",
+   "verify_contexts": "none"
+  }
+ },
+ "decision_id": "NHSJS-R1",
+ "evaluation": {
+  "count_rule": "max1_round",
+  "denominator_min": {
+   "L2": 1e-08,
+   "Q": 1e-12,
+   "RMS": 1e-08
+  },
+  "grid_percent": [
+   0,
+   1,
+   5,
+   10,
+   20,
+   30,
+   50,
+   75,
+   100
+  ],
+  "random_permutations": {
+   "language": 64,
+   "vision": 32
+  },
+  "random_seed": 930007
+ },
+ "numerics": {
+  "adaptive": {
+   "max_intervals": 49,
+   "rtol": 0.0001,
+   "snapshot_evaluations": [
+    105,
+    231,
+    441,
+    861
+   ]
+  },
+  "comparator_rule": "T512",
+  "gauss_legendre": [
+   32,
+   64,
+   128
+  ],
+  "historical_budgets": [
+   64
+  ],
+  "levels": 9,
+  "qualification_triple": [
+   "A4",
+   "A3GL128",
+   "A2T512"
+  ],
+  "store_rules": {
+   "language": "all",
+   "state": "all",
+   "vision": [
+    "T64",
+    "T512",
+    "E64",
+    "M256"
+   ]
+  }
+ },
+ "purpose": "Must Fix 5 and 6 of the NHSJS review on the R1 banks and the Month 8 bank; see analysis-plan-r1.json.",
+ "rankings": {
+  "fp32_rules": [
+   "A2T512",
+   "A2T64",
+   "A2E64",
+   "A3GL128",
+   "A4"
+  ],
+  "ig_rules": [
+   "T512",
+   "T64",
+   "E64"
+  ],
+  "path_gradient_rules": [
+   "T512"
+  ]
+ },
+ "recorded_before_execution": true,
+ "schema": "nhsjs_revision_gpu_protocol_v1",
+ "strict_settings": {
+  "cublas_workspace_config": ":4096:8",
+  "cuda_matmul_allow_tf32": false,
+  "cudnn_allow_tf32": false,
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "deterministic_algorithms": true,
+  "deterministic_warn_only": false,
+  "float32_matmul_precision": "highest"
+ },
+ "verification": {
+  "levels": 9,
+  "repeats": 2
+ }
+}

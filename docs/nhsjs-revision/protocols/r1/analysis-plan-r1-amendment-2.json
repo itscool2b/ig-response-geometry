@@ -1,0 +1,39 @@
+{
+ "amendment": 2,
+ "amends": [
+  {
+   "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1.json",
+   "sha256": "742571af61b70a65012833a4ec562593e9a71ce2ebbed7d444d196560c3f7684"
+  },
+  {
+   "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1-amendment-1.json",
+   "sha256": "df6ba2dc81cc888cbff953a92d1fcc2def62d71c662abb2adeea20325529fb6a"
+  }
+ ],
+ "choices_the_plan_left_open": [
+  "Passing a fixed bar (route 3): a method passes a bar when its episode-mean deletion area on the complete-case population is at or below the bar. The method with the largest share of calls at or below the bar uses call-level shares within the complete-case population.",
+  "Ties: when several methods share the highest mean in one bootstrap draw, the probability_best credit for that draw is split equally among them. An exact tie in the means leaves the preferred method undetermined and is reported as a tie. A route that compares an undetermined preferred method is reported as undetermined, not as a change.",
+  "Replication banks (B1, S and each Month 8 stratum) report the seven primary contrasts with descriptive 95% intervals and no multiplicity claim.",
+  "Coverage: before unblinding, the coverage simulation is repeated at the realized complete-case episode counts, with a literal two-point outlier scenario (point masses at 0.1 and -3.0, 5% at -3.0) added beside the existing normal-mixture rare-extreme scenario. Every reported interval states the simulated coverage of its method at its episode count, or that no simulation exists at that count."
+ ],
+ "corrections_to_follow_the_plan_as_written": [
+  "Descriptive intervals are 95% percentile intervals: every method, fixed order and z-scaled advantage, and every difference outside the unique test. The level 0.05/4 is used only for the best-minus-second interval of the unique test, and 0.05/7 only for the seven primary contrasts on the primary bank.",
+  "The complete-case rule is applied as written. For each modality and direction, an episode enters a comparison only when every planned call has a defined area and a defined random-order reference for every ranking in the comparison, under both Q and N. Calls the collector planned but never reached count as planned calls and exclude their episode. Each excluded episode is reported with its reason.",
+  "Route 4 compares the preferred method on the complete-case population with the preferred method on all available calls. On all available calls, each method is averaged over its own defined calls, with episodes weighted equally.",
+  "The amendment-1 extreme count is the number of episodes with any call of the compared quantity below -1. It is reported for each primary contrast, for each method's advantage and for the best-minus-second difference.",
+  "BCa and t intervals accompany the best-minus-second intervals as well as the primary contrasts (amendment 1).",
+  "The round-rule sensitivity is computed from the stored responses, so no new forwards are needed. The max1_round and round schedules differ only where round gives zero groups, and the zero-group response is the curve's first value.",
+  "The nominal-axis area is reported beside the realized-fraction area. RMS is reported as its raw area in action units.",
+  "Numerics comparisons are reported against two labelled references and a reference is never compared with itself:\n  - the fp32 A2 T512 map, on every fp32 context;\n  - the A4 map, on the contexts where A4 converged.\nOn the A4 subset, the qualification test (A4, GL128 and A2 T512 within relative L1 1e-3 pairwise) and the resolution floor (largest pairwise disagreement) are computed.",
+  "The numerics tables also report:\n  - the deleted-set Jaccard at each schedule count;\n  - shares of top-5% overlap below 0.95;\n  - nonfinite score counts split by sign;\n  - contexts whose fp32 phase recorded a probe failure, counted separately.",
+  "Normalized-AUC changes are reported for every ranked arm against three references:\n  - the bf16 comparator A1 T512, on every context;\n  - the fp32 A2 T512 ranking, on fp32 contexts;\n  - the A4 ranking, where A4 converged.",
+  "Numerics summaries are given for the plan's populations: the Month 8 strata pooled (all available Month 8 contexts) and the new P bank, with per-bank detail beside them."
+ ],
+ "decision_id": "NHSJS-R1",
+ "reason": "An independent review of the analysis code against the plan, before any production outcome was read, found places where the code departed from the plan and places where the plan left a choice open. The code is corrected to the plan, and the open choices are fixed here before the analysis runs.",
+ "recorded_before_unblinding": true,
+ "recorded_utc": "2026-10-23T22:59:31Z",
+ "schema": "nhsjs_revision_analysis_plan_amendment_v1",
+ "state_at_recording": "No production methods-study or numerics outcome value had been read. Before this amendment, three things touched production outputs:\n  - an engineering run of the analysis driver on the contexts completed by about 22:45 UTC (P 6, B1 10, S 11, Month 8 1), inspected only for file names and row counts;\n  - the Month 8 v6 cross-check (bit identity of 16 maps on one context);\n  - the node check (bit identity of 1,428 stored rules against their saved node gradients).\nNeither check computes a planned outcome.",
+ "unchanged": "Methods, controls, responses, metrics, primary family, multiplicity rule, decision rule, bootstrap (draws, seed, resampling of episodes) and populations."
+}

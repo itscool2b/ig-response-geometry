@@ -1,0 +1,35 @@
+{
+ "schema": "nhsjs_revision_analysis_plan_amendment_v1",
+ "decision_id": "NHSJS-R1",
+ "amendment": 3,
+ "amends": [
+  {
+   "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1.json",
+   "sha256": "742571af61b70a65012833a4ec562593e9a71ce2ebbed7d444d196560c3f7684"
+  },
+  {
+   "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1-amendment-1.json",
+   "sha256": "df6ba2dc81cc888cbff953a92d1fcc2def62d71c662abb2adeea20325529fb6a"
+  },
+  {
+   "file": "docs/nhsjs-revision/protocols/r1/analysis-plan-r1-amendment-2.json",
+   "sha256": "06322b2cb7d5989bbbbb74cb97867ef7beb464bd7e6119c80117d813d249ec2e"
+  }
+ ],
+ "recorded_utc": "2026-10-24T00:10:05Z",
+ "recorded_before_unblinding": true,
+ "reason": "A second independent review of the analysis code, the regeneration scripts and the packaging, before the analysis ran on production outputs, found reporting gaps in the numerics tables and one place where the code departed from the plan's reference rule. The code follows the plan as corrected below; every addition is descriptive.",
+ "corrections_to_follow_the_plan_as_written": [
+  "The reference is A4 where it converges (plan). A context is qualified only when A4 converged and A4, GL128 and A2 T512 agree within relative L1 1e-3 pairwise; each row states which condition failed. A4's convergence test bounds the L1 error of the path-gradient integral, not of the attribution map, which weights each coordinate by its displacement; the pairwise map-level agreement is the check on the map.",
+  "Map comparisons cover every fp32 rule and budget the plan lists. Rules whose maps the worker did not store are taken from the worker's own comparison against the reference it used (the same compare_maps, computed on the GPU pod) and are labelled source worker; stored maps are recomputed from the stored tensors and carry the worker's value beside the recomputed one."
+ ],
+ "additions_descriptive_only": [
+  "Ranking agreement is also measured on the rankings the methods study scored (the scoring record's orders and group scores, with their tie rule): Spearman of the order positions, Spearman of the scored group scores, top-1, top-5% overlap and the deleted-set Jaccard at each realized count, for the amendment-2 pairs.",
+  "The A0 completeness residual is also reported with its map summed in fp32, beside the historical input-dtype sum, so the bf16 reduction can be told apart from the quadrature error.",
+  "Nodes whose forward raised are counted on their own, with their stage, sampler step and nonfinite count where the arm recorded them; their sign is reported as not recorded.",
+  "The verify phase's smoke gates (repeatability, pinned kernel, archived kernel) are reported as a table.",
+  "Budget figures draw every arm on the contexts that have an fp32 phase, so the bf16 and fp32 medians describe the same contexts."
+ ],
+ "unchanged": "Methods, controls, responses, metrics, primary family, multiplicity rule, decision rule, bootstrap (draws, seed, resampling of episodes), populations, the coverage plan of amendment 2 and every choice amendment 2 fixed.",
+ "state_at_recording": "No production methods-study outcome and no numerics summary over contexts had been computed or read. Since amendment 2, production outputs were touched in three ways:\n  - the node check on the synced contexts (bit identity of 2,808 stored rules against their saved node gradients);\n  - inspection of the record layout of one P context (e0000-c014) to place the new columns; the printed output included its stored vision Q comparison of A2 E1 against A4 (relative L1 0.953, group Spearman 0.549) and its A4 convergence log (2 intervals, converged);\n  - process and completion counts on the pods.\nNone of these is a planned outcome."
+}

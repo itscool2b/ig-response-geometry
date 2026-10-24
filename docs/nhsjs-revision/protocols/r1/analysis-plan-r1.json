@@ -1,0 +1,214 @@
+{
+ "coverage_check": "before unblinding, simulate percentile-interval coverage for episode means at the realized episode count under normal, t3, skewed and two-point-outlier episode distributions",
+ "decision_id": "NHSJS-R1",
+ "methods_study": {
+  "advantage": "deletion: random-order mean minus method; insertion: method minus random-order mean; positive favors the method",
+  "bootstrap": {
+   "draws": 10000,
+   "interval": "percentile",
+   "resampling": "episodes",
+   "seed": 930011
+  },
+  "change_after_calibration": [
+   "across responses: preferred under Q differs from preferred under N for the same modality and direction",
+   "under z-scaling: preferred by z-scaled advantage differs from preferred by advantage",
+   "against fixed bars: for deletion, the method with the largest share of calls at or below 0.40 (and at or below 0.5) differs from the preferred method, or a method passes a bar under one response and fails it under the other",
+   "through population: preferred on the complete-case population differs from preferred on all available calls"
+  ],
+  "complete_case": "an episode enters a comparison only when every planned call has defined normalized areas for every ranking in it under both responses; every excluded call and its reason is reported",
+  "controls": {
+   "fixed": {
+    "language": [
+     "fixed_token_position",
+     "fixed_reverse_token_position"
+    ],
+    "state": [
+     "fixed_joint_order",
+     "fixed_reverse_joint_order"
+    ],
+    "vision": [
+     "fixed_raster",
+     "fixed_reverse_raster",
+     "fixed_centre_out"
+    ]
+   },
+   "random": {
+    "language": "64 seeded permutations",
+    "state": "exact mean over all subsets at each count (8 groups)",
+    "vision": "32 seeded permutations"
+   }
+  },
+  "count_rule": "max1_round (the saved runs' rule); the round rule is a sensitivity analysis",
+  "decision_rule": {
+   "beats_heuristics": "its mean advantage exceeds that of every fixed order, with the interval for best minus best fixed order reported",
+   "preferred": "highest episode-mean calibrated advantage among the methods (not the fixed orders), per modality, response and direction",
+   "probability_best": "share of bootstrap draws (same resampled episodes for every method) in which it has the highest mean",
+   "unique": "the Bonferroni-adjusted interval (alpha 0.05/4 over the four response-direction cells of a modality) for best minus second-best excludes zero"
+  },
+  "descriptive": "every other modality, direction, response, method and control, with 95% intervals and no multiplicity claim",
+  "family_alpha": 0.05,
+  "methods": {
+   "language": [
+    "IG_Q_A1T512",
+    "IG_N_A1T512",
+    "PG_Q_A1T512",
+    "PG_N_A1T512",
+    "input_difference",
+    "IG_Q_A0m64",
+    "IG_N_A0m64"
+   ],
+   "state": [
+    "IG_Q_A1T512",
+    "IG_N_A1T512",
+    "PG_Q_A1T512",
+    "PG_N_A1T512",
+    "input_difference",
+    "IG_Q_A0m64",
+    "IG_N_A0m64"
+   ],
+   "vision": [
+    "IG_Q_A1T512",
+    "IG_N_A1T512",
+    "PG_Q_A1T512",
+    "PG_N_A1T512",
+    "input_difference",
+    "IG_Q_A0m64",
+    "IG_N_A0m64"
+   ]
+  },
+  "metric": "normalized_auc on the realized-fraction axis; the nominal-axis area is reported beside it",
+  "multiplicity": "Bonferroni over the 7 primary contrasts",
+  "note": "Subtracting a common random-order reference cannot reorder methods under one response; those four routes are the only ways calibration can change the preferred method, and each is reported.",
+  "primary_bank": "P",
+  "primary_family": [
+   {
+    "contrast": "method_minus_random",
+    "direction": "deletion",
+    "id": "P1",
+    "method": "IG_Q_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "Q"
+   },
+   {
+    "contrast": "method_minus_random",
+    "direction": "deletion",
+    "id": "P2",
+    "method": "IG_Q_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "L2"
+   },
+   {
+    "contrast": "method_minus_random",
+    "direction": "deletion",
+    "id": "P3",
+    "method": "IG_N_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "Q"
+   },
+   {
+    "contrast": "method_minus_random",
+    "direction": "deletion",
+    "id": "P4",
+    "method": "IG_N_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "L2"
+   },
+   {
+    "contrast": "method_minus_method",
+    "control": "IG_N_A1T512",
+    "direction": "deletion",
+    "id": "P5",
+    "method": "IG_Q_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "Q"
+   },
+   {
+    "contrast": "method_minus_method",
+    "control": "IG_N_A1T512",
+    "direction": "deletion",
+    "id": "P6",
+    "method": "IG_Q_A1T512",
+    "metric": "normalized_auc",
+    "modality": "vision",
+    "response": "L2"
+   },
+   {
+    "contrast": "matched_calibrated",
+    "control": "IG_N_A1T512",
+    "control_response": "L2",
+    "direction": "deletion",
+    "id": "P7",
+    "method": "IG_Q_A1T512",
+    "method_response": "Q",
+    "metric": "normalized_auc",
+    "modality": "vision"
+   }
+  ],
+  "replication_banks": [
+   "B1",
+   "S",
+   "M8 strata"
+  ],
+  "unit": "reset episode; calls weighted equally within an episode, episodes equally",
+  "z_scaled": "advantage divided by the standard deviation over random orders (exact over all 40320 orders for state)"
+ },
+ "numerics_study": {
+  "arms": {
+   "A0": "historical bf16 replica, m=64 (and m=128 on the Month 8 PegInsertionSide and PickSingleYCB strata)",
+   "A1": "bf16 forward, fp32 accumulation, 513-node nested grid: T_m and E_m for m = 1..512, M_n for n = 1..256",
+   "A2": "fp32 forward on the fp32 probe context, same rules",
+   "A3": "Gauss-Legendre n = 32, 64, 128 (fp32)",
+   "A4": "adaptive vector Gauss-Kronrod 21-point, L1 error estimate, rtol 1e-4, at most 49 intervals (fp32), subset"
+  },
+  "budgets": [
+   16,
+   32,
+   64,
+   128,
+   256,
+   512
+  ],
+  "criteria_reported_with_denominators": {
+   "abs_auc_change": 0.01,
+   "relative_l1": 0.01,
+   "relative_residual": 0.01,
+   "source": "Month 8 provisional engineering criteria; study-specific, not general thresholds",
+   "spearman": 0.99,
+   "top5_overlap": 0.95
+  },
+  "expectations": [
+   "E_m = T_m + [(f0+f1)/2 - T_m]/(m+1) to rounding",
+   "T_2n = (T_n + M_n)/2 to rounding",
+   "N: endpoint-inclusive rules carry an O(1/m) term from the removable gradient jump at the input"
+  ],
+  "outcomes": [
+   "relative and absolute completeness residual",
+   "coordinate relative L1, max abs and signed-sum difference",
+   "group Spearman, top-1, top-5% overlap, deleted-set Jaccard at each schedule count",
+   "normalized-AUC change of each arm's ranking against the reference ranking, Q and N, deletion and insertion, all scored by the common bf16 forward",
+   "nonfinite counts by arm, stage, node and sign (NaN, +inf, -inf)"
+  ],
+  "populations": {
+   "month8": "all 21 available Month 8 contexts (16 RDT-170M, 5 RDT-1B)",
+   "new": "the P contexts of the first 6 episodes (fp32 arms) and all P contexts (bf16 arms)"
+  },
+  "reference": {
+   "bf16_function": "A1 T512 is the finite-budget comparator for the bf16 function, not truth",
+   "rule": "A4 where it converges; qualified when A4, GL128 and A2 T512 agree within relative L1 1e-3 pairwise; the largest pairwise disagreement is the resolution floor"
+  },
+  "statement": "whatever the outcome, the numerical accuracy of the saved headline rankings stays unverified: their contexts were not preserved, so these runs characterize the procedure, not those rankings"
+ },
+ "recorded_before_unblinding": true,
+ "responses": {
+  "N": "L2",
+  "Q": "Q",
+  "RMS": "reported in units only; its normalized area equals N's"
+ },
+ "schema": "nhsjs_revision_analysis_plan_v1",
+ "scope": "Analysis of the NHSJS-R1 GPU runs: the methods study (Must Fix 5), the numerics comparison (Must Fix 6) and the end-to-end record (Must Fix 2). Written before any production attribution or response exists."
+}

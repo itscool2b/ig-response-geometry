@@ -1,0 +1,60 @@
+{
+ "run_root": "../.agent-work/gpu/runs/r1",
+ "banks": [
+  {
+   "id": "P",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-p.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/P-bank.json",
+   "group": "P"
+  },
+  {
+   "id": "B1",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-b1s.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/B1-bank.json",
+   "group": "B1"
+  },
+  {
+   "id": "S",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-b1s.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/S-bank.json",
+   "group": "S"
+  },
+  {
+   "id": "M8-pickcube-170m",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/pickcube-170m.json",
+   "group": "M8"
+  },
+  {
+   "id": "M8-stackcube-170m",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/stackcube-170m.json",
+   "group": "M8"
+  },
+  {
+   "id": "M8-peginsertionside-170m",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/peginsertionside-170m.json",
+   "group": "M8"
+  },
+  {
+   "id": "M8-picksingleycb-170m",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/picksingleycb-170m.json",
+   "group": "M8"
+  },
+  {
+   "id": "M8-pickcube-1b",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/pickcube-1b.json",
+   "group": "M8"
+  },
+  {
+   "id": "M8-stackcube-1b",
+   "protocol": "docs/nhsjs-revision/protocols/r1/production/r1-m8.json",
+   "bank": "docs/nhsjs-revision/protocols/r1/banks/stackcube-1b.json",
+   "group": "M8"
+  }
+ ],
+ "note": "run_root is a local copy of the campaign run directory /workspace/nhsjs/runs/r1; paths are relative to the repository root"
+}

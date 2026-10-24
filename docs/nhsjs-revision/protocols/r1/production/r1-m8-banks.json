@@ -1,0 +1,330 @@
+{
+ "M8-peginsertionside-170m": {
+  "adaptive_contexts": "first_contexts:1",
+  "bank": "/workspace/nhsjs/banks/m8/peginsertionside-170m.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "none",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/peginsertionside-170m/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "170m",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "historical_budgets": [
+    64,
+    128
+   ],
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PegInsertionSide-v1",
+  "verify_contexts": "none"
+ },
+ "M8-pickcube-170m": {
+  "adaptive_contexts": "first_contexts:1",
+  "bank": "/workspace/nhsjs/banks/m8/pickcube-170m.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "first_contexts:1",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/pickcube-170m/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "170m",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PickCube-v1",
+  "verify_contexts": "first_contexts:1"
+ },
+ "M8-pickcube-1b": {
+  "adaptive_contexts": "none",
+  "bank": "/workspace/nhsjs/banks/m8/pickcube-1b.json",
+  "checkpoint_path": "/workspace/huggingface/hub/models--robotics-diffusion-transformer--maniskill-model/snapshots/9622afab2b7ce2312a6cf1febc526928589b77eb/rdt/mp_rank_00_model_states.pt",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "none",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/pickcube-1b/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "1b",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PickCube-v1",
+  "verify_contexts": "none"
+ },
+ "M8-picksingleycb-170m": {
+  "adaptive_contexts": "first_contexts:1",
+  "bank": "/workspace/nhsjs/banks/m8/picksingleycb-170m.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "none",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/picksingleycb-170m/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "170m",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "historical_budgets": [
+    64,
+    128
+   ],
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "PickSingleYCB-v1",
+  "verify_contexts": "none"
+ },
+ "M8-stackcube-170m": {
+  "adaptive_contexts": "first_contexts:1",
+  "bank": "/workspace/nhsjs/banks/m8/stackcube-170m.json",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "none",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/stackcube-170m/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "170m",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "StackCube-v1",
+  "verify_contexts": "none"
+ },
+ "M8-stackcube-1b": {
+  "adaptive_contexts": "none",
+  "bank": "/workspace/nhsjs/banks/m8/stackcube-1b.json",
+  "checkpoint_path": "/workspace/huggingface/hub/models--robotics-diffusion-transformer--maniskill-model/snapshots/9622afab2b7ce2312a6cf1febc526928589b77eb/rdt/mp_rank_00_model_states.pt",
+  "code_tree": "/workspace/nhsjs/code/nhsjs-r1-1-m8",
+  "fp32_contexts": "all",
+  "full_node_contexts": "none",
+  "full_node_modalities": [
+   "state"
+  ],
+  "lang_dir": "/workspace/tmlr/lang-20260930",
+  "metrics": "/workspace/tmlr/context-bank-v1/stackcube-1b/metrics.jsonl",
+  "modalities": [
+   "vision",
+   "language",
+   "state"
+  ],
+  "model": "1b",
+  "note": "Month 8 context bank (decision E01), replayed under its recorded forward bytes",
+  "numerics_override": {
+   "store_rules": {
+    "language": "all",
+    "state": "all",
+    "vision": [
+     "T16",
+     "T32",
+     "T64",
+     "T128",
+     "T256",
+     "T512",
+     "E16",
+     "E32",
+     "E64",
+     "E128",
+     "E256",
+     "E512",
+     "M64",
+     "M256"
+    ]
+   }
+  },
+  "source_replay_settings": {
+   "cublas_workspace_config": ":4096:8",
+   "cuda_matmul_allow_tf32": false,
+   "cudnn_allow_tf32": false,
+   "cudnn_benchmark": false,
+   "cudnn_deterministic": true,
+   "deterministic_algorithms": true,
+   "deterministic_warn_only": false,
+   "float32_matmul_precision": "highest"
+  },
+  "task": "StackCube-v1",
+  "verify_contexts": "none"
+ }
+}
