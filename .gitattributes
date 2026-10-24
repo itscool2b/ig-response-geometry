@@ -26,3 +26,11 @@ integrated_gradients.py -text
 legacy/** -text
 # Shell entrypoints must remain executable after a Windows checkout/upload.
 scripts/*.sh text eol=lf
+
+# NHSJS-R1 GPU analysis code and hash-bound results.
+analysis/revision_gpu/** -text
+# CPU revision analyses of 2026-10-23 carry byte-level hashes too.
+analysis/completeness_audit/** -text
+analysis/language_groups/** -text
+# The public NHSJS revision protocols and regeneration records are bound by SHA-256.
+docs/nhsjs-revision/** -text

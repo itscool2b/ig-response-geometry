@@ -49,7 +49,10 @@ archive/
 CLAUDE.md
 AGENTS.md
 docs/tmlr-readiness/
-docs/nhsjs-revision/
+# The NHSJS revision folder stays private except its protocols and the regeneration kit documentation.
+docs/nhsjs-revision/*
+!docs/nhsjs-revision/protocols/
+!docs/nhsjs-revision/regeneration/
 TMLR_HANDOFF.md
 SUBMISSION_RESTORATION.md
 image.jpg
