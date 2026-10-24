@@ -16,6 +16,7 @@ Layout under OUT:
   month8/         docs/nhsjs-revision/month8 (the recovered Month 8 bank, code snapshots, language inputs)
   identity/       the pod identity captures
   inventories/    the Must Fix 2 identity inventory and reproducibility classification
+  README.md       what each directory holds and what the archive alone can and cannot check
   MANIFEST.sha256 every file above
 
 With --anonymous every file is scanned, as UTF-8 or else Latin-1 (gzip members unpacked), for the
@@ -63,7 +64,7 @@ def copy_runs(runs, destination):
     event logs, and the failure records of failed attempts with a hash list of what else they kept."""
     runs = Path(runs)
     destination.mkdir(parents=True, exist_ok=True)
-    tensors = []
+    tensors, tensor_bytes = [], 0
     for completion in sorted(runs.glob("*/e*-c*/*/completion.json")):
         phase_dir = completion.parent
         target = destination / phase_dir.relative_to(runs)
@@ -74,6 +75,7 @@ def copy_runs(runs, destination):
         bound = json.loads(completion.read_text())["files_sha256"]
         tensors += [f"{digest}  {(phase_dir / name).relative_to(runs)}\n" for name, digest in sorted(bound.items())
                     if name not in RECORD_FILES]
+        tensor_bytes += sum((phase_dir / name).stat().st_size for name in bound if name not in RECORD_FILES)
     (destination / "TENSORS.sha256").write_text("".join(tensors))
     for log in sorted(runs.glob("*/workers/*.jsonl")):
         target = destination / log.relative_to(runs)
@@ -95,7 +97,7 @@ def copy_runs(runs, destination):
         else:
             kept.append(f"{sha256(path)}  {relative}\n")
     (destination / "ATTEMPTS.sha256").write_text("".join(kept))
-    return len(tensors), failures
+    return len(tensors), failures, tensor_bytes
 
 
 def identifying_hits(root, extra=()):
@@ -121,6 +123,33 @@ def identifying_hits(root, extra=()):
     return hits
 
 
+README = """# R1 reviewer archive
+
+Records of the NHSJS-R1 GPU campaign for Must Fix 2: the protocols, the inputs of every policy call,
+what each computation phase recorded, the registered analysis and the regeneration check. Check the
+files first, from this directory:
+
+    sha256sum -c MANIFEST.sha256        (on macOS: shasum -a 256 -c MANIFEST.sha256)
+
+| Path | What it holds |
+|---|---|
+| `protocols/` | The collection and selection protocols, the analysis template, the analysis plan and its amendments, the production protocols and the banks. |
+| `collections/` | The collection runs: every executed policy call's inputs and records. |
+| `runs/` | `record.json`, `rankings.json` and `completion.json` of every completed phase, every worker event log, the failure record of every failed attempt, and `ATTEMPT_DIRECTORIES.txt`, which lists every attempt directory with its state. |
+| `results/` | The registered analysis: tables, figures, populations and the checks made before unblinding. |
+| `kit/` | The regeneration kit. `kit/README.md` regenerates one P context end to end on a GPU and checks its stored scoring on CPU. |
+| `regeneration/` | The reports, logs and machine identity of that kit's run on a fresh machine. |
+| `month8/` | The recovered Month 8 context bank, its code snapshots and language inputs (`month8/README.md`). |
+| `identity/` | The identity captures of the campaign machines, and `phase_hosts.csv`, the machine that computed each phase. |
+| `inventories/` | The identity inventory and the reproducibility classification of every reported result. |
+
+The {tensors} map and gradient tensors ({gigabytes:.1f} GB) are not included. `runs/TENSORS.sha256` lists
+each with the hash its completion record binds. The analysis loader authenticates every file a completion
+record binds, so re-running the registered analysis, or the CPU check of a whole bank, needs those
+tensors. Without them, each phase's recorded values can be read and compared with the result tables.
+"""
+
+
 SOURCES = dict(protocols=ROOT / "docs/nhsjs-revision/protocols/r1", month8=ROOT / "docs/nhsjs-revision/month8",
                inventories=ROOT / "docs/nhsjs-revision/mf2",
                regeneration=ROOT / "docs/nhsjs-revision/regeneration/fresh-pod-20261024")
@@ -135,7 +164,7 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
     try:
         copy_tree(sources["protocols"], out / "protocols")
         copy_tree(results, out / "results")
-        tensors, failures = copy_runs(Path(runs), out / "runs")
+        tensors, failures, tensor_bytes = copy_runs(Path(runs), out / "runs")
         for name, source in collections:
             copy_tree(source, out / "collections" / name)
         if kit:
@@ -147,6 +176,7 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
         (out / "inventories").mkdir()
         for name in INVENTORY_FILES:
             shutil.copyfile(Path(sources["inventories"]) / name, out / "inventories" / name)
+        (out / "README.md").write_text(README.format(tensors=tensors, gigabytes=tensor_bytes / 1e9))
         if anonymous:
             hits = identifying_hits(out, identifiers)
             if hits:

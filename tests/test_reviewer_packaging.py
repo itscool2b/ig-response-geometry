@@ -63,6 +63,8 @@ def test_reviewer_archive_keeps_records_lists_tensors_and_screens_identifiers(tm
     assert (out / "runs/P/e0000-c001/bf16/record.json").is_file() and not (out / "runs/P/e0000-c001/bf16/maps.pt").exists()
     assert (out / "runs/TENSORS.sha256").read_text() == f"{sha(b'tensor bytes')}  P/e0000-c001/bf16/maps.pt\n"
     assert report["tensors_listed"] == 1 and "MANIFEST.sha256" not in (out / "MANIFEST.sha256").read_text()
+    assert "The 1 map and gradient tensors (0.0 GB)" in (out / "README.md").read_text()
+    assert "  README.md\n" in (out / "MANIFEST.sha256").read_text()
     write_tree(tmp_path / "identity", {"named.json": ('{"author": "%s"}' % archive.ARCHIVE_IDENTIFIERS[0].title()).encode()})
     with pytest.raises(ValueError, match="Identifying text"):
         archive.build(tmp_path / "out2", results=tmp_path / "results", runs=tmp_path / "runs",

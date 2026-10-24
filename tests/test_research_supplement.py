@@ -363,3 +363,5 @@ def test_revision_r1_paths_are_packaged_when_present_with_the_tokenizer_notice(t
     # The packaging tools, like this packager, stay out of research packages, and so do their tests.
     assert not {"scripts/build_reviewer_archive.py", "scripts/build_regeneration_code.py"} & set(package.REVISION_R1_FILES)
     assert "tests/test_reviewer_packaging.py" in package.OMITTED_TESTS
+    from revision_numerics import HISTORICAL_KERNEL
+    assert HISTORICAL_KERNEL in package.REVISION_R1_FILES

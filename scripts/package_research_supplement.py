@@ -70,6 +70,8 @@ REVISION_R1_FILES = (
     "scripts/launch_strict.py", "scripts/prepare_pinned_models.py", "scripts/build_regeneration_kit.py",
     "scripts/make_revision_protocol.py", "scripts/build_m8_overlay.py", "scripts/build_deploy_archive.py",
     "scripts/revision_pod.sh",
+    # The archived historical kernel that the worker's verify gate and its tests compare against.
+    "docs/tmlr-readiness/archives/active-originals/2026-10-01-stable-base/integrated_gradients.py.historical",
 )
 T5_TOKENIZER = "analysis/language_groups/vendor/spiece.model"
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
