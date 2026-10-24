@@ -1,6 +1,8 @@
 # These immutable analysis artifacts carry byte-level hashes. Git must not
 # translate their line endings when checking out on Windows.
 analysis/revision/results/** -text
+# provenance.json records the analysis code's hashes, which a translated checkout would change.
+analysis/revision/** -text
 analysis/revision/nested_grid_aliasing.py -text
 analysis/revision/examples/** -text
 analysis/paired_rescoring/** -text

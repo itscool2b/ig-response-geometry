@@ -9,10 +9,16 @@ Updated September 30, 2026. This page describes revised collection. Historical `
 Prepare the environment, model and embeddings using the current README. Specify experimental selection, budgets and acceptance criteria before scientific collection. This is a command example, not a claim that this budget is sufficient:
 
 ```bash
+python encode_task_lang.py --output-dir runs/language-v1 --revision 3db67ab1af984cf10548a73467f0e5bca2aaaeb2
 python per_step_ig.py --task PickCube-v1 --model 170m \
-  --episodes 1 --max-policy-calls 1 --m 16 --quadrature trapezoid \
+  --model-revision 8aa386cac3bbfd9540676c75b3d767cc7f88a10a \
+  --vision-revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 \
+  --lang-dir runs/language-v1 --episodes 1 --max-policy-calls 1 \
+  --seed-base 910001 --m 16 --quadrature trapezoid \
   --out runs/engineering-example/metrics.jsonl
 ```
+
+The language directory and the pinned revisions are required on a fresh clone: `data/lang_embeds` is not tracked, and an unpinned revision would resolve the model repositories' current heads.
 
 Use a new output path. Resume by repeating the same identified settings with `--resume`. A changed checkpoint, seed, target, budget, quadrature, source or other identified setting needs a new run. For 1B, supply `--checkpoint-mode` and, in authors/LoRA mode, an explicit `--checkpoint-path`. `--help` defines the current CLI.
 
