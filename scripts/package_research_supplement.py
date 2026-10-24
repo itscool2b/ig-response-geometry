@@ -17,6 +17,7 @@ import re
 import subprocess
 import sys
 import zipfile
+import zlib
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.validate_template_provenance import validate_template_bytes
@@ -60,19 +61,39 @@ DOCUMENTS = (
     "paper/tmlr-LICENSE", "paper/tmlr-source.json",
 )
 # NHSJS revision R1 (2026-10-23): the CPU revision analyses, the GPU campaign code and its protocols.
-# Each is packaged when present, so earlier commits still package exactly as before.
+# Each is packaged when present, so earlier commits still package exactly as before. Like this packager,
+# the reviewer-archive and regeneration-code builders are repository packaging tools and are not packaged.
 REVISION_R1_PREFIXES = ("analysis/completeness_audit/", "analysis/language_groups/", "analysis/revision_gpu/",
                         "docs/nhsjs-revision/protocols/", "docs/nhsjs-revision/regeneration/")
 REVISION_R1_FILES = (
     "revision_numerics.py", "ig_quadrature.py", "scripts/regenerate_result.py", "scripts/capture_identity.py",
     "scripts/launch_strict.py", "scripts/prepare_pinned_models.py", "scripts/build_regeneration_kit.py",
-    "scripts/build_regeneration_code.py", "scripts/build_reviewer_archive.py", "scripts/make_revision_protocol.py",
-    "scripts/build_m8_overlay.py", "scripts/build_deploy_archive.py", "scripts/revision_pod.sh",
+    "scripts/make_revision_protocol.py", "scripts/build_m8_overlay.py", "scripts/build_deploy_archive.py",
+    "scripts/revision_pod.sh",
 )
 T5_TOKENIZER = "analysis/language_groups/vendor/spiece.model"
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
     "tests/test_paper_packaging_paths.py", "tests/test_research_supplement.py",
-    "tests/test_approved_assembly.py"})
+    "tests/test_approved_assembly.py", "tests/test_reviewer_packaging.py"})
+# The private anonymous candidate omits these identity-bearing members, each reviewed by name; the
+# identified package keeps them. The Online Word exporter carries the author block, so its test goes too.
+ANONYMOUS_OMITTED = ("CITATION.cff", "docs/preprint_status.md", "paper/README.md",
+    "docs/manuscript_revision/README.md", "docs/manuscript_revision/final_local_verification.md",
+    "docs/manuscript_revision/final_v5_checklist.md", "docs/manuscript_revision/revision_checklist.md",
+    "scripts/export_online_docx.py", "tests/test_online_docx.py")
+# Tokens the anonymous candidate must also lack: name parts, the school and the identified deposit records.
+ANONYMOUS_TOKENS = ("arjun", "bajpai", "windermere", "zenodo")
+# Reviewed forms of the root guide's identity statements. Every substitution of one form must apply
+# exactly once; the earlier form is kept so earlier commits still package as before.
+README_IDENTITY_FORMS = (
+    ((r"^The sole current author is [^\n]*\n", ""), (r"^`CITATION\.cff` identifies [^\n]*\n", "")),
+    ((r"\[(October 4, 2026 polished snapshot)\]\(https://github\.com/[^)\s]*\)", r"\1"),
+     (r"^The sole author is [^.\n]*\. ", ""),
+     (r"^The identified 19-page preprint was published [^\n]*\n\n", ""),
+     (r"^The earlier Zenodo versions [^\n]*\n\n", ""),
+     (r"^`CITATION\.cff` retains [^\n]*\n\n", ""),
+     (r"^The current \[Zenodo preprint\]\([^)\s]*\) is licensed under \[[^\]\n]*\]\([^)\s]*\)\. ", "")),
+)
 OUTPUT_PREFIX = "analysis/revision/results/2026-09-30-v2/"
 RESULT_FILES = ("diagnostics.json", "duplicate_population_sensitivity.json", "duplicates.json",
     "population_membership.json.gz", "provenance.json", "random_order_counterexample.json",
@@ -447,22 +468,74 @@ Archive-only links may refer to omitted historical files.
 """
 
 
+REVISION_R1_GUIDE = """
+NHSJS revision R1 additions. Four saved-record CPU analyses regenerate in a
+fresh extraction with the full CPU environment. Each writes a new directory:
+
+    python -m analysis.completeness_audit --output runs/completeness-audit
+    python -m analysis.paired_rescoring.oneb_success --output runs/oneb-success
+    python -m analysis.paired_rescoring.extra_tasks --output runs/extra-tasks
+    python -m analysis.paired_rescoring.residual_geometry --output runs/residual-geometry
+
+Check each with --verify (for example python -m analysis.completeness_audit
+--verify runs/completeness-audit) and compare it with the committed directory
+under that analysis's results/ folder. completeness_audit records one artifact
+as platform dependent. analysis.language_groups regenerates only with the
+source repository's git history and the Month 8 language inputs, which are not
+included; its --verify checks the committed results here. The GPU campaign code
+is revision_numerics.py and ig_quadrature.py, its protocols and analysis plan
+are in docs/nhsjs-revision/protocols/r1/, the registered analysis and results
+in analysis/revision_gpu/v1/, and the fresh-machine regeneration check in
+docs/nhsjs-revision/regeneration/. The GPU phase records are not included;
+they are in the separate reviewer archive.
+"""
+
+
+def anonymous_readme(text):
+    """Remove the reviewed identity statements of one README form; anything else fails."""
+    for form in README_IDENTITY_FORMS:
+        result, counts = text, []
+        for pattern, replacement in form:
+            result, count = re.subn(pattern, replacement, result, flags=re.M)
+            counts.append(count)
+        if all(count == 1 for count in counts):
+            return result
+    raise ValueError("Root guide identity paragraphs differ from the reviewed transformation")
+
+
+def binary_identity_hits(data, tokens):
+    """Tokens in a binary member's raw bytes or in any zlib stream it holds (PDF metadata and content)."""
+    views = [data.lower()]
+    for match in re.finditer(rb"stream\r?\n", data):
+        try:
+            views.append(zlib.decompressobj().decompress(data[match.end():]).lower())
+        except zlib.error:
+            pass
+    return sorted(token for token in tokens if any(token.encode() in view for view in views))
+
+
 def anonymous_candidate(contents, extra_identifiers):
     """Create a marked local proposal; never mutate or relicense canonical files."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from scripts import package_paper_sources
-    transformed = dict(contents)
+    transformed = {name: data for name, data in contents.items() if name not in ANONYMOUS_OMITTED}
+    omitted = sorted(set(contents) - set(transformed))
+    for name, data in sorted(transformed.items()):
+        if not name.endswith(".py"):
+            continue
+        try:
+            local = import_dependencies(name, data, contents)[0]
+        except SyntaxError:  # collect() parses every packaged module, so only fixtures reach this
+            continue
+        if local & set(omitted):
+            raise ValueError("A packaged module imports a member the anonymous candidate omits: " + name)
     old_notice = b"Copyright (c) 2026 Arjun Bajpai"
     if transformed["LICENSE"].count(old_notice) != 1:
         raise ValueError("Own-author license notice differs from the reviewed candidate proposal")
     transformed["LICENSE"] = transformed["LICENSE"].replace(old_notice, b"Copyright (c) 2026 Anonymous author")
     # Keep the exact frozen runtime recipes/model revisions, removing only the
-    # two reviewed identity/deposit paragraphs. New identity syntax fails below.
-    readme = contents["README.md"].decode("utf-8")
-    for pattern in (r"^The sole current author is [^\n]*\n", r"^`CITATION\.cff` identifies [^\n]*\n"):
-        readme, count = re.subn(pattern, "", readme, flags=re.M)
-        if count != 1:
-            raise ValueError("Root guide identity paragraphs differ from the reviewed transformation")
+    # reviewed identity/deposit statements. New identity syntax fails below.
+    readme = anonymous_readme(contents["README.md"].decode("utf-8"))
     banner = ("PRIVATE ANONYMOUS CANDIDATE. Unapproved for external distribution or submission.\n"
               "The proposed own-author notice is for local review only; third-party notices remain intact.\n"
               "See SUPPLEMENT_README.md for scope and source-byte replay limitations.\n\n")
@@ -479,14 +552,24 @@ def anonymous_candidate(contents, extra_identifiers):
             raise ValueError("Canonical manuscript input hash differs before transformation")
         manuscript_inputs["paper/paper.tex"] = digest(transformed["paper/paper.tex"])
     transformed[lineage_path] = (json.dumps(lineage, indent=2)+"\n").encode()
-    findings = privacy_findings(transformed, extra_identifiers)
-    if any(row["category"] == "identifying_text" for row in findings):
+    tokens = audit_tokens([*extra_identifiers, *ANONYMOUS_TOKENS])
+    findings = privacy_findings(transformed, tokens)
+    for row in findings:
+        if row["category"] == "binary_requires_format_review":
+            data = transformed[row["path"]]
+            hits = binary_identity_hits(gzip.decompress(data) if row["path"].endswith(".gz") else data,
+                                        (*IDENTIFIERS, *tokens))
+            if hits:
+                findings.append(dict(path=row["path"], category="identifying_binary_content", identifiers=hits))
+    if any(row["category"] in ("identifying_text", "identifying_binary_content") for row in findings):
         raise ValueError("Known identifying text remains in the private anonymous candidate")
     changes = {name:dict(source_sha256=digest(contents[name]),candidate_sha256=digest(data))
                for name,data in transformed.items() if data != contents[name]}
     if set(changes) != {"LICENSE", "README.md", "paper/paper.tex", lineage_path}:
         raise ValueError("Anonymous candidate changed an unreviewed source member")
     return transformed, dict(transformations=changes,privacy_findings=findings,
+        omitted_members={name: dict(source_sha256=digest(contents[name])) for name in omitted},
+        anonymous_token_count=len(tokens),
         manuscript_transform_sha256=digest(Path(package_paper_sources.__file__).read_bytes()),
         licensing_status="proposed_review_copy_attribution_not_approved_for_external_distribution",
         third_party_notices="preserved_exactly",canonical_public_license="unchanged")
@@ -523,6 +606,8 @@ template contract, final local verification and scientific meaning audit.
 Historical archive paths mentioned in those documents are not build inputs
 and are not included. This package does not perform a journal submission.
 """
+    if "analysis/revision_gpu/v1/analyze.py" in contents:
+        contents["SUPPLEMENT_README.md"] += REVISION_R1_GUIDE.encode()
     if working_copy:
         contents["SUPPLEMENT_README.md"] = contents["SUPPLEMENT_README.md"].replace(
             b"Exported code is committed Git-blob bytes.", b"Exported code is an explicit hashed working-copy snapshot.")
@@ -543,6 +628,7 @@ and are not included. This package does not perform a journal submission.
         status="unapproved_for_external_distribution_or_submission" if private_anonymous_candidate else "working_draft_not_submission",
         source_kind=audit.get("source_kind", "committed_git_blobs"),
         source_snapshot_sha256=audit.get("snapshot_sha256"),
+        **({"omitted_members": sorted(audit["anonymous_candidate"]["omitted_members"])} if private_anonymous_candidate else {}),
         members={p:dict(sha256=digest(b),bytes=len(b)) for p,b in sorted(contents.items())})
     contents["SUPPLEMENT_MANIFEST.json"] = (json.dumps(package_manifest,indent=2)+"\n").encode()
     output = Path(output)

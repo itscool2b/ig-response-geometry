@@ -14,6 +14,7 @@ Writes OUTDIR/<TAG>-regeneration[-anonymous].tar and the matching .sha256 (sha25
 import argparse
 import hashlib
 import io
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -28,7 +29,8 @@ from scripts.package_research_supplement import IDENTIFIERS, import_dependencies
 ENTRYPOINTS = ("revision_numerics.py", "scripts/regenerate_result.py", "scripts/prepare_pinned_models.py",
                "collect_contexts.py", "per_step_ig.py", "scripts/launch_strict.py")
 EXTRAS = ("configs/base_170m.yaml", "scripts/revision_pod.sh", "LICENSE")
-OWN_NOTICE = b"Copyright (c) 2026 Arjun Bajpai"
+# The copyright line of the repository LICENSE; the anonymous variant names an anonymous author instead.
+OWN_NOTICE = re.compile(rb"^Copyright \(c\) 2026 [^\n]+$", re.M)
 ANONYMOUS_NOTICE = b"Copyright (c) 2026 Anonymous author"
 
 
@@ -55,9 +57,9 @@ def members(tag, anonymous=False):
         "Source: https://github.com/thu-ml/RoboticsDiffusionTransformer/tree/cd79363a1387e8f81c7724d070ef7e45fd23150f\n\n"
         + notice + "\n").encode()
     if anonymous:
-        if contents["LICENSE"].count(OWN_NOTICE) != 1:
+        if len(OWN_NOTICE.findall(contents["LICENSE"])) != 1:
             raise ValueError("License notice differs from the reviewed anonymous replacement")
-        contents["LICENSE"] = contents["LICENSE"].replace(OWN_NOTICE, ANONYMOUS_NOTICE)
+        contents["LICENSE"] = OWN_NOTICE.sub(ANONYMOUS_NOTICE, contents["LICENSE"])
     for name, data in contents.items():
         hits = [token for token in IDENTIFIERS if token in data.decode("utf-8", "replace").lower()]
         if hits and (anonymous or name != "LICENSE"):

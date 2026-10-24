@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import subprocess
 import zipfile
+import zlib
 
 import pytest
 
@@ -126,6 +127,40 @@ def test_private_candidate_changes_only_reviewed_members_and_preserves_terms():
     contaminated=dict(original,unexpected=b"Example-private-user")
     with pytest.raises(ValueError,match="identifying text"):
         package.anonymous_candidate(contaminated,["example-private-user"])
+
+
+def test_private_candidate_removes_current_identity_statements_and_omits_identity_members():
+    paper=b"\\author{\\name Arjun Bajpai\n\\addr Independent Researcher}\nScientific body.\n"
+    license=b"MIT License\nCopyright (c) 2026 Arjun Bajpai\nPermission and disclaimer stay intact.\n"
+    readme=(b"# Title\n\nThis holds the [October 4, 2026 polished snapshot](https://github.com/owner/repo/tree/tag). It asks.\n\n"
+            b"The sole author is Arjun Bajpai. The [canonical source](paper/paper.tex) stays.\n\n"
+            b"The identified 19-page preprint was published on October 9, 2026 as [Zenodo version 3.0](https://doi.org/10.5281/zenodo.1).\n\n"
+            b"The earlier Zenodo versions retain their own titles and DOIs.\n\nPinned runtime recipe survives.\n\n"
+            b"## Citation and licenses\n\n`CITATION.cff` retains the snapshot and gives [Zenodo version 3.0](https://doi.org/10.5281/zenodo.1).\n\n"
+            b"The current [Zenodo preprint](https://doi.org/10.5281/zenodo.1) is licensed under [Creative Commons Attribution 4.0 "
+            b"International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). Code is MIT licensed.\n")
+    figure=b"%PDF-1.4\n%\xff\xff\xff\xff\n1 0 obj\nstream\n"+zlib.compress(b"plain figure")+b"\nendstream\n"
+    original={"LICENSE":license,"README.md":readme,"paper/paper.tex":paper,
+        "paper/figures_revision/lineage.json":json.dumps({"manuscript_source_sha256":package.digest(paper)}).encode(),
+        "CITATION.cff":b"authors:\n- family-names: Bajpai\n","scripts/export_online_docx.py":b"AUTHOR = 'Arjun Bajpai'\n",
+        "tests/test_online_docx.py":b"from scripts.export_online_docx import AUTHOR\n","figure.pdf":figure}
+    result,audit=package.anonymous_candidate(original,[])
+    text=result["README.md"].decode()
+    assert "This holds the October 4, 2026 polished snapshot. It asks." in text
+    assert "The [canonical source](paper/paper.tex) stays." in text and "Pinned runtime recipe survives." in text
+    assert "Code is MIT licensed." in text and "github.com" not in text and "zenodo" not in text.lower() and "Bajpai" not in text
+    assert set(audit["omitted_members"])=={"CITATION.cff","scripts/export_online_docx.py","tests/test_online_docx.py"}
+    assert not set(audit["omitted_members"])&set(result) and result["figure.pdf"]==figure
+    assert set(audit["transformations"])=={"LICENSE","README.md","paper/paper.tex","paper/figures_revision/lineage.json"}
+    hidden=dict(original,**{"figure.pdf":figure.replace(zlib.compress(b"plain figure"),zlib.compress(b"/Author (A. Bajpai)"))})
+    with pytest.raises(ValueError,match="identifying text"):
+        package.anonymous_candidate(hidden,[])
+    importer=dict(original,**{"analysis/tool.py":b"from scripts import export_online_docx\n"})
+    with pytest.raises(ValueError,match="imports a member the anonymous candidate omits"):
+        package.anonymous_candidate(importer,[])
+    partial=dict(original,**{"README.md":readme.replace(b"The earlier Zenodo versions",b"Earlier versions")})
+    with pytest.raises(ValueError,match="Root guide identity"):
+        package.anonymous_candidate(partial,[])
 
 
 def test_private_candidate_cannot_be_written_inside_public_repository(tmp_path):
@@ -308,7 +343,7 @@ def test_working_collection_rejects_concurrent_changes(tmp_path, monkeypatch):
 def test_revision_r1_paths_are_packaged_when_present_with_the_tokenizer_notice(tmp_path, monkeypatch):
     sampler = b'"""Original sampler license:\nMIT License\nCopyright (c) 2024 TSAIL group\n"""\n'
     contents = {"LICENSE": b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n", "rdt_sampling.py": sampler,
-                package.T5_TOKENIZER: b"\x00sentencepiece"}
+                package.T5_TOKENIZER: b"\x00sentencepiece", "analysis/revision_gpu/v1/analyze.py": b"# entry\n"}
     root = Path(__file__).resolve().parents[1]
     for name in (*FILE_SHA256, "tmlr-source.json"):
         contents["paper/" + name] = (root / "paper" / name).read_bytes()
@@ -318,7 +353,13 @@ def test_revision_r1_paths_are_packaged_when_present_with_the_tokenizer_notice(t
     with zipfile.ZipFile(tmp_path / "out" / report["archive"]["file"]) as archive:
         assert b"google/t5-v1_1-xxl" in archive.read("THIRD_PARTY_NOTICES.txt")
         assert b"Apache License 2.0" in archive.read("THIRD_PARTY_NOTICES.txt")
+        guide = archive.read("SUPPLEMENT_README.md").decode()
+    assert "NHSJS revision R1 additions" in guide
+    assert "python -m analysis.paired_rescoring.oneb_success --output runs/oneb-success" in guide
     selected = {"analysis/revision_gpu/v1/methods.py", "docs/nhsjs-revision/protocols/r1/plan.json",
                 "revision_numerics.py", "docs/nhsjs-revision/inputs/review.pdf"}
     chosen = {p for p in selected if p.startswith(package.REVISION_R1_PREFIXES) or p in package.REVISION_R1_FILES}
     assert chosen == selected - {"docs/nhsjs-revision/inputs/review.pdf"}
+    # The packaging tools, like this packager, stay out of research packages, and so do their tests.
+    assert not {"scripts/build_reviewer_archive.py", "scripts/build_regeneration_code.py"} & set(package.REVISION_R1_FILES)
+    assert "tests/test_reviewer_packaging.py" in package.OMITTED_TESTS
