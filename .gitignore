@@ -48,7 +48,16 @@ archive/
 .playwright-mcp/
 CLAUDE.md
 AGENTS.md
-docs/tmlr-readiness/
+# docs/tmlr-readiness/ stays private except the archived historical IG kernel, which the public
+# revision_numerics.py loads from this fixed path (verify phase and the A0 replica tests).
+docs/tmlr-readiness/*
+!docs/tmlr-readiness/archives/
+docs/tmlr-readiness/archives/*
+!docs/tmlr-readiness/archives/active-originals/
+docs/tmlr-readiness/archives/active-originals/*
+!docs/tmlr-readiness/archives/active-originals/2026-10-01-stable-base/
+docs/tmlr-readiness/archives/active-originals/2026-10-01-stable-base/*
+!docs/tmlr-readiness/archives/active-originals/2026-10-01-stable-base/integrated_gradients.py.historical
 # The NHSJS revision folder stays private except its protocols and the regeneration kit documentation.
 docs/nhsjs-revision/*
 !docs/nhsjs-revision/protocols/

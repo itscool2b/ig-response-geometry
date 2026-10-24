@@ -34,3 +34,5 @@ analysis/completeness_audit/** -text
 analysis/language_groups/** -text
 # The public NHSJS revision protocols and regeneration records are bound by SHA-256.
 docs/nhsjs-revision/** -text
+# The archived historical IG kernel is compared bit for bit with the A0 replica.
+docs/tmlr-readiness/** -text
