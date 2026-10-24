@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "analysis": "analysis.paired_rescoring.oneb_success",
+  "analysis_version": "2026-10-23-v1",
+  "recorded_before_outcome_computation": true,
+  "recorded_on": "2026-10-23",
+  "reviewer_item": "NHSJS Must Fix 3: rescore the fine-tuned RDT-1B PickCube vision curves (15 successes in 60 episodes) with the same procedure; report successful and unsuccessful episodes separately",
+  "question": "Within each saved RDT-1B PickCube curve, how much does changing only the response from Q to stabilized N change saved-grid normalized AUC, separately for successful and unsuccessful recorded episodes?",
+  "pre_outcome_knowledge": "Before this protocol, only file structure was read: record counts, duplicate keys, own-sidecar fingerprints, success labels and calls per episode (notes Month 9/9.2 sections 3 and 4). No paired difference was computed on these files.",
+  "anchors": {
+    "canonical_results": "analysis/revision/results/2026-09-30-v2",
+    "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+    "input_manifest": "analysis/revision/input_manifest.json",
+    "input_manifest_sha256": "3738e57f2b812c8ae335cceb04b5c25a5aa5b044b175d495bff12963feefabd1",
+    "frozen_paired_procedure": "analysis/paired_rescoring/analyze.py paired_curve, protocol analysis/paired_rescoring/protocol.json (2026-10-01-v1)"
+  },
+  "runs": [
+    {
+      "run": "seed42",
+      "role": "primary",
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl", "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233"},
+      "steps": {"path": "data/metrics_PickCube-v1_1b_seed42.jsonl", "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17"},
+      "expected_roster": {"n_episodes": 20, "n_calls": 320, "successes": 9, "failures": 11, "success_calls": 45, "failure_calls": 275},
+      "documented_language_input": "Month 4 run (2026-05-26): the RDT authors' precomputed PickCube instruction embedding and a zeroed placeholder language baseline (notes Month 4/4.6, Month 6/6.2, TMLR errata D13)"
+    },
+    {
+      "run": "seed142",
+      "role": "primary",
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl", "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4"},
+      "steps": {"path": "data/metrics_PickCube-v1_1b_seed142.jsonl", "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4"},
+      "expected_roster": {"n_episodes": 20, "n_calls": 480, "successes": 1, "failures": 19, "success_calls": 5, "failure_calls": 475},
+      "documented_language_input": "Month 6 run (2026-06-14): pod-generated T5-XXL instruction embedding and the encoded PAD/EOS language baseline (notes Month 6/6.2, 6.3)"
+    },
+    {
+      "run": "seed242",
+      "role": "primary",
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl", "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048"},
+      "steps": {"path": "data/metrics_PickCube-v1_1b_seed242.jsonl", "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634"},
+      "expected_roster": {"n_episodes": 20, "n_calls": 399, "successes": 5, "failures": 15, "success_calls": 24, "failure_calls": 375},
+      "documented_language_input": "Month 6 run (2026-06-14): pod-generated T5-XXL instruction embedding and the encoded PAD/EOS language baseline (notes Month 6/6.2, 6.3)"
+    },
+    {
+      "run": "m5_seed42",
+      "role": "sensitivity",
+      "faithfulness": {"path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl", "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93"},
+      "steps": {"path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl", "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7"},
+      "expected_roster": {"n_episodes": 20, "n_calls": 334, "successes": 8, "failures": 12, "success_calls": 34, "failure_calls": 300},
+      "documented_language_input": "Month 5 reproduction of seed 42 on another machine with real T5-XXL instruction embeddings and the encoded baseline (notes Month 5/5.7, Month 6/6.2)"
+    }
+  ],
+  "event": "faithfulness",
+  "native_scale": "Q",
+  "native_scale_rule": "Saved curves are Q-scored (historical logpi target), Q = -r/(2*512); r = -2*512*Q. Every stored vision and language f_input must equal 0, otherwise the run fails.",
+  "dimension": 512,
+  "stabilizer_epsilon": 1e-12,
+  "modalities": ["vision", "lang"],
+  "directions": ["insertion", "deletion"],
+  "occurrence_rule": "last physical occurrence of each key within its source file (analysis.revision.core.reconcile); the conflict-excluded membership comparison is recorded",
+  "own_sidecar_fingerprint": "Join each faithfulness row to its run's step row on (task, model, seed, episode, policy_call_idx). For vision and language, original form: abs(-step_gap - f_baseline) <= 1e-6*max(abs(step_gap), abs(f_baseline), 1e-12); general form: the same test of step_gap against f_input - f_baseline. Every row of every run must join and agree in both forms, otherwise the analysis fails.",
+  "success_label": "The boolean success field of the run's own episode_end row joined on (task, model, seed, episode). Every saved episode needs exactly one such row, contiguous policy calls 0..n-1, and episode_end policy_calls equal to its saved call count.",
+  "rescoring": "analysis.paired_rescoring.analyze.paired_curve(k_grid_auc, curve, f_input, f_baseline, 'Q', dimension=512, epsilon=1e-12) per saved curve; Delta = AUC_Q - AUC_N on the same saved nodes and endpoints; positive Delta means scoring with N lowers that AUC. Geometry labels, in-range/overshoot/undershoot node contributions and the generalized identity check are those of the frozen paired analysis.",
+  "populations": [
+    {"id": "pooled_primary", "runs": ["seed42", "seed142", "seed242"], "modalities": ["vision"]},
+    {"id": "seed42", "runs": ["seed42"], "modalities": ["vision", "lang"]},
+    {"id": "seed142", "runs": ["seed142"], "modalities": ["vision", "lang"]},
+    {"id": "seed242", "runs": ["seed242"], "modalities": ["vision", "lang"]},
+    {"id": "m5_seed42", "runs": ["m5_seed42"], "modalities": ["vision", "lang"]}
+  ],
+  "language_policy": "Language is summarized per run only and never pooled: the seed-42 language baseline was zeroed while seeds 142 and 242 used encoded baselines (TMLR errata D13). Vision uses the gray-image baseline in every run. pooled_primary is the primary vision population; m5_seed42 is a sensitivity population and is never pooled with the primary runs.",
+  "outcome_groups": ["all", "success", "failure"],
+  "episode_key": ["source", "task", "model", "seed", "episode"],
+  "statistics": {
+    "counts": "n_raw_calls, n_defined_calls, n_undefined_calls, n_raw_episodes, n_defined_episodes, calls_per_episode_min/max; call counts are reported for every row because successful episodes are short",
+    "paired_median": "median of defined call Delta values (equal call weight), with its whole-episode bootstrap interval",
+    "positive_share": "defined calls with Delta > 0 divided by defined calls; negative and zero counts also reported",
+    "overshoot_share": "calls with at least one saved ordinate whose squared residual exceeds both endpoint residuals, divided by raw calls",
+    "fully_in_range_share": "defined calls with no overshoot and no undershoot ordinate, divided by defined calls; positive calls among them and among overshoot calls are also counted",
+    "min_max": "minimum and maximum defined call Delta",
+    "equal_call_mean": "math.fsum mean of defined call Delta values (descriptive; differs from the equal-episode mean when episode lengths differ)",
+    "equal_episode_mean": "math.fsum mean over defined episodes of the within-episode math.fsum mean Delta, with its whole-episode bootstrap interval",
+    "contributions": "equal-episode means of the within-episode mean trapezoid contributions of in-range, high-distance overshoot and low-distance undershoot nodes; they sum to the equal-episode mean (checked to 1e-9 relative)",
+    "episode_level": "median of within-episode mean Delta; count and share of episodes with a positive mean; count and share of episodes with any overshoot call; count and share of episodes whose calls are all fully in range; min and max episode mean",
+    "first_versus_later": "first means policy_call_idx 0, later means policy_call_idx > 0. For each: raw and defined calls, median, equal-call mean, min, max, positive share, overshoot calls and share, fully-in-range share, and contributions to the equal-episode mean using the whole population's weights 1/(E*n_e), so first plus later equals the equal-episode mean"
+  },
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 0,
+    "rng": "numpy.random.default_rng PCG64, integers(0, G, size=(block, G)) in blocks of at most 128 draws, the index stream of analysis.revision.core.bootstrap_summary",
+    "unit": "whole recorded episode within the summarized population and outcome group, unstratified by run; all defined calls of a selected episode stay together",
+    "median_draw": "median of all resampled defined calls with multiplicity",
+    "mean_draw": "math.fsum mean of the resampled within-episode means",
+    "interval": "2.5 and 97.5 percentiles, numpy linear method reproduced in pure Python",
+    "status": "fewer than 2 episodes gives no interval (insufficient_groups); exactly 2 is two_group_descriptive_only; otherwise conditional_empirical_episode_percentile",
+    "interpretation": "descriptive conditional intervals over recorded episodes; no multiplicity adjustment, calibration or significance claim"
+  },
+  "undefined_policy": "A zero endpoint gap in either response leaves the paired effect undefined; such calls stay in raw counts and are excluded only from defined-call statistics. Nonfinite or malformed values fail. No clipping, trimming or substitution.",
+  "outputs": {
+    "protocol.json": "byte copy of this protocol",
+    "inputs.json": "anchor verification, per-file authentication and stored-arithmetic checks, duplicate handling, per-run fingerprint, success roster and documented language input",
+    "calls.csv.gz": "one row per saved call, modality and direction with Delta, AUCs, endpoint residuals, maximum interior residual, node labels counts and contributions",
+    "episodes.csv": "one row per run, case and recorded episode",
+    "summary.csv": "one row per population, case and outcome group",
+    "call_index.csv": "first versus later calls per population, case and outcome group",
+    "provenance.json": "protocol, source, input and artifact SHA-256 hashes (gzip artifacts also hash their decompressed payload) and the environment"
+  },
+  "scope_limits": [
+    "Response-only rescoring of fixed saved rankings; no ranking efficacy, task-success causality or model comparison",
+    "Success and failure groups differ in episode length and in every unmeasured property of their contexts; their summaries are not a controlled contrast",
+    "The historical nominal percentage grid is retained; realized masks are not preserved with these curves",
+    "Checkpoint, observation, noise and reference action tensors remain unauthenticated; recorded episodes are not independently randomized units",
+    "Language baselines differ across runs; no cross-run language pooling or comparison is made"
+  ]
+}

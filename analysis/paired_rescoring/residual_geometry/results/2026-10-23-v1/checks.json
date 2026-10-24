@@ -1,0 +1,38 @@
+{
+  "headline": {
+    "frozen_calls": "analysis/paired_rescoring/results/2026-10-01-v1/calls.csv.gz",
+    "frozen_calls_sha256": "bcf06c972db579805b06f6050de3a74141b0c84bfaebb691656186eaf6a4a2ae",
+    "n_exact_delta": 6000,
+    "n_exact_residual_baseline": 6000,
+    "n_exact_residual_points": 6000,
+    "n_frozen_rows": 6000,
+    "n_raw_occurrences": 1524,
+    "n_recomputed": 6000,
+    "n_selected_occurrences": 1500
+  },
+  "n_calls_by_case": {
+    "1B-seed142:lang:deletion": 480,
+    "1B-seed142:lang:insertion": 480,
+    "1B-seed242:lang:deletion": 399,
+    "1B-seed242:lang:insertion": 399,
+    "1B-seed42:lang:deletion": 320,
+    "1B-seed42:lang:insertion": 320,
+    "1B:vision:deletion": 1199,
+    "1B:vision:insertion": 1199,
+    "L2:lang:deletion": 750,
+    "L2:lang:insertion": 750,
+    "L2:vision:deletion": 750,
+    "L2:vision:insertion": 750,
+    "Q:lang:deletion": 750,
+    "Q:lang:insertion": 750,
+    "Q:vision:deletion": 750,
+    "Q:vision:insertion": 750
+  },
+  "n_undefined_calls": 0,
+  "n_zero_baseline_calls": 0,
+  "oneb": {
+    "committed_calls": "analysis/paired_rescoring/oneb_success/results/2026-10-23-v1/calls.csv.gz",
+    "n_exact_delta": 4796,
+    "n_recomputed": 4796
+  }
+}

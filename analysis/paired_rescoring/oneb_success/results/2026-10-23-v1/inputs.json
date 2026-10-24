@@ -1,0 +1,357 @@
+{
+  "anchor": {
+    "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+    "canonical_verification": {
+      "artifact_hashes": 10,
+      "populations": 57,
+      "results": 284,
+      "valid_physical_records": 22966
+    },
+    "input_manifest_sha256": "3738e57f2b812c8ae335cceb04b5c25a5aa5b044b175d495bff12963feefabd1"
+  },
+  "files": [
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+      "conflict_excluded_records": 320,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "faithfulness": 320
+      },
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+      "physical_lines": 320,
+      "selected_records": 320,
+      "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+      "stored_arithmetic_checks": {
+        "auc_checks": 1280,
+        "deletion_delta_checks": 1920
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "auc_absolute_error": 8.881784197001252e-16
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 320
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17",
+      "conflict_excluded_records": 340,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "episode_end": 20,
+        "step": 320
+      },
+      "path": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+      "physical_lines": 340,
+      "selected_records": 340,
+      "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17",
+      "stored_arithmetic_checks": {
+        "completeness_checks": 960
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "completeness_absolute_error": 1.3738735399337898e-08
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 340
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+      "conflict_excluded_records": 480,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "faithfulness": 480
+      },
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+      "physical_lines": 480,
+      "selected_records": 480,
+      "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+      "stored_arithmetic_checks": {
+        "auc_checks": 1920,
+        "deletion_delta_checks": 2880
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "auc_absolute_error": 1.4210854715202004e-14
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 480
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4",
+      "conflict_excluded_records": 500,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "episode_end": 20,
+        "step": 480
+      },
+      "path": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+      "physical_lines": 500,
+      "selected_records": 500,
+      "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4",
+      "stored_arithmetic_checks": {
+        "completeness_checks": 1440
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "completeness_absolute_error": 4.0995960098877404e-08
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 500
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+      "conflict_excluded_records": 399,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "faithfulness": 399
+      },
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+      "physical_lines": 399,
+      "selected_records": 399,
+      "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+      "stored_arithmetic_checks": {
+        "auc_checks": 1596,
+        "deletion_delta_checks": 2394
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "auc_absolute_error": 1.1368683772161603e-13
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 399
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634",
+      "conflict_excluded_records": 419,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "episode_end": 20,
+        "step": 399
+      },
+      "path": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+      "physical_lines": 419,
+      "selected_records": 419,
+      "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634",
+      "stored_arithmetic_checks": {
+        "completeness_checks": 1197
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "completeness_absolute_error": 2.8869908158535296e-08
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 419
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+      "conflict_excluded_records": 334,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "faithfulness": 334
+      },
+      "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+      "physical_lines": 334,
+      "selected_records": 334,
+      "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+      "stored_arithmetic_checks": {
+        "auc_checks": 1336,
+        "deletion_delta_checks": 2004
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "auc_absolute_error": 1.7763568394002505e-15
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 334
+    },
+    {
+      "checkout_form": "canonical",
+      "checkout_sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7",
+      "conflict_excluded_records": 354,
+      "duplicate_classes": {},
+      "duplicate_differing_fields": [],
+      "duplicate_episodes": [],
+      "duplicate_groups": 0,
+      "events": {
+        "episode_end": 20,
+        "step": 334
+      },
+      "path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+      "physical_lines": 354,
+      "selected_records": 354,
+      "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7",
+      "stored_arithmetic_checks": {
+        "completeness_checks": 1002
+      },
+      "stored_arithmetic_maximum_discrepancies": {
+        "completeness_absolute_error": 1.5666377209400117e-08
+      },
+      "stored_arithmetic_undefined_auc": 0,
+      "valid_records": 354
+    }
+  ],
+  "max_abs_decomposition_residual": 5.684341886080802e-14,
+  "max_generalized_identity_error": 4.547473508864641e-13,
+  "n_calls_by_run": {
+    "m5_seed42": 334,
+    "seed142": 480,
+    "seed242": 399,
+    "seed42": 320
+  },
+  "n_undefined_case_calls": 0,
+  "runs": [
+    {
+      "conflict_excluded_membership_identical": true,
+      "documented_language_input": "Month 4 run (2026-05-26): the RDT authors' precomputed PickCube instruction embedding and a zeroed placeholder language baseline (notes Month 4/4.6, Month 6/6.2, TMLR errata D13)",
+      "faithfulness": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+      "fingerprint": {
+        "all_agree_general": true,
+        "all_agree_original": true,
+        "lang_general_agree": 320,
+        "lang_original_agree": 320,
+        "n_faithfulness": 320,
+        "n_joined": 320,
+        "n_missing": 0,
+        "vision_general_agree": 320,
+        "vision_original_agree": 320
+      },
+      "native": {
+        "n_nonzero_actual_scores": 0,
+        "n_rows": 320,
+        "native_scale": "Q"
+      },
+      "role": "primary",
+      "run": "seed42",
+      "steps": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+      "structure": {
+        "call_count_mismatches": 0,
+        "failure_calls": 275,
+        "failures": 11,
+        "n_calls": 320,
+        "n_episodes": 20,
+        "success_calls": 45,
+        "successes": 9
+      }
+    },
+    {
+      "conflict_excluded_membership_identical": true,
+      "documented_language_input": "Month 6 run (2026-06-14): pod-generated T5-XXL instruction embedding and the encoded PAD/EOS language baseline (notes Month 6/6.2, 6.3)",
+      "faithfulness": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+      "fingerprint": {
+        "all_agree_general": true,
+        "all_agree_original": true,
+        "lang_general_agree": 480,
+        "lang_original_agree": 480,
+        "n_faithfulness": 480,
+        "n_joined": 480,
+        "n_missing": 0,
+        "vision_general_agree": 480,
+        "vision_original_agree": 480
+      },
+      "native": {
+        "n_nonzero_actual_scores": 0,
+        "n_rows": 480,
+        "native_scale": "Q"
+      },
+      "role": "primary",
+      "run": "seed142",
+      "steps": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+      "structure": {
+        "call_count_mismatches": 0,
+        "failure_calls": 475,
+        "failures": 19,
+        "n_calls": 480,
+        "n_episodes": 20,
+        "success_calls": 5,
+        "successes": 1
+      }
+    },
+    {
+      "conflict_excluded_membership_identical": true,
+      "documented_language_input": "Month 6 run (2026-06-14): pod-generated T5-XXL instruction embedding and the encoded PAD/EOS language baseline (notes Month 6/6.2, 6.3)",
+      "faithfulness": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+      "fingerprint": {
+        "all_agree_general": true,
+        "all_agree_original": true,
+        "lang_general_agree": 399,
+        "lang_original_agree": 399,
+        "n_faithfulness": 399,
+        "n_joined": 399,
+        "n_missing": 0,
+        "vision_general_agree": 399,
+        "vision_original_agree": 399
+      },
+      "native": {
+        "n_nonzero_actual_scores": 0,
+        "n_rows": 399,
+        "native_scale": "Q"
+      },
+      "role": "primary",
+      "run": "seed242",
+      "steps": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+      "structure": {
+        "call_count_mismatches": 0,
+        "failure_calls": 375,
+        "failures": 15,
+        "n_calls": 399,
+        "n_episodes": 20,
+        "success_calls": 24,
+        "successes": 5
+      }
+    },
+    {
+      "conflict_excluded_membership_identical": true,
+      "documented_language_input": "Month 5 reproduction of seed 42 on another machine with real T5-XXL instruction embeddings and the encoded baseline (notes Month 5/5.7, Month 6/6.2)",
+      "faithfulness": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+      "fingerprint": {
+        "all_agree_general": true,
+        "all_agree_original": true,
+        "lang_general_agree": 334,
+        "lang_original_agree": 334,
+        "n_faithfulness": 334,
+        "n_joined": 334,
+        "n_missing": 0,
+        "vision_general_agree": 334,
+        "vision_original_agree": 334
+      },
+      "native": {
+        "n_nonzero_actual_scores": 0,
+        "n_rows": 334,
+        "native_scale": "Q"
+      },
+      "role": "sensitivity",
+      "run": "m5_seed42",
+      "steps": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+      "structure": {
+        "call_count_mismatches": 0,
+        "failure_calls": 300,
+        "failures": 12,
+        "n_calls": 334,
+        "n_episodes": 20,
+        "success_calls": 34,
+        "successes": 8
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+scope,population,task,model,modality,direction,n_curves,n_equal_1_and_5,G_assumed,historical_rule_implies_equal,instruction_task,documented_language_source
+headline_cohort,Q-ranked PickCube RDT-170M,PickCube-v1,170m,lang,insertion,750,750,20,True,,
+headline_cohort,Q-ranked PickCube RDT-170M,PickCube-v1,170m,lang,deletion,750,750,20,True,,
+headline_cohort,L2-ranked PickCube RDT-170M,PickCube-v1,170m,lang,insertion,750,750,20,True,,
+headline_cohort,L2-ranked PickCube RDT-170M,PickCube-v1,170m,lang,deletion,750,750,20,True,,
+all_faithfulness_files,data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl,PickCube-v1,1b,lang,both,668,668,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl,PickCube-v1,1b,vision,both,668,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed142.jsonl,PegInsertionSide-v1,170m,lang,both,700,700,25,True,PegInsertionSide-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed142.jsonl,PegInsertionSide-v1,170m,vision,both,700,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42.jsonl,PegInsertionSide-v1,170m,lang,both,700,700,25,True,PegInsertionSide-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42.jsonl,PegInsertionSide-v1,170m,vision,both,700,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl,PegInsertionSide-v1,170m,lang,both,400,400,25,True,PegInsertionSide-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl,PegInsertionSide-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PickCube-v1_170m_seed142.jsonl,PickCube-v1,170m,lang,both,400,400,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PickCube-v1_170m_seed142.jsonl,PickCube-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PickCube-v1_170m_seed42.jsonl,PickCube-v1,170m,lang,both,394,394,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PickCube-v1_170m_seed42.jsonl,PickCube-v1,170m,vision,both,394,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed142.jsonl,PickSingleYCB-v1,170m,lang,both,400,400,16,True,PickSingleYCB-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed142.jsonl,PickSingleYCB-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42.jsonl,PickSingleYCB-v1,170m,lang,both,394,394,16,True,PickSingleYCB-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42.jsonl,PickSingleYCB-v1,170m,vision,both,394,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl,PickSingleYCB-v1,170m,lang,both,400,400,16,True,PickSingleYCB-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl,PickSingleYCB-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_StackCube-v1_170m_seed142.jsonl,StackCube-v1,170m,lang,both,400,0,30,False,StackCube-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_StackCube-v1_170m_seed142.jsonl,StackCube-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/m7_metrics_faithfulness_StackCube-v1_170m_seed42.jsonl,StackCube-v1,170m,lang,both,400,0,30,False,StackCube-v1,encode_task_lang
+all_faithfulness_files,data/m7_metrics_faithfulness_StackCube-v1_170m_seed42.jsonl,StackCube-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl,PegInsertionSide-v1,170m,lang,both,400,400,25,True,PegInsertionSide-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl,PegInsertionSide-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl,PegInsertionSide-v1,170m,lang,both,400,400,25,True,PegInsertionSide-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl,PegInsertionSide-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl,PickCube-v1,170m,vision,both,750,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl,PickCube-v1,170m,vision,both,750,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_maxdev_20260530_083506.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_maxdev_20260530_083506.jsonl,PickCube-v1,170m,vision,both,750,13,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl,PickCube-v1,170m,vision,both,750,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl,PickCube-v1,170m,vision,both,750,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl,PickCube-v1,170m,lang,both,750,750,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl,PickCube-v1,170m,vision,both,750,15,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl,PickCube-v1,1b,lang,both,960,960,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl,PickCube-v1,1b,vision,both,960,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl,PickCube-v1,1b,lang,both,798,798,20,True,PickCube-v1,encode_task_lang
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl,PickCube-v1,1b,vision,both,798,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl,PickCube-v1,1b,lang,both,640,640,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl,PickCube-v1,1b,vision,both,640,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl,PickSingleYCB-v1,170m,lang,both,400,400,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl,PickSingleYCB-v1,170m,vision,both,400,0,729,False,,
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl,PickSingleYCB-v1,170m,lang,both,400,400,20,True,PickCube-v1,authors_precomputed
+all_faithfulness_files,data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl,PickSingleYCB-v1,170m,vision,both,400,0,729,False,,

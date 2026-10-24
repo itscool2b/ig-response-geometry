@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "analysis": "analysis.paired_rescoring.extra_tasks",
+  "analysis_version": "2026-10-23-v1",
+  "recorded_before_outcome_computation": true,
+  "recorded_on": "2026-10-23",
+  "reviewer_item": "NHSJS Must Fix 3: adding a second ManiSkill3 task",
+  "question": "Within each provenance-clean saved RDT-170M m=128 PegInsertionSide and PickSingleYCB curve, how much does changing only the response from Q to stabilized N change saved-grid normalized AUC?",
+  "pre_outcome_knowledge": "Before this protocol, only file structure was read: record counts, duplicate keys, own-sidecar fingerprints, success labels and calls per episode (notes Month 9/9.2 section 4). No paired difference was computed on these files.",
+  "anchors": {
+    "canonical_results": "analysis/revision/results/2026-09-30-v2",
+    "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+    "input_manifest": "analysis/revision/input_manifest.json",
+    "input_manifest_sha256": "3738e57f2b812c8ae335cceb04b5c25a5aa5b044b175d495bff12963feefabd1",
+    "frozen_paired_procedure": "analysis/paired_rescoring/analyze.py paired_curve, protocol analysis/paired_rescoring/protocol.json (2026-10-01-v1)",
+    "run_machinery": "analysis.paired_rescoring.oneb_success authenticate and compute, applied to this protocol"
+  },
+  "runs": [
+    {
+      "run": "PegInsertionSide_seed142",
+      "role": "primary",
+      "task": "PegInsertionSide-v1",
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl", "sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0"},
+      "steps": {"path": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl", "sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d"},
+      "expected_roster": {"n_episodes": 8, "n_calls": 200, "successes": 0, "failures": 8, "success_calls": 0, "failure_calls": 200},
+      "known_duplicates": "A --resume restart replayed episode 1: the 219 physical faithfulness rows and the 227 physical step-file lines (219 step rows and 8 episode_end rows) each hold 19 repeated keys, all in episode 1. The last physical occurrence of each key is selected (analysis.revision.core.reconcile); the classification and differing fields of every duplicate group are reported.",
+      "documented_language_input": "Month 4 m=128 run (E2 IG and E5 faithfulness, faithfulness file dated 2026-05-29): the RDT authors' precomputed PegInsertionSide instruction embedding and a zeroed BOS/EOS placeholder baseline (notes Month 4/4.6)"
+    },
+    {
+      "run": "PegInsertionSide_m7_seed42",
+      "role": "primary",
+      "task": "PegInsertionSide-v1",
+      "faithfulness": {"path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl", "sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2"},
+      "steps": {"path": "data/m7_metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl", "sha256": "e2d11810b17ce5724d3626a4c78be346017e58e94dadac875f211d4b4c256c8c"},
+      "expected_roster": {"n_episodes": 8, "n_calls": 200, "successes": 0, "failures": 8, "success_calls": 0, "failure_calls": 200},
+      "documented_language_input": "Month 7 verification rerun of the m=128 seed-42 arm (V4, 2026-08-24 to 2026-08-25): T5-XXL instruction embeddings generated with encode_task_lang.py and the encoded two-token baseline (notes Month 7/7.2)"
+    },
+    {
+      "run": "PickSingleYCB_seed142",
+      "role": "primary",
+      "task": "PickSingleYCB-v1",
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl", "sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330"},
+      "steps": {"path": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl", "sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde"},
+      "expected_roster": {"n_episodes": 8, "n_calls": 200, "successes": 0, "failures": 8, "success_calls": 0, "failure_calls": 200},
+      "documented_language_input": "Month 4 m=128 run (faithfulness file dated 2026-05-29): PickSingleYCB is absent from the RDT authors' precomputed embeddings, so the PickCube instruction embedding was used as a proxy, with a zeroed BOS/EOS placeholder baseline (notes Month 4/4.3, 4.6)"
+    },
+    {
+      "run": "PickSingleYCB_m7_seed42",
+      "role": "primary",
+      "task": "PickSingleYCB-v1",
+      "faithfulness": {"path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl", "sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30"},
+      "steps": {"path": "data/m7_metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl", "sha256": "fd7a9f6dd18be78b5567db3c0feab7463fee05c2e7e36828e8891538e9cb82c1"},
+      "expected_roster": {"n_episodes": 8, "n_calls": 200, "successes": 0, "failures": 8, "success_calls": 0, "failure_calls": 200},
+      "documented_language_input": "Month 7 verification rerun of the m=128 seed-42 arm (V4, 2026-08-24 to 2026-08-25): T5-XXL instruction embeddings generated with encode_task_lang.py and the encoded two-token baseline (notes Month 7/7.2)"
+    }
+  ],
+  "excluded": [
+    {
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl", "sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938"},
+      "nominal_steps": {"path": "data/metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl", "sha256": "5767cd828f3a9a77d5b299eb8d512533240d208437d1dfc5de4df4a4ee22c918"},
+      "clean_steps_same_task": {"path": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl", "sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d"},
+      "reason": "Pre-fix seed-42 m=128 faithfulness run that loaded seed-142 sidecars under shared sidecar filenames; own-sidecar fingerprint 0% (notes Month 7/7.1, Month 9/9.2). Excluded by exact filename; a pattern such as metrics_faithfulness_metrics_*_seed42_m128_* must never be used to select inputs."
+    },
+    {
+      "faithfulness": {"path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl", "sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513"},
+      "nominal_steps": {"path": "data/metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl", "sha256": "4bd6863e53425562bf039e9b18bea2760065e292fb28ef5986e5354b4fc9399e"},
+      "clean_steps_same_task": {"path": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl", "sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde"},
+      "reason": "Pre-fix seed-42 m=128 faithfulness run that loaded seed-142 sidecars under shared sidecar filenames; own-sidecar fingerprint 0% (notes Month 7/7.1, Month 9/9.2). Excluded by exact filename; a pattern such as metrics_faithfulness_metrics_*_seed42_m128_* must never be used to select inputs."
+    }
+  ],
+  "exclusion_documentation": "For each excluded file: the own-sidecar fingerprint against its nominal step file (must be 0 agreeing rows in both modalities, otherwise the analysis fails), and the general-form fingerprint against the clean seed-142 step file of the same task joined on (task, model, episode, policy_call_idx) without the seed label (recorded, no expectation). Excluded files are never rescored.",
+  "event": "faithfulness",
+  "native_scale": "Q",
+  "native_scale_rule": "Saved curves are Q-scored (default logpi target), Q = -r/(2*512); r = -2*512*Q. Every stored vision and language f_input must equal 0, otherwise the run fails.",
+  "dimension": 512,
+  "stabilizer_epsilon": 1e-12,
+  "modalities": ["vision", "lang"],
+  "directions": ["insertion", "deletion"],
+  "occurrence_rule": "last physical occurrence of each key within its source file (analysis.revision.core.reconcile); the conflict-excluded membership comparison is recorded",
+  "own_sidecar_fingerprint": "Join each faithfulness row to its run's step row on (task, model, seed, episode, policy_call_idx). For vision and language, original form: abs(-step_gap - f_baseline) <= 1e-6*max(abs(step_gap), abs(f_baseline), 1e-12); general form: the same test of step_gap against f_input - f_baseline. Every row of every included run must join and agree in both forms, otherwise the analysis fails.",
+  "success_label": "The boolean success field of the run's own episode_end row joined on (task, model, seed, episode); every included episode is a failure (expected_roster successes 0), so there is no success split.",
+  "rescoring": "analysis.paired_rescoring.analyze.paired_curve(k_grid_auc, curve, f_input, f_baseline, 'Q', dimension=512, epsilon=1e-12) per saved curve; Delta = AUC_Q - AUC_N on the same saved nodes and endpoints; positive Delta means scoring with N lowers that AUC.",
+  "populations": [
+    {"id": "PegInsertionSide_pooled", "runs": ["PegInsertionSide_seed142", "PegInsertionSide_m7_seed42"], "modalities": ["vision"]},
+    {"id": "PegInsertionSide_seed142", "runs": ["PegInsertionSide_seed142"], "modalities": ["vision", "lang"]},
+    {"id": "PegInsertionSide_m7_seed42", "runs": ["PegInsertionSide_m7_seed42"], "modalities": ["vision", "lang"]},
+    {"id": "PickSingleYCB_pooled", "runs": ["PickSingleYCB_seed142", "PickSingleYCB_m7_seed42"], "modalities": ["vision"]},
+    {"id": "PickSingleYCB_seed142", "runs": ["PickSingleYCB_seed142"], "modalities": ["vision", "lang"]},
+    {"id": "PickSingleYCB_m7_seed42", "runs": ["PickSingleYCB_m7_seed42"], "modalities": ["vision", "lang"]}
+  ],
+  "language_policy": "Language is summarized per run only and never pooled: the seed-142 runs used the authors' precomputed embedding (for PickSingleYCB, the PickCube embedding as a proxy) with a zeroed placeholder baseline, while the Month 7 reruns used encode_task_lang.py embeddings with the encoded baseline. Vision uses the gray-image baseline in every run and is pooled per task.",
+  "outcome_groups": ["all"],
+  "episode_key": ["source", "task", "model", "seed", "episode"],
+  "statistics": "identical to analysis/paired_rescoring/oneb_success/protocol.json statistics, with the single outcome group all",
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 0,
+    "rng": "numpy.random.default_rng PCG64, integers(0, G, size=(block, G)) in blocks of at most 128 draws, the index stream of analysis.revision.core.bootstrap_summary",
+    "unit": "whole recorded episode within the summarized population, unstratified by run; all defined calls of a selected episode stay together",
+    "median_draw": "median of all resampled defined calls with multiplicity",
+    "mean_draw": "math.fsum mean of the resampled within-episode means",
+    "interval": "2.5 and 97.5 percentiles, numpy linear method reproduced in pure Python",
+    "status": "fewer than 2 episodes gives no interval (insufficient_groups); exactly 2 is two_group_descriptive_only; otherwise conditional_empirical_episode_percentile",
+    "interpretation": "descriptive conditional intervals over recorded episodes; no multiplicity adjustment, calibration or significance claim"
+  },
+  "undefined_policy": "A zero endpoint gap in either response leaves the paired effect undefined; such calls stay in raw counts and are excluded only from defined-call statistics. Nonfinite or malformed values fail. No clipping, trimming or substitution.",
+  "outputs": {
+    "protocol.json": "byte copy of this protocol",
+    "inputs.json": "anchor verification, per-file authentication, stored-arithmetic checks and duplicate handling, per-run fingerprint, roster and documented language input, and the excluded-file fingerprints",
+    "calls.csv.gz": "one row per saved call, modality and direction",
+    "episodes.csv": "one row per run, case and recorded episode",
+    "summary.csv": "one row per population, case and outcome group",
+    "call_index.csv": "first versus later calls per population and case",
+    "provenance.json": "protocol, source, input and artifact SHA-256 hashes and the environment"
+  },
+  "scope_limits": [
+    "Response-only rescoring of fixed saved rankings on RDT-170M runs with no successes; no ranking efficacy or task-success claim",
+    "m=128 IG rankings, a different integration budget from the m=64 PickCube headline cohorts",
+    "The historical nominal percentage grid is retained; realized masks are not preserved with these curves",
+    "Checkpoint, observation, noise and reference action tensors remain unauthenticated; recorded episodes are not independently randomized units",
+    "PickSingleYCB seed-142 language curves were computed with the PickCube instruction embedding as a proxy; they do not describe the PickSingleYCB instruction"
+  ]
+}

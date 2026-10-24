@@ -1,0 +1,126 @@
+{
+  "analysis": "analysis.paired_rescoring.extra_tasks",
+  "analysis_version": "2026-10-23-v1",
+  "artifacts": {
+    "call_index.csv": {
+      "bytes": 9716,
+      "sha256": "10ac694404e7267fc162ba678bf8d409f213ed55ab4c1a892e9517faeaaa06d9"
+    },
+    "calls.csv.gz": {
+      "bytes": 519032,
+      "sha256": "195ed50a3dddb97d47e7301cdf8a46c56ebcaf0f0f572efb6bcf41f03962ed46",
+      "uncompressed_sha256": "fdbe69f94a5d999ad88e3cde5966bd22b384245a8a755360415250c4d2c80b79"
+    },
+    "episodes.csv": {
+      "bytes": 48474,
+      "sha256": "9bc46d54c50ff30d43ca7eba66abb6aae52e3f70479236fc533cc265605105b2"
+    },
+    "inputs.json": {
+      "bytes": 20982,
+      "sha256": "ca89bb2621707769a23a26a5e68cb9a6c56be97b4b2b6a36c77368648c50bec8"
+    },
+    "protocol.json": {
+      "bytes": 12680,
+      "sha256": "10b370c8054218a9afc7acd82dcc3b53971aa7c6ad5c1a0f92d67283652c7019"
+    },
+    "summary.csv": {
+      "bytes": 12437,
+      "sha256": "ad4c127d49a1a0584759822a45172718843f4710738f305e1fbb7464cfd6e9d0"
+    }
+  },
+  "command": "python -m analysis.paired_rescoring.extra_tasks --output <new-empty-directory>",
+  "environment": {
+    "machine": "arm64",
+    "numpy": "2.5.3",
+    "python": "3.12.13",
+    "system": "Darwin",
+    "zlib_runtime": "1.2.12"
+  },
+  "inputs": [
+    {
+      "checkout_sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0",
+      "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+      "sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0"
+    },
+    {
+      "checkout_sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d",
+      "path": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d"
+    },
+    {
+      "checkout_sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2",
+      "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+      "sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2"
+    },
+    {
+      "checkout_sha256": "e2d11810b17ce5724d3626a4c78be346017e58e94dadac875f211d4b4c256c8c",
+      "path": "data/m7_metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+      "sha256": "e2d11810b17ce5724d3626a4c78be346017e58e94dadac875f211d4b4c256c8c"
+    },
+    {
+      "checkout_sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330",
+      "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl",
+      "sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330"
+    },
+    {
+      "checkout_sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde",
+      "path": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl",
+      "sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde"
+    },
+    {
+      "checkout_sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30",
+      "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+      "sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30"
+    },
+    {
+      "checkout_sha256": "fd7a9f6dd18be78b5567db3c0feab7463fee05c2e7e36828e8891538e9cb82c1",
+      "path": "data/m7_metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+      "sha256": "fd7a9f6dd18be78b5567db3c0feab7463fee05c2e7e36828e8891538e9cb82c1"
+    },
+    {
+      "checkout_sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938",
+      "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl",
+      "sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938"
+    },
+    {
+      "checkout_sha256": "5767cd828f3a9a77d5b299eb8d512533240d208437d1dfc5de4df4a4ee22c918",
+      "path": "data/metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+      "sha256": "5767cd828f3a9a77d5b299eb8d512533240d208437d1dfc5de4df4a4ee22c918"
+    },
+    {
+      "checkout_sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d",
+      "path": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+      "sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d"
+    },
+    {
+      "checkout_sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513",
+      "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl",
+      "sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513"
+    },
+    {
+      "checkout_sha256": "4bd6863e53425562bf039e9b18bea2760065e292fb28ef5986e5354b4fc9399e",
+      "path": "data/metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+      "sha256": "4bd6863e53425562bf039e9b18bea2760065e292fb28ef5986e5354b4fc9399e"
+    },
+    {
+      "checkout_sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde",
+      "path": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl",
+      "sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde"
+    }
+  ],
+  "interpretation": "retrospective_descriptive_response_only_rescoring_no_efficacy_claim",
+  "protocol_sha256": "10b370c8054218a9afc7acd82dcc3b53971aa7c6ad5c1a0f92d67283652c7019",
+  "schema_version": 1,
+  "source_sha256": {
+    "analysis/paired_rescoring/analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61",
+    "analysis/paired_rescoring/curve_stats/__init__.py": "b9e07fe840c0112abb827830848472eca1f1baaee88325118643ec9ebd311d53",
+    "analysis/paired_rescoring/extra_tasks/__init__.py": "5286c0725b6fe8890a9d2c7dbeb97d40966812716d8813252c57b976b46b6d9a",
+    "analysis/paired_rescoring/extra_tasks/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/paired_rescoring/oneb_success/__init__.py": "7d8b9274cbee19936afd000890e2c5f84c862f64e71daf3672c87c1714119565",
+    "analysis/paired_rescoring/oneb_success/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/revision/analyze.py": "b24a8c5da3b5aeb90064bffe71a4a53063073a45ecaf2feb792f28dc3af2059a",
+    "analysis/revision/core.py": "f8c7a2ca6e50fb780c105f0d2dccb8576c3e19b90fe91ef9dd22ee6abb734f80",
+    "analysis/revision/verify.py": "10e0bef246eeddab8d5b2aa0777dbefdf1ab7310cf0cac189c62da7c59527fcd"
+  },
+  "verify_command": "python -m analysis.paired_rescoring.extra_tasks --verify <result-directory>"
+}

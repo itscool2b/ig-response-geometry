@@ -1,0 +1,94 @@
+{
+  "analysis": "analysis.paired_rescoring.oneb_success",
+  "analysis_version": "2026-10-23-v1",
+  "artifacts": {
+    "call_index.csv": {
+      "bytes": 25544,
+      "sha256": "ad85f3892c1000c5ce4d20bd409fee54622b0d09141ecb02b87cb57cb23d7b02"
+    },
+    "calls.csv.gz": {
+      "bytes": 1003579,
+      "sha256": "5792bea1ff1d7563e3d5d99bd80ddabd9fef519e34a221bb2851bc2e62108395",
+      "uncompressed_sha256": "faf43f8ac8541e784cca814bdac957ed3d714e4a98bb135fcc8132d8321a9dd0"
+    },
+    "episodes.csv": {
+      "bytes": 110342,
+      "sha256": "2c1cbd5a717f7fb2874ce15bf3a37486a8aee3216c8335f881cc045f698ea1c4"
+    },
+    "inputs.json": {
+      "bytes": 12229,
+      "sha256": "d65e5e408955623db495b7962e8c939e9defdb53d300cb5bb78a612fb812ef7b"
+    },
+    "protocol.json": {
+      "bytes": 11498,
+      "sha256": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629"
+    },
+    "summary.csv": {
+      "bytes": 33014,
+      "sha256": "7ed151db1250cffc89177c70ab9427551d8bebfcce85cae2f67c868fa144a69c"
+    }
+  },
+  "command": "python -m analysis.paired_rescoring.oneb_success --output <new-empty-directory>",
+  "environment": {
+    "machine": "arm64",
+    "numpy": "2.5.3",
+    "python": "3.12.13",
+    "system": "Darwin",
+    "zlib_runtime": "1.2.12"
+  },
+  "inputs": [
+    {
+      "checkout_sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+      "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233"
+    },
+    {
+      "checkout_sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17",
+      "path": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+      "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17"
+    },
+    {
+      "checkout_sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+      "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4"
+    },
+    {
+      "checkout_sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4",
+      "path": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+      "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4"
+    },
+    {
+      "checkout_sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+      "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+      "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048"
+    },
+    {
+      "checkout_sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634",
+      "path": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+      "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634"
+    },
+    {
+      "checkout_sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+      "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+      "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93"
+    },
+    {
+      "checkout_sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7",
+      "path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+      "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7"
+    }
+  ],
+  "interpretation": "retrospective_descriptive_response_only_rescoring_no_efficacy_claim",
+  "protocol_sha256": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629",
+  "schema_version": 1,
+  "source_sha256": {
+    "analysis/paired_rescoring/analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61",
+    "analysis/paired_rescoring/curve_stats/__init__.py": "b9e07fe840c0112abb827830848472eca1f1baaee88325118643ec9ebd311d53",
+    "analysis/paired_rescoring/oneb_success/__init__.py": "7d8b9274cbee19936afd000890e2c5f84c862f64e71daf3672c87c1714119565",
+    "analysis/paired_rescoring/oneb_success/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/revision/analyze.py": "b24a8c5da3b5aeb90064bffe71a4a53063073a45ecaf2feb792f28dc3af2059a",
+    "analysis/revision/core.py": "f8c7a2ca6e50fb780c105f0d2dccb8576c3e19b90fe91ef9dd22ee6abb734f80",
+    "analysis/revision/verify.py": "10e0bef246eeddab8d5b2aa0777dbefdf1ab7310cf0cac189c62da7c59527fcd"
+  },
+  "verify_command": "python -m analysis.paired_rescoring.oneb_success --verify <result-directory>"
+}

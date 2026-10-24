@@ -1,0 +1,44 @@
+{
+  "files": {
+    "lang_embeds/text_embed_PegInsertionSide-v1.pt": {
+      "bytes": 206223,
+      "dtype": "torch.bfloat16",
+      "sha256": "da798aab9df67a230259095c0d087772d10ff2dd089bd71762a1b6d1696dbbf3",
+      "shape": [
+        1,
+        25,
+        4096
+      ],
+      "token_positions": 25
+    },
+    "lang_embeds/text_embed_PickCube-v1.pt": {
+      "bytes": 165159,
+      "dtype": "torch.bfloat16",
+      "sha256": "a9ac30bc88ef12b171e9323b8a2c64f0b0ae9a54715deb061c021deaadb37f7a",
+      "shape": [
+        1,
+        20,
+        4096
+      ],
+      "token_positions": 20
+    },
+    "lang_embeds/text_embed_StackCube-v1.pt": {
+      "bytes": 247084,
+      "dtype": "torch.bfloat16",
+      "sha256": "ca0a1f758d183e4c541b412efd2ffafacae7bdc7220d03f7e9dca3e93bb28985",
+      "shape": [
+        1,
+        30,
+        4096
+      ],
+      "token_positions": 30
+    }
+  },
+  "files_last_commit": {
+    "commit": "7fdb1b3ada5dac421e9d16bcfb042a099fa94d74",
+    "date": "2024-12-17T12:54:49Z",
+    "title": "Upload 5 files"
+  },
+  "repository": "robotics-diffusion-transformer/maniskill-model",
+  "revision": "9622afab2b7ce2312a6cf1febc526928589b77eb"
+}

@@ -1,0 +1,77 @@
+{
+  "archived_copy": {
+    "crlf_lines": 369,
+    "equal_to_reference_after_crlf_to_lf": true,
+    "lines": 369,
+    "path": "docs/tmlr-readiness/archives/active-originals/2026-10-01-numerical-freeze-amendment/faithfulness.py.historical",
+    "reference_commit": "e4ad8bf",
+    "sha256": "6cf1e78d3d3e485a43169eed89a1fda7f2718dcd16c03bb1d2c9c882a31be541"
+  },
+  "commits": [
+    {
+      "commit": "afd12493b0be3c5f1df8da704844e00b982b02c1",
+      "committer_date": "2026-04-26T01:07:55-04:00",
+      "faithfulness_py_sha256": "154c03b4eec9d5a6e7cae1eee959cbc77233ff87c512aecdb04790cb6f42cc0a",
+      "floor_present": true,
+      "k_count_lines": [
+        {
+          "line": 98,
+          "text": "k_count = max(1, int(round(n_total * k_pct / 100.0)))"
+        }
+      ],
+      "no_floor_present": false
+    },
+    {
+      "commit": "b887a96ed374721095e2c5f45fa49eb27e3a54fb",
+      "committer_date": "2026-05-29T16:52:26-04:00",
+      "faithfulness_py_sha256": "2d375f228505d5d03bebf6df315365363291129f516ad7022678ff9aef7111fb",
+      "floor_present": true,
+      "k_count_lines": [
+        {
+          "line": 102,
+          "text": "k_count = max(1, int(round(n_total * k_pct / 100.0)))"
+        }
+      ],
+      "no_floor_present": false
+    },
+    {
+      "commit": "e4ad8bfc5c56a984ba16853083f89a870f8e6ede",
+      "committer_date": "2026-06-12T02:35:08+09:00",
+      "faithfulness_py_sha256": "d845af7c85d0bada545648a8d43b295b539bb3fd8ec245545dcea82744cc26c6",
+      "floor_present": true,
+      "k_count_lines": [
+        {
+          "line": 102,
+          "text": "k_count = max(1, int(round(n_total * k_pct / 100.0)))"
+        }
+      ],
+      "no_floor_present": false
+    },
+    {
+      "commit": "c9eacfbd1961f02f48766ef89ad6134320efa093",
+      "committer_date": "2026-09-30T21:27:59-04:00",
+      "faithfulness_py_sha256": "74d51dd97469544bf69e2f8b8edfac47688e6335c565dd9654c80e4a95795ed9",
+      "floor_present": false,
+      "k_count_lines": [
+        {
+          "line": 132,
+          "text": "k_count = int(round(n_total * k_pct / 100.0))"
+        }
+      ],
+      "no_floor_present": true
+    },
+    {
+      "commit": "934023d72130e3d3e3c4b0f620cd7b7db9bd4d6f",
+      "committer_date": "2026-10-01T17:39:57-04:00",
+      "faithfulness_py_sha256": "b7f3dd5f07c0a7f43d2b2a77f23ebef5510a5fe380a7cc3cd3408e4f7aa72772",
+      "floor_present": false,
+      "k_count_lines": [
+        {
+          "line": 132,
+          "text": "k_count = int(round(n_total * k_pct / 100.0))"
+        }
+      ],
+      "no_floor_present": true
+    }
+  ]
+}

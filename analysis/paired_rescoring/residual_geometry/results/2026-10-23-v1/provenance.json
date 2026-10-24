@@ -1,0 +1,175 @@
+{
+  "analysis": "analysis.paired_rescoring.residual_geometry",
+  "analysis_version": "2026-10-23-v1",
+  "artifacts": {
+    "bins.csv": {
+      "bytes": 68617,
+      "sha256": "4eadacc587100ed43282cc4303e7cc312200ec9036010f07f9d826690f136eb4"
+    },
+    "calls.csv.gz": {
+      "bytes": 1235589,
+      "sha256": "74db8b2732b037ab7199fca190d5f6ec0d9f4e8e0c7f9ce1165e12971c3f5831",
+      "uncompressed_sha256": "0855d65be53716b7eddffaa2977f87ac8c071ee1a467b64c7bb073a2503605cf"
+    },
+    "checks.json": {
+      "bytes": 1205,
+      "sha256": "178d45e6a9f4dd54eac4075d7796cf1449bc139ec97ef1179e4bcfa99d88cfd4"
+    },
+    "correlations.csv": {
+      "bytes": 3848,
+      "sha256": "b356f491d5c9902ddc2324d46a18e579923f746a31038b081034acd9980460cb"
+    },
+    "headline.pdf": {
+      "bytes": 802171,
+      "sha256": "ab99351af28f931dadea73d14244a1fc8286a94141c0e571e990772d53726ed7"
+    },
+    "headline.png": {
+      "bytes": 391603,
+      "sha256": "29dbc177fda9103003e42246f72d473cbc7c3212b55b29a1c45db6b90aa81b18"
+    },
+    "oneb.pdf": {
+      "bytes": 669930,
+      "sha256": "50b002f7e6e953108e0f83d95b371b673e308bcf4a27f456ddcbe719d1331041"
+    },
+    "oneb.png": {
+      "bytes": 399775,
+      "sha256": "47025aed8b59cdca42d2b4cfa73d212329c826626f1fb6620bb4ea4ea3289bfb"
+    },
+    "protocol.json": {
+      "bytes": 8986,
+      "sha256": "36835c0a6a43d848f5927d37186a4763aacdead263d0e918d22a77d1a126aa19"
+    }
+  },
+  "command": "python -m analysis.paired_rescoring.residual_geometry --output <new-empty-directory>",
+  "environment": {
+    "machine": "arm64",
+    "numpy": "2.5.3",
+    "python": "3.12.13",
+    "system": "Darwin",
+    "zlib_runtime": "1.2.12"
+  },
+  "figure_environment": {
+    "backend": "Agg",
+    "color_values_clipped_to_limits": {
+      "headline": 0,
+      "oneb": 19
+    },
+    "freetype": "2.14.3",
+    "matplotlib": "3.11.2",
+    "pdf_compression": 0,
+    "pdf_metadata": {
+      "CreationDate": null
+    },
+    "pillow": "12.3.0",
+    "pillow_zlib": "1.3.1.zlib-ng",
+    "png_dpi": 300
+  },
+  "inputs": {
+    "declared": [
+      {
+        "path": "analysis/paired_rescoring/protocol.json",
+        "sha256": "eb7008b23a0638a0a5dfac4653c45145715e0dcde20b3d4ea2e579d5eea1ec6f"
+      },
+      {
+        "path": "analysis/paired_rescoring/results/2026-10-01-v1/provenance.json",
+        "sha256": "2cedd28dbc9cb3b09bc7516ab9420cdf456deb80ebe1555b4725ecff42771573"
+      },
+      {
+        "path": "analysis/paired_rescoring/results/2026-10-01-v1/calls.csv.gz",
+        "sha256": "bcf06c972db579805b06f6050de3a74141b0c84bfaebb691656186eaf6a4a2ae"
+      },
+      {
+        "path": "analysis/paired_rescoring/oneb_success/results/2026-10-23-v1/calls.csv.gz",
+        "sha256": "5792bea1ff1d7563e3d5d99bd80ddabd9fef519e34a221bb2851bc2e62108395"
+      },
+      {
+        "path": "analysis/paired_rescoring/oneb_success/protocol.json",
+        "sha256": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629"
+      }
+    ],
+    "headline_raw": [
+      {
+        "checkout_sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c"
+      },
+      {
+        "checkout_sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8"
+      },
+      {
+        "checkout_sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb"
+      },
+      {
+        "checkout_sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f"
+      }
+    ],
+    "oneb_raw": [
+      {
+        "checkout_sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+        "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233"
+      },
+      {
+        "checkout_sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17",
+        "path": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+        "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17"
+      },
+      {
+        "checkout_sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+        "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4"
+      },
+      {
+        "checkout_sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4",
+        "path": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+        "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4"
+      },
+      {
+        "checkout_sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+        "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048"
+      },
+      {
+        "checkout_sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634",
+        "path": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+        "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634"
+      },
+      {
+        "checkout_sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+        "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+        "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93"
+      },
+      {
+        "checkout_sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7",
+        "path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+        "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7"
+      }
+    ]
+  },
+  "interpretation": "descriptive_geometry_no_causal_claim",
+  "png_pixels_sha256": {
+    "headline.png": "227a91e276d76c0cb7bd906e800052ce07a608bb00a2e5d1f488832404f3b96c",
+    "oneb.png": "18d0e9024df2feb5e84dadabde30d9989f855b8b8ddf6c181e4afb7cd4d67072"
+  },
+  "protocol_sha256": "36835c0a6a43d848f5927d37186a4763aacdead263d0e918d22a77d1a126aa19",
+  "schema_version": 1,
+  "source_sha256": {
+    "analysis/paired_rescoring/analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61",
+    "analysis/paired_rescoring/curve_stats/__init__.py": "b9e07fe840c0112abb827830848472eca1f1baaee88325118643ec9ebd311d53",
+    "analysis/paired_rescoring/oneb_success/__init__.py": "7d8b9274cbee19936afd000890e2c5f84c862f64e71daf3672c87c1714119565",
+    "analysis/paired_rescoring/oneb_success/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/paired_rescoring/residual_geometry/__init__.py": "644d0e4237e840cb1c80fd9b72877ad14e5eb18124c2790f0bade3af8642b914",
+    "analysis/paired_rescoring/residual_geometry/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/paired_rescoring/residual_geometry/figures.py": "41accfc1a6f6ab08d573a17415197a41fbbd46891eba6b5bd28dd8e1e15a887e",
+    "analysis/revision/analyze.py": "b24a8c5da3b5aeb90064bffe71a4a53063073a45ecaf2feb792f28dc3af2059a",
+    "analysis/revision/core.py": "f8c7a2ca6e50fb780c105f0d2dccb8576c3e19b90fe91ef9dd22ee6abb734f80",
+    "analysis/revision/verify.py": "10e0bef246eeddab8d5b2aa0777dbefdf1ab7310cf0cac189c62da7c59527fcd"
+  },
+  "verify_command": "python -m analysis.paired_rescoring.residual_geometry --verify <result-directory>"
+}

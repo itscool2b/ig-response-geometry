@@ -1,0 +1,94 @@
+{
+  "environment": {
+    "machine": "arm64",
+    "numpy": "2.5.3",
+    "system": "Darwin"
+  },
+  "note": "numpy.polynomial.legendre.leggauss nodes come from a LAPACK eigenvalue solve plus one Newton step; their last bits, and so these sums, can differ by a few ulps between platforms",
+  "rows": [
+    {
+      "m": 16,
+      "minus_mp50": 1.5428274259319947e-17,
+      "minus_stable_float64": 0.0,
+      "target": "N",
+      "value_numpy_leggauss": 0.999999999728
+    },
+    {
+      "m": 16,
+      "minus_mp50": 0.0,
+      "minus_stable_float64": 0.0,
+      "target": "Q",
+      "value_numpy_leggauss": 0.5
+    },
+    {
+      "m": 32,
+      "minus_mp50": 2.042273836583453e-18,
+      "minus_stable_float64": 0.0,
+      "target": "N",
+      "value_numpy_leggauss": 0.9999999989440004
+    },
+    {
+      "m": 32,
+      "minus_mp50": 0.0,
+      "minus_stable_float64": 0.0,
+      "target": "Q",
+      "value_numpy_leggauss": 0.5
+    },
+    {
+      "m": 64,
+      "minus_mp50": -3.7515755011316115e-17,
+      "minus_stable_float64": 0.0,
+      "target": "N",
+      "value_numpy_leggauss": 0.999999995840023
+    },
+    {
+      "m": 64,
+      "minus_mp50": 0.0,
+      "minus_stable_float64": 0.0,
+      "target": "Q",
+      "value_numpy_leggauss": 0.5
+    },
+    {
+      "m": 128,
+      "minus_mp50": -1.6264982247345448e-16,
+      "minus_stable_float64": -2.220446049250313e-16,
+      "target": "N",
+      "value_numpy_leggauss": 0.999999983489438
+    },
+    {
+      "m": 128,
+      "minus_mp50": -1.1102230246251565e-16,
+      "minus_stable_float64": -1.1102230246251565e-16,
+      "target": "Q",
+      "value_numpy_leggauss": 0.4999999999999999
+    },
+    {
+      "m": 256,
+      "minus_mp50": 9.191067846049601e-18,
+      "minus_stable_float64": 0.0,
+      "target": "N",
+      "value_numpy_leggauss": 0.99999993429882
+    },
+    {
+      "m": 256,
+      "minus_mp50": 0.0,
+      "minus_stable_float64": 0.0,
+      "target": "Q",
+      "value_numpy_leggauss": 0.5
+    },
+    {
+      "m": 512,
+      "minus_mp50": 8.107074685010983e-17,
+      "minus_stable_float64": 1.1102230246251565e-16,
+      "target": "N",
+      "value_numpy_leggauss": 0.9999997429781641
+    },
+    {
+      "m": 512,
+      "minus_mp50": 0.0,
+      "minus_stable_float64": 0.0,
+      "target": "Q",
+      "value_numpy_leggauss": 0.5
+    }
+  ]
+}

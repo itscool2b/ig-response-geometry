@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "analysis": "analysis.completeness_audit",
+  "analysis_version": "2026-10-23-v1",
+  "recorded_before_outcome_computation": true,
+  "recorded_on": "2026-10-23",
+  "reviewer_item": "NHSJS Must Fix 6, saved-data part: completeness residuals of the saved rankings and the endpoint-weighting example",
+  "questions": [
+    "(a) For each faithfulness cohort whose curves are rescored (the paper's Q-ranked and N-ranked PickCube cohorts, the RDT-1B runs and the m=128 extra-task runs), which step file holds the IG sums of its own rankings, and what are their completeness residuals?",
+    "(b) What do four quadrature rules give for the reviewer's one-dimensional N-target example?"
+  ],
+  "pre_outcome_knowledge": "notes Month 9/9.2 sections 1 and 2 reported residual summaries computed inline on 2026-10-22 and the endpoint example values; the Q-ranked row there used the regeneration base run metrics_PickCube-v1_170m_seed{42,142}.jsonl without a fingerprint check. Before this protocol the fingerprint matrix of the headline faithfulness files against the PickCube step files was read (structure only). No residual summary or bf16 analysis of this protocol was computed before it was recorded.",
+  "anchors": {
+    "canonical_results": "analysis/revision/results/2026-09-30-v2",
+    "canonical_provenance_sha256": "606cfd5307afeff873789ef48db969d914a42348552b447a6daf298182ff0a8b",
+    "input_manifest": "analysis/revision/input_manifest.json",
+    "input_manifest_sha256": "3738e57f2b812c8ae335cceb04b5c25a5aa5b044b175d495bff12963feefabd1"
+  },
+  "cohorts": [
+    {
+      "id": "Q_ranked_headline",
+      "description": "the paper's Q-ranked RDT-170M PickCube cohort (target logpi, Month 6)",
+      "faithfulness": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+          "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f"
+        },
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+          "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m5_metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "fe789314b85caaba12b8b268c16899813f96343541ae7308903e2fadff259be6"
+        },
+        {
+          "path": "data/m7_metrics_PickCube-v1_170m_seed142.jsonl",
+          "sha256": "4b408ad9d7a67187dc664033addd42f2a1f500eabbecb8bd8404b2804b2a3351"
+        },
+        {
+          "path": "data/m7_metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "64198669880ac7f738ccd01ec81cc45939940ea97641282fb59f398dc54aa40f"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142.jsonl",
+          "sha256": "a8b3dbd12ce19a0306462ca2758f5992e3e746a858bab02dd501836b274ec5b0"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_l2.jsonl",
+          "sha256": "a9378f7851580a381d528f2f3bd5d8f2574107de06be9cc7bb8d04b81640a25c"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_logpi.jsonl",
+          "sha256": "49a86a1e259ea3a0864346cbdfd81be6f094f2b520a8d8b0f7caeb15a01176a7"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_maxdev.jsonl",
+          "sha256": "f9f2c71a7a41f182b9d3893474d7ba36010b29177c2e6795c049a2c721481d20"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "5877f8df13457ec71deb263f30f03e9cf0d4e69ff39530d4d5414401bb05dd9c"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+          "sha256": "ee4ac107d04d0e5fbe9b5b44840aeedac17d926bddf361255f288f179f08ce8f"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_logpi.jsonl",
+          "sha256": "aae5595c417092c0ad176a2b67d00b4d9797d0c5ae8ec4794a673161b224a4e5"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+          "sha256": "7db5383efb9f0cecb0e9397a755f79034e0cd5c981e88d1a5ae1c56b1947d916"
+        }
+      ]
+    },
+    {
+      "id": "N_ranked_headline",
+      "description": "the paper's N-ranked RDT-170M PickCube cohort (target l2, Month 4)",
+      "faithfulness": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+          "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb"
+        },
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+          "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m5_metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "fe789314b85caaba12b8b268c16899813f96343541ae7308903e2fadff259be6"
+        },
+        {
+          "path": "data/m7_metrics_PickCube-v1_170m_seed142.jsonl",
+          "sha256": "4b408ad9d7a67187dc664033addd42f2a1f500eabbecb8bd8404b2804b2a3351"
+        },
+        {
+          "path": "data/m7_metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "64198669880ac7f738ccd01ec81cc45939940ea97641282fb59f398dc54aa40f"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142.jsonl",
+          "sha256": "a8b3dbd12ce19a0306462ca2758f5992e3e746a858bab02dd501836b274ec5b0"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_l2.jsonl",
+          "sha256": "a9378f7851580a381d528f2f3bd5d8f2574107de06be9cc7bb8d04b81640a25c"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_logpi.jsonl",
+          "sha256": "49a86a1e259ea3a0864346cbdfd81be6f094f2b520a8d8b0f7caeb15a01176a7"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142_maxdev.jsonl",
+          "sha256": "f9f2c71a7a41f182b9d3893474d7ba36010b29177c2e6795c049a2c721481d20"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "5877f8df13457ec71deb263f30f03e9cf0d4e69ff39530d4d5414401bb05dd9c"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_l2.jsonl",
+          "sha256": "ee4ac107d04d0e5fbe9b5b44840aeedac17d926bddf361255f288f179f08ce8f"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_logpi.jsonl",
+          "sha256": "aae5595c417092c0ad176a2b67d00b4d9797d0c5ae8ec4794a673161b224a4e5"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42_maxdev.jsonl",
+          "sha256": "7db5383efb9f0cecb0e9397a755f79034e0cd5c981e88d1a5ae1c56b1947d916"
+        }
+      ]
+    },
+    {
+      "id": "RDT1B_primary",
+      "description": "the three primary RDT-1B PickCube runs rescored in oneb_success",
+      "faithfulness": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+          "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233"
+        },
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+          "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4"
+        },
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+          "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+          "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+          "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+          "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+          "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17"
+        }
+      ]
+    },
+    {
+      "id": "RDT1B_m5_seed42",
+      "description": "the Month 5 RDT-1B seed-42 sensitivity run",
+      "faithfulness": [
+        {
+          "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+          "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m5_metrics_PickCube-v1_1b_seed42.jsonl",
+          "sha256": "664c20f55ed4fd49620181e3ddc64a414881e39b3597fe781dba17a1a09487c7"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed142.jsonl",
+          "sha256": "195f488a53825219cbbfa378cf75d56000e02ad19b837f7db69b080d25977cc4"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed242.jsonl",
+          "sha256": "5b2526a1cff5c614ca36ad69d05e9b842c2df5340c760c9196ae9cf0a38c8634"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_1b_seed42.jsonl",
+          "sha256": "9e84bdb02aff0698d1777821ced398ffd71b5257dac10a769490322af877da17"
+        }
+      ]
+    },
+    {
+      "id": "PegInsertionSide_m128",
+      "description": "the provenance-clean m=128 PegInsertionSide runs rescored in extra_tasks",
+      "faithfulness": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+          "sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0"
+        },
+        {
+          "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+          "sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m7_metrics_PegInsertionSide-v1_170m_seed142.jsonl",
+          "sha256": "52e319470e9e7eaf8cde91891cd30dab68c059473a164d4f75a9bd91312801bb"
+        },
+        {
+          "path": "data/m7_metrics_PegInsertionSide-v1_170m_seed42.jsonl",
+          "sha256": "6e6e785f21e7dc275fc41b119398e6393ac81cf8aee681ed77f9773f3f656d1c"
+        },
+        {
+          "path": "data/m7_metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+          "sha256": "e2d11810b17ce5724d3626a4c78be346017e58e94dadac875f211d4b4c256c8c"
+        },
+        {
+          "path": "data/metrics_PegInsertionSide-v1_170m_seed142.jsonl",
+          "sha256": "e702e2dbee1b53fd606e851fe92e8db7255375ec1bec9ba058fc02d4a5cc277a"
+        },
+        {
+          "path": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+          "sha256": "41f280077163bf868fb26f490358be3ebbc16edf67e170ee04d0d4967ef31f9d"
+        },
+        {
+          "path": "data/metrics_PegInsertionSide-v1_170m_seed42.jsonl",
+          "sha256": "2455949e81c8f29065d00166bbb9bb240c654e4e9cf25120c5a201a51e20fa98"
+        },
+        {
+          "path": "data/metrics_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+          "sha256": "5767cd828f3a9a77d5b299eb8d512533240d208437d1dfc5de4df4a4ee22c918"
+        }
+      ],
+      "declared_primary_when_ambiguous": {
+        "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl": {
+          "steps": "data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl",
+          "basis": "The m=64 regeneration run and the m=128 run share these contexts, so their step gaps are identical and the fingerprint cannot say which IG run produced the rankings. Primary by chronology: the Month 4 execution log records the seed-less, budget-less m=64 regeneration sidecars first, then E2 m=128 IG (seed 42 then seed 142, overwriting the same ep000 to ep007 paths), then E5 m=128 faithfulness after E2 on the same GPU, so the shared paths held the seed-142 m=128 sidecars when E5 read them (notes Month 4/4.6, Month 7/7.1). The alternative qualified m=64 file is reported as a separate grouping."
+        }
+      }
+    },
+    {
+      "id": "PickSingleYCB_m128",
+      "description": "the provenance-clean m=128 PickSingleYCB runs rescored in extra_tasks",
+      "faithfulness": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl",
+          "sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330"
+        },
+        {
+          "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+          "sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30"
+        }
+      ],
+      "candidate_steps": [
+        {
+          "path": "data/m7_metrics_PickSingleYCB-v1_170m_seed142.jsonl",
+          "sha256": "5e10459a7c46d9515b460fc9d8d942c3300a132657430614b8482299382116e5"
+        },
+        {
+          "path": "data/m7_metrics_PickSingleYCB-v1_170m_seed42.jsonl",
+          "sha256": "e0dfe65457d03e9436e7f620ce5becb82c8fd8e287a5cd8f1aee495f198f88f8"
+        },
+        {
+          "path": "data/m7_metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+          "sha256": "fd7a9f6dd18be78b5567db3c0feab7463fee05c2e7e36828e8891538e9cb82c1"
+        },
+        {
+          "path": "data/metrics_PickSingleYCB-v1_170m_seed142.jsonl",
+          "sha256": "275aeaa1ba5514116e65e6ba199ee225c18a888eb83f8369ddbda42f742fc23f"
+        },
+        {
+          "path": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl",
+          "sha256": "a15e7c24037591a8f716a7365a9c1251173e223929e9ad6b4203d95b747e0fde"
+        },
+        {
+          "path": "data/metrics_PickSingleYCB-v1_170m_seed42.jsonl",
+          "sha256": "4ca4ac9f78a03768db405eb72d0779e4c75e139f49e475c846f126a24aaad280"
+        },
+        {
+          "path": "data/metrics_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+          "sha256": "4bd6863e53425562bf039e9b18bea2760065e292fb28ef5986e5354b4fc9399e"
+        }
+      ],
+      "declared_primary_when_ambiguous": {
+        "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl": {
+          "steps": "data/metrics_PickSingleYCB-v1_170m_seed142_m128.jsonl",
+          "basis": "The m=64 regeneration run and the m=128 run share these contexts, so their step gaps are identical and the fingerprint cannot say which IG run produced the rankings. Primary by chronology: the Month 4 execution log records the seed-less, budget-less m=64 regeneration sidecars first, then E2 m=128 IG (seed 42 then seed 142, overwriting the same ep000 to ep007 paths), then E5 m=128 faithfulness after E2 on the same GPU, so the shared paths held the seed-142 m=128 sidecars when E5 read them (notes Month 4/4.6, Month 7/7.1). The alternative qualified m=64 file is reported as a separate grouping."
+        }
+      }
+    }
+  ],
+  "comparison_populations": [
+    {
+      "id": "Q_regeneration_base_run_as_in_9_2",
+      "description": "the step files notes Month 9/9.2 section 1 used for its Q-ranked row; reported for comparison, with their fingerprint against the Q-ranked faithfulness files",
+      "steps": [
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed42.jsonl",
+          "sha256": "5877f8df13457ec71deb263f30f03e9cf0d4e69ff39530d4d5414401bb05dd9c"
+        },
+        {
+          "path": "data/metrics_PickCube-v1_170m_seed142.jsonl",
+          "sha256": "a8b3dbd12ce19a0306462ca2758f5992e3e746a858bab02dd501836b274ec5b0"
+        }
+      ],
+      "fingerprint_against": [
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+          "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f"
+        },
+        {
+          "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+          "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8"
+        }
+      ]
+    }
+  ],
+  "occurrence_rule": "last physical occurrence of each key within its source file (analysis.revision.core.reconcile) is primary; for step populations that contain conflicting duplicate payloads, the conflict-excluded view (keys with conflicting occurrences removed) is also reported",
+  "step_selection_rule": "For each faithfulness file, every declared candidate step file is fingerprinted: join on (task, model, seed, episode, policy_call_idx) and test, for vision and language, abs(step_gap - (f_input - f_baseline)) <= 1e-6*max(abs(step_gap), abs(f_input - f_baseline), 1e-12) (general form) and abs(-step_gap - f_baseline) <= 1e-6*max(...) (original Month 7 form). A candidate qualifies when every faithfulness row joins and agrees in the general form. If exactly one candidate qualifies it is the cohort's own step file (fingerprint_unique). If several qualify, the fingerprint has established shared contexts but not which IG run produced the rankings: the cohort must then declare a primary in declared_primary_when_ambiguous with its documented basis (fingerprint_ambiguous_declared_primary), every other qualified candidate is reported as a separate alternative grouping, and the analysis fails if no declaration exists or if a declaration names an unqualified file. Nothing else is assumed from filenames. The full candidate matrix is reported.",
+  "population": "the selected step rows joined one to one to the cohort's last-occurrence faithfulness rows (the rescored calls); comparison populations use every last-occurrence step row of their files",
+  "modalities": [
+    "vision",
+    "lang",
+    "state"
+  ],
+  "residual": "|ig_sum - gap| / |gap| from the stored {modality}_ig_sum and {modality}_gap; undefined (counted, excluded) when gap is 0. The stored {modality}_err is checked against the same fields by analysis.revision.analyze.check_stored_arithmetic.",
+  "residual_statistics": "per cohort, grouping (pooled, and per selected step file when a cohort has several) and modality: n, undefined count, median, 5th and 95th percentiles (numpy linear method in pure Python), maximum, share over 1% and over 3%, shortfall share ((ig_sum - gap)/gap < 0), excess share, exact share, literal ig_sum < gap share, count of negative gaps",
+  "bf16_analysis": {
+    "representability": "count stored ig_sum and gap values that are exactly representable in bfloat16 (8 significant bits) and in float32",
+    "rounding_bound": "round-to-nearest bf16 changes a value by at most half the spacing to its neighbor, at most 2^-8 = 0.390625% of its magnitude; per call, storage_bound = largest half-spacing around the stored ig_sum divided by |gap| is the largest residual that bf16 rounding of ig_sum alone can produce",
+    "rounding_explains": "bf16_round(gap) == stored ig_sum, i.e. an exact sum equal to gap would have been stored as the observed value",
+    "adjusted_residual": "distance from gap to the interval of real values that round to the stored ig_sum, divided by |gap|: the smallest residual consistent with the stored value",
+    "sign": "observed shortfall share; definite shortfall and definite excess shares (the whole rounding interval lies on one side of gap); the rounding-only counterfactual shortfall share, the share of calls whose bf16_round(gap) lies below gap, which is the shortfall share storage rounding alone would produce",
+    "scope": "only the final bf16 storage of the summed attribution is quantified; rounding inside the historical bf16 integration is not identifiable from saved records"
+  },
+  "endpoint_example": {
+    "construction": "g(u) = u, baseline 0, input 1, reference g(1) = 1, r(u) = (1-u)^2; N target F = -sqrt(r + eps) with path derivative f(a) = (1-a)/sqrt((1-a)^2 + eps) and exact attribution sqrt(1+eps) - sqrt(eps); Q target with d_a = 1, F = -r/2, f(a) = 1 - a and exact attribution 1/2, as a contrast",
+    "epsilon": "1e-12",
+    "epsilon_rule": "float('1e-12'), the IEEE double nearest 1e-12, used in both float64 and mpmath",
+    "intervals": [
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "targets": [
+      "N",
+      "Q"
+    ],
+    "rules": {
+      "endpoint_inclusive": "(1/(m+1)) * sum_{j=0..m} f(j/m), paper Equation 3",
+      "trapezoid": "(1/m) * [f(0)/2 + f(1)/2 + sum_{j=1..m-1} f(j/m)], paper Equation 4",
+      "midpoint": "(1/m) * sum_{j=0..m-1} f((j+1/2)/m)",
+      "gauss_legendre": "m-point Gauss-Legendre on [0,1]: sum_k (w_k/2) f((x_k+1)/2)"
+    },
+    "arithmetic": "float64 with correctly rounded operations and math.fsum; Gauss-Legendre float64 nodes and weights are 70-digit mpmath Newton roots of the Legendre recurrence rounded to float64 (platform-stable). numpy.polynomial.legendre.leggauss is evaluated in float64 as well and written to a separate platform-dependent artifact with its difference from the stable value, because its LAPACK eigenvalue step can change node last bits between platforms. The mpmath check repeats every rule at 50 significant digits.",
+    "identity": "for every target and m, E_m = T_m + [(f(0)+f(1))/2 - T_m]/(m+1) is evaluated in float64 and at 50 digits",
+    "required": "the endpoint-inclusive N value at m = 64 rounds to 0.984615 at 6 decimals"
+  },
+  "outputs": {
+    "protocol.json": "byte copy of this protocol",
+    "step_selection.json": "anchor and per-file authentication, the candidate fingerprint matrix and selected step file per faithfulness file, and the comparison population fingerprints",
+    "residuals.csv": "residual statistics per cohort, grouping, modality and occurrence view",
+    "bf16.csv": "bf16 representability, rounding bound, adjusted residual and sign statistics per cohort, grouping and modality",
+    "calls.csv.gz": "one row per step row and modality with gap, ig_sum, residual and bf16 fields",
+    "endpoint_example.csv": "rule values and relative errors per target, m and rule in float64 and at 50 digits",
+    "endpoint_identity.csv": "the endpoint-inclusive/trapezoid identity per target and m",
+    "endpoint_numpy_leggauss.json": "numpy.polynomial.legendre.leggauss float64 values (platform-dependent; hashed separately)",
+    "provenance.json": "protocol, source, input and artifact SHA-256 hashes and the environment"
+  },
+  "scope_limits": [
+    "Completeness checks one signed sum per modality; passing or failing it does not certify individual coordinates or rankings",
+    "The 1% and 3% thresholds are study conventions, not exact-IG error bounds",
+    "Stored sums and gaps are historical bf16/float32 outputs; their internal integration arithmetic cannot be replayed from saved data",
+    "The endpoint example is a constructed one-dimensional case, not a measurement on RDT"
+  ],
+  "amendments": [
+    {
+      "date": "2026-10-23",
+      "before_any_outcome": true,
+      "what": "Added the ambiguity branch of step_selection_rule and the two declared_primary_when_ambiguous entries.",
+      "why": "The first execution of the original protocol stopped in step selection, before any residual or bf16 statistic was computed, because both data/metrics_PegInsertionSide-v1_170m_seed142.jsonl (m=64 regeneration run) and data/metrics_PegInsertionSide-v1_170m_seed142_m128.jsonl qualified for the seed-142 m=128 PegInsertionSide faithfulness file (200 of 200 rows in both modalities each); the same holds for PickSingleYCB. The two runs share their first eight episodes' contexts, so the gap fingerprint cannot separate IG budgets on shared contexts.",
+      "original_protocol_commit": "aaa6ac1"
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "analysis": "analysis.language_groups",
+  "analysis_version": "2026-10-23-v1",
+  "artifacts": {
+    "authors_embeddings.json": {
+      "bytes": 1159,
+      "sha256": "3000bda2e42a9842a8f07ecae5c9cbabb0e4312a99ef17565bb5fc8f510be0c0"
+    },
+    "git_history.json": {
+      "bytes": 2553,
+      "sha256": "e500d86368a78697370922884ba6d844ff2aec0794245d02c127f0b849764583"
+    },
+    "group_counts.csv": {
+      "bytes": 4648,
+      "sha256": "997e1da8b1ebb5ff2267fe02920981a528bbf886d7ebcce335eb9904234559b6"
+    },
+    "protocol.json": {
+      "bytes": 18877,
+      "sha256": "15b628610ef69add557e98ef888de1b0c0a1626b673c16ab7a4c114ca1f69985"
+    },
+    "run_language_inputs.csv": {
+      "bytes": 3042,
+      "sha256": "564cf66827565266550e7649f45c74dc88a6cce2c92a838b3b501e0c1ebb3771"
+    },
+    "saved_curve_check.csv": {
+      "bytes": 8332,
+      "sha256": "5ee2f81edf5e715f1c474fd42dc473375fc9b71e39a904e47d8f9b0baf70b381"
+    },
+    "tokenization.json": {
+      "bytes": 8985,
+      "sha256": "19c4f1050ad593570dd28dc6fa872c84d8c9857764eb36dd4cd13c14e7794da5"
+    }
+  },
+  "command": "python -m analysis.language_groups --output <new-empty-directory> [--allow-download]",
+  "environment": {
+    "python": "3.12.13",
+    "sentencepiece": "0.2.0",
+    "torch": "2.14.1"
+  },
+  "inputs": {
+    "authors_embeddings": {
+      "lang_embeds/text_embed_PegInsertionSide-v1.pt": "da798aab9df67a230259095c0d087772d10ff2dd089bd71762a1b6d1696dbbf3",
+      "lang_embeds/text_embed_PickCube-v1.pt": "a9ac30bc88ef12b171e9323b8a2c64f0b0ae9a54715deb061c021deaadb37f7a",
+      "lang_embeds/text_embed_StackCube-v1.pt": "ca0a1f758d183e4c541b412efd2ffafacae7bdc7220d03f7e9dca3e93bb28985"
+    },
+    "faithfulness_files": [
+      {
+        "checkout_sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+        "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+        "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93"
+      },
+      {
+        "checkout_sha256": "afc5076e21ad1cbae82839d7c514d5b7edb6a6bc8f44da61a6066a671e2256a0",
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed142.jsonl",
+        "sha256": "afc5076e21ad1cbae82839d7c514d5b7edb6a6bc8f44da61a6066a671e2256a0"
+      },
+      {
+        "checkout_sha256": "45be98eea976763cbeb5818ca3cb748bfdb422ea3f2a29baf37c46e609e12798",
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42.jsonl",
+        "sha256": "45be98eea976763cbeb5818ca3cb748bfdb422ea3f2a29baf37c46e609e12798"
+      },
+      {
+        "checkout_sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2",
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+        "sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2"
+      },
+      {
+        "checkout_sha256": "240f6f07123205342e4692757a136d14219b99e08e8c79fa4a64821cd750c42e",
+        "path": "data/m7_metrics_faithfulness_PickCube-v1_170m_seed142.jsonl",
+        "sha256": "240f6f07123205342e4692757a136d14219b99e08e8c79fa4a64821cd750c42e"
+      },
+      {
+        "checkout_sha256": "fbaf85d7094584e57c65087b64241329e0dcd49deb41381ce51c0ba6ae418d3e",
+        "path": "data/m7_metrics_faithfulness_PickCube-v1_170m_seed42.jsonl",
+        "sha256": "fbaf85d7094584e57c65087b64241329e0dcd49deb41381ce51c0ba6ae418d3e"
+      },
+      {
+        "checkout_sha256": "24d4f3d3c8906ff022a4d19181474d4d5c1809509b410921fc12facccb702a32",
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed142.jsonl",
+        "sha256": "24d4f3d3c8906ff022a4d19181474d4d5c1809509b410921fc12facccb702a32"
+      },
+      {
+        "checkout_sha256": "90c6689e38e29ca1007dcd78143fcfc7cc728c14bd1f0a49d5b450264032babe",
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42.jsonl",
+        "sha256": "90c6689e38e29ca1007dcd78143fcfc7cc728c14bd1f0a49d5b450264032babe"
+      },
+      {
+        "checkout_sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30",
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+        "sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30"
+      },
+      {
+        "checkout_sha256": "c3644093ad829cda7b21fa759b9e2e4937c8f5bc074e402730fe781457a86f45",
+        "path": "data/m7_metrics_faithfulness_StackCube-v1_170m_seed142.jsonl",
+        "sha256": "c3644093ad829cda7b21fa759b9e2e4937c8f5bc074e402730fe781457a86f45"
+      },
+      {
+        "checkout_sha256": "96961d5bc754ed1786b81bd04e52fec25206d5cff2e0ae24d741bf1190f34bf7",
+        "path": "data/m7_metrics_faithfulness_StackCube-v1_170m_seed42.jsonl",
+        "sha256": "96961d5bc754ed1786b81bd04e52fec25206d5cff2e0ae24d741bf1190f34bf7"
+      },
+      {
+        "checkout_sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0",
+        "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+        "sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0"
+      },
+      {
+        "checkout_sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938",
+        "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl",
+        "sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938"
+      },
+      {
+        "checkout_sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c"
+      },
+      {
+        "checkout_sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8"
+      },
+      {
+        "checkout_sha256": "40f2a2bac3625bdf36f9402963101b47fcd7a347ecbcb1a50562b0fbdc86f69e",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_maxdev_20260530_083506.jsonl",
+        "sha256": "40f2a2bac3625bdf36f9402963101b47fcd7a347ecbcb1a50562b0fbdc86f69e"
+      },
+      {
+        "checkout_sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb"
+      },
+      {
+        "checkout_sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f"
+      },
+      {
+        "checkout_sha256": "c31fdddf4cffd4f7dec383307b53cb2df0a854193b72b68b2a1d56356eaf52e7",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+        "sha256": "c31fdddf4cffd4f7dec383307b53cb2df0a854193b72b68b2a1d56356eaf52e7"
+      },
+      {
+        "checkout_sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+        "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4"
+      },
+      {
+        "checkout_sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+        "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048"
+      },
+      {
+        "checkout_sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+        "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233"
+      },
+      {
+        "checkout_sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330",
+        "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl",
+        "sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330"
+      },
+      {
+        "checkout_sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513",
+        "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl",
+        "sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513"
+      }
+    ],
+    "git_commits": [
+      "afd12493b0be3c5f1df8da704844e00b982b02c1",
+      "b887a96ed374721095e2c5f45fa49eb27e3a54fb",
+      "e4ad8bfc5c56a984ba16853083f89a870f8e6ede",
+      "c9eacfbd1961f02f48766ef89ad6134320efa093",
+      "934023d72130e3d3e3c4b0f620cd7b7db9bd4d6f"
+    ],
+    "local_files": [
+      {
+        "path": "encode_task_lang.py",
+        "sha256": "cda801f14a3f7e52051c426ee0b07e85c94b759c8c3aef6ad4fb143209b77673"
+      },
+      {
+        "path": "docs/tmlr-readiness/archives/active-originals/2026-10-01-numerical-freeze-amendment/faithfulness.py.historical",
+        "sha256": "6cf1e78d3d3e485a43169eed89a1fda7f2718dcd16c03bb1d2c9c882a31be541"
+      },
+      {
+        "path": "analysis/paired_rescoring/protocol.json",
+        "sha256": "eb7008b23a0638a0a5dfac4653c45145715e0dcde20b3d4ea2e579d5eea1ec6f"
+      },
+      {
+        "path": "docs/nhsjs-revision/month8/MANIFEST.sha256",
+        "sha256": "a254a80edcf0f46990343f6735e5254b42753f062f10d71807c05e8e9215c6a4"
+      },
+      {
+        "path": "docs/nhsjs-revision/month8/lang-20260930/PickCube-v1.pt",
+        "sha256": "c3b9cf56ce8202ed8726f450de2215f212a491cede3b2657d9c5b48a825d4793"
+      },
+      {
+        "path": "docs/nhsjs-revision/month8/lang-20260930/StackCube-v1.pt",
+        "sha256": "73aaee3a3097faa83ec58e0b6a4a8c403c027b5187ba57ea61b52d87c0038c01"
+      },
+      {
+        "path": "docs/nhsjs-revision/month8/lang-20260930/PegInsertionSide-v1.pt",
+        "sha256": "66536ebc0decad76946a9a00c97d3e36eabeea707168c4cc34314e09e123bbb9"
+      },
+      {
+        "path": "docs/nhsjs-revision/month8/lang-20260930/PickSingleYCB-v1.pt",
+        "sha256": "b4956232f322b376b525547d84124ad0085095ee38b95b8e74b743f81d685df4"
+      }
+    ],
+    "vendored_tokenizer": {
+      "path": "analysis/language_groups/vendor/spiece.model",
+      "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86"
+    }
+  },
+  "interpretation": "retrospective_reconstruction_of_historical_group_counts",
+  "network_or_cache_artifacts": [
+    "authors_embeddings.json",
+    "run_language_inputs.csv"
+  ],
+  "offline_artifacts": [
+    "protocol.json",
+    "tokenization.json",
+    "group_counts.csv",
+    "saved_curve_check.csv",
+    "git_history.json"
+  ],
+  "protocol_sha256": "15b628610ef69add557e98ef888de1b0c0a1626b673c16ab7a4c114ca1f69985",
+  "schema_version": 1,
+  "source_sha256": {
+    "analysis/language_groups/__init__.py": "f613f94aef0ccd37f05f0ce8cb5303d275dabf53d8a03f4ff2d9d47273b2d563",
+    "analysis/language_groups/__main__.py": "e418cdbb27adf0063e3cec28179ac6b7bdb6ac743bb49d157f450551fcf38be2",
+    "analysis/paired_rescoring/analyze.py": "5eeb519872b7cf4677debe8eb87bade57b5f656e53939bfa5a9752c9a5b91d61",
+    "analysis/paired_rescoring/curve_stats/__init__.py": "b9e07fe840c0112abb827830848472eca1f1baaee88325118643ec9ebd311d53",
+    "analysis/revision/analyze.py": "b24a8c5da3b5aeb90064bffe71a4a53063073a45ecaf2feb792f28dc3af2059a",
+    "analysis/revision/core.py": "f8c7a2ca6e50fb780c105f0d2dccb8576c3e19b90fe91ef9dd22ee6abb734f80",
+    "analysis/revision/verify.py": "10e0bef246eeddab8d5b2aa0777dbefdf1ab7310cf0cac189c62da7c59527fcd"
+  },
+  "vendored_sha256": {
+    "analysis/language_groups/vendor/spiece.model": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86"
+  },
+  "verify_command": "python -m analysis.language_groups --verify <result-directory>"
+}

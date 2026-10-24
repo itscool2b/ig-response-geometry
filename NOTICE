@@ -27,5 +27,13 @@ figures listed above has not been established. They are historical artifacts,
 excluded from current distribution and research packages. Prior publication is not a grant of
 permission to reuse them.
 
+Exception: analysis/language_groups/vendor/spiece.model is the SentencePiece
+tokenizer model of google/t5-v1_1-xxl at revision
+3db67ab1af984cf10548a73467f0e5bca2aaaeb2 (https://huggingface.co/google/t5-v1_1-xxl),
+vendored unchanged so that the language-group counts can be rechecked offline.
+It is distributed under the Apache License 2.0, reproduced in
+analysis/language_groups/vendor/LICENSE-Apache-2.0.txt, and is not covered by
+the repository's MIT license.
+
 rdt_sampling.py contains an adaptation of the pinned upstream RDT sampler.
 Its original MIT notice and TSAIL attribution are reproduced in that file.

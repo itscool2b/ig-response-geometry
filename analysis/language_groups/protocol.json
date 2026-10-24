@@ -1,0 +1,355 @@
+{
+  "schema_version": 1,
+  "analysis": "analysis.language_groups",
+  "analysis_version": "2026-10-23-v1",
+  "recorded_before_outcome_computation": true,
+  "recorded_on": "2026-10-23",
+  "reviewer_item": "NHSJS Minor 3: how language groups were counted for the intervention fractions",
+  "question": "How many attended language positions did each saved run rank, how many groups did each nominal fraction select under the historical and the current faithfulness.py rule, and do the saved curves show the equal 1% and 5% responses the historical rule implies?",
+  "pre_outcome_knowledge": "notes Month 9/9.2 section 6 and 9.4 section 1 reported the token counts, the rule table and the git-history finding from inline checks; the Month 8 language inputs record token ids. No artifact of this protocol was computed before it was recorded.",
+  "tokenizer": {
+    "repository": "google/t5-v1_1-xxl",
+    "revision": "3db67ab1af984cf10548a73467f0e5bca2aaaeb2",
+    "source_url": "https://huggingface.co/google/t5-v1_1-xxl/resolve/3db67ab1af984cf10548a73467f0e5bca2aaaeb2/spiece.model",
+    "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+    "bytes": 791656,
+    "license": "apache-2.0 (model card of google/t5-v1_1-xxl)",
+    "vendored_path": "analysis/language_groups/vendor/spiece.model"
+  },
+  "encoder": {
+    "path": "encode_task_lang.py",
+    "rule": "token_ids = sp.Encode(instruction) followed by token_ids.append(1) (T5 EOS); the encoder attention mask is 1 on exactly these positions; the instruction strings are the task2lang literal, read with ast without importing the module",
+    "history_commits": [
+      "0c3b731",
+      "a8db34c",
+      "6d49d8f",
+      "afd1249",
+      "c9eacfb",
+      "934023d"
+    ]
+  },
+  "tasks": [
+    "PickCube-v1",
+    "StackCube-v1",
+    "PegInsertionSide-v1",
+    "PickSingleYCB-v1"
+  ],
+  "expected_positions": {
+    "PickCube-v1": 20,
+    "StackCube-v1": 30,
+    "PegInsertionSide-v1": 25,
+    "PickSingleYCB-v1": 16
+  },
+  "expected_positions_rule": "the analysis fails if a tokenized count differs",
+  "month8_language_inputs": {
+    "directory": "docs/nhsjs-revision/month8/lang-20260930",
+    "manifest": "docs/nhsjs-revision/month8/MANIFEST.sha256",
+    "directory_in_manifest": "lang-20260930",
+    "check": "verify each task file against the manifest, load it with torch.load(weights_only=True) and compare its recorded token_ids and attention-mask sum with the tokenization"
+  },
+  "vision_groups": 729,
+  "grid": [
+    0,
+    1,
+    5,
+    10,
+    20,
+    30,
+    50,
+    75,
+    100
+  ],
+  "rules": {
+    "historical": "faithfulness.py at afd1249, b887a96 and e4ad8bf: k = max(1, int(round(G*p/100.0))) and all G groups once k >= G; Python round is round-half-even",
+    "current": "faithfulness.py from c9eacfb onward: k = int(round(G*p/100.0)) with no floor; argsort[:k] selects all groups when k >= G",
+    "endpoints": "in both versions the 0% and 100% nodes are the stored endpoint responses and are not masked through the rule; they are tabulated as k = 0 and k = G"
+  },
+  "group_count_table": "for every task language G and for vision G = 729, at every nominal percentage: k under both rules, realized fraction k/G (float and exact ratio), whether the floor is active and whether G*p/100 is a half-way tie",
+  "saved_curves": {
+    "paired_protocol": "analysis/paired_rescoring/protocol.json",
+    "headline_check": "in the last-occurrence records of the two headline cohorts (frozen paired protocol, 750 calls each), count language insertion and deletion curves whose saved 1% and 5% responses are exactly equal (3,000 curves)",
+    "all_files_check": "in every faithfulness file of the input manifest (last occurrence), count language and vision curves (both directions) with exactly equal saved 1% and 5% responses, beside what the historical rule implies for that file's G (the tokenized positions of the instruction the run used; 729 for vision)",
+    "all_faithfulness_files": [
+      {
+        "path": "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl",
+        "sha256": "3db28c259d1604e6f30d4c36fd19ef9e7ce5595f89da7f024c154f1117ddbb93",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed142.jsonl",
+        "sha256": "afc5076e21ad1cbae82839d7c514d5b7edb6a6bc8f44da61a6066a671e2256a0",
+        "instruction_task": "PegInsertionSide-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42.jsonl",
+        "sha256": "45be98eea976763cbeb5818ca3cb748bfdb422ea3f2a29baf37c46e609e12798",
+        "instruction_task": "PegInsertionSide-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl",
+        "sha256": "28ce7dae9594db826a7ec3a4224eef1f796f9708069fbb21f9bb117ed09bd6c2",
+        "instruction_task": "PegInsertionSide-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PickCube-v1_170m_seed142.jsonl",
+        "sha256": "240f6f07123205342e4692757a136d14219b99e08e8c79fa4a64821cd750c42e",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PickCube-v1_170m_seed42.jsonl",
+        "sha256": "fbaf85d7094584e57c65087b64241329e0dcd49deb41381ce51c0ba6ae418d3e",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed142.jsonl",
+        "sha256": "24d4f3d3c8906ff022a4d19181474d4d5c1809509b410921fc12facccb702a32",
+        "instruction_task": "PickSingleYCB-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42.jsonl",
+        "sha256": "90c6689e38e29ca1007dcd78143fcfc7cc728c14bd1f0a49d5b450264032babe",
+        "instruction_task": "PickSingleYCB-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl",
+        "sha256": "771c11daa8091e751567691c92c01d0b2e2908eae51d3e025c8fb3825ca30c30",
+        "instruction_task": "PickSingleYCB-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_StackCube-v1_170m_seed142.jsonl",
+        "sha256": "c3644093ad829cda7b21fa759b9e2e4937c8f5bc074e402730fe781457a86f45",
+        "instruction_task": "StackCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/m7_metrics_faithfulness_StackCube-v1_170m_seed42.jsonl",
+        "sha256": "96961d5bc754ed1786b81bd04e52fec25206d5cff2e0ae24d741bf1190f34bf7",
+        "instruction_task": "StackCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl",
+        "sha256": "5a10cf6c57d35580fc4ddbc6fc362e8fe119264016f4bdfdf8c74538eea22dc0",
+        "instruction_task": "PegInsertionSide-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed42_m128_20260529_162235.jsonl",
+        "sha256": "f41eb8660bad05543cbecc90f681488813eed359d1a75cb5c90611806a5d7938",
+        "instruction_task": "PegInsertionSide-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl",
+        "sha256": "b290d7610661d51b78d32c495c8b338ea9bbc75cff33a8eeeb441e6ffd56f49c",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl",
+        "sha256": "d50e89baa1b2832669cf1429897847d46b55ea6ee9e8215e6ab2ddd5b96309e8",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_maxdev_20260530_083506.jsonl",
+        "sha256": "40f2a2bac3625bdf36f9402963101b47fcd7a347ecbcb1a50562b0fbdc86f69e",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "sha256": "01ef0da22628ffe4017a3358d53fcc1ad62264926161cf15248973b645880adb",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "sha256": "2cffeb59375d4c336077510ef1658f3e314a45e7007b4035242054bc9173d07f",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_maxdev_20260530_022134.jsonl",
+        "sha256": "c31fdddf4cffd4f7dec383307b53cb2df0a854193b72b68b2a1d56356eaf52e7",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+        "sha256": "1d726463120770aa8ef828b18547b8277d1419676e099034231e2b5b601d25a4",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl",
+        "sha256": "038f170b9490a18bfe852206775c2b3d9fbcfd0dfb80dfdf81bb451efc21e048",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "encode_task_lang"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl",
+        "sha256": "4ec881ad4208e9e91a101576c90f2b56ce7a1a171dc95654174afdeaba867233",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl",
+        "sha256": "ede9898595d96ef5e13ff50da53f330321eb1a23f43a9f0817ccb70b52821330",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      },
+      {
+        "path": "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed42_m128_20260529_164934.jsonl",
+        "sha256": "b3fdf8311c7581530f54847584dd4a3abd706c5c842184c836f0a79fb38f6513",
+        "instruction_task": "PickCube-v1",
+        "documented_language_source": "authors_precomputed"
+      }
+    ]
+  },
+  "git_history": {
+    "commits": [
+      "afd1249",
+      "b887a96",
+      "e4ad8bf",
+      "c9eacfb",
+      "934023d"
+    ],
+    "floor_line": "k_count = max(1, int(round(n_total * k_pct / 100.0)))",
+    "no_floor_line": "k_count = int(round(n_total * k_pct / 100.0))",
+    "archived_copy": "docs/tmlr-readiness/archives/active-originals/2026-10-01-numerical-freeze-amendment/faithfulness.py.historical",
+    "archived_copy_reference_commit": "e4ad8bf",
+    "record": "for each declared commit: full hash, committer date, SHA-256 of faithfulness.py, every k_count line with its number, and whether the floor and no-floor lines are present; plus whether the archived copy equals the e4ad8bf blob after CRLF to LF. The working tree is not recorded because the revision may change faithfulness.py."
+  },
+  "authors_embeddings": {
+    "repository": "robotics-diffusion-transformer/maniskill-model",
+    "revision": "9622afab2b7ce2312a6cf1febc526928589b77eb",
+    "files_last_commit": {
+      "commit": "7fdb1b3ada5dac421e9d16bcfb042a099fa94d74",
+      "date": "2024-12-17T12:54:49Z",
+      "title": "Upload 5 files"
+    },
+    "files": {
+      "lang_embeds/text_embed_PickCube-v1.pt": "a9ac30bc88ef12b171e9323b8a2c64f0b0ae9a54715deb061c021deaadb37f7a",
+      "lang_embeds/text_embed_StackCube-v1.pt": "ca0a1f758d183e4c541b412efd2ffafacae7bdc7220d03f7e9dca3e93bb28985",
+      "lang_embeds/text_embed_PegInsertionSide-v1.pt": "da798aab9df67a230259095c0d087772d10ff2dd089bd71762a1b6d1696dbbf3"
+    },
+    "why": "Month 4 runs (the N-ranked headline cohort, the RDT-1B seed-42 run and the m=128 seed-142 extra-task runs) used these precomputed embeddings instead of encode_task_lang.py output (notes Month 4/4.6); their token dimension is their language G",
+    "access": "read from the local Hugging Face cache at the pinned revision; downloaded only with --allow-download; each file must match its pinned SHA-256 before torch.load(weights_only=True); not vendored because the repository states no license",
+    "record": "shape, dtype and token positions of each file"
+  },
+  "run_language_inputs": [
+    {
+      "run": "Q-ranked headline (RDT-170M PickCube, Month 6)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_logpi_20260615_004816.jsonl",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_logpi_20260615_004405.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "encode_task_lang",
+      "documented": "Month 6 pod: T5-XXL instruction embeddings generated on the pod and the encoded PAD/EOS baseline, inferred from running on the same pod after the RDT-1B seeds 142 and 242 (notes Month 6/6.2, 6.3)"
+    },
+    {
+      "run": "N-ranked headline (RDT-170M PickCube, Month 4)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed42_l2_20260530_021658.jsonl",
+        "data/metrics_faithfulness_metrics_PickCube-v1_170m_seed142_l2_20260530_082947.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "authors_precomputed",
+      "authors_file": "lang_embeds/text_embed_PickCube-v1.pt",
+      "documented": "Month 4 pod: the RDT authors' precomputed PickCube embedding and a zeroed BOS/EOS placeholder baseline (notes Month 4/4.6)"
+    },
+    {
+      "run": "RDT-1B seed 42 (Month 4)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed42_20260526_142949.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "authors_precomputed",
+      "authors_file": "lang_embeds/text_embed_PickCube-v1.pt",
+      "documented": "Month 4 pod: the RDT authors' precomputed PickCube embedding and a zeroed placeholder baseline (notes Month 4/4.6, Month 6/6.2, TMLR errata D13)"
+    },
+    {
+      "run": "RDT-1B seeds 142 and 242 (Month 6)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed142_20260614_182933.jsonl",
+        "data/metrics_faithfulness_metrics_PickCube-v1_1b_seed242_20260614_160424.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "encode_task_lang",
+      "documented": "Month 6 pod-generated T5-XXL embeddings and the encoded PAD/EOS baseline (notes Month 6/6.2, 6.3)"
+    },
+    {
+      "run": "RDT-1B Month 5 seed-42 rerun",
+      "files": [
+        "data/m5_metrics_faithfulness_PickCube-v1_1b_seed42.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "encode_task_lang",
+      "documented": "Month 5 real T5-XXL embeddings and the encoded baseline (notes Month 5/5.7)"
+    },
+    {
+      "run": "PegInsertionSide m=128 seed 142 (Month 4)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl"
+      ],
+      "instruction_task": "PegInsertionSide-v1",
+      "source": "authors_precomputed",
+      "authors_file": "lang_embeds/text_embed_PegInsertionSide-v1.pt",
+      "documented": "Month 4 pod: the authors' precomputed PegInsertionSide embedding and a zeroed placeholder baseline (notes Month 4/4.6)"
+    },
+    {
+      "run": "PickSingleYCB m=128 seed 142 (Month 4)",
+      "files": [
+        "data/metrics_faithfulness_metrics_PickSingleYCB-v1_170m_seed142_m128_20260529_163610.jsonl"
+      ],
+      "instruction_task": "PickCube-v1",
+      "source": "authors_precomputed",
+      "authors_file": "lang_embeds/text_embed_PickCube-v1.pt",
+      "documented": "Month 4 pod: PickSingleYCB is absent from the authors' embeddings, so the PickCube embedding was used as a proxy, with a zeroed placeholder baseline (notes Month 4/4.3, 4.6)"
+    },
+    {
+      "run": "PegInsertionSide m=128 Month 7 seed-42 rerun",
+      "files": [
+        "data/m7_metrics_faithfulness_PegInsertionSide-v1_170m_seed42_m128.jsonl"
+      ],
+      "instruction_task": "PegInsertionSide-v1",
+      "source": "encode_task_lang",
+      "documented": "Month 7 pod: encode_task_lang.py embeddings and the encoded two-token baseline (notes Month 7/7.2)"
+    },
+    {
+      "run": "PickSingleYCB m=128 Month 7 seed-42 rerun",
+      "files": [
+        "data/m7_metrics_faithfulness_PickSingleYCB-v1_170m_seed42_m128.jsonl"
+      ],
+      "instruction_task": "PickSingleYCB-v1",
+      "source": "encode_task_lang",
+      "documented": "Month 7 pod: encode_task_lang.py embeddings and the encoded two-token baseline (notes Month 7/7.2)"
+    }
+  ],
+  "outputs": {
+    "protocol.json": "byte copy of this protocol",
+    "tokenization.json": "tokenizer identity and special ids, per-task token ids, pieces and attended positions, the encoder history check and the Month 8 cross-check",
+    "group_counts.csv": "selected groups per task and fraction under both rules",
+    "saved_curve_check.csv": "equal 1% and 5% saved responses, headline cohorts and every faithfulness file",
+    "git_history.json": "the rounding rule in each declared faithfulness.py commit and the archived copy check",
+    "authors_embeddings.json": "shapes of the pinned RDT authors' precomputed embeddings (needs the Hugging Face cache)",
+    "run_language_inputs.csv": "the language input and G of every rescored run (needs the Hugging Face cache)",
+    "provenance.json": "protocol, source, vendored-file and artifact SHA-256 hashes and the environment"
+  },
+  "scope_limits": [
+    "Masks and rankings were not saved with the curves; equal saved 1% and 5% responses are consistent with identical masks but do not authenticate them",
+    "Which embedding file each historical run loaded is documented in the notes, not recorded in the saved rows",
+    "The tokenizer revision of the historical encoder runs is not recorded in the saved rows; the Month 8 inputs record the pinned one"
+  ]
+}

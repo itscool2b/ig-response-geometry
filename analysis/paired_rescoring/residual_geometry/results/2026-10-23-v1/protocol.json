@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "analysis": "analysis.paired_rescoring.residual_geometry",
+  "analysis_version": "2026-10-23-v1",
+  "recorded_before_outcome_computation": true,
+  "recorded_on": "2026-10-23",
+  "reviewer_item": "NHSJS Recommended 3: a plot or analysis relating baseline residual B, maximum intermediate residual and paired AUC difference",
+  "question": "Per saved call, how are the all-baseline squared residual B, the largest interior saved squared residual and the paired difference Delta = AUC_Q - AUC_N related? Descriptive only; no causal claim.",
+  "pre_outcome_knowledge": "The frozen headline paired values and the paper's descriptions of B, extreme calls and first calls are already public (paper Section on overshoots; analysis/paired_rescoring/results/2026-10-01-v1). The RDT-1B paired values were computed by oneb_success 2026-10-23-v1 before this protocol. No correlation, bin count or figure of this analysis was computed before this protocol.",
+  "headline": {
+    "paired_protocol": {"path": "analysis/paired_rescoring/protocol.json", "sha256": "eb7008b23a0638a0a5dfac4653c45145715e0dcde20b3d4ea2e579d5eea1ec6f"},
+    "paired_provenance": {"path": "analysis/paired_rescoring/results/2026-10-01-v1/provenance.json", "sha256": "2cedd28dbc9cb3b09bc7516ab9420cdf456deb80ebe1555b4725ecff42771573"},
+    "frozen_calls": {"path": "analysis/paired_rescoring/results/2026-10-01-v1/calls.csv.gz", "sha256": "bcf06c972db579805b06f6050de3a74141b0c84bfaebb691656186eaf6a4a2ae"},
+    "inputs": "authenticated with analysis.paired_rescoring.analyze.authenticate on the frozen protocol's Q (logpi) and L2 cohorts; last physical occurrence",
+    "recompute": "analysis.paired_rescoring.analyze.paired_curve with the cohort's native scale, dimension 512, epsilon 1e-12; every recomputed call must exist in the frozen calls.csv.gz and match its delta, residual_baseline and residual_points exactly (float equality), and every frozen row must be recomputed, otherwise the analysis fails",
+    "cases": ["Q:vision:insertion", "Q:vision:deletion", "Q:lang:insertion", "Q:lang:deletion", "L2:vision:insertion", "L2:vision:deletion", "L2:lang:insertion", "L2:lang:deletion"]
+  },
+  "oneb": {
+    "protocol_sha256": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629",
+    "committed_calls": {"path": "analysis/paired_rescoring/oneb_success/results/2026-10-23-v1/calls.csv.gz", "sha256": "5792bea1ff1d7563e3d5d99bd80ddabd9fef519e34a221bb2851bc2e62108395"},
+    "inputs": "the three primary runs of analysis/paired_rescoring/oneb_success/protocol.json, authenticated with analysis.paired_rescoring.oneb_success.authenticate (the Month 5 sensitivity run is not used)",
+    "recompute": "paired_curve as in oneb_success; every recomputed delta must equal the committed oneb_success calls.csv.gz value exactly",
+    "cases": [
+      {"case": "1B:vision:insertion", "runs": ["seed42", "seed142", "seed242"], "modality": "vision", "direction": "insertion"},
+      {"case": "1B:vision:deletion", "runs": ["seed42", "seed142", "seed242"], "modality": "vision", "direction": "deletion"},
+      {"case": "1B-seed42:lang:insertion", "runs": ["seed42"], "modality": "lang", "direction": "insertion"},
+      {"case": "1B-seed42:lang:deletion", "runs": ["seed42"], "modality": "lang", "direction": "deletion"},
+      {"case": "1B-seed142:lang:insertion", "runs": ["seed142"], "modality": "lang", "direction": "insertion"},
+      {"case": "1B-seed142:lang:deletion", "runs": ["seed142"], "modality": "lang", "direction": "deletion"},
+      {"case": "1B-seed242:lang:insertion", "runs": ["seed242"], "modality": "lang", "direction": "insertion"},
+      {"case": "1B-seed242:lang:deletion", "runs": ["seed242"], "modality": "lang", "direction": "deletion"}
+    ],
+    "language_policy": "RDT-1B language is reported per run only because the seed-42 language baseline was zeroed while seeds 142 and 242 used encoded baselines"
+  },
+  "per_call_variables": {
+    "B": "residual_baseline: the all-baseline squared residual recovered from the stored baseline score",
+    "max_interior_residual": "max(residual_points[1:-1]): the largest squared residual among the seven interior saved nodes (1, 5, 10, 20, 30, 50 and 75 percent)",
+    "ratio_max_interior_to_baseline": "max_interior_residual / B; undefined when B is 0",
+    "delta": "AUC_Q - AUC_N from paired_curve",
+    "first_call": "policy_call_idx == 0",
+    "overshoot": "at least one saved ordinate with squared residual above both endpoint residuals (n_high_distance_overshoot > 0)",
+    "fully_in_range": "no overshoot and no undershoot ordinate"
+  },
+  "statistics": {
+    "spearman": "Spearman rank correlation with average ranks for ties (Pearson correlation of ranks, math.fsum sums), per case, of Delta with B and of Delta with ratio_max_interior_to_baseline, over three subsets of defined calls: all, fully_in_range, overshoot; undefined (null) when fewer than 3 calls or a constant variable",
+    "bins": "per case, defined calls counted in bins of B (left-closed decades from B_edges, plus below the first and at or above the last edge), in bins of the ratio (right-closed intervals from ratio_edges, plus at or below the first and above the last edge), and in every nonempty joint B-by-ratio bin; each bin reports n_calls, n_first_calls, n_overshoot_calls, n_fully_in_range_calls, n_negative_delta, n_delta_below_minus_1, n_delta_below_minus_100, and min, median and max Delta"
+  },
+  "bins": {
+    "B_edges": ["1e-6", "1e-5", "1e-4", "1e-3", "1e-2", "1e-1", "1", "10", "100", "1e3", "1e4", "1e5", "1e6"],
+    "ratio_edges": ["0.5", "1", "2", "10", "100", "1e3", "1e4", "1e5"],
+    "edge_parsing": "edges are decimal strings parsed with float(), which rounds correctly on every platform"
+  },
+  "figures": {
+    "figures": [
+      {"name": "headline", "panels": [
+        {"case": "Q:vision:insertion", "label": "Q-ranked, vision, insertion"},
+        {"case": "Q:vision:deletion", "label": "Q-ranked, vision, deletion"},
+        {"case": "Q:lang:insertion", "label": "Q-ranked, language, insertion"},
+        {"case": "Q:lang:deletion", "label": "Q-ranked, language, deletion"},
+        {"case": "L2:vision:insertion", "label": "N-ranked, vision, insertion"},
+        {"case": "L2:vision:deletion", "label": "N-ranked, vision, deletion"},
+        {"case": "L2:lang:insertion", "label": "N-ranked, language, insertion"},
+        {"case": "L2:lang:deletion", "label": "N-ranked, language, deletion"}]},
+      {"name": "oneb", "panels": [
+        {"case": "1B:vision:insertion", "label": "3 seeds, vision, insertion"},
+        {"case": "1B:vision:deletion", "label": "3 seeds, vision, deletion"},
+        {"case": "1B-seed42:lang:insertion", "label": "seed 42, language, insertion"},
+        {"case": "1B-seed42:lang:deletion", "label": "seed 42, language, deletion"},
+        {"case": "1B-seed142:lang:insertion", "label": "seed 142, language, insertion"},
+        {"case": "1B-seed142:lang:deletion", "label": "seed 142, language, deletion"},
+        {"case": "1B-seed242:lang:insertion", "label": "seed 242, language, insertion"},
+        {"case": "1B-seed242:lang:deletion", "label": "seed 242, language, deletion"}]}
+    ],
+    "encoding": "x: B on a log scale; y: Delta on a symmetric log scale, linear for |Delta| <= 0.25; color: log10(ratio_max_interior_to_baseline) on a diverging blue-gray-red scale centered at 0 (the overshoot boundary), values outside the limits drawn at the end colors and counted; marker: circle for later calls, black-edged triangle for first calls; a hairline at Delta = 0; no titles or captions",
+    "symlog_linthresh": 0.25,
+    "log10_ratio_limits": [-2.0, 5.0],
+    "x_label": "B, all-baseline squared residual",
+    "y_label": "$\\Delta=\\mathrm{AUC}_Q-\\mathrm{AUC}_N$",
+    "color_label": "$\\log_{10}$(max interior $r$ / B)",
+    "later_label": "later call",
+    "first_label": "first call",
+    "reproducibility": "matplotlib Agg backend, DejaVu Sans, PDF saved with metadata CreationDate None, PNG at 300 dpi"
+  },
+  "outputs": {
+    "protocol.json": "byte copy of this protocol",
+    "calls.csv.gz": "one row per case and saved call with the per-call variables",
+    "correlations.csv": "Spearman correlations per case and subset",
+    "bins.csv": "B, ratio and joint bin counts per case",
+    "checks.json": "exact-equality checks against the frozen and committed calls and roster counts",
+    "headline.pdf, headline.png, oneb.pdf, oneb.png": "the two figures",
+    "provenance.json": "protocol, source and artifact SHA-256 hashes, figure and software environment"
+  },
+  "scope_limits": [
+    "Descriptive only: no causal account of why some calls overshoot or why some B values are small",
+    "Spearman coefficients are within-case summaries of dependent calls (shared episodes and recorded contexts), not inferential tests; no p-values or intervals",
+    "Interior saved nodes are a nominal percentage grid; unobserved intermediate interventions are not inferred"
+  ]
+}

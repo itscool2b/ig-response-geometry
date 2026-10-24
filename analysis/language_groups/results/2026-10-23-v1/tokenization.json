@@ -1,0 +1,383 @@
+{
+  "baseline": {
+    "pieces": [
+      "<pad>",
+      "</s>"
+    ],
+    "token_ids": [
+      0,
+      1
+    ]
+  },
+  "encoder": {
+    "appends_eos": true,
+    "path": "encode_task_lang.py",
+    "sha256": "cda801f14a3f7e52051c426ee0b07e85c94b759c8c3aef6ad4fb143209b77673",
+    "uses_sp_encode": true
+  },
+  "encoder_history": [
+    {
+      "appends_eos": true,
+      "commit": "0c3b7319dd40070d8627c29b92041cc88fd5d56b",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    },
+    {
+      "appends_eos": true,
+      "commit": "a8db34c89df91888b5cfda124abeaf57d01966c5",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    },
+    {
+      "appends_eos": true,
+      "commit": "6d49d8f09a2de25f47b8750cbee6d3a1da758ccd",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    },
+    {
+      "appends_eos": true,
+      "commit": "afd12493b0be3c5f1df8da704844e00b982b02c1",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "PickSingleYCB-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "PickSingleYCB-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    },
+    {
+      "appends_eos": true,
+      "commit": "c9eacfbd1961f02f48766ef89ad6134320efa093",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "PickSingleYCB-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "PickSingleYCB-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    },
+    {
+      "appends_eos": true,
+      "commit": "934023d72130e3d3e3c4b0f620cd7b7db9bd4d6f",
+      "instructions_equal_to_current": {
+        "PegInsertionSide-v1": true,
+        "PickCube-v1": true,
+        "PickSingleYCB-v1": true,
+        "StackCube-v1": true
+      },
+      "tasks_present": [
+        "PegInsertionSide-v1",
+        "PickCube-v1",
+        "PickSingleYCB-v1",
+        "StackCube-v1"
+      ],
+      "uses_sp_encode": true
+    }
+  ],
+  "month8_cross_check": {
+    "PegInsertionSide-v1": {
+      "path": "docs/nhsjs-revision/month8/lang-20260930/PegInsertionSide-v1.pt",
+      "recorded_attention_positions": 25,
+      "recorded_model_revision": "3db67ab1af984cf10548a73467f0e5bca2aaaeb2",
+      "recorded_token_ids_equal": true,
+      "recorded_tokenizer_sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+      "sha256": "66536ebc0decad76946a9a00c97d3e36eabeea707168c4cc34314e09e123bbb9"
+    },
+    "PickCube-v1": {
+      "path": "docs/nhsjs-revision/month8/lang-20260930/PickCube-v1.pt",
+      "recorded_attention_positions": 20,
+      "recorded_model_revision": "3db67ab1af984cf10548a73467f0e5bca2aaaeb2",
+      "recorded_token_ids_equal": true,
+      "recorded_tokenizer_sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+      "sha256": "c3b9cf56ce8202ed8726f450de2215f212a491cede3b2657d9c5b48a825d4793"
+    },
+    "PickSingleYCB-v1": {
+      "path": "docs/nhsjs-revision/month8/lang-20260930/PickSingleYCB-v1.pt",
+      "recorded_attention_positions": 16,
+      "recorded_model_revision": "3db67ab1af984cf10548a73467f0e5bca2aaaeb2",
+      "recorded_token_ids_equal": true,
+      "recorded_tokenizer_sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+      "sha256": "b4956232f322b376b525547d84124ad0085095ee38b95b8e74b743f81d685df4"
+    },
+    "StackCube-v1": {
+      "path": "docs/nhsjs-revision/month8/lang-20260930/StackCube-v1.pt",
+      "recorded_attention_positions": 30,
+      "recorded_model_revision": "3db67ab1af984cf10548a73467f0e5bca2aaaeb2",
+      "recorded_token_ids_equal": true,
+      "recorded_tokenizer_sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+      "sha256": "73aaee3a3097faa83ec58e0b6a4a8c403c027b5187ba57ea61b52d87c0038c01"
+    }
+  },
+  "tasks": {
+    "PegInsertionSide-v1": {
+      "expected": 25,
+      "instruction": "Pick up a orange-white peg and insert the orange end into the box with a hole in it.",
+      "n_attended_positions": 25,
+      "pieces": [
+        "\u2581Pick",
+        "\u2581up",
+        "\u2581",
+        "a",
+        "\u2581orange",
+        "-",
+        "white",
+        "\u2581pe",
+        "g",
+        "\u2581and",
+        "\u2581insert",
+        "\u2581the",
+        "\u2581orange",
+        "\u2581end",
+        "\u2581into",
+        "\u2581the",
+        "\u2581box",
+        "\u2581with",
+        "\u2581",
+        "a",
+        "\u2581hole",
+        "\u2581in",
+        "\u2581it",
+        ".",
+        "</s>"
+      ],
+      "token_ids": [
+        8356,
+        95,
+        3,
+        9,
+        5470,
+        18,
+        13698,
+        158,
+        122,
+        11,
+        8722,
+        8,
+        5470,
+        414,
+        139,
+        8,
+        1367,
+        28,
+        3,
+        9,
+        6356,
+        16,
+        34,
+        5,
+        1
+      ]
+    },
+    "PickCube-v1": {
+      "expected": 20,
+      "instruction": "Grasp a red cube and move it to a target goal position.",
+      "n_attended_positions": 20,
+      "pieces": [
+        "\u2581",
+        "Gra",
+        "s",
+        "p",
+        "\u2581",
+        "a",
+        "\u2581red",
+        "\u2581cu",
+        "be",
+        "\u2581and",
+        "\u2581move",
+        "\u2581it",
+        "\u2581to",
+        "\u2581",
+        "a",
+        "\u2581target",
+        "\u2581goal",
+        "\u2581position",
+        ".",
+        "</s>"
+      ],
+      "token_ids": [
+        3,
+        4744,
+        7,
+        102,
+        3,
+        9,
+        1131,
+        123,
+        346,
+        11,
+        888,
+        34,
+        12,
+        3,
+        9,
+        2387,
+        1288,
+        1102,
+        5,
+        1
+      ]
+    },
+    "PickSingleYCB-v1": {
+      "expected": 16,
+      "instruction": "Pick up the object on the table and lift it to the target position.",
+      "n_attended_positions": 16,
+      "pieces": [
+        "\u2581Pick",
+        "\u2581up",
+        "\u2581the",
+        "\u2581object",
+        "\u2581on",
+        "\u2581the",
+        "\u2581table",
+        "\u2581and",
+        "\u2581lift",
+        "\u2581it",
+        "\u2581to",
+        "\u2581the",
+        "\u2581target",
+        "\u2581position",
+        ".",
+        "</s>"
+      ],
+      "token_ids": [
+        8356,
+        95,
+        8,
+        3735,
+        30,
+        8,
+        953,
+        11,
+        5656,
+        34,
+        12,
+        8,
+        2387,
+        1102,
+        5,
+        1
+      ]
+    },
+    "StackCube-v1": {
+      "expected": 30,
+      "instruction": "Pick up a red cube and stack it on top of a green cube and let go of the cube without it falling.",
+      "n_attended_positions": 30,
+      "pieces": [
+        "\u2581Pick",
+        "\u2581up",
+        "\u2581",
+        "a",
+        "\u2581red",
+        "\u2581cu",
+        "be",
+        "\u2581and",
+        "\u2581stack",
+        "\u2581it",
+        "\u2581on",
+        "\u2581top",
+        "\u2581of",
+        "\u2581",
+        "a",
+        "\u2581green",
+        "\u2581cu",
+        "be",
+        "\u2581and",
+        "\u2581let",
+        "\u2581go",
+        "\u2581of",
+        "\u2581the",
+        "\u2581cu",
+        "be",
+        "\u2581without",
+        "\u2581it",
+        "\u2581falling",
+        ".",
+        "</s>"
+      ],
+      "token_ids": [
+        8356,
+        95,
+        3,
+        9,
+        1131,
+        123,
+        346,
+        11,
+        9013,
+        34,
+        30,
+        420,
+        13,
+        3,
+        9,
+        1442,
+        123,
+        346,
+        11,
+        752,
+        281,
+        13,
+        8,
+        123,
+        346,
+        406,
+        34,
+        7306,
+        5,
+        1
+      ]
+    }
+  },
+  "tokenizer": {
+    "bos_id": -1,
+    "bytes": 791656,
+    "eos_id": 1,
+    "pad_id": 0,
+    "path": "analysis/language_groups/vendor/spiece.model",
+    "piece_0": "<pad>",
+    "piece_1": "</s>",
+    "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86",
+    "source_url": "https://huggingface.co/google/t5-v1_1-xxl/resolve/3db67ab1af984cf10548a73467f0e5bca2aaaeb2/spiece.model",
+    "unk_id": 2,
+    "vocabulary": 32000
+  }
+}
