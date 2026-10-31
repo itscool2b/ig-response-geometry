@@ -24,6 +24,11 @@ paper/tmlr-source.json -text
 scripts/build_revision_assets.py -text
 scripts/build_nhsjs_revision_assets.py -text
 paper/supplementary_derivations.tex -text
+# Replay validation binds these source and runtime bytes in the review archive.
+scripts/reviewer_interval_certificate.py -text
+scripts/verify_reviewer_replay.py -text
+scripts/reproduce_reviewer_archive.py -text
+requirements-replay-linux.txt -text
 # The aliasing/manuscript lineage also authenticates this shared core's bytes.
 integrated_gradients.py -text
 # Preserved source files have an exact-byte archive manifest.
