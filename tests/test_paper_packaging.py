@@ -64,6 +64,23 @@ def test_changed_author_or_malformed_conditionals_fail_closed():
         anonymous_source(r'\author{Different syntax}')
 
 
+def test_authorized_review_package_preserves_every_scientific_member(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    build(root, tmp_path/'draft')
+    build(root, tmp_path/'review', authorized_review=True)
+    with zipfile.ZipFile(tmp_path/'draft/anonymous-manuscript-sources-draft.zip') as before, \
+            zipfile.ZipFile(tmp_path/'review/anonymous-manuscript-sources.zip') as after:
+        assert before.namelist() == after.namelist()
+        for name in before.namelist():
+            if name not in {'README.txt', 'manifest.json'}:
+                assert before.read(name) == after.read(name), name
+        readme = after.read('README.txt').decode()
+        assert 'working draft' not in readme and 'submission or receipt' in readme
+        manifest = json.loads(after.read('manifest.json'))
+        assert manifest['status'] == 'author_authorized_review_copy_not_journal_submission'
+        assert 'author_authorized' not in json.loads(before.read('manifest.json'))['status']
+
+
 def test_comment_only_review_markers_do_not_create_paragraphs_in_captions():
     source = "\\author{Anonymous author}\n\\caption{\n% BEGIN approved-caption\nA 16.0\\% overshoot share.\n% END approved-caption\n}\n"
     result = anonymous_source(source)

@@ -176,7 +176,7 @@ def manuscript_dependencies(text, *, top_level, supplement=False):
     return names
 
 
-def build(root, output):
+def build(root, output, *, authorized_review=False):
     root, output = Path(root).resolve(), Path(output).resolve()
     validate_revision_assets(root)
     if output.exists():
@@ -207,17 +207,20 @@ def build(root, output):
         inputs['paper/' + name] = digest(data)
     template_provenance = validate_template_bytes(files)
     files['README.txt'] = (
-        'Anonymous manuscript source component, working draft.\n'
+        ('Anonymous manuscript source component, author-authorized review copy.\n' if authorized_review else
+         'Anonymous manuscript source component, working draft.\n') +
         'Build the article with Tectonic: tectonic --only-cached --untrusted --reruns 3 paper.tex.\n'
         'Requires installed Times New Roman and an already populated TeX package cache.\n'
         'The legacy TMLR source can also use pdflatex, bibtex, then two pdflatex passes.\n'
         'Exact pinned TMLR files and both upstream license notices are preserved.\n'
         'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
         'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
-        'This contains manuscript sources, not the complete code/data supplement.\n'
-        'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n'
+        'This contains manuscript sources, not the complete code/data supplement.\n' +
+        ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review else
+         'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n')
     ).encode()
-    manifest = dict(kind='anonymous_manuscript_sources', status='working_draft_not_submission_ready',
+    manifest = dict(kind='anonymous_manuscript_sources', status=(
+                    'author_authorized_review_copy_not_journal_submission' if authorized_review else 'working_draft_not_submission_ready'),
                     artifacts_sha256={name:digest(data) for name,data in sorted(files.items())})
     files['manifest.json'] = (json.dumps(manifest,indent=2,sort_keys=True)+'\n').encode()
     # Validate every output member, including generated templates, before
@@ -231,7 +234,7 @@ def build(root, output):
         path = work / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-    archive = output / 'anonymous-manuscript-sources-draft.zip'
+    archive = output / ('anonymous-manuscript-sources.zip' if authorized_review else 'anonymous-manuscript-sources-draft.zip')
     with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED) as package:
         for name,data in sorted(files.items()):
             info = zipfile.ZipInfo(name, date_time=(1980,1,1,0,0,0))
@@ -251,5 +254,6 @@ def build(root, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--authorized-review', action='store_true', help='Use only with owner authorization for the anonymous review copy; does not imply validation or submission')
     args = parser.parse_args()
-    build(Path(__file__).resolve().parents[1], args.out)
+    build(Path(__file__).resolve().parents[1], args.out, authorized_review=args.authorized_review)
