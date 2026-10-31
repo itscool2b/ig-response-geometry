@@ -232,6 +232,26 @@ def test_public_tokenizer_build_path_exception_requires_exact_upstream_bytes(tmp
     assert archive.identifying_hits(tmp_path) == [('tokenizer.model', ['personal machine path'])]
 
 
+def test_binary_path_prefilter_preserves_mixed_separators_and_unicode_filename_checks(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    values = [b'C:/Users/person/file', b'c:\\Users\\person\\file', b'C:/uSeRs\\person/file',
+              b'C:\\uSErs/person/file', b'/Users/person/file', b'/HoMe/person/file']
+    for index, value in enumerate(values):
+        (tmp_path / f'{index}.bin').write_bytes(value)
+    unicode_path = tmp_path / 'a/Uſers/person/file.txt'
+    unicode_path.parent.mkdir(parents=True)
+    unicode_path.write_text('ordinary bytes')
+    hits = archive.identifying_hits(tmp_path)
+    assert len(hits) == len(values) + 1
+    assert all(tokens == ['personal machine path'] for _, tokens in hits)
+    # Every possible latin-1 replacement is still evaluated by the same regex
+    # whenever its literal Users/home component can match.
+    for byte in range(256):
+        text = ('C:/' + chr(byte) + 'sers/person/file').lower()
+        assert bool(archive.PERSONAL_PATH.search(text)) == bool(
+            ('users' in text or '/home/' in text) and archive.PERSONAL_PATH.search(text))
+
+
 def test_anonymous_reviewer_archive_requires_pdf_drawn_text_scan(tmp_path, monkeypatch):
     from scripts import build_reviewer_archive as archive
     kwargs = reviewer_inputs(tmp_path)

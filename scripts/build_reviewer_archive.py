@@ -182,7 +182,10 @@ def stored_zip_hits(path, tokens, chunk_size=1 << 23):
             for index, view in enumerate((chunk, chunk.replace(b"\x00", b""))):
                 view = tails[index] + view.lower()
                 found.update(token for token, value in encoded if value in view)
-                if personal.search(view):
+                # Every regex alternative contains one of these lowercase
+                # literals. Fast substring search avoids applying a regex to
+                # gigabytes of numeric tensor bytes with no path prefix.
+                if (b"users" in view or b"/home/" in view) and personal.search(view):
                     found.add("personal machine path")
                 tails[index] = view[-overlap:]
     return sorted(found)
@@ -209,7 +212,11 @@ def identifying_hits(root, extra=()):
             for view in identity_views(path.read_bytes()):
                 text = view.decode("latin-1").lower()
                 found.update(token for token in tokens if token in text)
-                if PERSONAL_PATH.search(text) and hashlib.sha256(view).hexdigest() not in PUBLIC_TOKENIZER_VIEWS:
+                # This view is lowercase latin-1, so the prefilter is equivalent
+                # to the regex's literal Users/home components. Filenames keep
+                # their separate unrestricted Unicode regex check above.
+                if (("users" in text or "/home/" in text) and PERSONAL_PATH.search(text)
+                        and hashlib.sha256(view).hexdigest() not in PUBLIC_TOKENIZER_VIEWS):
                     found.add("personal machine path")
         if found:
             hits.append((relative, sorted(found)))
