@@ -57,3 +57,22 @@ def assert_artifacts_authentic(directory, provenance):
     artifacts.update(provenance.get("platform_dependent_artifacts", {}))
     for name, record in artifacts.items():
         assert cs.artifact_record(Path(directory) / name) == record, name
+
+
+def canonical_git_text_record(record, root, reference_bytes, *, current):
+    """Authenticate a text-file fingerprint against a pinned Git blob.
+
+    Some older inventories record an actual-byte digest in ``sha256`` without
+    separate canonical and checkout fields. Permit exactly the pinned LF blob
+    or its complete CRLF checkout, then retain every other metadata field.
+    """
+    assert b"\r" not in reference_bytes, "Pinned Git reference must be canonical LF"
+    canonical_digest = hashlib.sha256(reference_bytes).hexdigest()
+    allowed = {canonical_digest,
+               hashlib.sha256(reference_bytes.replace(b"\n", b"\r\n")).hexdigest()}
+    assert record["sha256"] in allowed, record["path"]
+    if current:
+        blob = (Path(root) / record["path"]).read_bytes()
+        assert hashlib.sha256(blob).hexdigest() == record["sha256"], record["path"]
+        assert blob.replace(b"\r\n", b"\n") == reference_bytes, record["path"]
+    return {**record, "sha256": canonical_digest}

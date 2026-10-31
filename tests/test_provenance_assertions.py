@@ -3,7 +3,7 @@ import hashlib
 
 import pytest
 
-from tests.provenance_assertions import canonical_audit
+from tests.provenance_assertions import canonical_audit, canonical_git_text_record
 
 
 def fixture(tmp_path):
@@ -52,3 +52,35 @@ def test_checkout_metadata_cannot_hide_changed_input(tmp_path, change):
     (tmp_path / "data.jsonl").write_bytes(blob)
     with pytest.raises(AssertionError):
         canonical_audit(audit, tmp_path, entries, current=True)
+
+
+@pytest.mark.parametrize("crlf", [False, True])
+def test_git_text_fingerprint_preserves_actual_checkout_check(tmp_path, crlf):
+    reference = b"x = 1\ny = 2\n"
+    blob = reference.replace(b"\n", b"\r\n") if crlf else reference
+    (tmp_path / "encoder.py").write_bytes(blob)
+    old = dict(path="encoder.py", sha256=hashlib.sha256(reference).hexdigest(), appends_eos=True)
+    new = {**old, "sha256": hashlib.sha256(blob).hexdigest()}
+    assert canonical_git_text_record(new, tmp_path, reference, current=True) == canonical_git_text_record(
+        old, tmp_path, reference, current=False)
+    new["appends_eos"] = False
+    assert canonical_git_text_record(new, tmp_path, reference, current=True) != canonical_git_text_record(
+        old, tmp_path, reference, current=False)
+
+
+@pytest.mark.parametrize("change", ["stale_digest", "mixed_endings", "code_change", "forged_archive"])
+def test_git_text_normalization_rejects_unpinned_or_forged_bytes(tmp_path, change):
+    reference = b"x = 1\ny = 2\n"
+    blob = reference
+    if change == "stale_digest":
+        blob = reference.replace(b"\n", b"\r\n")
+    elif change == "mixed_endings":
+        blob = reference.replace(b"\n", b"\r\n", 1)
+    elif change == "code_change":
+        blob = reference.replace(b"x = 1", b"x = 2")
+    (tmp_path / "encoder.py").write_bytes(blob)
+    record = dict(path="encoder.py", sha256=hashlib.sha256(reference if change == "stale_digest" else blob).hexdigest())
+    if change == "forged_archive":
+        record["sha256"] = "0" * 64
+    with pytest.raises(AssertionError):
+        canonical_git_text_record(record, tmp_path, reference, current=change != "forged_archive")

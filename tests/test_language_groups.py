@@ -7,6 +7,9 @@ import pytest
 
 from analysis import language_groups as lg
 from analysis.revision.core import IntegrityError, Record
+from tests.provenance_assertions import (
+    assert_artifacts_authentic, assert_same_input_audit, canonical_git_text_record,
+)
 
 
 def test_historical_and_current_rules_with_half_even_rounding():
@@ -79,13 +82,34 @@ def test_real_data_reproduction_counts_and_history(tmp_path, monkeypatch):
         monkeypatch.setattr(lg, "authors_embeddings", lambda protocol, allow_download=False: committed_authors)
     fresh = tmp_path / "fresh"
     lg.run(fresh)
-    for name in lg.CORE_OUTPUTS + (lg.AUTHORS_OUTPUTS if cached else ()):
-        assert (fresh / name).read_bytes() == (lg.RESULTS / name).read_bytes(), name
     produced = json.loads((fresh / "provenance.json").read_bytes())
     recorded = json.loads((lg.RESULTS / "provenance.json").read_bytes())
-    for key in ("protocol_sha256", "source_sha256", "inputs", "vendored_sha256"):
+    assert_artifacts_authentic(fresh, produced)
+    assert_artifacts_authentic(lg.RESULTS, recorded)
+    _, protocol = lg.load_protocol()
+    encoder = protocol["encoder"]["path"]
+    commit = protocol["encoder"]["history_commits"][-1]
+    reference = lg.git(lg.ROOT, "show", f"{commit}:{encoder}")
+    for name in lg.CORE_OUTPUTS + (lg.AUTHORS_OUTPUTS if cached else ()):
+        if name == "tokenization.json":
+            new = json.loads((fresh / name).read_bytes())
+            old = json.loads((lg.RESULTS / name).read_bytes())
+            assert new["encoder"]["path"] == old["encoder"]["path"] == encoder
+            new["encoder"] = canonical_git_text_record(new["encoder"], lg.ROOT, reference, current=True)
+            old["encoder"] = canonical_git_text_record(old["encoder"], lg.ROOT, reference, current=False)
+            assert new == old
+        else:
+            assert (fresh / name).read_bytes() == (lg.RESULTS / name).read_bytes(), name
+    for provenance, current in ((produced, True), (recorded, False)):
+        local = provenance["inputs"]["local_files"]
+        assert sum(r["path"] == encoder for r in local) == 1
+        for i, item in enumerate(local):
+            if item["path"] == encoder:
+                local[i] = canonical_git_text_record(item, lg.ROOT, reference, current=current)
+    assert_same_input_audit(produced["inputs"], recorded["inputs"], lg.ROOT)
+    for key in ("protocol_sha256", "source_sha256", "vendored_sha256"):
         assert produced[key] == recorded[key], key
-    assert lg.verify(lg.RESULTS)["status"] == "verified"
+    assert lg.verify(fresh)["status"] == "verified"
     tokens = json.loads((lg.RESULTS / "tokenization.json").read_bytes())
     assert {t: v["n_attended_positions"] for t, v in tokens["tasks"].items()} == {
         "PickCube-v1": 20, "StackCube-v1": 30, "PegInsertionSide-v1": 25, "PickSingleYCB-v1": 16}
