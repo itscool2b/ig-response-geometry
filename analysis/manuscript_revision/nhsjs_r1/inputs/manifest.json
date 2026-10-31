@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "inputs": {
+    "methods_decisions.csv": {
+      "source": "docs/nhsjs-revision/facts/r1/methods_decisions.csv",
+      "source_sha256": "46023e3c42c7319244e3150c3b49c236f3ca093f6eedb58cff42a1afdc95f296",
+      "sha256": "46023e3c42c7319244e3150c3b49c236f3ca093f6eedb58cff42a1afdc95f296"
+    },
+    "methods_advantage.csv": {
+      "source": "docs/nhsjs-revision/facts/r1/methods_advantage.csv",
+      "source_sha256": "9a127c96f4dde61943e734766e9a0846782652e8ab385e77a9a6de8a1dc6b010",
+      "sha256": "9a127c96f4dde61943e734766e9a0846782652e8ab385e77a9a6de8a1dc6b010"
+    },
+    "contrasts.csv": {
+      "source": "docs/nhsjs-revision/facts/r1/contrasts.csv",
+      "source_sha256": "7d93f3ea2436e2c3ddd4b3596856fc46a4df5be46c36b74aaec126c28f299c60",
+      "sha256": "7d93f3ea2436e2c3ddd4b3596856fc46a4df5be46c36b74aaec126c28f299c60"
+    },
+    "identity_status.csv": {
+      "source": "docs/nhsjs-revision/mf2/identities.json",
+      "source_sha256": "63680766f1510f3d4942cb29e237dce778a38d89a7f55f40a881709b6afa34ee",
+      "computation": "Count each field's stated status, by population; no inferred status upgrades.",
+      "sha256": "bed74f9bb5e79b4ce91ac1a62c46601496117f88055dd6752e49c1d1bbaee460"
+    },
+    "identity_values.json": {
+      "source": "docs/nhsjs-revision/mf2/identities.json",
+      "source_sha256": "63680766f1510f3d4942cb29e237dce778a38d89a7f55f40a881709b6afa34ee",
+      "computation": "Audited compact identity projection; 12-character revision/hash prefixes; full identity inventory is authoritative.",
+      "sha256": "350538f87c40bc9aa463f66d5acffcbf09b8209336023bb1dca0df585bddbb68"
+    },
+    "experiments.json": {
+      "source": "docs/nhsjs-revision/mf2/rec4_facts.csv",
+      "source_sha256": "5b72ae580ec97493047382359b084764ce35bb753f9a1a602088e3173b2a3291",
+      "computation": "Curated compact projection of the 13 experiment rows; asterisk means inferred budget.",
+      "sha256": "8c8132c7e0f660559e7a551d4888a1d69128e361969d224e0275d00174309d55"
+    }
+  }
+}

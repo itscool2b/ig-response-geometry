@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Pinned R1 identities and their evidence status.} Revisions and digests use 12-character prefixes; the archive gives full strings, adaptor hashes and per-phase evidence. Recorded means captured by the experiment. Inferred software/preprocessing entries reflect incomplete host captures, not a claim that every host was individually captured. Across all 12 historical and new populations the inventory has 220 recorded, 171 recovered, 52 inferred and 45 unknown fields. Historical unknowns remain unknown.}
+\label{tab:r1-identities}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.19\linewidth} p{0.57\linewidth} p{0.13\linewidth}}
+\toprule
+\textbf{Component} & \textbf{Value} & \textbf{Status} \\
+\midrule
+RDT-170M checkpoint & rdt-170m; revision 8aa386cac3bb; SHA-256 2e87fccee029 & Recorded \\
+RDT-1B checkpoint & maniskill-model/rdt; revision 9622afab2b7c; SHA-256 3fa89cbf7bbb & Recorded \\
+Vision encoder & SigLIP so400m-patch14-384; revision 9fdffc58afc9 & Recorded \\
+Language encoder & T5-v1.1-XXL; revision 3db67ab1af98; preserved bf16 task embeddings & Recorded \\
+Code & RDT upstream cd79363a1387; project tag nhsjs-r1-1 (d10de3d) & Recorded \\
+Sampler & DPMSolverMultistepScheduler; 5 steps; explicit-noise adapter v1 & Recorded \\
+Runtime & Python 3.12.3; torch 2.8.0+cu128; diffusers 0.27.2; transformers 4.41.0 & Inferred \\
+Simulator & ManiSkill 3.0.1; SAPIEN 3.0.3; gymnasium 1.3.0 & Inferred \\
+Control & pd\_joint\_pos; 20 Hz control / 100 Hz simulation; 400-step horizon & Recorded \\
+Determinism & Deterministic algorithms; no TF32; cuDNN deterministic; benchmark off & Recorded \\
+Image preprocessing & SigLIP: 384 x 384; resample 3; scale 1/255; mean/std 0.5 & Inferred \\
+Adaptors & Checkpoint-contained: image/language mlp2x\_gelu; state mlp3x\_gelu; hashes archived & Recorded \\
+\bottomrule
+\end{tabular}
+\end{table}

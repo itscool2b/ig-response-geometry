@@ -5,9 +5,11 @@ repository, so the research supplement omits them.
 """
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import tarfile
+import zipfile
 
 import pytest
 
@@ -103,3 +105,435 @@ def test_reviewer_archive_keeps_worker_logs_and_failures_and_scans_every_encodin
         assert not (tmp_path / f"bad{k}").exists()
     write_tree(tmp_path / "identity-pod", {"pod.json": b'{"cwd": "/workspace/nhsjs", "home": "/root/.cache"}'})
     archive.build(tmp_path / "pod-ok", **dict(kwargs, identity=tmp_path / "identity-pod"))
+
+
+def reviewer_inputs(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    for name, files in (("results", {"manifest.json": b"{}"}), ("identity", {"pod.json": b"{}"}),
+                        ("protocols", {"plan.json": b"{}"}), ("month8", {"README.md": b"bank"}),
+                        ("mf2", {n: b"facts" for n in archive.INVENTORY_FILES})):
+        write_tree(tmp_path / name, files)
+    phase = tmp_path / "runs/P/e0000-c001/bf16"
+    write_tree(phase, {"record.json": b"{}", "maps.pt": b"raw-map", "source-cache.pt": b"raw-cache"})
+    (phase / "completion.json").write_text(json.dumps({"files_sha256": {
+        "record.json": sha(b"{}"), "maps.pt": sha(b"raw-map"), "source-cache.pt": sha(b"raw-cache")}}))
+    return dict(results=tmp_path / "results", runs=tmp_path / "runs", identity=tmp_path / "identity",
+                sources=dict(protocols=tmp_path / "protocols", month8=tmp_path / "month8",
+                             inventories=tmp_path / "mf2"))
+
+
+def test_complete_reviewer_archive_keeps_and_authenticates_every_raw_run_file(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    write_tree(tmp_path / "runs/P/e0000-c001/attempts/failed", {
+        "failure.json": b'{"error":"retained"}', "partial.pt": b"partial bytes"})
+    (tmp_path / "runs/P/e0000-c002/attempts/empty").mkdir(parents=True)
+    write_tree(tmp_path / "runs/P/workers", {"worker-00.jsonl": b'{"event":"end"}\n'})
+    report = archive.build(tmp_path / "full", **kwargs, include_raw_runs=True, anonymous=True)
+    assert report["raw_runs_included"] is True and report["tensors_included"] == 2
+    assert report["attempt_failures"] == 1
+    for source in (tmp_path / "runs").rglob("*"):
+        destination = tmp_path / "full/runs" / source.relative_to(tmp_path / "runs")
+        assert destination.is_dir() if source.is_dir() else destination.read_bytes() == source.read_bytes()
+    out = tmp_path / "full"
+    manifest = (out / "MANIFEST.sha256").read_bytes()
+    assert b"\r" not in manifest and b"\\" not in manifest
+    for line in manifest.decode().splitlines():
+        digest, name = line.split("  ", 1)
+        assert sha((out / name).read_bytes()) == digest
+    assert "All 2 completion-bound raw files" in (out / "README.md").read_text()
+    assert "are not included" not in (out / "README.md").read_text()
+
+
+@pytest.mark.parametrize("include_raw", [False, True])
+@pytest.mark.parametrize("fault", ["missing", "corrupted", "escape", "absolute", "backslash", "bad-hash"])
+def test_reviewer_archive_rejects_invalid_completion_bindings(tmp_path, include_raw, fault):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    phase = tmp_path / "runs/P/e0000-c001/bf16"
+    completion = phase / "completion.json"
+    value = json.loads(completion.read_text())
+    if fault == "missing":
+        (phase / "maps.pt").unlink()
+    elif fault == "corrupted":
+        (phase / "maps.pt").write_bytes(b"changed")
+    else:
+        name = {"escape": "../outside.pt", "absolute": "/outside.pt",
+                "backslash": "nested\\outside.pt", "bad-hash": "maps.pt"}[fault]
+        value["files_sha256"][name] = "invalid" if fault == "bad-hash" else sha(b"outside")
+        completion.write_text(json.dumps(value))
+    with pytest.raises(ValueError, match="Completion hash|Invalid completion"):
+        archive.build(tmp_path / "bad", **kwargs, include_raw_runs=include_raw)
+    assert not (tmp_path / "bad").exists()
+
+
+def test_complete_anonymous_archive_checks_attempt_data_without_rewriting_it(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    private = b"Windermere in an interrupted file"
+    write_tree(tmp_path / "runs/P/e0000-c001/attempts/interrupted", {"partial.pt": private})
+    with pytest.raises(ValueError, match="Identifying text"):
+        archive.build(tmp_path / "bad", **kwargs, include_raw_runs=True, anonymous=True)
+    assert not (tmp_path / "bad").exists()
+    assert (tmp_path / "runs/P/e0000-c001/attempts/interrupted/partial.pt").read_bytes() == private
+
+
+@pytest.mark.parametrize("name", ["../outside", "nested/path", "C:drive", "", ".."])
+def test_reviewer_archive_rejects_escaping_collection_names(tmp_path, name):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    with pytest.raises(ValueError, match="Collection names"):
+        archive.build(tmp_path / "bad", **kwargs, collections=[(name, tmp_path / "runs")])
+    assert not (tmp_path / "bad").exists()
+
+
+def test_reviewer_archive_rejects_output_inside_source_without_modifying_it(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    with pytest.raises(ValueError, match="outside every source"):
+        archive.build(tmp_path / "runs/output", **kwargs)
+    assert not (tmp_path / "runs/output").exists()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows directory junction regression")
+@pytest.mark.parametrize("position", ["nested", "root", "ancestor", "output-ancestor",
+                                      "mathematical_supplement", "reproduction_code", "coverage"])
+def test_reviewer_archive_rejects_real_windows_junctions_before_copy(tmp_path, position):
+    import _winapi
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    outside = tmp_path / "outside"
+    write_tree(outside, {"nested/private.bin": b"unrelated confidential bytes"})
+    link = (kwargs["results"] / "linked" if position == "nested" else tmp_path / "linked")
+    _winapi.CreateJunction(str(outside), str(link))
+    assert link.is_junction() and not link.is_symlink()
+    output = tmp_path / "bad"
+    if position == "root":
+        kwargs["results"] = link
+    elif position == "ancestor":
+        kwargs["results"] = link / "nested"
+    elif position == "output-ancestor":
+        output = link / "new-archive"
+    elif position in ("mathematical_supplement", "reproduction_code", "coverage"):
+        path = link / "nested/private.bin"
+        kwargs[position] = [path] if position == "coverage" else path
+    try:
+        with pytest.raises(ValueError, match="symbolic link|junction"):
+            archive.build(output, **kwargs, include_raw_runs=True)
+        assert not output.exists()
+        assert (outside / "nested/private.bin").read_bytes() == b"unrelated confidential bytes"
+    finally:
+        # Remove the junction itself, never recursively remove its target.
+        link.rmdir()
+
+
+def test_regeneration_kit_members_are_not_silently_filtered(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    kit = tmp_path / 'kit'
+    files = {'record.json': b'{}', 'source.lock': b'bound auxiliary', '__pycache__/saved.bin': b'bound cache'}
+    write_tree(kit, files)
+    archive.build(tmp_path / 'out', **kwargs, kit=kit)
+    assert {p.relative_to(tmp_path / 'out/kit').as_posix(): p.read_bytes()
+            for p in (tmp_path / 'out/kit').rglob('*') if p.is_file()} == files
+
+
+def test_stored_tensor_privacy_scan_keeps_raw_and_utf16_matches_across_chunks(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    path = tmp_path / "tensor.pt"
+    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_STORED) as output:
+        output.writestr("tensor/data.pkl", b"metadata")
+        output.writestr("tensor/data/0", b"x" * 63 + b"Bajpai" + b"x" * 63
+                        + "Windermere".encode("utf-16-le") + b"x" * 63 + b"/Users/someone/project")
+    assert archive.stored_zip_hits(path, ["bajpai", "windermere"], chunk_size=4) == [
+        "bajpai", "personal machine path", "windermere"]
+    compressed = tmp_path / "compressed.zip"
+    with zipfile.ZipFile(compressed, "w", compression=zipfile.ZIP_DEFLATED) as output:
+        output.writestr("secret.txt", b"Bajpai")
+    assert archive.stored_zip_hits(compressed, ["bajpai"], chunk_size=4) is None
+    assert archive.stored_zip_hits(path, ['非公開'], chunk_size=4) == ['personal machine path']
+
+
+def test_public_tokenizer_build_path_exception_requires_exact_upstream_bytes(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    source = Path(__file__).resolve().parents[1] / 'analysis/language_groups/vendor/spiece.model'
+    data = source.read_bytes()
+    target = tmp_path / 'tokenizer.model'
+    target.write_bytes(data)
+    assert not archive.identifying_hits(tmp_path)
+    target.write_bytes(data + b'changed')
+    assert archive.identifying_hits(tmp_path) == [('tokenizer.model', ['personal machine path'])]
+
+
+def test_binary_path_prefilter_preserves_mixed_separators_and_unicode_filename_checks(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    values = [b'C:/Users/person/file', b'c:\\Users\\person\\file', b'C:/uSeRs\\person/file',
+              b'C:\\uSErs/person/file', b'/Users/person/file', b'/HoMe/person/file']
+    for index, value in enumerate(values):
+        (tmp_path / f'{index}.bin').write_bytes(value)
+    unicode_path = tmp_path / 'a/Uſers/person/file.txt'
+    unicode_path.parent.mkdir(parents=True)
+    unicode_path.write_text('ordinary bytes')
+    hits = archive.identifying_hits(tmp_path)
+    assert len(hits) == len(values) + 1
+    assert all(tokens == ['personal machine path'] for _, tokens in hits)
+    # Every possible latin-1 replacement is still evaluated by the same regex
+    # whenever its literal Users/home component can match.
+    for byte in range(256):
+        text = ('C:/' + chr(byte) + 'sers/person/file').lower()
+        assert bool(archive.PERSONAL_PATH.search(text)) == bool(
+            ('users' in text or '/home/' in text) and archive.PERSONAL_PATH.search(text))
+
+
+def test_anonymous_reviewer_archive_requires_pdf_drawn_text_scan(tmp_path, monkeypatch):
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    write_tree(tmp_path / "results", {"figure.pdf": b"%PDF-1.4\n"})
+    monkeypatch.setattr(archive, "pdf_reader_available", lambda: False)
+    with pytest.raises(ValueError, match="requires PyMuPDF"):
+        archive.build(tmp_path / "bad", **kwargs, anonymous=True)
+    assert not (tmp_path / "bad").exists()
+
+
+def portable_fixture(tmp_path):
+    from scripts import build_reviewer_archive as archive
+    root = tmp_path / 'archive'
+    protocol = 'docs/nhsjs-revision/protocols/r1/production/test.json'
+    bank = 'docs/nhsjs-revision/protocols/r1/banks/test.json'
+    expected = dict(kind='nhsjs_r1_gpu_analysis', inputs={'run_root': '../unavailable-volume',
+        'banks': [dict(id='P', group='P', bank=bank, protocol=protocol)]}, population={'P': {'available': 1}},
+        outputs={'result.csv': sha(b'x\n1\n')}, plan_sha256=sha(b'{}'),
+        coverage_sha256={'original/coverage.json': sha(b'{}')})
+    write_tree(root, {'results/analysis/manifest.json': json.dumps(expected).encode(),
+        'results/analysis/result.csv': b'x\n1\n', 'protocols/analysis-plan-r1.json': b'{}',
+        'protocols/production/test.json': b'{}',
+        'protocols/banks/test.json': json.dumps({'source_metrics_sha256': sha(b'{}')}).encode(),
+        **{'collections/' + name + '/metrics.jsonl': b'{}' for name in ('P', 'B1', 'S')}})
+    (root / 'runs').mkdir()
+    code = b'''import argparse,hashlib,json
+from pathlib import Path
+p=argparse.ArgumentParser()
+for name in ('inputs','plan','out'):p.add_argument('--'+name,required=True)
+p.add_argument('--coverage',action='append');p.add_argument('--metrics-copy',action='append');a=p.parse_args()
+inputs=json.loads(Path(a.inputs).read_text());assert Path(inputs['run_root']).is_dir()
+for row in inputs['banks']:
+ for key in ('bank','protocol'):assert Path(row[key]).is_file() and Path(row[key]).is_absolute()
+for value in a.metrics_copy:assert Path(value.split('=',1)[1]).is_file()
+sha=lambda b:hashlib.sha256(b).hexdigest()
+out=Path(a.out);out.mkdir();(out/'result.csv').write_bytes(b'x\\n1\\n')
+data=dict(kind='nhsjs_r1_gpu_analysis',inputs=inputs,population={'P':{'available':1}},outputs={'result.csv':sha(b'x\\n1\\n')},plan_sha256=sha(Path(a.plan).read_bytes()),coverage_sha256={x:sha(Path(x).read_bytes()) for x in a.coverage})
+(out/'manifest.json').write_text(json.dumps(data))
+'''
+    contents = {'analysis/revision_gpu/v1/analyze.py': code}
+    package = tmp_path / 'code.zip'
+    with zipfile.ZipFile(package, 'w') as stream:
+        for name, data in contents.items():
+            stream.writestr(name, data)
+        stream.writestr('SUPPLEMENT_MANIFEST.json', json.dumps({'members': {
+            name: {'sha256': sha(data), 'bytes': len(data)} for name, data in contents.items()}}))
+    coverage = tmp_path / 'coverage.json'
+    coverage.write_bytes(b'{}')
+    archive.add_reproduction(root, package, [coverage])
+    # This one-row synthetic producer exercises portability, not the full
+    # registered-science verifier (covered in test_reviewer_replay_equivalence).
+    config_path = root / 'reproduction.json'
+    config = json.loads(config_path.read_text())
+    config.pop('equivalence_verifier')
+    config.pop('interval_certificate', None)
+    config.pop('interval_certificate_sha256', None)
+    config_path.write_text(json.dumps(config))
+    files = sorted(p for p in root.rglob('*') if p.is_file())
+    (root / 'MANIFEST.sha256').write_text(''.join(archive.sha256(p) + '  ' + p.relative_to(root).as_posix() + '\n' for p in files))
+    return root
+
+
+def test_portable_archive_replay_executes_without_checkout_or_original_paths(tmp_path, monkeypatch):
+    from scripts import reproduce_reviewer_archive as replay
+    monkeypatch.setattr(replay, 'check_runtime', lambda: {'test_fixture': True})
+    root = portable_fixture(tmp_path)
+    report = replay.replay(root, tmp_path / 'reproduction')
+    assert report['verified'] and report['outputs_compared'] == 1
+    text = (tmp_path / 'reproduction/inputs.json').read_text()
+    assert 'unavailable-volume' not in text
+    assert str(root).replace('\\', '\\\\') in text
+    (root / 'collections/P/metrics.jsonl').write_bytes(b'changed')
+    with pytest.raises(ValueError, match='Archive hash mismatch'):
+        replay.replay(root, tmp_path / 'second')
+    assert not (tmp_path / 'second').exists()
+
+
+@pytest.mark.parametrize('bad_name', ['../escape.py', 'a/../escape.py', 'C:/escape.py', 'a\\escape.py'])
+def test_nested_code_manifest_cannot_escape_extraction(tmp_path, bad_name):
+    from scripts.reproduce_reviewer_archive import extract_code
+    package = tmp_path / 'code.zip'
+    with zipfile.ZipFile(package, 'w') as stream:
+        info = zipfile.ZipInfo('placeholder')
+        info.filename = bad_name  # Bypass Windows ZipInfo's separator normalization in this adversarial fixture.
+        stream.writestr(info, b'code')
+        stream.writestr('SUPPLEMENT_MANIFEST.json', '{}')
+    with pytest.raises(ValueError, match='Unsafe archive member'):
+        extract_code(package, tmp_path / 'code')
+    assert not (tmp_path / 'code').exists()
+
+
+def test_replay_rejects_unlisted_files_and_duplicate_manifest_records(tmp_path):
+    from scripts.reproduce_reviewer_archive import verify_archive
+    root = portable_fixture(tmp_path)
+    manifest = root / 'MANIFEST.sha256'
+    original = manifest.read_text()
+    manifest.write_text(original + original.splitlines()[0] + '\n')
+    with pytest.raises(ValueError, match='Repeated'):
+        verify_archive(root)
+    manifest.write_text(original)
+    (root / 'unlisted.py').write_text('pass')
+    with pytest.raises(ValueError, match='inventory differs'):
+        verify_archive(root)
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows directory junction regression")
+@pytest.mark.parametrize("operation", ["verify-root", "verify-ancestor", "replay-root",
+                                       "replay-ancestor", "replay-output", "extract-input", "extract-output"])
+def test_replay_rejects_aliased_roots_before_resolution(tmp_path, operation):
+    import _winapi
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    link = tmp_path / "archive-alias"
+    target = root if operation.endswith("root") else tmp_path
+    _winapi.CreateJunction(str(target), str(link))
+    assert link.is_junction() and not link.is_symlink()
+    selected = link if operation.endswith("root") else link / "archive"
+    out = tmp_path / "replayed"
+    try:
+        with pytest.raises(ValueError, match="alias|junction|symbolic link"):
+            if operation.startswith("verify"):
+                replay.verify_archive(selected)
+            elif operation == "replay-output":
+                replay.replay(root, link / "replayed")
+            elif operation == "extract-output":
+                replay.extract_code(root / "code/research-supplement.zip", link / "extracted")
+            elif operation == "extract-input":
+                replay.extract_code(selected / "code/research-supplement.zip", tmp_path / "extracted")
+            else:
+                replay.replay(selected, out)
+        assert not out.exists() and not (tmp_path / "extracted").exists()
+    finally:
+        link.rmdir()
+
+
+def test_replay_requires_hash_bound_outcomes_for_month8_before_execution(tmp_path):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    config = json.loads((root / 'reproduction.json').read_text())
+    original = json.loads((root / config['expected_manifest']).read_text())
+    path = 'month8/context-bank-v1/pickcube-170m/metrics.jsonl'
+    metrics = b'{"event":"episode_end","episode":0,"success":false}\n{"event":"episode_end","episode":1,"success":true}\n'
+    bank_path = 'protocols/banks/pickcube-170m.json'
+    bank_source = 'docs/nhsjs-revision/protocols/r1/banks/pickcube-170m.json'
+    write_tree(root, {path: metrics, bank_path: json.dumps({'source_metrics_sha256': sha(metrics)}).encode()})
+    original['inputs']['banks'].append(dict(id='M8-pickcube-170m', group='M8',
+        bank=bank_source, protocol=original['inputs']['banks'][0]['protocol']))
+    config['input_paths'][bank_source] = bank_path
+    with pytest.raises(ValueError, match='exactly every registered bank'):
+        replay.validate_outcome_inputs(root, config, original)
+    config['metrics']['M8-pickcube-170m'] = path
+    replay.validate_outcome_inputs(root, config, original)
+    from analysis.revision_gpu.v1.analyze import episode_outcomes
+    assert episode_outcomes(root / path) == {0: False, 1: True}
+    (root / path).write_bytes(metrics.replace(b'false', b'true'))
+    with pytest.raises(ValueError, match='Outcome metrics hash mismatch: M8-pickcube-170m'):
+        replay.validate_outcome_inputs(root, config, original)
+    (root / path).unlink()
+    with pytest.raises(ValueError, match='Outcome metrics hash mismatch'):
+        replay.validate_outcome_inputs(root, config, original)
+
+
+def test_replay_runtime_preflight_rejects_untested_versions(monkeypatch):
+    from scripts import reproduce_reviewer_archive as replay
+    monkeypatch.setattr(replay.platform, 'system', lambda: 'Linux')
+    monkeypatch.setattr(replay.platform, 'machine', lambda: 'x86_64')
+    monkeypatch.setattr(replay.sys, 'version_info', (3, 12, 3))
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: replay.REPLAY_PACKAGES[name])
+    assert replay.check_runtime()['packages'] == replay.REPLAY_PACKAGES
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: '2.14.1+cpu' if name == 'torch' else replay.REPLAY_PACKAGES[name])
+    with pytest.raises(ValueError, match='exact requirements-replay-linux'):
+        replay.check_runtime()
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: '1.14.1' if name == 'scipy' else replay.REPLAY_PACKAGES[name])
+    with pytest.raises(ValueError, match='exact requirements-replay-linux'):
+        replay.check_runtime()
+    monkeypatch.setattr(replay.platform, 'system', lambda: 'Windows')
+    with pytest.raises(ValueError, match='Linux x86-64'):
+        replay.check_runtime()
+
+
+def test_replay_package_versions_are_bound_by_dedicated_lock():
+    from scripts import reproduce_reviewer_archive as replay
+    lock = (Path(replay.__file__).resolve().parents[1] / 'requirements-replay-linux.txt').read_text()
+    for name, version in replay.REPLAY_PACKAGES.items():
+        assert name + '==' + version in lock.splitlines()
+
+
+@pytest.mark.parametrize('equivalent,byte_identity', [(False, True), (True, False)])
+def test_replay_verifier_controls_acceptance_without_hiding_byte_differences(tmp_path, monkeypatch, equivalent, byte_identity):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    monkeypatch.setattr(replay, 'check_runtime', lambda: {'test_fixture': True})
+    if not byte_identity:
+        frozen = root / 'results/analysis/result.csv'
+        frozen.write_bytes(b'x\n1.000000000000001\n')
+        manifest_path = root / 'results/analysis/manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['outputs']['result.csv'] = sha(frozen.read_bytes())
+        manifest_path.write_text(json.dumps(manifest))
+    verifier = ('def verify(expected, actual, archive, code):\n'
+                ' assert (expected / "manifest.json").is_file()\n'
+                ' assert (actual / "manifest.json").is_file()\n'
+                ' assert (archive / "MANIFEST.sha256").is_file()\n'
+                ' assert (code / "SUPPLEMENT_MANIFEST.json").is_file()\n'
+                f' return {{"verified": {equivalent}, "byte_identity": {byte_identity}}}\n').encode()
+    (root / 'verify_replay.py').write_bytes(verifier)
+    config_path = root / 'reproduction.json'
+    config = json.loads(config_path.read_text())
+    config.update(equivalence_verifier='verify_replay.py', equivalence_verifier_sha256=sha(verifier))
+    config_path.write_text(json.dumps(config))
+    files = sorted(p for p in root.rglob('*') if p.is_file() and p.name != 'MANIFEST.sha256')
+    (root / 'MANIFEST.sha256').write_text(''.join(replay.sha256(p) + '  ' + p.relative_to(root).as_posix() + '\n' for p in files))
+    output = tmp_path / 'replayed'
+    report = replay.replay(root, output)
+    assert report['verified'] is equivalent
+    assert report['byte_identity'] is byte_identity
+    assert bool(report['differences']) is (not byte_identity)
+    assert json.loads((output / 'numerical-equivalence-report.json').read_text())['verified'] is equivalent
+    assert (output / 'analysis/result.csv').read_bytes() == b'x\n1\n'
+
+
+def test_verifier_source_is_reauthenticated_after_long_replay(tmp_path):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    config = json.loads((root / 'reproduction.json').read_text())
+    config['equivalence_verifier'] = 'verify_replay.py'
+    (root / 'verify_replay.py').write_text('raise AssertionError("altered code executed")')
+    with pytest.raises(ValueError, match='verifier changed'):
+        replay.check_equivalence(root, tmp_path / 'output', tmp_path / 'code', config)
+
+
+@pytest.mark.parametrize('change', ['before', 'during'])
+def test_interval_certificate_source_is_authenticated_across_use(tmp_path, change):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    helper = root / 'reviewer_interval_certificate.py'
+    helper.write_bytes(b'VALUE = 1\n')
+    verifier = ('from pathlib import Path\n'
+                'def verify(expected, actual, archive, code, *, interval_source):\n'
+                ' path, source = interval_source\n'
+                ' assert source == b"VALUE = 1\\n"\n'
+                ' assert Path(__file__).parent == archive\n'
+                ' path.write_bytes(b"VALUE = 2\\n")\n'
+                ' return {"verified": True, "byte_identity": True}\n').encode()
+    (root / 'verify_replay.py').write_bytes(verifier)
+    config = json.loads((root / 'reproduction.json').read_text())
+    config.update(equivalence_verifier='verify_replay.py', equivalence_verifier_sha256=sha(verifier),
+                  interval_certificate=helper.name, interval_certificate_sha256=sha(helper.read_bytes()))
+    if change == 'before':
+        helper.write_bytes(b'VALUE = 2\n')
+    with pytest.raises(ValueError, match='certificate changed|source changed during use'):
+        replay.check_equivalence(root, tmp_path / 'output', tmp_path / 'code', config)

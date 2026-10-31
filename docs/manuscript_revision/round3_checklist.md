@@ -6,7 +6,7 @@ This is the current revision ledger. The [preceding ledger](revision_checklist.m
 
 ## Authorized scope and evidence
 
-All three tiers, including figure and typesetting polish, apply to the current study. The author chose to retain its existing population; optional rescoring of excluded cohorts is not performed. Scientific inputs and frozen results remain unchanged. Reporting version `2026-10-03-v2` adds descriptions and sensitivity summaries. No model runs, pushes, uploads, editor messages or submission are part of this local work. The existing AI statement remains unchanged at the author's request.
+All three tiers, including figure and typesetting polish, apply to the current study. The author chose to retain its existing population; optional rescoring of excluded cohorts is not performed. Scientific inputs and frozen results remain unchanged. Reporting version `2026-10-03-v2` adds descriptions and sensitivity summaries. No model runs, pushes, uploads, editor messages or submission are part of this local work.
 
 Author affiliation details, funding/contribution/competing-interest declarations, journal answers, an independent scientist's cold read and mentor sign-off remain author tasks. The author chose to supply those facts later. Do not invent declarations or describe a draft inquiry as sent. These constraints take precedence over action language in the attached checklist.
 
@@ -92,4 +92,4 @@ The checked formats have 18 identified PDF pages, 18 blinded PDF pages and 20 On
 
 These checks are recorded in [local verification](final_local_verification.md). Final delivery acceptance additionally requires matching source, bibliography and asset hashes, every rendered page inspected, anonymous text/metadata/links/source checks, extracted archive rebuilds, scientific reproduction and verified shared public/private bytes. `Manifest.json` and `Verification.json` identify the accepted delivery; changes invalidate the affected receipts. Earlier builds and Round 2 records cannot substitute.
 
-The unsent author drafts are complete within the authorized local scope. Affiliation/eligibility facts, contribution/funding/competing-interest declarations, journal answers, independent human review and mentor sign-off remain author tasks. The existing AI statement is preserved for the author. Local technical completion does not attest to those declarations, journal approval or submission.
+The unsent author drafts are complete within the authorized local scope. Affiliation/eligibility facts, contribution/funding/competing-interest declarations, journal answers, independent human review and mentor sign-off remain author tasks. Local technical completion does not attest to those declarations, journal approval or submission.

@@ -1,58 +1,46 @@
 # Local manuscript builds
 
-The current source uses a 12-point Letter article layout with one-inch margins and Times New Roman. It has NHSJS Standard citations, five figures, two numbered tables, 17 references and two proof appendices. The blinded Standard PDF has 19 pages, the identified reading copy has 19 and the Online Word document has 20. The one-paragraph abstract contains 248 words. Six keywords are retained. See the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md) and [Final-v5 ledger](../docs/manuscript_revision/final_v5_checklist.md) for document and package checks. Formatting and local build success do not imply journal approval or completed submission.
+The R1 source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Five figures, four tables and 34 references accompany a 221-word abstract and six keywords. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
 
-## Compile the canonical source
+## Rebuild current displays and PDFs
 
-The portable build entry point is the already assembled `paper/paper.tex`. Later authorized corrections are applied to that source. Use the asset and compilation commands below; replaying the historical approval assembly is not part of a manuscript build or research-package reproduction.
-
-Historical assembly tools, baselines and review records are preserved in the separate local records archive. They are not required for current builds. Restoring an older source would discard later corrections and invalidate current asset lineage and PDF receipts.
-
-## CPU assets and cached Tectonic
-
-Use the [full CPU environment](../docs/cpu_reproduction.md). No model, training or simulator run is needed.
+Use the [full CPU environment](../docs/cpu_reproduction.md). These commands need no GPU, model or simulator run:
 
 ```powershell
-python scripts/build_revision_assets.py --reproduce
+python scripts/build_nhsjs_revision_assets.py
 python scripts/build_paper.py --engine auto --keep-intermediates-dir runs/identified-build
 python scripts/build_paper.py --anonymous --engine auto --keep-intermediates-dir runs/blinded-build
 ```
 
-Use fresh intermediate directories. Asset generation reproduces all 36 retained scientific artifacts when `--reproduce` is supplied. Ordinary refresh verifies the retained reproduction receipt and current inputs. Reporting version `2026-10-03-v2` creates figures, table, prose macros, abstract and lineage without changing frozen protocols or outputs.
+Use fresh intermediate directories. The display builder reads authenticated saved outputs and the curated nonidentifying projection in `analysis/manuscript_revision/nhsjs_r1/inputs`. It records hashes, actual plotted populations and display outputs in `paper/figures_revision/r1_lineage.json`. It leaves earlier figures, source data and frozen analyses unchanged. `scripts/build_revision_assets.py --reproduce` remains the historical October 3 reporting reproduction workflow; it does not produce the R1 displays.
 
-`--engine auto` locates an installed Tectonic or the existing Windows cache at `~/.cache/tmlr-tectonic-0.17.0/tectonic.exe`. An absolute executable path is also accepted. Default builds use `--only-cached` and `--untrusted`. Missing public TeX resources cause failure. The explicit `--allow-resource-downloads` option permits initial cache setup using public TeX resources. It does not upload the manuscript. This fontspec source cannot use pdfLaTeX. The older engine route remains available for compatible archived sources.
+`--engine auto` locates installed Tectonic or the existing Windows cache at `~/.cache/tmlr-tectonic-0.17.0/tectonic.exe`. An explicit executable path is accepted. Default compilation uses cached resources and untrusted mode. `--allow-resource-downloads` allows missing public TeX resources into the cache without uploading the manuscript. The fontspec source requires XeTeX/Tectonic, not pdfLaTeX.
 
-The builder checks manuscript, display, reporting and frozen-evidence hashes before and after compilation. Stale assets fail instead of producing a misleading PDF. AUX and BBL files can be preserved for Word conversion, with their source and PDF hashes.
+The builder validates source, numerical and display hashes before and after compilation. Preserved AUX and BBL files include hashes tied to the source and PDF. Identified default builds update `paper/paper.pdf` and `paper/paper-revision.pdf` together. Anonymous default builds update `paper/paper-anonymous-draft.pdf`; opposing reserved names and the historical archive are protected.
 
-## Names and protected paths
-
-An identified build to `paper/paper.pdf` or `paper/paper-revision.pdf` updates both with identical bytes and corresponding logs. A custom output receives only that file. The anonymous default is `paper/paper-anonymous-draft.pdf`. Anonymous builds cannot overwrite identified names and identified builds cannot overwrite the reserved anonymous name. The historical `legacy/pre-response-geometry` archive is protected. Temporary compiler files never replace historical sources.
-
-The final local delivery is under `artifacts/current`; completed checks belong in the tracked [final local verification](../docs/manuscript_revision/final_local_verification.md). The preceding `2026-10-02` and `2026-10-02-humanized` delivery folders are historical. A blinded PDF does not make the complete repository anonymous. Check source packages, metadata, links and figure files separately.
-
-## Online Word export
-
-The Online Word document contains three native table components representing two numbered tables, repeated full citations and literal equation source. The checked 20-page export was regenerated from the same polished manuscript as the 19-page blinded Standard PDF. Repeated full citations and literal TeX equations affect pagination; both formats are checked against the 20-page template limit. Earlier Word files remain historical.
-
-Use local Pandoc and the bundled document Python with python-docx. The reference document is the official Online template. Source and bibliography must match the compiled intermediate files.
+The anonymous extended mathematical supplement is standalone:
 
 ```powershell
-python scripts/export_online_docx.py --pandoc PATH_TO_PANDOC --template PATH_TO_ONLINE_TEMPLATE --intermediates runs/identified-build --output "runs/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx"
+tectonic --only-cached --untrusted --reruns 1 --outdir runs/math paper/supplementary_derivations.tex
 ```
 
-This creates native Word tables, embeds current PNG figures and repeats full bibliography entries at every citation. Reference parity is checked against the compiled bibliography count, currently 17; missing or extra entries fail export. Equations retain literal TeX source as requested for the journal's LaTeX route. Content and export-verification JSON files are also written. Render Word locally and inspect every page. The Windows document renderer uses native LibreOffice and bundled Poppler.
+## Word delivery
 
-## Source and research packages
+The revision delivery includes the source-first Word tooling, original templates and immutable comparison baseline. It accepts explicit repository, Pandoc, compiled-source, citation processor, renderer and output paths. Both citation variants derive from the same ordered key groups and repaired NHSJS CSL styles. Equations are native OMML; tables and text remain editable. Generated citations are plain output, not tested live Zotero fields. The Zotero import and styles are retained for handoff.
 
-The historical 17-member Final-v5 source archive rebuilt to the same 18-page blinded output in text and pixels. Its 57 pages across the blinded PDF, identified PDF and rendered Online Word document passed visual inspection. The current polished source and research archives rebuild to the accepted 19-page blinded PDF in text and pixels. All 58 current document pages are reviewed. The current research archive uses an explicit working-copy snapshot. Final archive extraction, manifests and rebuild checks are recorded beside the delivery. The packages in preceding delivery folders remain historical. The unchanged scientific inputs retain their separately verified reproduction evidence.
+A pinned Open XML PowerTools wrapper creates real tracked revisions with author `Author`. Its accepted projection must equal the revised anonymous master; its rejected projection must equal the submitted baseline, including effective formatting, mathematics, tables, image bytes and hyperlink targets. Equivalent repairs to pre-existing baseline XML are documented without modifying the original files. Portable LibreOffice renders in an isolated profile. The checked PDF, page images and DOCX hashes must match; page counts are measured from actual rendering.
+
+`scripts/export_online_docx.py` is the preserved October 4 exporter with literal TeX equations. It is not the current native-equation delivery workflow. Earlier Word files and receipts remain historical.
+
+## Source and research archives
 
 ```powershell
 python scripts/package_paper_sources.py --out runs/source-package
 python scripts/package_research_supplement.py --working-copy --out runs/research-package
 ```
 
-Each destination must be new. The source package exports an anonymized manuscript, allowlisted dependencies and required third-party notices. The research package's explicit `--working-copy` option captures exact current bytes, including the already assembled canonical manuscript and reviewed reporting files. Its scope is scientific reproduction and compilation of that source, not historical prose replay. Its manifest hashes every member and the complete snapshot. The recorded Git commit is a base reference, not a claim that uncommitted changes came from that commit. Concurrent changes invalidate packaging. Use `--commit REVISION` only when the committed version is intended.
+Each destination must be new. The source package curates the anonymous manuscript and dependencies. The research package captures an explicit source snapshot, saved inputs, analyses, numerical outputs and current display builder. Its manifest hashes exact members. A recorded base commit is not a claim that later working-copy edits came from that commit. Concurrent changes invalidate packaging.
 
-Both routes preserve raw input and historical-output checks. Extract each archive into a fresh directory, verify its manifest, rebuild the manuscript and reproduce scientific outputs. Review the exact delivered bytes and record hashes. Local completion remains separate from author and journal decisions.
+The separate reviewer archive includes preserved R1 contexts and raw tensors required for registered-analysis replay. Reproducing saved outputs is distinct from GPU regeneration of a policy execution. Verify all manifests after extraction, then use the archive's reproduction launcher. Do not claim complete analysis reproduction from the smaller archive that omits the raw tensor bundle.
 
-The official TMLR files remain pinned and verified for historical compatibility. Their Apache 2.0 and separate LPPL notices are preserved. The new `nhsjs.bst` is a project-specific numbered bibliography style. See [NOTICE](../NOTICE) and [template provenance](../paper/tmlr-source.json).
+Historical templates and their Apache 2.0/LPPL notices remain preserved; see [NOTICE](../NOTICE) and [template provenance](../paper/tmlr-source.json). Every delivered archive and document requires its own exact-byte checks and receipt.

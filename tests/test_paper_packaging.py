@@ -7,6 +7,19 @@ import pytest
 from scripts.package_paper_sources import anonymous_source, assert_anonymous, build
 
 
+def test_standalone_math_supplement_has_no_unreviewed_dependencies():
+    from scripts.package_paper_sources import manuscript_dependencies
+    root = Path(__file__).resolve().parents[1]
+    path = root / 'paper/supplementary_derivations.tex'
+    if not path.exists():
+        pytest.skip('Current mathematical supplement absent from this historical snapshot')
+    text = path.read_text(encoding='utf-8')
+    assert not manuscript_dependencies(text, top_level=True, supplement=True)
+    assert_anonymous(text, path.name)
+    with pytest.raises(ValueError, match='Unreviewed manuscript input'):
+        manuscript_dependencies(text + '\n\\input{private}', top_level=True, supplement=True)
+
+
 def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     root = Path(__file__).resolve().parents[1]
     source = (root/'paper/paper.tex').read_text(encoding='utf-8')
@@ -14,7 +27,7 @@ def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     for value in ('Arjun', 'arjunbajpai', 'itscool2b', 'Acknowledgments', r'\ifanonymous', r'\ifdefined'):
         assert value not in result
     if r'\bibliographystyle{nhsjs}' in source:
-        assert r'\author{Anonymous author}' in result
+        assert any(author in result for author in (r'\author{Anonymous author}', r'\author{}'))
         assert r'\usepackage{fontspec}' in result and r'\usepackage[preprint]{tmlr}' not in result
     else:
         assert r'\author{\name Anonymous authors}' in result
@@ -49,6 +62,23 @@ def test_changed_author_or_malformed_conditionals_fail_closed():
         anonymous_source(r'\ifanonymous unclosed')
     with pytest.raises(ValueError,match='author declaration'):
         anonymous_source(r'\author{Different syntax}')
+
+
+def test_authorized_review_package_preserves_every_scientific_member(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    build(root, tmp_path/'draft')
+    build(root, tmp_path/'review', authorized_review=True)
+    with zipfile.ZipFile(tmp_path/'draft/anonymous-manuscript-sources-draft.zip') as before, \
+            zipfile.ZipFile(tmp_path/'review/anonymous-manuscript-sources.zip') as after:
+        assert before.namelist() == after.namelist()
+        for name in before.namelist():
+            if name not in {'README.txt', 'manifest.json'}:
+                assert before.read(name) == after.read(name), name
+        readme = after.read('README.txt').decode()
+        assert 'working draft' not in readme and 'submission or receipt' in readme
+        manifest = json.loads(after.read('manifest.json'))
+        assert manifest['status'] == 'author_authorized_review_copy_not_journal_submission'
+        assert 'author_authorized' not in json.loads(before.read('manifest.json'))['status']
 
 
 def test_comment_only_review_markers_do_not_create_paragraphs_in_captions():

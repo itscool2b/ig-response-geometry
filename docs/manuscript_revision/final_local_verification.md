@@ -4,7 +4,7 @@ The manuscript snapshot is identified by tag `manuscript-2026-10-04-polish`, wit
 
 ## Final polish P1-P5
 
-The polish preserves the 248-word abstract byte-for-byte, all scientific values and the author-supplied facts, declarations and AI statement. Existing E1-E20 and O1-O4 remain implemented; their prior ledger and acceptance receipts are preserved as historical records.
+The polish preserves the 248-word abstract byte-for-byte, all scientific values and the author-supplied facts and declarations. Existing E1-E20 and O1-O4 remain implemented; their prior ledger and acceptance receipts are preserved as historical records.
 
 | Item | Disposition | Verified change |
 |---|---|---|
@@ -20,7 +20,7 @@ All 14 corrections in the historical [Final-v5 ledger](final_v5_checklist.md) ar
 
 Independent recomputation from the sealed criterion rows gives 6,048 budget checks: 302 violated, 5,602 satisfied and 144 not applicable. This subset is the union of 5,760 cross-budget comparisons and 288 conditional completeness checks, not the complement of repeatability checks. All 5,544 other checks pass. Thus the total remains 11,592, with 11,146 satisfied. The 144 not-applicable results are top-five-percent overlap comparisons with no selected state groups. Adjacent pairs contribute 153 failures, smallest-to-largest pairs 126, and completeness thresholds 23. No scientific inputs or results changed.
 
-The author supplied Windermere Preparatory School, Windermere, Florida, United States for the Online author block, with the existing corresponding email. As specifically requested, the identified reading PDF retains its original author block. Identified acknowledgments contain the supplied funding, contribution and competing-interest declarations. The author confirms both mentors read the manuscript and approved acknowledgment and submission. These are author-confirmed facts, separate from automated verification. The blinded PDF and source exclude the identifying block and declarations. The AI statement is unchanged.
+The author supplied Windermere Preparatory School, Windermere, Florida, United States for the Online author block, with the existing corresponding email. As specifically requested, the identified reading PDF retains its original author block. Identified acknowledgments contain the supplied funding, contribution and competing-interest declarations. The author confirms both mentors read the manuscript and approved acknowledgment and submission. These are author-confirmed facts, separate from automated verification. The blinded PDF and source exclude the identifying block and declarations.
 
 ## Builds, document checks and tests
 
@@ -36,4 +36,4 @@ The untracked local delivery is `artifacts/current`. Its current `Manifest.json`
 
 The public commit and annotated tag use only Arjun Bajpai's configured identity, without an AI co-author trailer. The separate publication receipt records the actual remote commit/tag outcome. The private repository receives only guarded shared-file and delivery updates; its HEAD, all 2,371 preexisting deletions, the five recorded repository-specific variants and historical text are preserved. Publication is a normal public-branch update, with no force push or history rewrite. The October 3 and original October 4 tags remain unchanged. GitHub account-email association remains pending; the named Git author and committer are verified.
 
-The editor inquiry and prior-version disclosure are prepared locally and remain unsent. The inquiry covers earlier versions, eligibility, fees, copyright, journal placement, anonymous archive access and section order. Journal eligibility/form requirements and answers, an outside-scientist cold read, and author-handled AI policy remain pending. Repository publication is not journal submission or acceptance; no payment or submission has been made.
+The editor inquiry and prior-version disclosure are prepared locally and remain unsent. The inquiry covers earlier versions, eligibility, fees, copyright, journal placement, anonymous archive access and section order. Journal eligibility/form requirements and answers and an outside-scientist cold read remain pending. Repository publication is not journal submission or acceptance; no payment or submission has been made.

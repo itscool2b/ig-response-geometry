@@ -23,7 +23,8 @@ import argparse
 import hashlib
 import json
 import math
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
+import re
 import subprocess
 import sys
 
@@ -44,18 +45,36 @@ def sha256(path):
 
 
 def verify_kit(directory):
-    directory = Path(directory)
+    directory = Path(directory).resolve()
     manifest = (directory / "MANIFEST.sha256").read_text().splitlines()
-    bad = []
-    for line in manifest:
-        digest, name = line.split("  ", 1)
+    bad, invalid, listed = [], [], set()
+    for lineno, line in enumerate(manifest, 1):
+        parts = line.split("  ", 1)
+        if len(parts) != 2:
+            invalid.append(f"line {lineno}: expected SHA-256 and relative POSIX path")
+            continue
+        digest, name = parts
+        relative = PurePosixPath(name)
+        if (not re.fullmatch(r"[0-9a-f]{64}", digest) or not name
+                or "\\" in name or relative.is_absolute() or PureWindowsPath(name).drive
+                or any(part in ("", ".", "..") for part in name.split("/"))
+                or name == "MANIFEST.sha256" or name in listed):
+            invalid.append(f"line {lineno}: invalid or duplicate entry")
+            continue
+        listed.add(name)
         path = directory / name
-        if not path.is_file() or sha256(path) != digest:
+        # A manifest must never authenticate a file outside its own kit, even
+        # when a directory component is a symlink or Windows junction.
+        if (not path.resolve().is_relative_to(directory) or path.is_symlink()
+                or not path.is_file() or sha256(path) != digest):
             bad.append(name)
-    listed = {line.split("  ", 1)[1] for line in manifest}
-    unlisted = sorted(str(p.relative_to(directory)) for p in directory.rglob("*")
-                      if p.is_file() and p.name != "MANIFEST.sha256" and str(p.relative_to(directory)) not in listed)
-    return dict(files=len(manifest), mismatched=bad, unlisted=unlisted, status="verified" if not bad and not unlisted else "failed")
+    unlisted = sorted(p.relative_to(directory).as_posix() for p in directory.rglob("*")
+                      if p.is_file() and p != directory / "MANIFEST.sha256"
+                      and p.relative_to(directory).as_posix() not in listed)
+    if not manifest:
+        invalid.append("empty manifest")
+    return dict(files=len(manifest), mismatched=bad, unlisted=unlisted, invalid=invalid,
+                status="verified" if not bad and not unlisted and not invalid else "failed")
 
 
 def strip_timing(value):

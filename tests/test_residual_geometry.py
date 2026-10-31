@@ -8,6 +8,7 @@ import pytest
 
 from analysis.paired_rescoring import residual_geometry as rg
 from analysis.revision.core import IntegrityError
+from tests.provenance_assertions import assert_artifacts_authentic, assert_same_input_audit
 
 
 def call(record, case, delta, baseline, maximum, index=1, high=0):
@@ -82,6 +83,8 @@ def assert_reproduces(fresh, committed):
     from PIL import features
     recorded = json.loads((committed / "provenance.json").read_bytes())
     produced = json.loads((fresh / "provenance.json").read_bytes())
+    assert_artifacts_authentic(committed, recorded)
+    assert_artifacts_authentic(fresh, produced)
     same_zlib = recorded["environment"]["zlib_runtime"] == zlib.ZLIB_RUNTIME_VERSION
     same_png_zlib = recorded["figure_environment"]["pillow_zlib"] == features.version("zlib")
     for name, entry in recorded["artifacts"].items():
@@ -96,7 +99,8 @@ def assert_reproduces(fresh, committed):
                 assert mine["sha256"] == entry["sha256"], name
         else:
             assert (fresh / name).read_bytes() == (committed / name).read_bytes(), name
-    for key in ("protocol_sha256", "source_sha256", "inputs", "analysis_version"):
+    assert_same_input_audit(produced["inputs"], recorded["inputs"], rg.ROOT)
+    for key in ("protocol_sha256", "source_sha256", "analysis_version"):
         assert produced[key] == recorded[key], key
 
 
@@ -104,7 +108,7 @@ def test_real_data_reproduction_and_frozen_equality(tmp_path):
     fresh = tmp_path / "fresh"
     rg.run(fresh)
     assert_reproduces(fresh, rg.RESULTS)
-    assert rg.verify(rg.RESULTS)["status"] == "verified"
+    assert rg.verify(fresh)["status"] == "verified"
     checks = json.loads((rg.RESULTS / "checks.json").read_bytes())
     head = checks["headline"]
     assert head["n_frozen_rows"] == head["n_recomputed"] == head["n_exact_delta"] == 6000

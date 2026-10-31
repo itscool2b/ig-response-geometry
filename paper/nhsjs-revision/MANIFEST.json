@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-31",
+  "scope": "Identified manuscript and public research download guide",
+  "submission_status": "not_submitted_no_receipt",
+  "files": {
+    "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
+      "bytes": 697552,
+      "sha256": "216c3a16ab6cc20e460da693e3efc0cb3a63925dd023d7b6dcca15666bccbcd4"
+    },
+    "README.md": {
+      "bytes": 1721,
+      "sha256": "9c19de0cde26f6307f5ef37e22f27b32fbacb805020bdbe9d4003c07ff494dbd"
+    },
+    "downloads.json": {
+      "bytes": 4661,
+      "sha256": "1d9d83f568ac228ce815a3d964e28408f90835bca542948ebe23743dcef6f8b2"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+[
+  [
+    "Saved Q, 170M",
+    "E64*",
+    "bf16/bf16",
+    "PickCube",
+    "Curves only"
+  ],
+  [
+    "Saved N, 170M",
+    "E64",
+    "bf16/bf16",
+    "PickCube",
+    "Curves only"
+  ],
+  [
+    "Saved 1B, M4",
+    "E64",
+    "bf16/bf16",
+    "PickCube",
+    "Curves only"
+  ],
+  [
+    "Saved 1B, M6",
+    "E64",
+    "bf16/bf16",
+    "PickCube",
+    "Curves only"
+  ],
+  [
+    "Saved 1B, M5",
+    "E64*",
+    "bf16/bf16",
+    "PickCube",
+    "Curves only"
+  ],
+  [
+    "Saved m128, M4",
+    "E128*",
+    "bf16/bf16",
+    "Peg and YCB",
+    "Curves only"
+  ],
+  [
+    "Saved m128, M7",
+    "E128",
+    "bf16/bf16",
+    "Peg and YCB",
+    "Curves only"
+  ],
+  [
+    "Offline M8, 170M",
+    "T128-1024",
+    "fp32/fp32",
+    "Four tasks",
+    "Contexts, projection"
+  ],
+  [
+    "Analytic examples",
+    "Exact; grids",
+    "Exact; fp32/64",
+    "Constructed functions",
+    "Definitions"
+  ],
+  [
+    "R1 P, 170M",
+    "A0-A4",
+    "bf16, fp32",
+    "PickCube",
+    "All inputs"
+  ],
+  [
+    "R1 B1, 1B",
+    "A0, A1",
+    "bf16; fp32 sum",
+    "PickCube",
+    "All inputs"
+  ],
+  [
+    "R1 S, 170M",
+    "A0, A1",
+    "bf16; fp32 sum",
+    "StackCube",
+    "All inputs"
+  ],
+  [
+    "R1 M8, 170M/1B",
+    "A0-A4",
+    "bf16, fp32",
+    "Preserved contexts",
+    "Contexts, new calls"
+  ]
+]

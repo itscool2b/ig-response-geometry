@@ -11,6 +11,7 @@ import pytest
 from analysis import completeness_audit as ca
 from analysis.completeness_audit import endpoint_example as ee
 from analysis.revision.core import IntegrityError, Record
+from tests.provenance_assertions import assert_artifacts_authentic, assert_same_input_audit
 
 
 def test_bf16_rounding_ties_to_even_and_detects_stored_sums():
@@ -111,9 +112,14 @@ def test_real_data_reproduction_selection_and_reviewer_value(tmp_path):
     ca.run(fresh)
     recorded = json.loads((ca.RESULTS / "provenance.json").read_bytes())
     produced = json.loads((fresh / "provenance.json").read_bytes())
+    assert_artifacts_authentic(ca.RESULTS, recorded)
+    assert_artifacts_authentic(fresh, produced)
     same_zlib = recorded["environment"]["zlib_runtime"] == zlib.ZLIB_RUNTIME_VERSION
     for name, entry in recorded["artifacts"].items():
-        if "uncompressed_sha256" in entry:
+        if name == "step_selection.json":
+            assert_same_input_audit(json.loads((fresh / name).read_bytes()),
+                                    json.loads((ca.RESULTS / name).read_bytes()), ca.ROOT)
+        elif "uncompressed_sha256" in entry:
             assert produced["artifacts"][name]["uncompressed_sha256"] == entry["uncompressed_sha256"], name
             if same_zlib:
                 assert produced["artifacts"][name]["sha256"] == entry["sha256"], name
@@ -125,9 +131,10 @@ def test_real_data_reproduction_selection_and_reviewer_value(tmp_path):
         assert fresh_numpy == numpy_part
     for old, new in zip(numpy_part["rows"], fresh_numpy["rows"]):
         assert new["value_numpy_leggauss"] == pytest.approx(old["value_numpy_leggauss"], rel=1e-14, abs=1e-15)
-    for key in ("protocol_sha256", "source_sha256", "inputs", "analysis_version"):
+    assert_same_input_audit(produced["inputs"], recorded["inputs"], ca.ROOT)
+    for key in ("protocol_sha256", "source_sha256", "analysis_version"):
         assert produced[key] == recorded[key], key
-    assert ca.verify(ca.RESULTS)["status"] == "verified"
+    assert ca.verify(fresh)["status"] == "verified"
     selection = json.loads((ca.RESULTS / "step_selection.json").read_bytes())
     picked = {path_name(s["faithfulness"]): (path_name(s["selected"]), s["selection_status"])
               for rows in selection["selection"].values() for s in rows}
