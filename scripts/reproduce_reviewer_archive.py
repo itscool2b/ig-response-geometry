@@ -1,7 +1,7 @@
 """Authenticate and replay a complete reviewer archive, without a source checkout.
 
-This file is copied to the archive root. Install the included research
-supplement's pinned CPU requirements first, then run this file with --out DIR.
+This file is copied to the archive root. Install requirements-replay-linux.txt
+in Linux x86-64 Python 3.12 first, then run this file with --out DIR.
 The original records and their path metadata are never rewritten. Only a new
 runtime input configuration is generated, using paths inside this extraction.
 """
@@ -9,12 +9,40 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.metadata
 import json
+import os
 from pathlib import Path, PurePosixPath
+import platform
 import re
 import subprocess
 import sys
 import zipfile
+
+
+REPLAY_PACKAGES = {'numpy': '2.1.2', 'scipy': '1.14.1', 'torch': '2.8.0+cu128',
+                   'Pillow': '11.0.0', 'PyYAML': '6.0.2', 'filelock': '3.16.1'}
+
+
+def check_runtime():
+    """Fail before expensive replay in an unvalidated numerical environment."""
+    packages = {}
+    for name in REPLAY_PACKAGES:
+        try:
+            packages[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            packages[name] = None
+    compatible = (sys.version_info[:2] == (3, 12) and platform.system() == 'Linux'
+                  and platform.machine().lower() in ('x86_64', 'amd64')
+                  and packages == REPLAY_PACKAGES)
+    result = dict(python=platform.python_version(), system=platform.system(),
+                  machine=platform.machine(), libc=platform.libc_ver(), packages=packages)
+    if not compatible:
+        raise ValueError('Replay requires Linux x86-64 Python 3.12 and the exact '
+                         'requirements-replay-linux.txt packages. Archive verification '
+                         'with --verify-only remains available on other runtimes. Actual: '
+                         + json.dumps(result, sort_keys=True))
+    return result
 
 
 def sha256(path):
@@ -34,6 +62,15 @@ def member(name):
     return name
 
 
+def reject_aliases(path):
+    """Check lexical selections and ancestors before resolve() hides aliases."""
+    path = Path(path).absolute()
+    for component in (path, *path.parents):
+        if component.is_symlink() or (hasattr(component, 'is_junction') and component.is_junction()):
+            raise ValueError('Archive roots and input/output paths cannot contain symbolic links or junctions')
+    return path
+
+
 def contained(root, name):
     path = root / member(name)
     current = root
@@ -47,9 +84,9 @@ def contained(root, name):
 
 
 def verify_archive(root):
-    root = Path(root).resolve()
+    root = reject_aliases(root).resolve()
     expected = {}
-    for line in (root / 'MANIFEST.sha256').read_text(encoding='utf-8').splitlines():
+    for line in contained(root, 'MANIFEST.sha256').read_text(encoding='utf-8').splitlines():
         match = re.fullmatch(r'([a-f0-9]{64})  (.+)', line)
         if not match:
             raise ValueError('Invalid archive manifest record')
@@ -69,6 +106,7 @@ def verify_archive(root):
 
 def extract_code(archive, destination):
     """Validate every ZIP name and streamed byte before executing any source."""
+    archive, destination = reject_aliases(archive), reject_aliases(destination)
     with zipfile.ZipFile(archive) as source:
         names = source.namelist()
         if len(names) != len(set(names)):
@@ -110,13 +148,14 @@ def validate_outcome_inputs(root, config, original):
 
 
 def replay(root, out):
-    root, out = Path(root).resolve(), Path(out).resolve()
+    root, out = reject_aliases(root).resolve(), reject_aliases(out).resolve()
     if out.exists() or out.is_relative_to(root):
         raise ValueError('Choose a fresh output directory outside the archive')
     count = verify_archive(root)
     config = json.loads((root / 'reproduction.json').read_text(encoding='utf-8'))
     original = json.loads(contained(root, config['expected_manifest']).read_text(encoding='utf-8'))
     validate_outcome_inputs(root, config, original)
+    runtime = check_runtime() if config.get('runtime_lock') else None
     inputs = json.loads(json.dumps(original['inputs']))
     inputs['run_root'] = str(contained(root, 'runs'))
     inputs.pop('note', None)
@@ -134,7 +173,12 @@ def replay(root, out):
         command += ['--coverage', str(contained(root, path))]
     for bank, path in config['metrics'].items():
         command += ['--metrics-copy', bank + '=' + str(contained(root, path))]
-    subprocess.run(command, cwd=code, check=True)
+    environment = os.environ.copy()
+    # Four CPU threads match the validated run and avoid machine-dependent
+    # oversubscription. No scientific draw count or analysis operation changes.
+    environment['OMP_NUM_THREADS'] = '4'
+    environment['MKL_NUM_THREADS'] = '4'
+    subprocess.run(command, cwd=code, check=True, env=environment)
     actual = json.loads((out / 'analysis/manifest.json').read_text(encoding='utf-8'))
     differences = {}
     for name in sorted(set(original['outputs']) | set(actual['outputs'])):
@@ -145,7 +189,7 @@ def replay(root, out):
             raise ValueError('Generated analysis manifest does not bind its output: ' + name)
         if value != expected:
             differences[name] = {'expected_sha256': expected, 'actual_sha256': value}
-    report = {'archive_files_verified': count, 'analysis_kind': actual['kind'],
+    report = {'archive_files_verified': count, 'analysis_kind': actual['kind'], 'runtime': runtime,
               'outputs_compared': len(original['outputs']), 'differences': differences,
               'population_matches': actual['population'] == original['population'],
               'plan_matches': actual['plan_sha256'] == original['plan_sha256'],
@@ -160,7 +204,7 @@ def replay(root, out):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--archive', type=Path, default=Path(__file__).resolve().parent)
+    parser.add_argument('--archive', type=Path, default=Path(__file__).absolute().parent)
     parser.add_argument('--out', type=Path)
     parser.add_argument('--verify-only', action='store_true')
     args = parser.parse_args()

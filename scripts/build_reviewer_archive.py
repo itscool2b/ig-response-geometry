@@ -333,10 +333,11 @@ def add_reproduction(out, code, coverage):
     (out / "code").mkdir()
     shutil.copyfile(code, out / "code/research-supplement.zip")
     shutil.copyfile(ROOT / "scripts/reproduce_reviewer_archive.py", out / "reproduce.py")
+    shutil.copyfile(ROOT / "requirements-replay-linux.txt", out / "requirements-replay-linux.txt")
     config = dict(schema_version=1, code="code/research-supplement.zip",
                   expected_manifest="results/analysis/manifest.json",
                   plan=plans[0].relative_to(out).as_posix(), coverage=coverage_paths,
-                  input_paths=input_paths, metrics=metrics)
+                  input_paths=input_paths, metrics=metrics, runtime_lock="requirements-replay-linux.txt")
     (out / "reproduction.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
@@ -400,18 +401,20 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
                        "The complete runs tree also preserves worker logs, failed and interrupted attempts, "
                        "and empty attempt directories. No raw file or hash-bound record has been redacted.\n\n"
                        "The archive includes the raw inputs required to rerun the registered analysis. "
-                       "Use the accompanying research supplement's analysis code and pinned CPU environment; "
+                       "Use the accompanying research supplement's analysis code and the dedicated replay environment; "
                        "point its input configuration at this archive's runs, protocols and banks. "
                        "GPU regeneration still requires the pinned models and runtime documented in kit/README.md.\n")
         if reproduction_code is not None:
             readme += ("\n## Portable registered-analysis replay\n\n"
-                       "The complete research code is in `code/research-supplement.zip`. Extract it separately "
-                       "to install its pinned `requirements-cpu-lock.txt` environment, then run from this archive:\n\n"
+                       "The complete research code is in `code/research-supplement.zip`. Use Linux x86-64 "
+                       "Python 3.12 and at least 24 GB RAM (32 GB recommended). In a fresh virtual environment, "
+                       "install this archive's dedicated runtime and run:\n\n"
+                       "    python -m pip install -r requirements-replay-linux.txt\n"
                        "    python reproduce.py --verify-only\n"
                        "    python reproduce.py --out ../registered-analysis-reproduction\n\n"
                        "The launcher verifies every archive file, authenticates and extracts the code into the fresh "
                        "output directory, creates runtime paths wholly inside this archive, and runs the full "
-                       "registered CPU analysis. Both frozen coverage simulations and the P/B1/S collection outcomes "
+                       "registered CPU analysis. Both frozen coverage simulations and all nine banks' collection outcomes "
                        "are included. It compares every generated scientific output hash and records all differences "
                        "in `reproduction-report.json`; original records and their hashes remain unchanged. "
                        "A successful replay exits zero. A GPU and access to the original volume are unnecessary.\n")

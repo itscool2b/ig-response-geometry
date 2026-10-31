@@ -339,8 +339,9 @@ data=dict(kind='nhsjs_r1_gpu_analysis',inputs=inputs,population={'P':{'available
     return root
 
 
-def test_portable_archive_replay_executes_without_checkout_or_original_paths(tmp_path):
+def test_portable_archive_replay_executes_without_checkout_or_original_paths(tmp_path, monkeypatch):
     from scripts import reproduce_reviewer_archive as replay
+    monkeypatch.setattr(replay, 'check_runtime', lambda: {'test_fixture': True})
     root = portable_fixture(tmp_path)
     report = replay.replay(root, tmp_path / 'reproduction')
     assert report['verified'] and report['outputs_compared'] == 1
@@ -381,6 +382,36 @@ def test_replay_rejects_unlisted_files_and_duplicate_manifest_records(tmp_path):
         verify_archive(root)
 
 
+@pytest.mark.skipif(os.name != "nt", reason="Windows directory junction regression")
+@pytest.mark.parametrize("operation", ["verify-root", "verify-ancestor", "replay-root",
+                                       "replay-ancestor", "replay-output", "extract-input", "extract-output"])
+def test_replay_rejects_aliased_roots_before_resolution(tmp_path, operation):
+    import _winapi
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    link = tmp_path / "archive-alias"
+    target = root if operation.endswith("root") else tmp_path
+    _winapi.CreateJunction(str(target), str(link))
+    assert link.is_junction() and not link.is_symlink()
+    selected = link if operation.endswith("root") else link / "archive"
+    out = tmp_path / "replayed"
+    try:
+        with pytest.raises(ValueError, match="alias|junction|symbolic link"):
+            if operation.startswith("verify"):
+                replay.verify_archive(selected)
+            elif operation == "replay-output":
+                replay.replay(root, link / "replayed")
+            elif operation == "extract-output":
+                replay.extract_code(root / "code/research-supplement.zip", link / "extracted")
+            elif operation == "extract-input":
+                replay.extract_code(selected / "code/research-supplement.zip", tmp_path / "extracted")
+            else:
+                replay.replay(selected, out)
+        assert not out.exists() and not (tmp_path / "extracted").exists()
+    finally:
+        link.rmdir()
+
+
 def test_replay_requires_hash_bound_outcomes_for_month8_before_execution(tmp_path):
     from scripts import reproduce_reviewer_archive as replay
     root = portable_fixture(tmp_path)
@@ -406,3 +437,25 @@ def test_replay_requires_hash_bound_outcomes_for_month8_before_execution(tmp_pat
     (root / path).unlink()
     with pytest.raises(ValueError, match='Outcome metrics hash mismatch'):
         replay.validate_outcome_inputs(root, config, original)
+
+
+def test_replay_runtime_preflight_rejects_untested_versions(monkeypatch):
+    from scripts import reproduce_reviewer_archive as replay
+    monkeypatch.setattr(replay.platform, 'system', lambda: 'Linux')
+    monkeypatch.setattr(replay.platform, 'machine', lambda: 'x86_64')
+    monkeypatch.setattr(replay.sys, 'version_info', (3, 12, 3))
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: replay.REPLAY_PACKAGES[name])
+    assert replay.check_runtime()['packages'] == replay.REPLAY_PACKAGES
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: '2.14.1+cpu' if name == 'torch' else replay.REPLAY_PACKAGES[name])
+    with pytest.raises(ValueError, match='exact requirements-replay-linux'):
+        replay.check_runtime()
+    monkeypatch.setattr(replay.platform, 'system', lambda: 'Windows')
+    with pytest.raises(ValueError, match='Linux x86-64'):
+        replay.check_runtime()
+
+
+def test_replay_package_versions_are_bound_by_dedicated_lock():
+    from scripts import reproduce_reviewer_archive as replay
+    lock = (Path(replay.__file__).resolve().parents[1] / 'requirements-replay-linux.txt').read_text()
+    for name, version in replay.REPLAY_PACKAGES.items():
+        assert name + '==' + version in lock.splitlines()
