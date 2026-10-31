@@ -24,6 +24,8 @@ paper/tmlr-source.json -text
 scripts/build_revision_assets.py -text
 scripts/build_nhsjs_revision_assets.py -text
 paper/supplementary_derivations.tex -text
+# Final identified Word delivery and download manifests retain exact bytes.
+paper/nhsjs-revision/** -text
 # Replay validation binds these source and runtime bytes in the review archive.
 scripts/reviewer_interval_certificate.py -text
 scripts/verify_reviewer_replay.py -text
