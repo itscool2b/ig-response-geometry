@@ -75,13 +75,30 @@ def copy_tree(source, destination):
     shutil.copytree(source, destination, ignore=shutil.ignore_patterns("*.lock", "__pycache__", ".DS_Store"))
 
 
+def reject_aliases(path):
+    """Reject an aliased selection before resolve() can hide its path components."""
+    path = Path(path).absolute()
+    for component in (path, *path.parents):
+        if component.is_symlink() or (hasattr(component, "is_junction") and component.is_junction()):
+            raise ValueError(f"Archive path contains a symbolic link or junction: {component}")
+    return path
+
+
 def validate_source_tree(source):
-    """Never follow a link outside the explicitly selected archive inputs."""
-    source = Path(source)
+    """Check each directory before descending, including Windows junctions."""
+    source = reject_aliases(source)
     if not source.is_dir():
         raise NotADirectoryError(source)
-    if source.is_symlink() or any(path.is_symlink() for path in source.rglob("*")):
-        raise ValueError(f"Archive source contains a symbolic link: {source}")
+    root = source.resolve(strict=True)
+    pending = [source]
+    while pending:
+        for path in pending.pop().iterdir():
+            if path.is_symlink() or (hasattr(path, "is_junction") and path.is_junction()):
+                raise ValueError(f"Archive source contains a symbolic link or junction: {path}")
+            if not path.resolve(strict=True).is_relative_to(root):
+                raise ValueError(f"Archive source path escapes its selected tree: {path}")
+            if path.is_dir():
+                pending.append(path)
 
 
 def bound_files(completion):
@@ -94,7 +111,9 @@ def bound_files(completion):
                 or PurePosixPath(name).is_absolute() or any(part in ("", ".", "..") for part in name.split("/"))
                 or not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
             raise ValueError(f"Invalid completion member: {name!r}")
-        path = completion.parent / name
+        path = reject_aliases(completion.parent / name)
+        if not path.resolve().is_relative_to(completion.parent.resolve()):
+            raise ValueError(f"Invalid completion member outside its phase: {name!r}")
         if not path.is_file() or path.is_symlink() or sha256(path) != digest:
             raise ValueError(f"Completion hash mismatch or missing file: {path}")
     return bound
@@ -272,7 +291,7 @@ def add_reproduction(out, code, coverage):
         raise ValueError("Repeated coverage input name")
     coverage_paths = []
     for name, expected in original["coverage_sha256"].items():
-        source = supplied.pop(Path(member(name)).name, ROOT / name)
+        source = reject_aliases(supplied.pop(Path(member(name)).name, ROOT / name))
         if source.is_symlink() or not source.is_file() or sha256(source) != expected:
             raise ValueError("Coverage input missing or differs from registered analysis: " + name)
         target = out / "coverage" / Path(name).name
@@ -315,12 +334,13 @@ def add_reproduction(out, code, coverage):
 
 def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=False, identifiers=(),
           sources=SOURCES, include_raw_runs=False, reproduction_code=None, coverage=(), mathematical_supplement=None):
-    out = Path(out)
+    out = reject_aliases(out)
     if out.exists():
         raise FileExistsError(out)
     if reproduction_code is not None and not include_raw_runs:
         raise ValueError("Portable registered-analysis replay requires complete raw runs")
     collections = list(collections)
+    coverage = list(coverage)
     names = [name for name, _ in collections]
     if len(set(names)) != len(names) or any(not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", name) for name in names):
         raise ValueError("Collection names must be unique single portable path components")
@@ -331,6 +351,11 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
         validate_source_tree(source)
         if out.resolve().is_relative_to(source.resolve()):
             raise ValueError("Archive output must be outside every source tree")
+    for source in (reproduction_code, mathematical_supplement, *coverage):
+        if source is not None:
+            path = reject_aliases(source)
+            if not path.is_file():
+                raise ValueError(f"Archive input must be a regular file: {path}")
     out.mkdir(parents=True)
     try:
         copy_tree(sources["protocols"], out / "protocols")
@@ -350,7 +375,7 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
         for name in INVENTORY_FILES:
             shutil.copyfile(Path(sources["inventories"]) / name, out / "inventories" / name)
         if reproduction_code is not None:
-            add_reproduction(out, reproduction_code, list(coverage))
+            add_reproduction(out, reproduction_code, coverage)
         if mathematical_supplement is not None:
             path = Path(mathematical_supplement)
             if path.is_symlink() or not path.is_file() or path.suffix not in (".tex", ".pdf"):

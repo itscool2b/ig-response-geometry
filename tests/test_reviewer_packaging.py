@@ -5,6 +5,7 @@ repository, so the research supplement omits them.
 """
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import tarfile
@@ -192,6 +193,38 @@ def test_reviewer_archive_rejects_output_inside_source_without_modifying_it(tmp_
     with pytest.raises(ValueError, match="outside every source"):
         archive.build(tmp_path / "runs/output", **kwargs)
     assert not (tmp_path / "runs/output").exists()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows directory junction regression")
+@pytest.mark.parametrize("position", ["nested", "root", "ancestor", "output-ancestor",
+                                      "mathematical_supplement", "reproduction_code", "coverage"])
+def test_reviewer_archive_rejects_real_windows_junctions_before_copy(tmp_path, position):
+    import _winapi
+    from scripts import build_reviewer_archive as archive
+    kwargs = reviewer_inputs(tmp_path)
+    outside = tmp_path / "outside"
+    write_tree(outside, {"nested/private.bin": b"unrelated confidential bytes"})
+    link = (kwargs["results"] / "linked" if position == "nested" else tmp_path / "linked")
+    _winapi.CreateJunction(str(outside), str(link))
+    assert link.is_junction() and not link.is_symlink()
+    output = tmp_path / "bad"
+    if position == "root":
+        kwargs["results"] = link
+    elif position == "ancestor":
+        kwargs["results"] = link / "nested"
+    elif position == "output-ancestor":
+        output = link / "new-archive"
+    elif position in ("mathematical_supplement", "reproduction_code", "coverage"):
+        path = link / "nested/private.bin"
+        kwargs[position] = [path] if position == "coverage" else path
+    try:
+        with pytest.raises(ValueError, match="symbolic link|junction"):
+            archive.build(output, **kwargs, include_raw_runs=True)
+        assert not output.exists()
+        assert (outside / "nested/private.bin").read_bytes() == b"unrelated confidential bytes"
+    finally:
+        # Remove the junction itself, never recursively remove its target.
+        link.rmdir()
 
 
 def test_regeneration_kit_members_are_not_silently_filtered(tmp_path):
