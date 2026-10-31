@@ -334,6 +334,12 @@ data=dict(kind='nhsjs_r1_gpu_analysis',inputs=inputs,population={'P':{'available
     coverage = tmp_path / 'coverage.json'
     coverage.write_bytes(b'{}')
     archive.add_reproduction(root, package, [coverage])
+    # This one-row synthetic producer exercises portability, not the full
+    # registered-science verifier (covered in test_reviewer_replay_equivalence).
+    config_path = root / 'reproduction.json'
+    config = json.loads(config_path.read_text())
+    config.pop('equivalence_verifier')
+    config_path.write_text(json.dumps(config))
     files = sorted(p for p in root.rglob('*') if p.is_file())
     (root / 'MANIFEST.sha256').write_text(''.join(archive.sha256(p) + '  ' + p.relative_to(root).as_posix() + '\n' for p in files))
     return root
@@ -449,6 +455,9 @@ def test_replay_runtime_preflight_rejects_untested_versions(monkeypatch):
     monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: '2.14.1+cpu' if name == 'torch' else replay.REPLAY_PACKAGES[name])
     with pytest.raises(ValueError, match='exact requirements-replay-linux'):
         replay.check_runtime()
+    monkeypatch.setattr(replay.importlib.metadata, 'version', lambda name: '1.14.1' if name == 'scipy' else replay.REPLAY_PACKAGES[name])
+    with pytest.raises(ValueError, match='exact requirements-replay-linux'):
+        replay.check_runtime()
     monkeypatch.setattr(replay.platform, 'system', lambda: 'Windows')
     with pytest.raises(ValueError, match='Linux x86-64'):
         replay.check_runtime()
@@ -459,3 +468,47 @@ def test_replay_package_versions_are_bound_by_dedicated_lock():
     lock = (Path(replay.__file__).resolve().parents[1] / 'requirements-replay-linux.txt').read_text()
     for name, version in replay.REPLAY_PACKAGES.items():
         assert name + '==' + version in lock.splitlines()
+
+
+@pytest.mark.parametrize('equivalent,byte_identity', [(False, True), (True, False)])
+def test_replay_verifier_controls_acceptance_without_hiding_byte_differences(tmp_path, monkeypatch, equivalent, byte_identity):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    monkeypatch.setattr(replay, 'check_runtime', lambda: {'test_fixture': True})
+    if not byte_identity:
+        frozen = root / 'results/analysis/result.csv'
+        frozen.write_bytes(b'x\n1.000000000000001\n')
+        manifest_path = root / 'results/analysis/manifest.json'
+        manifest = json.loads(manifest_path.read_text())
+        manifest['outputs']['result.csv'] = sha(frozen.read_bytes())
+        manifest_path.write_text(json.dumps(manifest))
+    verifier = ('def verify(expected, actual, archive, code):\n'
+                ' assert (expected / "manifest.json").is_file()\n'
+                ' assert (actual / "manifest.json").is_file()\n'
+                ' assert (archive / "MANIFEST.sha256").is_file()\n'
+                ' assert (code / "SUPPLEMENT_MANIFEST.json").is_file()\n'
+                f' return {{"verified": {equivalent}, "byte_identity": {byte_identity}}}\n').encode()
+    (root / 'verify_replay.py').write_bytes(verifier)
+    config_path = root / 'reproduction.json'
+    config = json.loads(config_path.read_text())
+    config.update(equivalence_verifier='verify_replay.py', equivalence_verifier_sha256=sha(verifier))
+    config_path.write_text(json.dumps(config))
+    files = sorted(p for p in root.rglob('*') if p.is_file() and p.name != 'MANIFEST.sha256')
+    (root / 'MANIFEST.sha256').write_text(''.join(replay.sha256(p) + '  ' + p.relative_to(root).as_posix() + '\n' for p in files))
+    output = tmp_path / 'replayed'
+    report = replay.replay(root, output)
+    assert report['verified'] is equivalent
+    assert report['byte_identity'] is byte_identity
+    assert bool(report['differences']) is (not byte_identity)
+    assert json.loads((output / 'numerical-equivalence-report.json').read_text())['verified'] is equivalent
+    assert (output / 'analysis/result.csv').read_bytes() == b'x\n1\n'
+
+
+def test_verifier_source_is_reauthenticated_after_long_replay(tmp_path):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    config = json.loads((root / 'reproduction.json').read_text())
+    config['equivalence_verifier'] = 'verify_replay.py'
+    (root / 'verify_replay.py').write_text('raise AssertionError("altered code executed")')
+    with pytest.raises(ValueError, match='verifier changed'):
+        replay.check_equivalence(root, tmp_path / 'output', tmp_path / 'code', config)

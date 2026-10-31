@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib.metadata
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -20,7 +21,7 @@ import sys
 import zipfile
 
 
-REPLAY_PACKAGES = {'numpy': '2.1.2', 'scipy': '1.14.1', 'torch': '2.8.0+cu128',
+REPLAY_PACKAGES = {'numpy': '2.5.3', 'scipy': '1.18.1', 'torch': '2.8.0+cu128',
                    'Pillow': '11.0.0', 'PyYAML': '6.0.2', 'filelock': '3.16.1'}
 
 
@@ -147,6 +148,18 @@ def validate_outcome_inputs(root, config, original):
             raise ValueError('Outcome metrics hash mismatch: ' + spec['id'])
 
 
+def check_equivalence(root, out, code, config):
+    path = contained(root, config['equivalence_verifier'])
+    source = path.read_bytes()
+    if hashlib.sha256(source).hexdigest() != config['equivalence_verifier_sha256']:
+        raise ValueError('Replay verifier changed after archive authentication')
+    specification = importlib.util.spec_from_loader('archive_replay_verifier', loader=None)
+    module = importlib.util.module_from_spec(specification)
+    exec(compile(source, str(path), 'exec'), module.__dict__)
+    expected = contained(root, config['expected_manifest']).parent
+    return module.verify(expected, out / 'analysis', root, code)
+
+
 def replay(root, out):
     root, out = reject_aliases(root).resolve(), reject_aliases(out).resolve()
     if out.exists() or out.is_relative_to(root):
@@ -195,8 +208,19 @@ def replay(root, out):
               'plan_matches': actual['plan_sha256'] == original['plan_sha256'],
               'coverage_matches': sorted(actual['coverage_sha256'].values()) == sorted(original['coverage_sha256'].values()),
               'full_registered_analysis': actual['kind'] == 'nhsjs_r1_gpu_analysis'}
-    report['verified'] = not differences and all(report[key] for key in
+    invariants = all(report[key] for key in
         ('population_matches', 'plan_matches', 'coverage_matches', 'full_registered_analysis'))
+    report['byte_identity'] = not differences
+    report['verified'] = report['byte_identity'] and invariants
+    if config.get('equivalence_verifier'):
+        equivalence = check_equivalence(root, out, code, config)
+        (out / 'numerical-equivalence-report.json').write_text(
+            json.dumps(equivalence, indent=2) + '\n', encoding='utf-8', newline='\n')
+        report['numerical_equivalence'] = equivalence['verified']
+        report['equivalence_report'] = 'numerical-equivalence-report.json'
+        report['verified'] = bool(invariants and equivalence['verified'])
+        if equivalence['byte_identity'] != report['byte_identity']:
+            raise ValueError('Independent verifier disagrees with byte-identity result')
     (out / 'reproduction-report.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(report, indent=2))
     return report

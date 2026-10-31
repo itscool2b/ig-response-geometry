@@ -2,8 +2,8 @@
 # Linux x86-64, Python 3.12; execution uses CPU, with no GPU or driver required.
 # The reference replay used Python 3.12.3 and glibc 2.39.
 --extra-index-url https://download.pytorch.org/whl/cu128
-numpy==2.1.2
-scipy==1.14.1
+numpy==2.5.3
+scipy==1.18.1
 torch==2.8.0+cu128
 Pillow==11.0.0
 PyYAML==6.0.2

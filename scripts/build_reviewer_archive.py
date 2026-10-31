@@ -332,12 +332,16 @@ def add_reproduction(out, code, coverage):
     shutil.rmtree(temporary)
     (out / "code").mkdir()
     shutil.copyfile(code, out / "code/research-supplement.zip")
-    shutil.copyfile(ROOT / "scripts/reproduce_reviewer_archive.py", out / "reproduce.py")
-    shutil.copyfile(ROOT / "requirements-replay-linux.txt", out / "requirements-replay-linux.txt")
+    for source, target in (("scripts/reproduce_reviewer_archive.py", "reproduce.py"),
+                           ("requirements-replay-linux.txt", "requirements-replay-linux.txt"),
+                           ("scripts/verify_reviewer_replay.py", "verify_replay.py")):
+        shutil.copyfile(reject_aliases(ROOT / source), out / target)
     config = dict(schema_version=1, code="code/research-supplement.zip",
                   expected_manifest="results/analysis/manifest.json",
                   plan=plans[0].relative_to(out).as_posix(), coverage=coverage_paths,
-                  input_paths=input_paths, metrics=metrics, runtime_lock="requirements-replay-linux.txt")
+                  input_paths=input_paths, metrics=metrics, runtime_lock="requirements-replay-linux.txt",
+                  equivalence_verifier="verify_replay.py",
+                  equivalence_verifier_sha256=sha256(out / "verify_replay.py"))
     (out / "reproduction.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
@@ -417,7 +421,13 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
                        "registered CPU analysis. Both frozen coverage simulations and all nine banks' collection outcomes "
                        "are included. It compares every generated scientific output hash and records all differences "
                        "in `reproduction-report.json`; original records and their hashes remain unchanged. "
-                       "A successful replay exits zero. A GPU and access to the original volume are unnecessary.\n")
+                       "It reports byte identity separately from numerical equivalence. The independent "
+                       "`verify_replay.py` authenticates the evidence and permits only differences justified "
+                       "by operation-specific floating-point bounds; categorical decisions, counts, missing "
+                       "values and all other outputs must match its explicit contract. Its detailed report is "
+                       "`numerical-equivalence-report.json`. An unsupported difference fails the replay. "
+                       "A successful replay exits zero without changing frozen records. A GPU and access "
+                       "to the original volume are unnecessary.\n")
         (out / "README.md").write_text(readme, encoding="utf-8", newline="\n")
         if anonymous:
             hits = identifying_hits(out, identifiers)
