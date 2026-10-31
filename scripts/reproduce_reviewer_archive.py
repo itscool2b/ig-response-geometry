@@ -96,6 +96,19 @@ def extract_code(archive, destination):
                 raise ValueError('Code supplement hash mismatch: ' + name)
 
 
+def validate_outcome_inputs(root, config, original):
+    """Require a hash-authenticated outcome file for every registered bank."""
+    banks = original['inputs']['banks']
+    ids = [spec['id'] for spec in banks]
+    if len(ids) != len(set(ids)) or set(config['metrics']) != set(ids):
+        raise ValueError('Outcome inputs must cover exactly every registered bank')
+    for spec in banks:
+        bank = json.loads(contained(root, config['input_paths'][spec['bank']]).read_text(encoding='utf-8'))
+        path = contained(root, config['metrics'][spec['id']])
+        if not path.is_file() or sha256(path) != bank.get('source_metrics_sha256'):
+            raise ValueError('Outcome metrics hash mismatch: ' + spec['id'])
+
+
 def replay(root, out):
     root, out = Path(root).resolve(), Path(out).resolve()
     if out.exists() or out.is_relative_to(root):
@@ -103,6 +116,7 @@ def replay(root, out):
     count = verify_archive(root)
     config = json.loads((root / 'reproduction.json').read_text(encoding='utf-8'))
     original = json.loads(contained(root, config['expected_manifest']).read_text(encoding='utf-8'))
+    validate_outcome_inputs(root, config, original)
     inputs = json.loads(json.dumps(original['inputs']))
     inputs['run_root'] = str(contained(root, 'runs'))
     inputs.pop('note', None)

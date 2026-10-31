@@ -312,9 +312,17 @@ def add_reproduction(out, code, coverage):
                 raise ValueError("Missing archive-contained registered input: " + target)
             input_paths[name] = target
     metrics = {}
-    for bank in ("P", "B1", "S"):
-        target = "collections/" + bank + "/metrics.jsonl"
-        if not (out / target).is_file():
+    for spec in original["inputs"]["banks"]:
+        bank = member(spec["id"])
+        if bank in ("P", "B1", "S"):
+            target = "collections/" + bank + "/metrics.jsonl"
+        elif bank.startswith("M8-") and "/" not in bank:
+            target = "month8/context-bank-v1/" + bank[3:] + "/metrics.jsonl"
+        else:
+            raise ValueError("Unreviewed outcome bank: " + bank)
+        record = json.loads((out / input_paths[spec["bank"]]).read_text(encoding="utf-8"))
+        if (not (out / target).is_file()
+                or sha256(out / target) != record.get("source_metrics_sha256")):
             raise ValueError("Missing collection outcomes: " + target)
         metrics[bank] = target
     # Authenticate the nested code inventory now, without executing it. The

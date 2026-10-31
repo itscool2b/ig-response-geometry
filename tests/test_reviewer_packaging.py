@@ -306,7 +306,8 @@ def portable_fixture(tmp_path):
         coverage_sha256={'original/coverage.json': sha(b'{}')})
     write_tree(root, {'results/analysis/manifest.json': json.dumps(expected).encode(),
         'results/analysis/result.csv': b'x\n1\n', 'protocols/analysis-plan-r1.json': b'{}',
-        'protocols/production/test.json': b'{}', 'protocols/banks/test.json': b'{}',
+        'protocols/production/test.json': b'{}',
+        'protocols/banks/test.json': json.dumps({'source_metrics_sha256': sha(b'{}')}).encode(),
         **{'collections/' + name + '/metrics.jsonl': b'{}' for name in ('P', 'B1', 'S')}})
     (root / 'runs').mkdir()
     code = b'''import argparse,hashlib,json
@@ -378,3 +379,30 @@ def test_replay_rejects_unlisted_files_and_duplicate_manifest_records(tmp_path):
     (root / 'unlisted.py').write_text('pass')
     with pytest.raises(ValueError, match='inventory differs'):
         verify_archive(root)
+
+
+def test_replay_requires_hash_bound_outcomes_for_month8_before_execution(tmp_path):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    config = json.loads((root / 'reproduction.json').read_text())
+    original = json.loads((root / config['expected_manifest']).read_text())
+    path = 'month8/context-bank-v1/pickcube-170m/metrics.jsonl'
+    metrics = b'{"event":"episode_end","episode":0,"success":false}\n{"event":"episode_end","episode":1,"success":true}\n'
+    bank_path = 'protocols/banks/pickcube-170m.json'
+    bank_source = 'docs/nhsjs-revision/protocols/r1/banks/pickcube-170m.json'
+    write_tree(root, {path: metrics, bank_path: json.dumps({'source_metrics_sha256': sha(metrics)}).encode()})
+    original['inputs']['banks'].append(dict(id='M8-pickcube-170m', group='M8',
+        bank=bank_source, protocol=original['inputs']['banks'][0]['protocol']))
+    config['input_paths'][bank_source] = bank_path
+    with pytest.raises(ValueError, match='exactly every registered bank'):
+        replay.validate_outcome_inputs(root, config, original)
+    config['metrics']['M8-pickcube-170m'] = path
+    replay.validate_outcome_inputs(root, config, original)
+    from analysis.revision_gpu.v1.analyze import episode_outcomes
+    assert episode_outcomes(root / path) == {0: False, 1: True}
+    (root / path).write_bytes(metrics.replace(b'false', b'true'))
+    with pytest.raises(ValueError, match='Outcome metrics hash mismatch: M8-pickcube-170m'):
+        replay.validate_outcome_inputs(root, config, original)
+    (root / path).unlink()
+    with pytest.raises(ValueError, match='Outcome metrics hash mismatch'):
+        replay.validate_outcome_inputs(root, config, original)
