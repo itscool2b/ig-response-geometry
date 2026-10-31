@@ -7,6 +7,19 @@ import pytest
 from scripts.package_paper_sources import anonymous_source, assert_anonymous, build
 
 
+def test_standalone_math_supplement_has_no_unreviewed_dependencies():
+    from scripts.package_paper_sources import manuscript_dependencies
+    root = Path(__file__).resolve().parents[1]
+    path = root / 'paper/supplementary_derivations.tex'
+    if not path.exists():
+        pytest.skip('Current mathematical supplement absent from this historical snapshot')
+    text = path.read_text(encoding='utf-8')
+    assert not manuscript_dependencies(text, top_level=True, supplement=True)
+    assert_anonymous(text, path.name)
+    with pytest.raises(ValueError, match='Unreviewed manuscript input'):
+        manuscript_dependencies(text + '\n\\input{private}', top_level=True, supplement=True)
+
+
 def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     root = Path(__file__).resolve().parents[1]
     source = (root/'paper/paper.tex').read_text(encoding='utf-8')
@@ -14,7 +27,7 @@ def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     for value in ('Arjun', 'arjunbajpai', 'itscool2b', 'Acknowledgments', r'\ifanonymous', r'\ifdefined'):
         assert value not in result
     if r'\bibliographystyle{nhsjs}' in source:
-        assert r'\author{Anonymous author}' in result
+        assert any(author in result for author in (r'\author{Anonymous author}', r'\author{}'))
         assert r'\usepackage{fontspec}' in result and r'\usepackage[preprint]{tmlr}' not in result
     else:
         assert r'\author{\name Anonymous authors}' in result

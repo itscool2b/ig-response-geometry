@@ -8,6 +8,7 @@ import pytest
 
 from analysis.paired_rescoring import extra_tasks as extra
 from analysis.revision.core import IntegrityError, Record
+from tests.provenance_assertions import assert_artifacts_authentic, assert_same_input_audit
 
 
 def record(source, line, **row):
@@ -21,16 +22,22 @@ def assert_reproduces(fresh, committed):
     and by compressed bytes when this zlib build matches the recorded one)."""
     recorded = json.loads((committed / "provenance.json").read_bytes())
     produced = json.loads((fresh / "provenance.json").read_bytes())
+    assert_artifacts_authentic(committed, recorded)
+    assert_artifacts_authentic(fresh, produced)
     same_zlib = recorded["environment"]["zlib_runtime"] == zlib.ZLIB_RUNTIME_VERSION
     for name, entry in recorded["artifacts"].items():
         mine = produced["artifacts"][name]
-        if "uncompressed_sha256" in entry:
+        if name == "inputs.json":
+            assert_same_input_audit(json.loads((fresh / name).read_bytes()),
+                                    json.loads((committed / name).read_bytes()), extra.ROOT)
+        elif "uncompressed_sha256" in entry:
             assert mine["uncompressed_sha256"] == entry["uncompressed_sha256"], name
             if same_zlib:
                 assert mine["sha256"] == entry["sha256"], name
         else:
             assert (fresh / name).read_bytes() == (committed / name).read_bytes(), name
-    for key in ("protocol_sha256", "source_sha256", "inputs", "analysis_version"):
+    assert_same_input_audit(produced["inputs"], recorded["inputs"], extra.ROOT)
+    for key in ("protocol_sha256", "source_sha256", "analysis_version"):
         assert produced[key] == recorded[key], key
 
 
@@ -61,7 +68,7 @@ def test_real_data_reproduction_duplicates_and_exclusions(tmp_path):
     fresh = tmp_path / "fresh"
     extra.run(fresh)
     assert_reproduces(fresh, extra.RESULTS)
-    assert extra.verify(extra.RESULTS)["status"] == "verified"
+    assert extra.verify(fresh)["status"] == "verified"
     audit = json.loads((extra.RESULTS / "inputs.json").read_bytes())
     files = {f["path"]: f for f in audit["files"]}
     peg_faith = files["data/metrics_faithfulness_metrics_PegInsertionSide-v1_170m_seed142_m128_20260529_160739.jsonl"]

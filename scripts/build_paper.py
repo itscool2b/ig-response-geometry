@@ -36,6 +36,21 @@ def validate_revision_assets(root: Path) -> None:
     else:
         from validate_template_provenance import validate_template_provenance
     validate_template_provenance(root)
+    if "{figures_revision/r1_design.pdf}" in (root / "paper/paper.tex").read_text(encoding="utf-8"):
+        r1_path = root / "paper/figures_revision/r1_lineage.json"
+        if not r1_path.is_file():
+            raise RuntimeError("Missing R1 display lineage; run scripts/build_nhsjs_revision_assets.py")
+        r1 = json.loads(r1_path.read_text(encoding="utf-8"))
+        expected = {**r1["inputs_sha256"], **r1["outputs_sha256"], **r1["manuscript_inputs_sha256"],
+                    "scripts/build_nhsjs_revision_assets.py": r1["builder_sha256"]}
+        if any(not (root / name).resolve().is_relative_to(root.resolve()) for name in expected):
+            raise RuntimeError("R1 display lineage contains a path outside the repository")
+        mismatches = [name for name, value in expected.items()
+                      if not (root / name).is_file() or value not in checkout_digests((root / name).read_bytes())]
+        if mismatches:
+            raise RuntimeError("Stale or missing R1 inputs: " + ", ".join(mismatches)
+                               + ". Run scripts/build_nhsjs_revision_assets.py")
+        return
     registry_path = root / "paper/figures_revision/lineage.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     expected = dict(registry["generated_sha256"])
@@ -110,9 +125,10 @@ def main() -> None:
         if args.keep_intermediates_dir.is_relative_to(archive.resolve()):
             parser.error("Build intermediates must not be written inside the historical archive")
     validate_revision_assets(root)
-    registry_path = paper / "figures_revision/lineage.json"
-    registry_before = registry_path.read_bytes() if registry_path.is_file() else None
     source = (paper / "paper.tex").read_text(encoding="utf-8")
+    registry_path = paper / ("figures_revision/r1_lineage.json"
+                            if "{figures_revision/r1_design.pdf}" in source else "figures_revision/lineage.json")
+    registry_before = registry_path.read_bytes() if registry_path.is_file() else None
     try:
         engine, executable = resolve_engine(args.engine, source)
     except ValueError as error:

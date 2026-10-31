@@ -1,0 +1,695 @@
+{
+  "schema_version": 1,
+  "presentation": "NHSJS R1 2026-10-31",
+  "inputs_sha256": {
+    "analysis/revision/response_geometry_theory.py": "f61bbc69e6a4e93a09c7441634fac9765f2ac0512284ac7ce28c1ce95435015e",
+    "analysis/revision_gpu/v1/figures.py": "a38e19eb9ed03a64ee046eca5826fb6392002c2787fcfc227e396a5513d6ca8d",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/manifest.json": "8aa59967c86d4fbf5238bb0a3062d8754fa4ea475ea9d88bb2eca86c2092b163",
+    "analysis/paired_rescoring/residual_geometry/results/2026-10-23-v1/calls.csv.gz": "74db8b2732b037ab7199fca190d5f6ec0d9f4e8e0c7f9ce1165e12971c3f5831",
+    "analysis/paired_rescoring/oneb_success/results/2026-10-23-v1/summary.csv": "7ed151db1250cffc89177c70ab9427551d8bebfcce85cae2f67c868fa144a69c",
+    "analysis/paired_rescoring/extra_tasks/results/2026-10-23-v1/summary.csv": "ad4c127d49a1a0584759822a45172718843f4710738f305e1fbb7464cfd6e9d0",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/shifts/B1/summary_vision.csv": "eed1a59bcfcc0f4f2a3dfbd1a0e30dd7549618e46d6bafe10dcec8fd4bb25dd0",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/methods_advantage.csv": "9a127c96f4dde61943e734766e9a0846782652e8ab385e77a9a6de8a1dc6b010",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/numerics/residuals.csv": "506df0636a4bb22242e1b9977209228e06131ddd42411c1032583c0292139788",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/numerics/references.csv": "f397116da4065fc5ac91062bbc40ddd4a8f579e7b818432ff152f784d65b11b8",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/experiments.json": "8c8132c7e0f660559e7a551d4888a1d69128e361969d224e0275d00174309d55",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/identity_status.csv": "bed74f9bb5e79b4ce91ac1a62c46601496117f88055dd6752e49c1d1bbaee460",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/identity_values.json": "350538f87c40bc9aa463f66d5acffcbf09b8209336023bb1dca0df585bddbb68",
+    "analysis/manuscript_revision/results/2026-10-03-v2/paired_summary.csv": "0ec5072cb5736553346be30a64b8df124aebeded60975e48b87f7106aaa82f04",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/methods_decisions.csv": "46023e3c42c7319244e3150c3b49c236f3ca093f6eedb58cff42a1afdc95f296",
+    "analysis/manuscript_revision/nhsjs_r1/inputs/contrasts.csv": "7d93f3ea2436e2c3ddd4b3596856fc46a4df5be46c36b74aaec126c28f299c60"
+  },
+  "manuscript_inputs_sha256": {
+    "paper/paper.tex": "26fb8624b89b0d4ba8783564a0384c84de53048d2edf0f4469a78f24993895b4",
+    "paper/references.bib": "b4c6dfd304e9d83ede8175a4f0741bab2058ec54bad89a503074df2f52ceae0f",
+    "paper/appendix_aliasing.tex": "e5f45fd17cdfdd4472c849bd5f85f01647a5794f0e99dbcbfaa13fee7c1e02cf",
+    "paper/tables_revision/revision_facts.tex": "8f93b8133b72034362ad13cae1b910246c457e01419c3e57e74b17e24ad544a4"
+  },
+  "builder_sha256": "39d03ca207dfdd3128f59668fa2151353d73d27d19fd1b818651ae81f2d8f6ae",
+  "populations": {
+    "r1_design": {
+      "kind": "analytic illustration, not an observed policy reversal",
+      "construction": {
+        "kind": "analytic_constructive_example_not_RDT_evidence",
+        "c": "4/5",
+        "epsilon": 1e-12,
+        "policy": "mu(x1,x2)=x1^2+c*x2",
+        "baseline": [
+          0,
+          0
+        ],
+        "actual": [
+          1,
+          1
+        ],
+        "reference_action": 1.8,
+        "active_entries": 1,
+        "sigma_squared": 1,
+        "quadratic_ig_exact": [
+          "23/30",
+          "64/75"
+        ],
+        "unstabilized_l2_ig_limit_exact": [
+          "1",
+          "4/5"
+        ],
+        "stabilized_l2_ig": [
+          0.9999992857150685,
+          0.7999997142852093
+        ],
+        "quadrature_error_estimates": [
+          9.52878823026088e-14,
+          1.2678992981533734e-13
+        ],
+        "stabilized_l2_coordinate_deficit_upper_bounds": [
+          2.4999999999999998e-06,
+          1e-06
+        ],
+        "stabilized_l2_completeness_absolute_residual": 2.220446049250313e-16,
+        "quadratic_feature_2_minus_1_exact": "13/150",
+        "stabilized_l2_feature_1_minus_2_lower_bound": 0.19999749999999994,
+        "interpretation": "An output-transform-dependent path weight can reverse IG ranks; reversal is not universal."
+      }
+    },
+    "r1_saved_geometry": {
+      "Q:vision:insertion": {
+        "calls": 750,
+        "outside_zoom": 74,
+        "log_region": 43
+      },
+      "Q:vision:deletion": {
+        "calls": 750,
+        "outside_zoom": 34,
+        "log_region": 14
+      },
+      "Q:lang:insertion": {
+        "calls": 750,
+        "outside_zoom": 144,
+        "log_region": 79
+      },
+      "Q:lang:deletion": {
+        "calls": 750,
+        "outside_zoom": 52,
+        "log_region": 28
+      },
+      "L2:vision:insertion": {
+        "calls": 750,
+        "outside_zoom": 60,
+        "log_region": 31
+      },
+      "L2:vision:deletion": {
+        "calls": 750,
+        "outside_zoom": 29,
+        "log_region": 11
+      },
+      "L2:lang:insertion": {
+        "calls": 750,
+        "outside_zoom": 98,
+        "log_region": 53
+      },
+      "L2:lang:deletion": {
+        "calls": 750,
+        "outside_zoom": 76,
+        "log_region": 24
+      }
+    },
+    "r1_success_tasks": {
+      "new_ranking": "IG_Q_A1T512",
+      "groups": [
+        {
+          "direction": "insertion",
+          "groups": [
+            [
+              "Saved 1B success\n15 episodes / 74 calls",
+              0.06530033576503891,
+              [
+                0.052156817180487536,
+                0.07553157767590657
+              ],
+              "#2a78d6"
+            ],
+            [
+              "Saved 1B failure\n45 episodes / 1125 calls",
+              0.0867623914417327,
+              [
+                0.0774651316925915,
+                0.09388079074334377
+              ],
+              "#2a78d6"
+            ],
+            [
+              "R1 B1 success\n31 episodes / 62 calls",
+              0.06156237775844631,
+              null,
+              "#d65326"
+            ],
+            [
+              "R1 B1 failure\n9 episodes / 18 calls",
+              0.09126911802838611,
+              null,
+              "#d65326"
+            ],
+            [
+              "PegInsertionSide\n16 episodes / 400 calls",
+              0.09902331847729537,
+              [
+                0.0704766425831157,
+                0.12474432332256397
+              ],
+              "#777777"
+            ],
+            [
+              "PickSingleYCB\n16 episodes / 400 calls",
+              0.09543368005985564,
+              [
+                0.08145540223111541,
+                0.10964562537731964
+              ],
+              "#777777"
+            ]
+          ]
+        },
+        {
+          "direction": "deletion",
+          "groups": [
+            [
+              "Saved 1B success\n15 episodes / 74 calls",
+              0.07474266698109351,
+              [
+                0.04219675233194625,
+                0.0995206853669626
+              ],
+              "#2a78d6"
+            ],
+            [
+              "Saved 1B failure\n45 episodes / 1125 calls",
+              0.10351564829343213,
+              [
+                0.09075936921931213,
+                0.11460554700881534
+              ],
+              "#2a78d6"
+            ],
+            [
+              "R1 B1 success\n31 episodes / 62 calls",
+              0.021185308429958437,
+              null,
+              "#d65326"
+            ],
+            [
+              "R1 B1 failure\n9 episodes / 18 calls",
+              -0.008580664123705832,
+              null,
+              "#d65326"
+            ],
+            [
+              "PegInsertionSide\n16 episodes / 400 calls",
+              0.11522309886627582,
+              [
+                0.07446535734032671,
+                0.1450906678988631
+              ],
+              "#777777"
+            ],
+            [
+              "PickSingleYCB\n16 episodes / 400 calls",
+              0.14047707198168297,
+              [
+                0.12255681072340541,
+                0.15471240881744824
+              ],
+              "#777777"
+            ]
+          ]
+        }
+      ],
+      "intervals": "saved groups only: recorded episode-bootstrap median intervals; R1 diamonds have no interval"
+    },
+    "r1_methods": {
+      "banks": {
+        "P": 60,
+        "B1": 40,
+        "S": 30
+      },
+      "intervals": "descriptive 95% episode bootstrap; seven adjusted contrasts in Table 4",
+      "ranks": [
+        "IG_Q_A1T512",
+        "IG_N_A1T512",
+        "PG_Q_A1T512",
+        "PG_N_A1T512",
+        "input_difference",
+        "IG_Q_A0m64",
+        "IG_N_A0m64",
+        "fixed_raster",
+        "fixed_reverse_raster",
+        "fixed_centre_out"
+      ]
+    },
+    "r1_numerics": {
+      "relative_residual/Q": {
+        "contexts": [
+          "095d584644074105bea4008b23feab95fbba37cde43ac8bd3ad1bb11895d31ef",
+          "1d1ab09086ef70efb4ff481844c1c6ed25e97502304c8452d78f788a419cd717",
+          "39dc9f8061cb0e1f8ecd3a0c6e855095519300b12b1f4a7d57bba2808b6da529",
+          "3e8597c048e879d608a423c395236940267e4f244e6997c75fd3e96835701c4c",
+          "442590521cb38b43d5ba22f863d6c7a7348cb5fe7464e3d8116c3f7cc0b9a34b",
+          "586ce80f71178afff5a1e55b83e5a71276e36882e14647f5e8694ac906b57a4a",
+          "607be1345e2a76c74267f2cbbfcc239ed94170557674a7cc2466005306ace793",
+          "70298694fdd7c6f1f367ddf9ddd96761d809c438d59e0b970fbc0d8254f3f196",
+          "cae441e4c1344417eadfa5c2ae6c8727f3953d7960d4e9d04c7165be9d1924fb",
+          "d1988cde31ff1b7434f7ab462347adbb3dde858491618ba515e83b4cee569ed4",
+          "e4d3c8f731787bb77c3a766ba0286d62725c14072fdc89e9738345f46355d3df",
+          "fca046b848de0eba13ba04f4c7e9449a0c3e1a313ef2cdf713ccfeff9b0e7b30"
+        ],
+        "n": 12,
+        "series": {
+          "A1T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.013490471528076484,
+              0.00816289176351412,
+              0.010454780000419545,
+              0.00992080831773836,
+              0.009888664299152219,
+              0.009912246407082057
+            ]
+          },
+          "A1E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.07130392611414123,
+              0.03545935630117542,
+              0.018849104297239832,
+              0.0120135129979283,
+              0.010991963204057537,
+              0.009832250576750986
+            ]
+          },
+          "A1M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.010722695951585624,
+              0.011093194771666632,
+              0.008759615176379621,
+              0.00926466282643552,
+              0.010589350040649856
+            ]
+          },
+          "A2T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.003477983531450626,
+              0.0010470449895772138,
+              0.0002609596742061003,
+              6.463851744682679e-05,
+              1.5536547534624226e-05,
+              3.2135030395177255e-06
+            ]
+          },
+          "A2E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.06496727990215069,
+              0.033623650390836535,
+              0.01643039847614331,
+              0.00800754640351906,
+              0.003999241970066448,
+              0.0020586803211233885
+            ]
+          },
+          "A2M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.0020657604989757898,
+              0.000525066190354901,
+              0.00013171251048126932,
+              3.363838770879012e-05,
+              9.063233895980413e-06
+            ]
+          }
+        }
+      },
+      "relative_residual/N": {
+        "contexts": [
+          "095d584644074105bea4008b23feab95fbba37cde43ac8bd3ad1bb11895d31ef",
+          "1d1ab09086ef70efb4ff481844c1c6ed25e97502304c8452d78f788a419cd717",
+          "39dc9f8061cb0e1f8ecd3a0c6e855095519300b12b1f4a7d57bba2808b6da529",
+          "3e8597c048e879d608a423c395236940267e4f244e6997c75fd3e96835701c4c",
+          "442590521cb38b43d5ba22f863d6c7a7348cb5fe7464e3d8116c3f7cc0b9a34b",
+          "586ce80f71178afff5a1e55b83e5a71276e36882e14647f5e8694ac906b57a4a",
+          "607be1345e2a76c74267f2cbbfcc239ed94170557674a7cc2466005306ace793",
+          "70298694fdd7c6f1f367ddf9ddd96761d809c438d59e0b970fbc0d8254f3f196",
+          "cae441e4c1344417eadfa5c2ae6c8727f3953d7960d4e9d04c7165be9d1924fb",
+          "d1988cde31ff1b7434f7ab462347adbb3dde858491618ba515e83b4cee569ed4",
+          "e4d3c8f731787bb77c3a766ba0286d62725c14072fdc89e9738345f46355d3df",
+          "fca046b848de0eba13ba04f4c7e9449a0c3e1a313ef2cdf713ccfeff9b0e7b30"
+        ],
+        "n": 12,
+        "series": {
+          "A1T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.08496677584206441,
+              0.06460197101348679,
+              0.04763923695653647,
+              0.052092889567145445,
+              0.04339588701775684,
+              0.04463280461624071
+            ]
+          },
+          "A1E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.13812984600415135,
+              0.09322323344784653,
+              0.06268903267744892,
+              0.05964160118430469,
+              0.0472071874239431,
+              0.0465397480353997
+            ]
+          },
+          "A1M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.04395437815986923,
+              0.03542028745506604,
+              0.05114681530357123,
+              0.05080298316045752,
+              0.045882718930991204
+            ]
+          },
+          "A2T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.06188510328722313,
+              0.0338380688054085,
+              0.015390623008780618,
+              0.00768637955544027,
+              0.0034743393919602697,
+              0.0019194241226844874
+            ]
+          },
+          "A2E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.12389572847190194,
+              0.06039495039845979,
+              0.03042177372518095,
+              0.016416193277974712,
+              0.007664252005512833,
+              0.0038266701275883027
+            ]
+          },
+          "A2M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.00027514644487123424,
+              0.00010320251703924504,
+              2.4290413692714094e-05,
+              6.377596374785417e-06,
+              3.907753902954208e-06
+            ]
+          }
+        }
+      },
+      "relative_l1/Q": {
+        "contexts": [
+          "095d584644074105bea4008b23feab95fbba37cde43ac8bd3ad1bb11895d31ef",
+          "3e8597c048e879d608a423c395236940267e4f244e6997c75fd3e96835701c4c",
+          "442590521cb38b43d5ba22f863d6c7a7348cb5fe7464e3d8116c3f7cc0b9a34b",
+          "586ce80f71178afff5a1e55b83e5a71276e36882e14647f5e8694ac906b57a4a",
+          "607be1345e2a76c74267f2cbbfcc239ed94170557674a7cc2466005306ace793",
+          "70298694fdd7c6f1f367ddf9ddd96761d809c438d59e0b970fbc0d8254f3f196",
+          "cae441e4c1344417eadfa5c2ae6c8727f3953d7960d4e9d04c7165be9d1924fb",
+          "e4d3c8f731787bb77c3a766ba0286d62725c14072fdc89e9738345f46355d3df"
+        ],
+        "n": 8,
+        "series": {
+          "A1T": {
+            "budget": [
+              64.0,
+              512.0
+            ],
+            "median": [
+              0.027571235264067365,
+              0.02780318103638376
+            ]
+          },
+          "A1E": {
+            "budget": [
+              64.0
+            ],
+            "median": [
+              0.025104698687194317
+            ]
+          },
+          "A1M": {
+            "budget": [
+              256.0
+            ],
+            "median": [
+              0.027270553611777385
+            ]
+          },
+          "A2T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.0032577106550509185,
+              0.0008103209044103205,
+              0.00020008617568214064,
+              4.7676002117832e-05,
+              9.538988049234063e-06
+            ]
+          },
+          "A2E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.05882953020680147,
+              0.030042859069106306,
+              0.015207215197633371,
+              0.007651005867431646,
+              0.0038372472280226565,
+              0.0019107895596512181
+            ]
+          },
+          "A2M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.0016375809371778388,
+              0.0004101508605378098,
+              0.00010473704400537501,
+              2.861808739495922e-05,
+              9.536981267250042e-06
+            ]
+          }
+        }
+      },
+      "relative_l1/N": {
+        "contexts": [
+          "095d584644074105bea4008b23feab95fbba37cde43ac8bd3ad1bb11895d31ef",
+          "3e8597c048e879d608a423c395236940267e4f244e6997c75fd3e96835701c4c",
+          "442590521cb38b43d5ba22f863d6c7a7348cb5fe7464e3d8116c3f7cc0b9a34b",
+          "586ce80f71178afff5a1e55b83e5a71276e36882e14647f5e8694ac906b57a4a",
+          "607be1345e2a76c74267f2cbbfcc239ed94170557674a7cc2466005306ace793",
+          "70298694fdd7c6f1f367ddf9ddd96761d809c438d59e0b970fbc0d8254f3f196",
+          "cae441e4c1344417eadfa5c2ae6c8727f3953d7960d4e9d04c7165be9d1924fb",
+          "e4d3c8f731787bb77c3a766ba0286d62725c14072fdc89e9738345f46355d3df"
+        ],
+        "n": 8,
+        "series": {
+          "A1T": {
+            "budget": [
+              64.0,
+              512.0
+            ],
+            "median": [
+              0.04697622382673723,
+              0.045997679700451155
+            ]
+          },
+          "A1E": {
+            "budget": [
+              64.0
+            ],
+            "median": [
+              0.05694558623452585
+            ]
+          },
+          "A1M": {
+            "budget": [
+              256.0
+            ],
+            "median": [
+              0.04773885496904081
+            ]
+          },
+          "A2T": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.06272293598427427,
+              0.030357266616002406,
+              0.014168442698902783,
+              0.006072728971512595,
+              0.002024316893746556
+            ]
+          },
+          "A2E": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0,
+              512.0
+            ],
+            "median": [
+              0.11000188988471221,
+              0.05576217098357587,
+              0.027391627649999653,
+              0.012881901407033124,
+              0.005556534485427253,
+              0.0019317428310066278
+            ]
+          },
+          "A2M": {
+            "budget": [
+              16.0,
+              32.0,
+              64.0,
+              128.0,
+              256.0
+            ],
+            "median": [
+              0.002186619490881834,
+              0.0021252124311876004,
+              0.0021502026607886364,
+              0.0020241089757959217,
+              0.002024317054225273
+            ]
+          }
+        }
+      }
+    }
+  },
+  "outputs_sha256": {
+    "paper/figures_revision/r1_design.pdf": "282bfc9afd6d46963cff411cb00e270f6abca404c6dc252de243f1e021fbc228",
+    "paper/figures_revision/r1_design.png": "9c0a55be9e627790170e5390502f37d64c8f6cf0b2997b1f9ab41b5d50d6db8a",
+    "paper/figures_revision/r1_methods.pdf": "6265c3088e7ebb9c5ddc46f1d26a56fed7612a2085cb9f7084475dab45a7166b",
+    "paper/figures_revision/r1_methods.png": "3f5aa3f4cd58f24322c626959a31e38f8ad1aab77fbb27ebabb646899e6c7f4d",
+    "paper/figures_revision/r1_numerics.pdf": "3671d38d80ff7a7eb03eb9e02cc74d4cdd535be78783b991aba63d69058aa059",
+    "paper/figures_revision/r1_numerics.png": "efe26dc9497bcc8ad0ea944f21ce3cd8492d6a95c33a689370059e63b71b98e3",
+    "paper/figures_revision/r1_saved_geometry.pdf": "a74c4b4274483ac390daeae9d5c394ac0ac83e2342e9e432f7c12c199e4ae2a4",
+    "paper/figures_revision/r1_saved_geometry.png": "23721ee8015de334821397e49ce49ef95f8b0f39a90a84d730f3652d45a1a77d",
+    "paper/figures_revision/r1_success_tasks.pdf": "f2c5be0c5ea49a39e06e5584f5d159106ba792d40cbceb5a52b9136fbd739a1c",
+    "paper/figures_revision/r1_success_tasks.png": "f7e68cd2626c150a99bf5ef96e0c2180b698d31ae3e0a251a1cb911709cc1f86",
+    "paper/tables_revision/r1_experiments.tex": "162b03857e0d92e2a38dbd8b885b9493d02dc4002997324b7ee1ac0d46d6d4d3",
+    "paper/tables_revision/r1_identities.tex": "b8d7309cba3866b45b9894fc4140098d191e2c592f374508c458fd994d9f094a",
+    "paper/tables_revision/r1_methods_summary.tex": "068145e8be82a96441b177e5c6b0bb38ccb9fa79aa163a6df0e70d1bbc13a7ac",
+    "paper/tables_revision/r1_saved_summary.tex": "e647bef151b4b272df49b57d285bfad1176c6f2bc0cf033c6ba26bf9024f7610"
+  }
+}

@@ -29,6 +29,30 @@ def test_timing_fields_are_ignored_but_values_are_not():
     assert rr.strip_timing(a) != rr.strip_timing(b)
 
 
+@pytest.mark.parametrize("name", ["../outside", "/outside", "C:/outside", "sub\\file", "./file", "a//b", "MANIFEST.sha256"])
+def test_kit_rejects_unsafe_or_noncanonical_manifest_paths(tmp_path, name):
+    (tmp_path / "MANIFEST.sha256").write_text("0" * 64 + "  " + name + "\n")
+    result = rr.verify_kit(tmp_path)
+    assert result["status"] == "failed" and result["invalid"]
+
+
+@pytest.mark.parametrize("contents", ["", "malformed\n", "0" * 63 + "  file\n"])
+def test_kit_rejects_empty_or_malformed_manifest(tmp_path, contents):
+    (tmp_path / "MANIFEST.sha256").write_text(contents)
+    assert rr.verify_kit(tmp_path)["status"] == "failed"
+
+
+def test_kit_detects_duplicate_entries_and_nested_manifest(tmp_path):
+    (tmp_path / "file").write_bytes(b"a")
+    line = f"{rr.sha256(tmp_path / 'file')}  file\n"
+    (tmp_path / "MANIFEST.sha256").write_text(line * 2)
+    assert rr.verify_kit(tmp_path)["invalid"]
+    (tmp_path / "MANIFEST.sha256").write_text(line)
+    (tmp_path / "sub").mkdir()
+    (tmp_path / "sub/MANIFEST.sha256").write_text("unlisted")
+    assert rr.verify_kit(tmp_path)["unlisted"] == ["sub/MANIFEST.sha256"]
+
+
 def test_map_comparison_reports_identity_and_differences():
     stored = {"vision/Q/A1T8": torch.ones(1, 729, 4), "state/Q/A1T8": torch.ones(1, 1, 8), "vision/Q/A1T8/group_scores": torch.ones(729)}
     fresh = {key: value.clone() for key, value in stored.items()}

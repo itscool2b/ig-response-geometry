@@ -35,7 +35,7 @@
 \input{tables_revision/revision_facts.tex}
 \title{How Scoring Responses Change Attribution Evaluation in a Diffusion Policy}
 \ifanonymous
-\author{Anonymous author}
+\author{}
 \hypersetup{pdfauthor={}}
 \else
 \author{Arjun Bajpai\\Independent Researcher\\\texttt{arjunbajpai2009@gmail.com}}
@@ -53,11 +53,12 @@
 \renewcommand{\floatpagefraction}{0.75}
 \renewcommand{\bibnumfmt}[1]{#1.}
 \makeatletter
-\renewcommand\section{\@startsection{section}{1}{\z@}{10pt}{4pt}{\normalfont\fontsize{14}{16.8}\selectfont\bfseries}}
+\renewcommand\section{\@startsection{section}{1}{\z@}{10pt}{4pt}{\normalfont\normalsize\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}{6pt}{3pt}{\normalfont\normalsize\bfseries}}
-\renewcommand\@maketitle{\begin{center}{\fontsize{18}{21.6}\selectfont\@title\par}\vskip 1em{\normalsize\lineskip .5em\begin{tabular}[t]{c}\@author\end{tabular}\par}\end{center}\par\vskip 1em}
+\renewcommand\@maketitle{\begin{center}{\normalsize\bfseries\@title\par}\vskip 1em{\normalsize\lineskip .5em\begin{tabular}[t]{c}\@author\end{tabular}\par}\end{center}\par\vskip 1em}
 \makeatother
 
+\setcounter{secnumdepth}{0}
 \begin{document}
 \setlength{\abovedisplayskip}{6pt plus 2pt minus 2pt}
 \setlength{\belowdisplayskip}{6pt plus 2pt minus 2pt}
@@ -66,379 +67,211 @@
 \maketitle
 
 \begin{abstract}
-Feature attributions rank inputs associated with a model's prediction. Their evaluation depends on how a scalar response scores predictions after features are removed or restored. For robot policies, we separate the attribution target from the scoring response. We compare squared distance (Q) and stabilized distance (N) from a fixed reference action. An identity shows that N cannot increase insertion or deletion area under the curve (AUC) when no intervention overshoots, that is, moves the prediction farther from the reference, in squared distance, than replacing every feature with its baseline. Strict decreases make an unchanged ranking look worse by insertion and better by deletion; absolute thresholds can give opposite verdicts. We rescore saved curves for PickCube, a simulated pick-and-place task, from a model recorded as a pretrained Robotics Diffusion Transformer. Q-ranked and N-ranked cohorts ranked features using Q and N, respectively; each contains \RescoreCalls{} policy calls from \RescoreEpisodes{} episodes with no successes. Across eight combinations of cohort, modality and direction, median Q-minus-N differences are \PairedMedianMin{} to \PairedMedianMax{}, with \PositiveShareMin{}\% to \PositiveShareMax{}\% positive. Overshoots occur in \OvershootShareMin{}\% to \OvershootShareMax{}\% of calls. Extreme calls, mainly each episode's first prediction, make vision-insertion means strongly negative. An example shows that target choice can also reverse rankings. Separate numerical diagnostics show that integration error can change evaluation results or leave them unchanged. A smooth counterexample shows that agreeing uniform integration grids can give incorrect coordinates. We recommend specifying targets and responses separately, comparing rankings under matched controls, reporting full distributions, and checking numerical sensitivity.
+Feature attribution evaluation depends on the response used to score predictions after inputs are removed or restored. We separate the attribution target from the scoring response for a robot diffusion policy, comparing squared action discrepancy (Q) with stabilized distance (N). An exact identity shows that N cannot increase insertion or deletion area under the curve (AUC) when interventions remain within the endpoint range. Overshoots, which move the prediction farther from the reference action than replacing every feature with its baseline, can reverse this effect. Saved PickCube cohorts contain no successful episodes; their eight paired median Q-minus-N differences range from 0.104 to 0.159, while extreme calls reverse six means. Historical RDT-1B rescoring gives positive vision medians in successful and failed groups. A new experiment preserves inputs for 281 contexts and compares seven rankings with matched random and fixed orders. The preferred vision-deletion method changes between responses in all three new banks; only one cell has an adjusted best-minus-second interval excluding zero. Numerical comparisons separate completeness, coordinate error, ranking stability and AUC sensitivity. Increasing integration budgets reduces fp32 residuals but leaves a bf16-forward floor; no nonfinite value occurs at 815,210 evaluated nodes. These limited context samples do not estimate general failure rates or verify the original saved rankings. Response calibration can change practical comparisons, and numerical checks require separate interpretation from ranking quality.
 \end{abstract}
 
 \textbf{Keywords:} integrated gradients, attribution evaluation, diffusion policies, perturbation metrics, numerical integration, robotics
 
 \section{Introduction}
 
-Attributions assign image regions, language representations or state coordinates contributions to a robot policy's prediction. A persuasive ranking need not identify inputs that meaningfully affect actions. Diffusion policies predict action sequences by repeatedly refining noise conditioned on observations\citep{chi2023diffusion}. Their vector outputs require a scalar attribution target, such as discrepancy from a fixed reference action\citep{zhang2026embodied}.
+Diffusion policies generate action sequences by denoising predictions conditioned on observations\citep{chi2023diffusion}. Their vector outputs require a scalar function for feature attribution or perturbation evaluation\citep{zhang2026embodied}. Integrated Gradients (IG) integrates sensitivity along a baseline-to-input path\citep{sundararajan2017axiomatic}; we study this procedure with the Robotics Diffusion Transformer (RDT)\citep{liu2024rdt}. The function being attributed and the response scoring subsequent interventions are distinct choices.
 
-Q measures squared distance and N stabilized distance from the reference; ``Q-ranked'' means ranked using target Q. Deletion area under the curve (AUC) summarizes responses as features are removed, with lower conventionally better. Consider removing the highest-ranked image features. In Q-ranked curves, median vision-deletion AUC changes from \RescoreQDeletionQ{} scored with Q to \RescoreQDeletionL{} scored with N. An illustrative, unvalidated absolute bar of 0.40 rejects the first and accepts the second. Absolute thresholds, cross-response comparisons and assumed 0.5 references therefore need response-matched calibration. Only scoring changed; rankings, interventions and predicted actions stayed fixed.
+Insertion and deletion tests progressively restore or remove ranked features\citep{petsiuk2018rise}. Retraining after removal\citep{hooker2019roar}, information exposed by masks\citep{rong2022road} and disagreeing perturbation metrics\citep{tomsett2020sanity} complicate interpretation. Removal frameworks distinguish the intervention, model behavior and summary\citep{covert2021explaining}. Artificial inputs can leave the training distribution\citep{hase2021ood}; insertion/deletion AUC also discards attribution magnitudes once their ranking is fixed\citep{gomez2022metrics}. Meta-evaluation tests metric reliability\citep{hedstrom2023metaquantus}, while occlusion strategy can change method rankings\citep{blucher2024decoupling}. Baseline choice similarly changes the question answered in regression\citep{mamalakis2023baseline}.
 
-Integrated Gradients (IG) adds model sensitivity along a straight baseline-to-input path\citep{sundararajan2017axiomatic}. Completeness means coordinate attributions sum to the target's endpoint change. Three questions differ: what the scoring response measures, whether integration recovers the intended attribution, and whether the ranking is useful. We study the first two using the Robotics Diffusion Transformer (RDT)\citep{liu2024rdt}.
+Policy explanations have additional interpretation problems. Counterfactual tests challenge saliency-based hypotheses in reinforcement learning\citep{atrey2020exploratory}; evaluating action preference differs from evaluating state value\citep{huber2022benchmarking}. Input attribution has been adapted to robotic torque outputs\citep{kim2021explaining}, and internal activation steering can change vision-language-action behavior\citep{haon2025mechanistic}. These studies motivate specifying the behavioral quantity before interpreting a score.
 
-Insertion and deletion scores evaluate a ranking by progressively restoring or removing features\citep{petsiuk2018rise}. Their interpretation depends on the interventions: retraining after removal changes the question\citep{hooker2019roar}, masks can reveal information\citep{rong2022road}, and perturbation metrics can disagree\citep{tomsett2020sanity}. Hama, Mase and Owen established that response scale and feature interactions affect insertion and deletion evaluation and its random-order reference\citep{hama2023deletion}. Here we separate target choice from scoring response for vector-output action discrepancies, derive their response-only ordering, and measure the effect and normalized-AUC instability on saved robot-policy curves.
+Hama, Mase and Owen derive interaction-dependent random-order references for unnormalized insertion/deletion areas, attributing and evaluating one scalar function\citep{hama2023deletion}. We instead separate target and response for vector action discrepancies, derive an endpoint-normalized identity, investigate overshoots, and compare calibrated rankings in matched robot contexts. Changing the response alone can move a deletion median across an illustrative bar of 0.40; this bar is not an empirically validated decision rule.
 
-The integration budget is the number of intervals used to approximate IG. Earlier work finds instance-dependent completeness errors as this budget changes\citep{makino2024integration}; IDGI reduces explanation noise by retaining the component of each integration step along the gradient\citep{yang2023idgi}. Our concern is recovery of the specified IG integral. We use quadrature aliasing, where sampled nodes miss variation between them, to examine what finite numerical checks can establish.
-
-First, scoring with N instead of Q cannot increase either AUC for in-range curves, whose saved residuals all lie between zero and the all-baseline value (Section~\ref{sec:scoring}). Strict decreases make insertion look worse and deletion better; saved curves measure their size and prevalence. Second, overshoots beyond this range can dominate means through extreme first calls. Third, an example shows target-dependent IG ranking reversal. Finally, real-model diagnostics expose numerical problems, while a counterexample limits agreement and completeness checks. Section~\ref{sec:procedure} gives reporting steps.
+Numerical recovery is another question. IG's axiomatic conditions require care\citep{lundstrom2022rigorous}, and completeness does not guarantee usefulness for a chosen end-task\citep{bilodeau2024impossibility}. Exact integration for piecewise-linear networks exposes errors in sampling approximations\citep{sotoudeh2019linear}; ground-truth benchmarks supply a different evaluation criterion\citep{arras2022clevrxai}. Earlier studies examine budget-dependent completeness\citep{makino2024integration} and modify integration steps to reduce explanation noise\citep{yang2023idgi}. We distinguish accurate recovery of a specified integral, stable rankings and favorable perturbation scores.
 
 \section{Methods}
 
-\subsection{Research design and policy setting}
+\subsection{Research design and provenance}
 
-We combine algebra, saved-curve rescoring and separate numerical diagnostics. A policy call predicts an action chunk; the first call is index 0 of each episode. Target and scoring response are separate choices (Figure~\ref{fig:pipeline}); rescoring requires no new policy execution.
+The original evidence comprises two unsuccessful PickCube cohorts, each with \RescoreEpisodes{} episodes and \RescoreCalls{} calls, ranked separately using Q and N. The model was recorded as the released RDT-170M\citep{rdt170mrelease}. Shared environment-seed blocks do not make these cohorts matched: vision baseline residuals differ in every aligned call, and their log correlation falls from \CohortInitialCorrelation{} at call 0 to 0.289 at call 2. Original observations and diffusion-noise arrays are unavailable. Rescoring reproduces their recorded response changes, not the original policy executions.
+
+We additionally rescore saved RDT-1B PickCube runs and RDT-170M PegInsertionSide and PickSingleYCB runs. The new R1 experiment contains P (PickCube, RDT-170M: 60 episodes, 120 contexts), B1 (PickCube, authors' RDT-1B checkpoint: 40, 80), S (StackCube, RDT-170M: 30, 60), and 21 preserved Month 8 contexts. The new banks uniformly select two executed calls per episode under a rule locked before collection, while preserving every executed call. Table~\ref{tab:r1-experiments} separates all experiment sources and estimators; Table~\ref{tab:r1-identities} summarizes provenance. Full hashes, settings and status evidence accompany the archive.
+
+\input{tables_revision/r1_experiments.tex}
+\input{tables_revision/r1_identities.tex}
+
+The identity inventory distinguishes values recorded by a run from values recovered from dated source/model history, inferred values and unknowns. Its 45 unknown fields belong to historical runs, principally software/simulator versions and nonfinite counts. Historical downloads used unpinned model branches; unchanged file histories permit recovery, not contemporaneous recording. Five DPM-Solver++ steps are recorded for the Q cohort and recovered from the only run-era configuration path for the N cohort\citep{lu2022dpm}. Historical diffusion noise was redrawn by the same episode seed at each call, reproducing one draw per episode. Repeated saved IG sums sometimes differ despite identical endpoint gaps.
+
+R1 pins weights, encoders, upstream code and runtime, with observation images, proprioception, fp32 noise, reference actions, masks, predicted actions, rankings and run configuration preserved. Four RTX PRO 6000 machines used Python 3.12.3 and torch 2.8.0+cu128. A fresh machine in another data center, following only the regeneration kit, reproduced 596 maps and 2,466 areas for one context bit for bit, using identified and anonymous code. Two further contexts originally computed on other machines also matched. This establishes the tested regeneration route, not universal hardware independence.
+
+\subsection{Targets, features and numerical estimators}
+
+Fix context $c$, model, noise and other modalities. Let $g(u)$ predict the active action chunk when one modality is replaced by $u$; $x$ is its actual input, $x'$ its baseline and $a=g(x)$ the fixed reference. The chunk has 64 timesteps and eight active action coordinates, so $d_a=512$. ManiSkill3\citep{tao2024maniskill3} executes every fourth action, up to 16 steps per call and 400 steps per episode. Define
+\begin{equation}
+ r(u)=\|a-g(u)\|_2^2,\qquad Q(u)=-\frac{r(u)}{2d_a},\qquad N(u)=-\sqrt{r(u)+\epsilon},\quad\epsilon=10^{-12}.
+\label{eq:targets}
+\end{equation}
+Q is an auxiliary discrepancy, not a policy log likelihood. The reference is computed once with fixed noise. Figure~\ref{fig:r1-design} separates attribution from scoring.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures_revision/pipeline.pdf}
-\caption{\textbf{Ranking and scoring are separate choices.} Q is the quadratic action-discrepancy function and N its stabilized norm counterpart (Equation~\ref{eq:targets}). IG ranks feature groups using one target. The scoring stage covers both the interventions and their response curves: either response can score the same predicted actions. Rescoring keeps the observation, reference action, diffusion noise, ranking and interventions fixed.}
-\label{fig:pipeline}
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_design.pdf}
+\caption{\textbf{Attribution target and evaluation response are separate choices.} \textbf{A)} A fixed context produces rankings and intervention actions; Q or N can score the same actions. \textbf{B)} Responses in the zero-stabilizer limit: Q minus N is nonnegative in range and negative beyond the all-baseline residual. \textbf{C)} Exact-IG shares, divided by each target's endpoint gap, reverse order in a constructed two-feature action map. This is not an observed PickCube ranking reversal.}
+\label{fig:r1-design}
 \end{figure}
 
-Attribution covers 64 predicted timesteps and eight action dimensions, so $d_a=512$. RDT places each robot's actions and states in a shared, padded 128-dimensional representation; ``active'' coordinates are the eight this robot uses, and the active action chunk consists of these eight coordinates at every predicted timestep. Our \mbox{ManiSkill3}\citep{tao2024maniskill3} evaluation executes every fourth action: 16 per call and 25 calls give 400 environment steps. The headline task, PickCube, moves a cube to a target. A separate numerical collection covers PickCube (cube placement), \mbox{StackCube} (stacking), \mbox{PegInsertionSide} (peg insertion) and \mbox{PickSingleYCB} (household-object pickup).
+Vision groups are 729 adapted patch tokens from one external image; five other camera slots remain fixed backgrounds. Replacement uses matching adapted tokens from a gray image. SigLIP\citep{zhai2023siglip} and T5-XXL\citep{raffel2020t5} supply image and language representations. Language attribution operates after the adaptor over attended token positions; replacement does not rerun the encoder. Q-ranked historical runs used encoded padding/end-of-sequence tokens; N-ranked runs used the authors' precomputed embedding with a zeroed placeholder baseline. State groups are eight active normalized coordinates, differentiated through the state adaptor against zero. Baselines are comparisons, not unique neutral inputs\citep{sturmfels2020visualizing}; representation-space paths need not encode valid language\citep{sanyal2021discretized}.
 
-\subsection{The function being explained}
-
-Fix context $c$: model, diffusion noise and other modalities. Let $\mathcal{M}$ denote vision, language or state, with input representation $x$ and baseline $x'$. Let $g_{c,\mathcal{M}}(u)$ predict the active action chunk after replacement by $u$, with reference $a_c=g_{c,\mathcal{M}}(x)$ computed once.
-
-Define
+For target $F$, IG and the historical endpoint-inclusive estimator are
 \begin{equation}
-\begin{aligned}
-r(u)&=\|a_c-g_{c,\mathcal{M}}(u)\|_2^2,\\
-Q(u)&=-\frac{r(u)}{2d_a},\qquad
-N(u)=-\sqrt{r(u)+\epsilon},\qquad \epsilon=10^{-12}.
-\end{aligned}
-\label{eq:targets}
-\end{equation}
-Either function can be the attribution target or scoring response. Both reward proximity to the reference in action coordinates. Q is an auxiliary discrepancy score, not a policy log likelihood. Q's magnitude grows with squared residual, whereas $|N|$ grows approximately with its square root when $r$ is large compared with $\epsilon$. At the actual input,
-\[
-Q(x)=0,\qquad N(x)=-\sqrt{\epsilon}.
-\]
-Both gradients vanish there. A positive constant multiplier changes neither exact absolute-coordinate rankings nor endpoint-normalized AUC.
-
-Fixed noise makes the attributed mapping one function along the path. Redrawing noise would change that function. Averaging over noise requires a different target and sampling procedure; interpreting the discrepancy as a distance between action distributions requires further assumptions\citep{zhang2026embodied}.
-
-\subsection{Features, baselines, and Integrated Gradients}
-
-RDT encodes inputs as tokens; a group contains coordinates replaced together. SigLIP image and T5-XXL language encoders feed adaptors mapping outputs into policy representations\citep{liu2024rdt}. Vision attribution follows the adaptor, with 729 patch-token groups from one external camera. Deleted tokens receive adapted tokens at matching positions from a uniform gray image. Five other camera slots remain fixed background images.
-
-Language groups are token positions retained by the attention mask after the encoder and language adaptor. Their count was not preserved in the saved curve records. A deleted position receives its matching adapted baseline token. The baseline encodes padding and end-of-sequence tokens, pads the encoder output with zeros, then applies the adaptor, so its adapted value need not be zero. The encoder is not rerun after replacement; other tokens can retain information from the removed position. Baselines specify a comparison rather than a uniquely neutral input\citep{sturmfels2020visualizing}, and straight paths between language representations need not correspond to valid text\citep{sanyal2021discretized}.
-
-State uses the eight active coordinates of the normalized 128-dimensional representation, each its own feature group, with a zero baseline and differentiation through its adaptor. Saved PickCube rescoring covers only vision and language; separate numerical diagnostics include state.
-
-For target $F\in\{Q,N\}$, coordinate $i$ has attribution
-\begin{equation}
-A_i^F=(x_i-x'_i)\int_0^1\partial_i F(x'+\alpha(x-x'))\,d\alpha.
+ A_i^F=(x_i-x_i')\int_0^1 f_i(\alpha)\,d\alpha,\qquad
+ E_{i,m}=\frac{x_i-x_i'}{m+1}\sum_{j=0}^{m}f_i(j/m),
 \label{eq:ig}
 \end{equation}
-Under the chain rule and path integrability, completeness gives $\sum_i A_i^F=F(x)-F(x')$. This total is $r(x')/(2d_a)$ for Q and $\sqrt{r(x')+\epsilon}-\sqrt{\epsilon}$ for N. Vision and language groups are ranked by the sum of absolute coordinate attributions within each group.
-
-With $m$ intervals, $m+1$ evaluations and $f_i(\alpha)=\partial_iF(x'+\alpha(x-x'))$, the saved PickCube runs used the endpoint-inclusive average
+where $f_i(\alpha)=\partial_i F(x'+\alpha(x-x'))$. The trapezoidal estimate $T_{i,m}$ gives half weight to endpoints\citep{trefethen2014trapezoidal}; exactly,
 \begin{equation}
-A_{i,m}^{\mathrm{avg}}=(x_i-x_i')\frac{1}{m+1}\sum_{j=0}^{m}f_i(j/m).
-\label{eq:endpoint-average}
+ E_{i,m}=\frac{mT_{i,m}+(x_i-x_i')[f_i(0)+f_i(1)]/2}{m+1}.
+\label{eq:endpoint}
 \end{equation}
-The numerical sample uses the composite trapezoidal rule,
-\begin{equation}
-A_{i,m}^{\mathrm{trap}}=\frac{x_i-x_i'}{m}
-\left[\frac{f_i(0)+f_i(1)}2+\sum_{j=1}^{m-1}f_i(j/m)\right].
-\label{eq:trapezoid}
-\end{equation}
-The trapezoidal rule is second-order accurate for sufficiently smooth integrands\citep{trefethen2014trapezoidal}. The endpoint-inclusive average equals $m/(m+1)$ times that estimate plus $(x_i-x_i')[f_i(0)+f_i(1)]/[2(m+1)]$, giving a generally first-order endpoint correction. Here ``order'' describes how error decreases as the interval count grows. Positive $\epsilon$ makes N smooth for a smooth action map, but its narrow transition near zero can remain unresolved at practical budgets. The saved runs used $m=64$, brain floating point 16 (bf16), and zero replacement of nonfinite gradients; the replacement frequency was not recorded. The implementation for the saved PickCube runs and the numerical collection specifies five-step DPM-Solver++ sampling, with gradients through every denoising step and noise held fixed within each attribution. The saved PickCube curves lack run configurations; the Q-ranked episode records store five solver steps, and for the N-ranked runs the step count is inferred from the default configuration.
+This endpoint term can cause first-order error. Historical $m=64$ bf16 runs replaced nonfinite gradients with zero without counting them. The numerical accuracy of the saved headline rankings is unverified.
 
-\subsection{Interventions and scoring}
-\label{sec:scoring}
+R1 compares the historical kernel A0; bf16 forward/fp32 accumulation A1; fp32 forward A2; Gauss-Legendre A3 with 32, 64 and 128 nodes; and adaptive Gauss-Kronrod A4. A1/A2 share 513 nodes, yielding nested trapezoidal and endpoint-inclusive rules through 512 intervals and midpoint rules through 256. A2 covers 12 P contexts and the 21 preserved contexts. Nonfinite values are counted at every evaluated node, never replaced. A1 T512 is a finite-budget comparator. An fp32 reference is qualified only when A4 converges and A4, GL128 and A2 T512 agree pairwise within relative L1 error $10^{-3}$.
 
-We compare responses on the same interventions. Let $G$ count eligible groups (the camera patches, attended language positions or, in the numerical sample, state coordinates defined above), and let $P_k$ mask the first $k$ ranked groups, expanded over their coordinates. With $\odot$ denoting coordinatewise multiplication, insertion and deletion inputs are
+\subsection{Interventions, calibration and statistics}
+
+Insertion restores groups from baseline; deletion replaces groups in the actual input. Group scores sum absolute attribution coordinates; mean path gradients omit the IG input-difference factor. With $B=r(x')>0$, normalization and the paired response difference are
 \begin{equation}
-x_k^{\mathrm{ins}}=x'+P_k\odot(x-x'),\qquad
-x_k^{\mathrm{del}}=x-P_k\odot(x-x').
-\label{eq:interventions}
-\end{equation}
-For response $S\in\{Q,N\}$, endpoint normalization gives
-\begin{equation}
-C_S(u)=\frac{S(u)-S(x')}{S(x)-S(x')}.
+ C_S(u)=\frac{S(u)-S(x')}{S(x)-S(x')},\qquad
+ \Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N.
 \label{eq:normalization}
 \end{equation}
-This assigns zero to the all-baseline input and one to the actual input. Self-reference gives $r(x)=0$ by definition; we check it because records were stored in finite precision. Write $B=r(x')>0$ for the all-baseline squared residual. An intervention is in range if $0\le r(u)\le B$ and an overshoot if $r(u)>B$. A curve is fully in range if every saved point is in range. An undershoot below zero is impossible in exact arithmetic; its check guards against roundoff.
+An overshoot moves the prediction farther from the reference action than the all-baseline input, so $r>B$. Normalization is undefined for $B=0$. AUC uses trapezoidal weights over intervention fractions; larger insertion and smaller deletion areas are conventionally favored.
 
-Area under the curve (AUC) integrates normalized values over the fraction of groups intervened on. Higher insertion AUC and lower deletion AUC are conventionally better. The saved nominal fractions are 0, 1, 5, 10, 20, 30, 50, 75 and 100\%. For $0=q_0\le\cdots\le q_J=1$, with $J=8$ fraction intervals and integer group count $k_j$ at fraction $q_j$, we use
-\begin{equation}
-\mathrm{AUC}_S=\sum_{j=1}^{J}\frac{q_j-q_{j-1}}2
-\left[C_S(x_{k_j})+C_S(x_{k_{j-1}})\right].
-\label{eq:auc}
-\end{equation}
-Actual fractions $k_j/G$ can differ from the nominal schedule; the realized masks and rounding rule were not preserved with these curves. In all 3,000 language curves, the saved response values at 1\% and 5\% are equal, without establishing mask identity. Both responses use the same nominal AUC weights. Dropping the 1\% node moves median language paired differences by at most \LanguageMedianSensitivity{}; for fully in-range calls, the paired change is bounded by \LanguageInRangeBound{} (Appendix~\ref{sec:response-proof}).
+The saved nominal schedule is 0, 1, 5, 10, 20, 30, 50, 75 and 100\%. Historical intermediate group counts use $k=\max(1,\mathrm{round}(Gp/100))$, with ties rounded to even. Pinned tokenization gives G=20, 30, 25 and 16 for PickCube, StackCube, PegInsertionSide and PickSingleYCB. Thus 1\% and 5\% select one group for G=16,20,25; all 3,000 headline language curves have equal saved responses there. No such equality occurs in the 800 StackCube curves. This recovers the rule, not missing historical masks. Saved analyses retain nominal weights; R1 uses preserved masks and realized fractions, with nominal-axis sensitivity results.
 
-The paired response effect is
-\begin{equation}
-\Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N.
-\label{eq:paired-change}
-\end{equation}
-Positive $\Delta$ means scoring with N lowers that AUC. Ranking, interventions, predicted actions, baseline and schedule remain fixed within each pair. The median of paired differences need not equal the difference of the two marginal medians.
+R1 ranks seven methods: Q/N IG and Q/N mean path gradient (PG) at A1 T512, input difference, and historical Q/N IG at A0m64. Controls are 32 random vision orders, 64 language orders and the exact random-order average for eight state groups, plus raster/reverse/centre-out vision orders, forward/reverse token orders and forward/reverse joint orders. Advantage is method-minus-random AUC for insertion and random-minus-method for deletion. Preferred means highest episode-mean advantage on common complete cases. Subtracting one common reference cannot reorder methods within a response. We therefore compare response choice, random-SD z-scaling, population and illustrative 0.4/0.5 deletion bars separately.
 
-\subsection{Data sources and claim dependencies}
+Episode percentile bootstrap uses 10,000 draws. Seven primary P vision-deletion contrasts use Bonferroni alpha 0.05/7; best-minus-second intervals use 0.05/4 across response/direction cells. Other intervals are descriptive. Best-method ties remain undetermined. Coverage was simulated before unblinding. The plan and amendments precede their governed results. Historical rescoring intervals use seed 0 and R1 seed 930011; neither captures training-run, checkpoint or wider task variation. We retain all finite tails and all eight dependent headline cases; emphasis on medians and positive shares was chosen retrospectively.
 
-The saved PickCube runs contain response curves and episode records. One cohort used Q to rank features and the other used N; we call them Q-ranked and N-ranked. Both are recorded as the same pretrained \mbox{RDT-170M} without PickCube fine-tuning; the original checkpoint file was not preserved. \mbox{RDT-170M} is the publicly released 170-million-parameter small variant of RDT\citep{rdt170mrelease}. \mbox{RDT-1B} names the larger, billion-parameter model\citep{liu2024rdt}. Each cohort contains \RescoreEpisodes{} episodes with \CallsPerEpisode{} calls, using environment-seed blocks 42 and 142 with 15 episodes each. These are environment seeds, not training runs. Every episode reaches the 400-step, 25-call cap without success.
+\subsection{Diagnostic scope and ethics}
 
-Shared environment seeds and episode indices give the same seeded initial-state setup. Yet vision $B$ differs in all \CohortUnequalBaselines{} aligned calls. Its cross-cohort log correlation is \CohortInitialCorrelation{} at call 0, drops to 0.289 by call 2, then varies between about 0.4 and 0.8, ending at \CohortFinalCorrelation{} at call 24. Similar vision summaries thus come from related trajectories. Missing original contexts prevent assigning differences to particular inputs or noise. The cohorts support separate response comparisons under different ranking targets, not a comparison of ranking quality.
+Completeness measures $|\sum_iA_i-[F(x)-F(x')]|/|F(x)-F(x')|$; coordinate change compares relative L1 maps, and ranking comparisons use Spearman, top-group overlap and intervention-mask Jaccard. We separately recompute normalized-AUC changes with one common scoring forward. Zero denominators remain undefined. The 1\% completeness and 0.01 AUC-change criteria are study-specific diagnostics, not accuracy guarantees. RMS discrepancy is also retained in physical response units; its unstabilized normalized area equals N's unstabilized area and supplies no independent normalized metric.
 
-Both full-episode PickCube cohorts passed the rescoring procedure described below. A separate short verification set, distinct from the numerical collection, retains only calls 0--3 (0--6 for PegInsertionSide) on four tasks and is not rescored because it covers only early calls, a different population from full episodes. Full-episode $m=128$ PegInsertionSide/\mbox{PickSingleYCB} and fine-tuned \mbox{RDT-1B} runs each use one ranking target and remain unprocessed by this procedure. A single target still permits rescoring, a direct next test. \mbox{RDT-1B} language baselines differ across seeds, so only their vision curves are comparable across seeds. Records from a third ranking target, maximum coordinate deviation, are excluded because their stored scores cannot recover squared residuals. Table~\ref{tab:sources} links sources to claims.
-
-\begin{table}[htbp]
-\caption{\textbf{Data sources support distinct claims.} Saved PickCube runs supply both ranking cohorts. Success refers to the robot task. Numerical diagnostics test the separately specified offline function.}
-\label{tab:sources}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{.19\linewidth}>{\raggedright\arraybackslash}p{.36\linewidth}>{\raggedright\arraybackslash}X@{}}
-\toprule
-Source & Inputs and scope & Supported claim and dependency\\
-\midrule
-Analytic results & Defined functions, paths and integration nodes. & Response ordering, target reversal and limits of sampled integration under stated assumptions.\\
-Saved PickCube runs & Each cohort: \RescoreCalls{} calls, \RescoreEpisodes{} episodes, two environment-seed blocks, zero successes. \mbox{RDT-170M}, $m=64$, bf16. & Within-curve response effects and overshoots from saved response values, endpoints and nominal fractions. Original noise was not preserved.\\
-Numerical sample & Separate collection capped at 13 calls per episode; \NumericalComplete{} completed contexts from \NumericalEpisodes{} episodes across four tasks with \mbox{RDT-170M}. & Repeatability and budget sensitivity of an offline fp32 function, using this collection's preserved noise and encoder outputs.\\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Each cohort stored curves scored with its own ranking function. We recover $r=-2d_aQ$ or $r=N^2-\epsilon$ from those values, then recompute both responses, endpoints and AUCs. N-ranked actual-input endpoints store approximately $-10^{-6}$, whose inversion gives a tiny negative residual from roundoff. Only this actual-input residual, zero by definition, is set to zero; Q-ranked endpoints give zero directly. No intervention point undershoots, and all calls have $B>0$. We remove 24 duplicate records that differ only in timing, leaving every distinct saved call.
-
-\subsection{Descriptive statistical analysis}
-
-The response identity predicts a nonnegative per-call difference for fully in-range curves. Medians and positive-call shares describe the typical effect, while means retain its tail magnitude. We chose this emphasis after examining the data. We report all eight combinations of cohort, modality and direction, which reuse observations and are dependent.
-
-Descriptive 95\% percentile intervals use \BootstrapDraws{} whole-episode bootstrap samples with seed 0. Equal-episode and equal-call means coincide because every episode has \CallsPerEpisode{} calls. Intervals describe logged episodes, not independently trained models. We split means into AUC-weighted in-range and overshoot contributions and count single-episode omissions preserving their sign. No finite AUC or paired-difference values are clipped or trimmed.
-
-\subsection{Numerical diagnostic procedure}
-
-The numerical sample tests a separate offline RDT function recomputed in 32-bit floating point (fp32) from cached encoder outputs. Weights and adapted image/language values retain bf16-rounded values lifted to fp32; state is readapted in fp32. Its source is a separate collection capped at 13 policy calls per episode, which preserved noise. A new reference action is computed with that noise held fixed. Calls 0 and 12 were selected prospectively to cover the initial and later portions of this short collection. Of \NumericalPlanned{} planned contexts, including \NumericalPlannedOneB{} for \mbox{RDT-1B}, \NumericalComplete{} are complete, 9 unfinished and 3 have selected calls that were never reached.
-
-IG budgets are 128, 256 and 512 intervals for vision and language, and 256, 512 and 1,024 for state. Finest maps were computed twice; gradients were evaluated three times at seven fixed path positions. Equality checks compare repeated gradients, maps and responses; coverage checks require the planned positions, budgets, repeats and response comparisons to be present. These are dependent checks on the same contexts. Using the trapezoidal estimator $A_{i,m}=A_{i,m}^{\mathrm{trap}}$, the relative completeness residual $E_m$ and relative coordinate change $D_m$ are
-\begin{equation}
-E_m=\frac{|\sum_i A_{i,m}-(F(x)-F(x'))|}{|F(x)-F(x')|},\qquad
-D_m=\frac{\|A_m-A_{2m}\|_1}{\|A_{2m}\|_1}.
-\label{eq:diagnostics}
-\end{equation}
-Comparisons cover all three pairs of budgets: the two adjacent pairs, as in Equation~\ref{eq:diagnostics}, and the smallest with the largest budget, for which the largest budget's map replaces $A_{2m}$ in $D_m$. Zero denominators are undefined. The numerical sample also scores curves with the root-mean-square action discrepancy $\mathrm{RMS}(u)=(r(u)/d_a)^{1/2}$, whose endpoint-normalized curve, when $B>0$, equals that of N with $\epsilon=0$. Absolute endpoint changes at or below $10^{-12}$ for Q, or $10^{-8}$ for N and RMS, are flagged near-zero. A budget selected for final use would require a relative completeness residual at most 1\% when its endpoint change exceeds the cutoff; none is selected here. Mean path-gradient maps omit the IG factor $x-x'$. Both map comparisons require relative coordinate $L_1$ change at most 1\%, Spearman at least 0.99 for nonconstant group scores, and top-five-percent overlap at least 0.95, replaced by matching top-one for an empty subset. Maximum RMS-curve and absolute raw RMS-area changes must be at most 1\% and 0.5\% of all-baseline RMS, respectively. Absolute normalized-AUC changes must be at most 0.01 under each common Q, N or RMS response when its endpoint gap exceeds the cutoff; Section~\ref{sec:numerical-results}'s examples use Q. These are sensitivity criteria, not exact-IG error bounds. Budget-check violations count all failed comparisons and recorded completeness-threshold failures, including at coarse budgets. Finest-pair counts include a context when any IG or mean path-gradient comparison between its two largest budgets fails.
-
-\subsection{Ethical considerations}
-
-This study used simulated robot policies and saved numerical records. There were no human or animal subjects.
+The earlier offline fp32 sample is separate: 12 completed RDT-170M contexts per modality and target, six episodes across four tasks, no completed RDT-1B context. Its cached function and budget comparisons demonstrate possible failures, not their prevalence in the original rankings or diffusion policies generally. Full check results remain archived. All experiments use simulation; no human or animal subjects were involved and no IRB approval was required.
 
 \section{Results}
 
-\subsection{Scoring with N instead of Q cannot increase in-range AUC}
+\subsection{Response identity and saved-curve effects}
 
-For squared residual $r$, Equation~\ref{eq:normalization} gives
+Under exact self-reference, Equation~\ref{eq:normalization} gives
 \begin{equation}
-\begin{aligned}
-C_Q(r)&=1-r/B,\\
-C_N(r)&=\frac{\sqrt{B+\epsilon}-\sqrt{r+\epsilon}}{\sqrt{B+\epsilon}-\sqrt{\epsilon}},\\
-C_Q(r)-C_N(r)&=\frac{(\sqrt{r+\epsilon}-\sqrt{\epsilon})(\sqrt{B+\epsilon}-\sqrt{r+\epsilon})}{B}.
-\end{aligned}
-\label{eq:response-identity}
+ C_Q-C_N=\frac{(\sqrt{r+\epsilon}-\sqrt\epsilon)(\sqrt{B+\epsilon}-\sqrt{r+\epsilon})}{B}.
+\label{eq:identity}
 \end{equation}
-The difference is positive for $0<r<B$, zero at endpoints and negative at overshoots (Figure~\ref{fig:mechanism}). Thus N cannot increase either fully in-range AUC, and the decrease is strict if some point with positive AUC weight has $0<r<B$. Curve monotonicity is unnecessary. As $\epsilon\to0$, setting $t=r/B$ gives $C_Q=1-t$ and $C_N=1-\sqrt t$. More generally, an increasing convex rescaling lies below the normalized endpoint chord in range; N is such a rescaling of Q. A strict decrease makes the fixed ranking look worse by insertion and better by deletion.
+The difference is positive for $0<r<B$, zero at endpoints and negative at overshoots. Nonnegative AUC weights therefore imply $\Delta\ge0$ for fully in-range curves, strictly when an interior residual receives positive weight. Lowering AUC favors deletion but disfavors insertion for the same ranking. The pointwise upper bound is 1/4; endpoint weights tighten the saved-schedule bound to 0.2175. These statements do not depend on IG accuracy.
+
+For an additive equal-feature policy, Q introduces interactions through squaring. At 100 features, every ordering gives AUC 0.65976 on the saved schedule, versus 0.5 for unstabilized N. These are analytic reference values, not measured RDT controls. Hama's interaction-dependent expectation explains why a universal 0.5 reference is inappropriate; 0.40 remains illustrative.
+
+The eight positive paired medians, \PairedMedianMin{} to \PairedMedianMax{}, quantify a response shift whose in-range direction was already predicted. Positive shares range from \PositiveShareMin{}\% to \PositiveShareMax{}\%, while overshoots occur in \OvershootShareMin{}\% to \OvershootShareMax{}\% of calls (Figure~\ref{fig:r1-saved-geometry}; Table~\ref{tab:r1-saved-summary}). Six means are negative. Q-ranked vision insertion has mean $-17.10$ but median 0.104; first calls contribute $-16.92$ on the same 750-call denominator. Neither cohort establishes ranking superiority.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures_revision/response_mechanism.pdf}
-\caption{\textbf{\boldmath The response difference $C_Q-C_N$ changes sign at overshoot.} \textbf{A)} Normalized responses versus $r/B$, with $B=1$, $\epsilon=10^{-12}$. Rug: saved nodes from the Q-ranked vision-insertion call nearest the median difference. \textbf{B)} Extreme call from Section~\ref{sec:overshoots}; negative values mark overshoot. Blue: Q; orange: N. The symmetric logarithmic scale is linear for $|C_S|\le1$.}
-\label{fig:mechanism}
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_saved_geometry.pdf}
+\caption{\textbf{Typical response shifts coexist with extreme negative tails.} \textbf{A)} All eight headline cases on a symmetric-log scale, linear for $|\Delta|\le0.25$ and logarithmic beyond it, preserving sign. \textbf{B)} Values in $[-0.05,0.25]$ and outside-range counts. Diamonds mark medians. \textbf{C)--D)} All case calls against baseline residual B and maximum interior residual/B; triangles identify first calls. Each case has 750 calls; repeated observations are dependent. No tail is removed from summaries. Geometry is descriptive.}
+\label{fig:r1-saved-geometry}
 \end{figure}
+\input{tables_revision/r1_saved_summary.tex}
 
-The pointwise difference is at most $1/4$, including at overshoots, which only lower it. Consequently every defined saved curve satisfies the pointwise-derived bound $\Delta\le1/4$. On the nine-point schedule, zero endpoint differences carry 13\% of the AUC weight, giving the tighter schedule bound \ScheduleDifferenceBound{} (Appendix~\ref{sec:response-proof}). Fully in-range curves additionally have $\Delta\ge0$. These results hold for any fixed ranking, independently of how accurately IG was computed.
+The intervals in Table~\ref{tab:r1-saved-summary} describe variation among recorded episodes only. Outside-range counts in Figure~\ref{fig:r1-saved-geometry} prevent the central panel from hiding tails. Vision B's N-ranked 5th--95th percentile range is 2.914--80.798, correcting the previous rounded upper endpoint. Across 6,000 headline and 4,796 RDT-1B case calls, no $\Delta<-1$ call has maximum interior residual below 2B; every $\Delta<-100$ call has ratio above 100 and B below 1. Among overshooting calls, rank correlations between Delta and this ratio range from $-0.56$ to $-0.98$. Small denominators and large intervention residuals are consistent with the tail mechanism; out-of-distribution mixing remains an untested explanation.
 
-A random-order reference is the expected AUC of a random feature ordering, often assumed to be 0.5. Consider an additive scalar policy summing $n$ equal input features, with all-one input and zero baseline. For $n=100$, every ordering gives insertion and deletion AUC about 0.660 under Q on the nine-point schedule, versus 0.5 under N with $\epsilon=0$. On all $n+1$ whole-feature fractions, both quadratic AUCs are $2/3-1/(6n^2)$. Squaring the discrepancy creates interactions even for an additive policy\citep{hama2023deletion}. These are analytic calibration values, not measured random rankings on RDT (Appendix~\ref{sec:random-calibration}). Subtracting them from the opening deletion medians would put both about 0.21 below their respective references. That arithmetic illustrates why an absolute-bar flip need not survive response-matched calibration, and why the actual reference must be measured for each response.
+\subsection{Successful episodes and additional tasks}
 
-\subsection{Saved curves show a substantial response-only shift}
-
-Within the Q-ranked cohort, changing only the response from Q to N lowers median vision-deletion AUC from \RescoreQDeletionQ{} to \RescoreQDeletionL{}. Within the N-ranked cohort, changing from N to Q raises it from \RescoreLDeletionL{} to \RescoreLDeletionQ{}. Both show a substantial change while the ranked interventions remain fixed.
-
-All eight paired medians are positive, from \PairedMedianMin{} to \PairedMedianMax{}, and \PositiveShareMin{}\% to \PositiveShareMax{}\% of calls have positive differences (Figure~\ref{fig:paired}). In each cohort, these shifts are comparable to the roughly 0.16 shift that a response change gives every ordering of the additive calibration. Fully in-range calls account for \FullyInRangeShareMin{}\% to \FullyInRangeShareMax{}\% across cases; all are positive in these data. Among calls with an overshoot, \OvershootPositiveShareMin{}\% to \OvershootPositiveShareMax{}\% still have positive differences. These measured proportions, together with the identity, explain the positive medians.
-
-First-call vision-insertion medians are $\QVisionInsertionFirstMedian{}$ for Q-ranked and $\NormVisionInsertionFirstMedian{}$ for N-ranked calls, whereas both later-call medians are positive. The largest positive difference, about \MaxPositiveChange{}, reaches \MaxPositiveBoundPercent{}\% of the schedule bound. Among fully in-range Q-ranked vision-insertion calls, the middle half of paired differences spans \QVisionInsertionInRangeQuartileLow{} to \QVisionInsertionInRangeQuartileHigh{}: the response shift is not a constant offset.
+Historical RDT-1B PickCube supplies 60 episodes and 1,199 calls: 15 successful episodes contribute 74 calls, and 45 failed episodes contribute 1,125. Vision insertion medians are 0.0653 and 0.0868, respectively; deletion medians are 0.0747 and 0.1035. Both groups remain positive, but the successful-call sample is small (Figure~\ref{fig:r1-success-tasks}). Insertion overshoot shares are 24.3\% for successes and 29.0\% for failures; deletion shares are 41.9\% and 31.6\%. Minimum insertion differences are $-2.35$ and $-57.72$, and deletion minima $-0.347$ and $-74.46$. Success therefore does not remove overshoots, although these saved failure groups contain more extreme negative calls. Language stays separated by seed because baselines differ. The two extra saved tasks each contain 16 unsuccessful episodes and 400 calls. PegInsertionSide vision insertion/deletion medians are 0.0990/0.1152; PickSingleYCB values are 0.0954/0.1405. PegInsertionSide's insertion mean is $-3.54$, retaining the overshoot tail.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures_revision/paired_effects.pdf}
-\caption{\textbf{Positive typical shifts coexist with long negative tails.} Each row uses \RescoreCalls{} saved PickCube calls from \RescoreEpisodes{} episodes. Row prefixes identify Q-ranked and N-ranked cohorts. Positive differences lower AUC under N, making insertion look worse and deletion better. \textbf{A)} All calls on a symmetric logarithmic scale, linear for $|\Delta|\le0.25$. \textbf{B)} The window $[-0.05,0.25]$; every outside value lies to the left, with counts shown there. Black diamonds mark medians; blue and orange identify Q-ranked and N-ranked cohorts.}
-\label{fig:paired}
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_success_tasks.pdf}
+\caption{\textbf{Response shifts in successful episodes and additional tasks.} \textbf{A)} Vision insertion. \textbf{B)} Vision deletion. Circles show historical RDT-1B and extra-task paired medians with descriptive 95\% episode-bootstrap intervals. Diamonds show new B1 Q-target T512 IG medians without intervals. Displayed episode and call counts define each population. Historical and new groups remain separate; the new failed-episode deletion median is negative. These comparisons do not establish an effect on robot success.}
+\label{fig:r1-success-tasks}
 \end{figure}
 
-\subsection{Overshoots can dominate means through extreme calls}
-\label{sec:overshoots}
+New B1 succeeds in 31 of 40 episodes; P succeeds in none of 60 and S in none of 30. Thus the substantial R1 success comparison rests on B1's 31 successes and nine failures. For Q-target A1 T512 IG, B1 insertion medians are 0.0616 (success) and 0.0913 (failure); deletion medians are 0.0212 and $-0.00858$. Unlike the historical split, the new failed-episode deletion median is negative. These new inputs extend the empirical scope without retrospectively validating the original unsuccessful cohorts.
 
-Overshoot points occur in \OvershootShareMin{}\% to \OvershootShareMax{}\% of calls. The in-range contribution is nonnegative by construction, but negative overshoot contributions reverse six of eight means despite positive medians (Table~\ref{tab:paired}). Three negative means have 95\% episode-bootstrap mean intervals entirely below zero: Q-ranked vision insertion $[-33.82,-3.97]$, N-ranked vision insertion $[-37.87,-3.17]$, and Q-ranked language insertion $[-0.405,-0.028]$. The other three negative means have intervals spanning zero: Q-ranked language deletion $[-0.102,0.063]$, N-ranked language insertion $[-0.096,0.027]$, and N-ranked language deletion $[-4.208,0.078]$. Vision-insertion differences below $-100$ occur in the same \SharedExtremeEpisodes{} of 30 episodes in both cohorts. These extreme episodes drive the vision-insertion mean intervals, so the two cohorts are not independent evidence for this tail.
+\subsection{Matched attribution methods and calibration}
 
-\begin{table}[htbp]
-\centering
-\caption{\textbf{Typical response effects and tail contributions differ.} All cases use the saved PickCube runs and $\Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N$; positive values mean scoring with N lowers that AUC. \textbf{A)} Paired median, descriptive 95\% episode-bootstrap interval, positive-call share and share of calls with any overshoot. \textbf{B)} Equal-episode mean, in-range and overshoot contributions, and single-episode omissions preserving the mean's sign. Values are rounded independently.}
-\label{tab:paired}
-\input{tables_revision/paired_results.tex}
-\end{table}
-
-For Q-ranked vision insertion, the mean is $\QVisionInsertionMean{}$ but the median is \QVisionInsertionMedian{}. Its in-range contribution is \QVisionInsertionInRange{} and overshoot contribution $\QVisionInsertionOvershoot{}$. Figure~\ref{fig:mechanism}B shows an extreme call with $B\approx0.0174$ and maximum squared residual about 653, a ratio of about 37,500. Q and N AUCs are about $-4{,}465$ and $-26$, producing a paired change near $-4{,}439$. The N-ranked vision-insertion minimum is about $-5{,}243$.
-
-First calls are only 30 of 750 calls per cohort, yet contribute $\QVisionInsertionFirstContribution{}$ to the $\QVisionInsertionMean{}$ Q-ranked vision-insertion mean and $\NormVisionInsertionFirstContribution{}$ to the $\NormVisionInsertionMean{}$ N-ranked mean. The 720 later calls contribute $\QVisionInsertionLaterContribution{}$ and $\NormVisionInsertionLaterContribution{}$, respectively, on the same 750-call denominator. First calls supply \QVisionInsertionFirstTailShare{}\% and \NormVisionInsertionFirstTailShare{}\% of the negative overshoot contributions. All first-call vision-deletion curves overshoot, versus \NormVisionDeletionLaterOvershootShare{}\% to \QVisionDeletionLaterOvershootShare{}\% of later calls. First calls also contribute $\NormLanguageDeletionFirstContribution{}$ to the N-ranked language-deletion mean, while later calls contribute $+\NormLanguageDeletionLaterContribution{}$. The negative tail is concentrated in initial calls for these cases.
-
-For scale, vision $B$ has medians \QVisionBaselineMedian{} and \NormVisionBaselineMedian{} in the Q-ranked and N-ranked cohorts, with 5th--95th percentile ranges about 2.7--69 and 2.9--82. In each cohort, 14 of the 30 first calls have $B<0.5$, accounting for 14 of 17 such calls overall. The six most negative Q-ranked vision-insertion calls are all first calls. In these data, small $B$ is necessary but not sufficient for an extreme call: every vision-insertion call with $\Delta$ below $-100$ has $B<0.5$, yet only 7 (Q-ranked) and 8 (N-ranked) of the 17 small-$B$ calls per cohort fall that low. Their largest intermediate squared residuals lie between 191 and 825, whereas those of the other small-$B$ calls are at most 8.4. Partially inserted inputs mix baseline and actual representations and may lie outside typical policy inputs\citep{hooker2019roar,rong2022road}, which could produce such residuals. Why roughly half of initial states have such a small $B$ remains open; poor competence is one hypothesis. Neither explanation is tested here.
-
-Table~\ref{tab:paired}B's \emph{Same sign} count measures sensitivity to dropping one episode, not uncertainty or the first-call pattern. Every insertion mean stays negative under each omission. N-ranked language insertion does so 30 times even though its mean interval spans zero. Language-deletion means change sign in three Q-ranked and one N-ranked omission. Medians, signs and means therefore answer different descriptive questions.
-
-\subsection{Changing the target can reverse exact IG rankings}
-
-Changing the target poses a different problem even for exact integration. Where gradients exist,
-\begin{equation}
-\nabla Q(u)=\frac{\sqrt{r(u)+\epsilon}}{d_a}\nabla N(u).
-\label{eq:path-weight}
-\end{equation}
-The factor varies along the path and reweights coordinate contributions. For $g(x_1,x_2)=x_1^2+\tfrac45x_2$, baseline $(0,0)$, input $(1,1)$, reference $9/5$ and $d_a=1$, exact Q attributions are $(23/30,64/75)$, ranking feature 2 first. N ranks feature 1 first by about 0.2 (Figure~\ref{fig:toys}A; Appendix~\ref{sec:reversal-proof}). In this example, Q's weight on $\nabla g$ decreases to zero along the path, suppressing feature 1's growing gradient. The factor in Equation~\ref{eq:path-weight} itself remains positive at the input for positive $\epsilon$. This is an existence example; its path-weighting mechanism is specific to IG, whereas squared-discrepancy masking scores also occur in policy analysis\citep{zhang2026embodied}.
+Preferred vision-deletion methods change between Q and N in P, B1 and S, while vision-insertion preferences do not (Figure~\ref{fig:r1-methods}; Table~\ref{tab:r1-methods-summary}). Only P/Q/deletion has an adjusted best-minus-second interval excluding zero, favoring the N mean path gradient. Table~\ref{tab:r1-methods-summary} reports every new-bank vision cell, including whether its preferred method's mean exceeds all fixed-order means; that flag is not a significance claim.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures_revision/analytic_toys.pdf}
-\caption{\textbf{Target weighting and unresolved variation can reverse feature order.} \textbf{A)} The example uses $g(x_1,x_2)=x_1^2+\tfrac45x_2$, baseline $(0,0)$, input $(1,1)$ and reference $9/5$. Each target's weight on the policy gradient is scaled to its own path maximum. Blue is Q, orange N; annotated pairs are coordinate attributions. N's weight smoothly reaches zero in a narrow endpoint region (Appendix~\ref{sec:reversal-proof}). \textbf{B)} Part of $h(\alpha)$ for $K=128$. Nodes for $m=128$ intervals miss its oscillation; coordinate errors cancel in the completeness sum (Appendix~\ref{sec:aliasing-proof}).}
-\label{fig:toys}
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_methods.pdf}
+\caption{\textbf{Response choice changes calibrated vision-deletion comparisons.} Panels show P, B1 and S under Q and N. Positive episode-mean advantage favors the ranking over the response-matched random mean. Plotted intervals are descriptive 95\% episode-bootstrap intervals on common complete cases: P 60, B1 40 and S 30 episodes. Table~\ref{tab:r1-methods-summary} separately reports the seven corrected primary P contrasts, insertion preferences and fixed-order comparisons.}
+\label{fig:r1-methods}
 \end{figure}
+\input{tables_revision/r1_methods_summary.tex}
 
-\subsection{Numerical changes can affect evaluation or escape its checks}
-\label{sec:numerical-results}
+In the primary family, both T512 IG methods exceed random under N but neither separates from random under Q. IG-N exceeds IG-Q under both responses; the Q interval for IG-Q minus IG-N ends at $-0.0115$. Comparing response-matched IG-Q-at-Q against IG-N-at-N gives $-0.438$ with interval $[-3.91,2.44]$. Z-scaling changes P deletion preferences under both responses, B1 deletion under Q and B1 insertion under both. Fixed-bar decisions also differ from calibrated preferences; subtracting a common reference alone never causes a within-response reorder. Complete-case population choice does not change these preferences. Month 8 strata have at most two complete-case episodes, with simulated percentile coverage of 9\%--50\%; their intervals and mechanical winner flags support no inferential conclusion.
 
-The sample tests the separate offline fp32 function, not saved $m=64$, bf16, endpoint-inclusive rankings. The 11,592 recorded diagnostic checks include 6,048 budget checks: \NumericalDependentViolations{} violated, 5,602 satisfied and 144 not applicable because top-five-percent selection yields no state groups. The 5,544 other checks all pass, giving 11,146 satisfied overall; they include \NumericalRepeatChecks{} repeat-related equality and coverage checks, \NumericalEqualityChecks{} of them equality checks. Among 12 contexts per modality and target, finest-pair violations affect \FinestVisionNViolations{} vision N and \FinestVisionQViolations{} vision Q contexts, \FinestStateQViolations{} state contexts under each target, and no language contexts. Passing equality checks coexist with budget sensitivity (Figure~\ref{fig:numerical}).
+\subsection{Numerical accuracy and separate diagnostic outcomes}
+
+For the reviewer's linear example $g(u)=u$, baseline 0 and input 1, exact N attribution is approximately 0.999999. At $m=64$, endpoint-inclusive averaging gives 0.984615 (1.54\% shortfall), trapezoidal integration 0.992187, midpoint 0.99999999984 and Gauss-Legendre 0.9999999958. The narrow endpoint transition explains why treating endpoints equally matters even with exact gradients.
+
+Historical saved vision completeness residual medians are 1.96\% for Q-ranked and 4.76\% for N-ranked calls; 77.2\% and 99.6\% exceed 1\%. Sums fall short of endpoint gaps in 87.5\% and 99.1\%. Every stored sum is bf16-valued, but storage rounding alone cannot explain the one-sided deficit.
+
+In P vision, increasing trapezoidal intervals from 64 to 512 changes A1 bf16-forward median residuals only from 0.0403 to 0.0351 for N and 0.00865 to 0.00834 for Q. A2 fp32 values fall from 0.0154 to 0.00192 and $2.61\times10^{-4}$ to $3.21\times10^{-6}$ (Figure~\ref{fig:r1-numerics}). The same floor-versus-decrease pattern holds on the matched 12 contexts. Historical maps differ from the bf16 T512 comparator by median relative L1 0.0207 (N) and 0.0182 (Q); against fp32 T512 the corresponding 12-context medians are 0.0603 and 0.0321. Forward precision, not simply adding nodes, therefore limits these bf16 comparisons.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.90\linewidth]{figures_revision/numerical_diagnostics.pdf}
-\caption{\textbf{Maps change with budget despite passing equality checks.} Twelve completed \mbox{RDT-170M} contexts supply one line per context and modality. \textbf{A)--C)} Q target. \textbf{D)--F)} N target. Columns show IG coordinate change, mean path-gradient change, and completeness residual. Changes use the finer budget $2m$ in Equation~\ref{eq:diagnostics}; completeness uses $m$. Changes are shown only between adjacent budgets; three of the four vision N contexts with finest-pair violations fail only RMS-curve, RMS-area or AUC criteria, which are not plotted. The dotted line marks 1\%. Purple circles denote vision, green squares language, and gray triangles state. The symmetric logarithmic scale is linear within $\pm0.01\%$; the zero tick denotes an exact zero.}
-\label{fig:numerical}
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_numerics.pdf}
+\caption{\textbf{Completeness and coordinate differences depend on precision and budget.} \textbf{A)--B)} Median Q/N completeness residuals on 12 matched P vision contexts. \textbf{C)--D)} Median relative L1 differences from fp32 T512 on eight matched contexts with stored rule comparisons. E, T and M denote endpoint-inclusive, trapezoidal and midpoint rules; stars mark A0. Dashed curves use bf16 forward, solid curves fp32. The comparator's zero difference is omitted on the log axis. Neither finite-budget comparison nor completeness certifies exact IG.}
+\label{fig:r1-numerics}
 \end{figure}
 
-Between the two finest budgets, state IG changes reach \NumericalStateQCoord{}\% for Q and \NumericalStateNCoord{}\% for N; finest completeness residuals reach \NumericalStateQResidual{}\% and \NumericalStateNResidual{}\%. Both state contexts from the only completed \mbox{PickSingleYCB} episode (episode 1) exceed the 1\% completeness threshold under both targets, with endpoint target changes above the near-zero cutoffs; their $m=256$ Q residuals exceed 100\%. At that episode's call 0, vision changes by \NumericalVisionQCoord{}\% under Q and \NumericalVisionNCoord{}\% under N between 256 and 512 intervals. Its finest-budget ($m=512$) completeness residuals are only \NumericalVisionQResidual{}\% and \NumericalVisionNResidual{}\%, so passing completeness at the finest budget does not establish coordinate convergence.
+Ranking stability does not remove score sensitivity. For A0 versus A1 T512 on 120 P vision contexts, median group Spearman is about 0.999975 under both targets and median top-5\% overlap is 1. Nevertheless, N-target deletion AUC changes exceed 0.01 in seven contexts scored with N and 12 scored with Q; Q-target counts are four and 12. Maximum Q-scored deletion change for the Q-target comparison is 221.03. All four diagnostics therefore require separate reporting.
 
-For state at the same episode's call 0, Q-target rankings at 256 versus 512 intervals have Spearman agreement \YCBStateCoarseRankAgreement{}; insertion AUC changes by \YCBStateCoarseInsertionChange{} and deletion AUC by \YCBStateCoarseDeletionChange{} under a common Q response. That insertion change is as large as the response-only shifts. Conversely, its call-12 Q-target state map changes by \YCBStateLaterCoordinateChange{}\% between the two finest budgets with zero curve change. Even a \PickCubeVisionNCoordinateChange{}\% coordinate change between 256 and 512 intervals for PickCube episode 1, call 0, vision N moves Q-response insertion AUC by \PickCubeVisionNInsertionChange{}, just above the 0.01 criterion. Integration error can alter evaluation outcomes or remain invisible to them. For a smooth action map, positive $\epsilon$ makes N's gradient continuous; these sampled budgets cannot establish an asymptotic order. Empirically, N residuals typically halve under doubling while Q residuals fall roughly fourfold, consistent with an unresolved narrow N transition.
-
-The smooth aliasing construction in Appendix~\ref{sec:aliasing-proof} sets $h(\alpha)=\tfrac25\sin^2(\pi K\alpha)$, $K=128$, in a two-feature policy. Uniform grids with 32, 64 and 128 intervals give trapezoidal attributions $(1/5,3/10)$ instead of exact $(3/10,1/5)$ (Equations~\ref{eq:aliasing-coarse}--\ref{eq:aliasing-exact}; Figure~\ref{fig:toys}B). Equal and opposite errors cancel in completeness but cause 40\% relative $L_1$ error and reverse the order. Appendix~\ref{sec:aliasing-proof}'s argument for $m$ dividing $K$ shows that the endpoint-inclusive rule also gives Equation~\ref{eq:aliasing-coarse}. The inaccurate order scores better by insertion and deletion in this example (Appendix~\ref{sec:aliasing-quality}). Thus even exact IG need not optimize perturbation scores, as the target-reversal example also shows. Budget and completeness checks detect problems but agreeing finite uniform grids cannot certify coordinates without assumptions controlling unresolved variation.
+No NaN or infinity occurs at 815,210 evaluated nodes. A4 converges in all 48 reference comparisons, but strict three-way qualification holds for only 5 of 24 N comparisons; convergence alone does not establish the reference. A0 residuals depend on GPU summation order, so the per-context fp32-sum alternative is retained. No fp64 model run was performed. The earlier separate offline fp32 sample likewise shows that repeated equality checks can pass while budget comparisons fail; its limited sample is not a failure-rate estimate. The short appendix gives constructed exact-ranking reversal and aliasing examples, not observed robot-policy reversals.
 
 \section{Discussion}
 
-For question one, response choice substantially changes fixed-ranking evaluations; overshoots can dominate means. For question two, finite numerical agreement does not certify integration. Question three, ranking utility, remains unresolved. Separately, attribution target changes can reverse exact feature order.
+Our analytic result isolates a scoring effect that persists with unchanged actions and arbitrary rankings. The saved unsuccessful runs quantify its size and tails; successful 1B episodes and extra tasks broaden the observed scope without implying universal effect sizes. The matched R1 study answers a different practical question: changing the response can change the preferred method after response-matched calibration. Most best-versus-second intervals still include zero, so selecting the highest mean is weaker evidence than establishing a clear winner.
 
-Normalization puts calls on a common scale but amplifies small all-baseline squared residuals. Hama and colleagues instead use unnormalized areas from the straight endpoint reference, avoiding this division while retaining response units\citep{hama2023deletion}. On their full prefix grid, combining insertion with deletion oriented so larger means better gives zero random-order expectation even with interactions; either area alone need not. Their IG argument gives an optimal feature order for an increasing transform of a linear inner score, whose gradient direction is constant. Appendix~\ref{sec:reversal-proof}'s nonlinear inner score falls outside that condition: feature 1 first is better under both responses, yet exact Q-target IG ranks feature 2 first.
+Hama's random-order result concerns feature interactions and unnormalized full-prefix areas. Their sufficient condition uses a strictly increasing differentiable transform of an additive inner model on binary features. Its IG argument extends the inner model affinely along the path, so gradients have a common coordinate order when $h'>0$. Our construction has a varying path-gradient direction and does not satisfy that condition. Our additional findings concern separate targets and responses, endpoint normalization, overshoots and numerical recovery in a vector-output policy. They do not replace general interaction results. Compared with intervention and metric studies, we hold interventions fixed to isolate the response. Compared with exact-integration work, our finite diagnostics expose limitations without certifying coordinates. No model-weight randomization study was performed\citep{adebayo2018sanity}.
 
-\subsection{A practical reporting procedure}
-\label{sec:procedure}
+A practical evaluation should specify target, response, reference, noise, groups, baselines and masks; compare rankings in identical contexts with response-matched random and fixed controls; and report undefined gaps, unnormalized residuals, medians and full tails alongside means. Episode-level resampling respects repeated calls. Completeness, coordinate convergence, rank stability and perturbation-score stability should be reported separately across budgets and precisions. Passing a finite set of checks does not guarantee a correct integral or improved robot behavior.
 
-\begin{enumerate}
-\setlength{\itemsep}{0pt}
-\setlength{\parskip}{0pt}
-\item Specify the attribution target separately from the scoring response, with the reference action, noise, feature groups, baseline and intervention schedule. The target-reversal example and response identity show why both choices matter.
-\item Compare rankings in matched contexts under the same response, including response-matched random rankings or a simple fixed feature order. A common response change can reverse two rankings (Appendix~\ref{sec:ranking-comparison}); justify the response or check both.
-\item Keep interventions fixed when comparing responses. Report undefined normalization when $B=0$, overshoots, distributions of $B$ or unnormalized areas, medians, positive shares and full tails alongside means. For repeated calls from episodes, resample whole episodes.
-\item Check repeatability, coordinate changes and completeness across budgets; separately report ranking and curve changes. Keep IG and mean path-gradient results distinct because multiplication by $x-x'$ can change rankings. Report the completed and planned context counts.
-\end{enumerate}
+\subsection{Limitations and conclusion}
 
-\subsection{Limitations and next steps}
+The numerical accuracy of the saved headline rankings is unverified. Their missing original inputs cannot be restored by R1's regeneration success. Historical cohorts are not matched ranking comparisons; all original headline episodes, P and S fail. Successful evidence rests mainly on historical 1B and B1, with differing seeds, language inputs and runtimes. Month 8 samples are too small for population inference, and partially replaced inputs have no demonstrated causal explanation here. The separate offline fp32 sample and R1 subsets show what can occur, not general numerical failure frequencies.
 
-The headline evidence is one simulated task, one model recorded as pretrained \mbox{RDT-170M}, two environment-seed blocks and 30 episodes per cohort, with no successes. A failing policy still tests a scoring-only identity, but its effect sizes and overshoot rates may not generalize. Existing fine-tuned \mbox{RDT-1B} PickCube runs succeed in \OneBSuccesses{} of \OneBEpisodes{} episodes. Rescoring their vision curves through the same checked procedure is the most direct available test with a more competent policy; additional tasks and physical robots would further test generality.
-
-Normalized AUC is unbounded below at overshoots. No matched random or fixed-order control establishes ranking superiority, and no model-weight randomization test is performed\citep{adebayo2018sanity}. The incomplete numerical sample has no completed \mbox{RDT-1B} context and cannot estimate how often numerical checks fail across policy contexts. It does not validate the original bf16 rankings: the saved PickCube runs lack original observations, noise arrays and exact checkpoint files. Future studies should preserve complete contexts and compare finer or adaptive integration against explicitly justified error controls.
-
-\subsection{Conclusion}
-
-N cannot increase either fully in-range AUC, and the saved PickCube evaluations show substantial response-only changes. Strict decreases favor deletion and disfavor insertion; absolute thresholds can give opposite verdicts. Overshoots can dominate means, especially through extreme first calls in vision insertion. Target choice can reverse exact IG rankings, and numerical checks reveal problems without certifying accuracy. Report targets and responses separately, compare rankings with matched controls, retain full distributions, and check numerical sensitivity.
+The mathematical identity establishes the direction of fully in-range response changes. Saved and new experiments establish conditional effects in their recorded contexts, including successful 1B episodes and response-dependent preferred methods. Numerical comparisons and counterexamples establish limits on particular estimators and checks. These conclusions justify explicit response calibration and qualified numerical reporting, not general ranking superiority or improved task success.
 
 \section*{Data and code availability}
 
-The accompanying archives contain saved curves, episode records, analysis and figure/table scripts, analytic checks, and exact file hashes. They reproduce results and manuscript without model execution. Original observations, noise and checkpoint files from the headline PickCube runs were not preserved. The separate numerical collection preserved noise; supplied records reproduce its diagnostic summaries.
+The research supplement contains code, the 99 saved JSONL files, analyses, results and extended derivations. The reviewer archive adds R1 protocols, collections, identity inventories, the preserved Month 8 bundle and a regeneration kit; the complete tensor bundle supports registered-analysis replay. Saved curves reproduce on CPU, but missing inputs prevent regeneration of original headline policy evaluations. The kit regenerated a new result from preserved observations and noise on a fresh machine. Anonymous downloads and SHA-256 manifests are in the \href{https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/index.html}{review archive}. This unlisted link requires no account; anyone holding it can download.
 \ifanonymous
-Repository link withheld for review.
+Repository link withheld for review. The anonymous supplement accompanies the revision.
 \else
-The public repository is \url{https://github.com/itscool2b/ig-response-geometry}; release \href{https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04-polish}{manuscript-2026-10-04-polish} contains this manuscript, its data, and the analysis and figure scripts.
-\fi
-
-\ifanonymous\else
-\section*{Acknowledgments}
-I thank Professor Sumit K.\ Jha and Brian Rodriguez at the University of Florida for mentoring me and providing technical advice throughout this eight-month project.
-
-\textbf{Funding:} This research received no external funding.
-
-\textbf{Author contributions:} A.B. conceived the study, wrote the code, ran the analyses, and wrote the manuscript.
-
-\textbf{Competing interests:} The author declares no competing interests.
+Code and saved analysis are at \url{https://github.com/itscool2b/ig-response-geometry}. The submitted snapshot remains tagged \texttt{manuscript-2026-10-04-polish}; this revision is a distinct version.
 \fi
 
 \section*{AI-use disclosure}
 
 OpenAI Codex, Claude Code, pi.dev, and Cursor were used to assist with writing and debugging code, running and interpreting analyses, and searching the literature.
 
+\ifanonymous\else
+\section*{Acknowledgments}
+I thank Professor Sumit K.\ Jha and Brian Rodriguez at the University of Florida for mentoring me and providing technical advice throughout this project.
+
+\textbf{Funding:} This research received no external funding.
+
+\textbf{Author contributions:} A.B. conceived and directed the study, evaluated the analyses, and takes responsibility for the manuscript and its conclusions.
+
+\textbf{Competing interests:} The author declares no competing interests.
+\fi
+
 \bibliographystyle{nhsjs}
 \bibliography{references}
 
 \appendix
-\section{Response identities and target-induced reversal}
-\label{sec:proofs}
+\section{Short analytic proofs}
 
-\subsection{Normalized response difference}
-\label{sec:response-proof}
+Set $\eta=\sqrt\epsilon$, $b=\sqrt{B+\epsilon}$ and $z=\sqrt{r+\epsilon}$. Because $B=(b-\eta)(b+\eta)$, subtracting the normalized responses gives $(z-\eta)(b-z)/B$, proving Equation~\ref{eq:identity}. In range its maximum is $(b-\eta)/[4(b+\eta)]\le1/4$. Beyond range it is negative. The saved schedule gives zero endpoint differences total weight 0.13, hence $\Delta\le0.87/4=0.2175$. If B=0 normalization is undefined. Equal saved 1\%/5\% values make deletion of the 1\% node change their combined weight by 0.02, bounding its in-range paired effect by 0.005.
 
-Assume exact self-reference and $B>0$. Set $\eta=\sqrt{\epsilon}$, $b=\sqrt{B+\epsilon}$ and $z=\sqrt{r+\epsilon}$, so $B=(b-\eta)(b+\eta)$. Then
-\begin{equation}
-C_Q-C_N=\frac{b^2-z^2}{B}-\frac{b-z}{b-\eta}
-=\frac{(z-\eta)(b-z)}{B}.
-\end{equation}
-For $\eta\le z\le b$, the product is nonnegative and maximized at $z=(\eta+b)/2$, giving
-\begin{equation}
-0\le C_Q-C_N\le\frac{(b-\eta)^2}{4B}
-=\frac{b-\eta}{4(b+\eta)}\le\frac14.
-\end{equation}
-For $z>b$, the difference is negative, so the $1/4$ upper bound holds for all $r\ge0$. Nonnegative AUC weights sum to one, yielding $\Delta\le1/4$ for every defined curve. On the nine-point schedule they are $(0.005,0.025,0.045,0.075,0.10,0.15,0.225,0.25,0.125)$. The endpoints contribute zero difference and have total weight 0.13, giving $\Delta\le0.87/4=0.2175$. For positive $\epsilon$ and finite $B$, the fixed-$B$ schedule bound $0.87(b-\eta)/[4(b+\eta)]$ is strictly smaller. Fully in-range curves additionally satisfy $\Delta\ge0$, strictly if a point with positive AUC weight has $0<r<B$. If $B=0$, normalization is undefined. When the 1\% and 5\% language values coincide, dropping the 1\% node changes their combined AUC weight by 0.02; the $1/4$ pointwise bound therefore bounds the paired change by $0.02/4=0.005$ for fully in-range calls.
-
-\subsection{Finite-stabilizer rank reversal}
-\label{sec:reversal-proof}
-
-Let $g(x_1,x_2)=x_1^2+\beta x_2$, with $\beta=4/5$, $x'=(0,0)$ and $x=(1,1)$. Along the diagonal, the scalar action residual and its square are
-\[
-\rho(\alpha)=(1-\alpha)(1+\alpha+\beta),\qquad r(\alpha,\alpha)=\rho(\alpha)^2.
-\]
-Since $\nabla g=(2\alpha,\beta)$ there, differentiating the targets for $d_a=1$ gives
-\begin{equation}
-\nabla Q=\rho(\alpha)(2\alpha,\beta),\qquad
-\nabla N=\frac{\rho(\alpha)}{\sqrt{\rho(\alpha)^2+\epsilon}}(2\alpha,\beta).
-\end{equation}
-Polynomial integration yields
-\begin{equation}
-A^Q=\left(\frac12+\frac\beta3,\frac{2\beta}3+\frac{\beta^2}2\right)
-=\left(\frac{23}{30},\frac{64}{75}\right),
-\end{equation}
-so feature 2 leads by $13/150$. Norm attributions tend to $(1,\beta)$ as $\epsilon$ decreases to zero.
-
-For the positive stabilizer, define $\psi(\rho)=1-\rho/\sqrt{\rho^2+\epsilon}\ge0$. Its derivative is $-\epsilon/(\rho^2+\epsilon)^{3/2}<0$, and $\rho(\alpha)\ge\beta(1-\alpha)$. Therefore
-\begin{equation}
-\begin{aligned}
-\int_0^1\psi(\rho(\alpha))\,d\alpha
-&\le\int_0^1\left[1-\frac{\beta(1-\alpha)}{\sqrt{\beta^2(1-\alpha)^2+\epsilon}}\right]d\alpha\\
-&=1-\frac{\sqrt{\beta^2+\epsilon}-\sqrt{\epsilon}}{\beta}
-\le\frac{\sqrt{\epsilon}}{\beta}.
-\end{aligned}
-\end{equation}
-The identities $1-A_1^N=\int_0^1 2\alpha\psi(\rho(\alpha))\,d\alpha$ and $\beta-A_2^N=\beta\int_0^1\psi(\rho(\alpha))\,d\alpha$, together with $0\le2\alpha\le2$ and $\epsilon=10^{-12}$, give
-\begin{equation}
-0\le1-A_1^N\le2.5\times10^{-6},\qquad
-0\le\beta-A_2^N\le10^{-6}.
-\end{equation}
-Thus $A_1^N-A_2^N\ge0.1999975$. Every coordinate is positive, so ordinary and absolute-coordinate rankings agree. Only the target changes. At the half-feature insertion point, feature 1 first gives normalized Q response about 0.80 versus 0.69 for feature 2 first, and N response about 0.56 versus 0.44. Deletion swaps these intermediate values. Hence feature 1 first scores better under both responses, despite exact Q-target IG ranking feature 2 first.
-
-\subsection{Finite-grid random-order calibration}
-\label{sec:random-calibration}
-
-For $g(x)=\sum_{i=1}^n x_i$, an all-one input and zero baseline, every feature order gives residual distances $k$ after $k$ deletions and $n-k$ after $k$ insertions. At $q=k/n$, normalized Q curves are $1-q^2$ and $1-(1-q)^2$. Both have second derivative $-2$, so their trapezoidal areas underestimate their common integral $2/3$ by $1/(6n^2)$ on the full-prefix grid. Their identical curvature also gives identical quadrature errors on any common grid, including an asymmetric one. The nine-point schedule with $n=100$ gives area 0.65976. Unstabilized N gives the lines $1-q$ and $q$, both with trapezoidal area 0.5 on either schedule.
-
-\subsection{A common response change can reorder rankings}
-\label{sec:ranking-comparison}
-
-Take three features and insertion fractions $\{0,1/3,2/3,1\}$, with $B=1$. Let orders $(1,2,3)$ and $(3,2,1)$ give residual sequences $(1,1/4,1/4,0)$ and $(1,16/25,0,0)$, respectively. Their intermediate subsets are distinct, so these values can belong to one scalar policy with the same endpoints. Q insertion AUCs are $2/3$ and $31/50=0.620$; with $\epsilon=0$, N AUCs are $1/2$ and $17/30\approx0.567$. Thus the better order reverses. The inequalities persist at $\epsilon=10^{-12}$. This establishes possibility, not a measured comparison of the saved cohorts.
+For scalar action examples set $d_a=1$. With $g(x_1,x_2)=x_1^2+(4/5)x_2$, baseline (0,0), input (1,1) and reference 9/5, polynomial integration gives $A^Q=(23/30,64/75)$. Writing $\rho(\alpha)=(1-\alpha)(1+\alpha+4/5)$, N's gradient is $\rho(\alpha)(2\alpha,4/5)/\sqrt{\rho(\alpha)^2+\epsilon}$. The inequality $\rho\ge(4/5)(1-\alpha)$ bounds the coordinate deficits from (1,4/5) by $2.5\times10^{-6}$ and $10^{-6}$ at the chosen epsilon. Thus N ranks feature 1 first while Q ranks feature 2 first. This is a constructed possibility, not an observed PickCube reversal.
 
 \input{appendix_aliasing.tex}
 \end{document}
