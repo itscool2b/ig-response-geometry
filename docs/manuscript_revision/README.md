@@ -10,4 +10,4 @@ The delivery consists of an anonymous tracked Standard DOCX, a clean identified 
 
 The records in this directory predating October 31 describe the submitted version. In particular, [the October 4 edit ledger](exact_edits_checklist.md), [claim map](claim_map.md), [semantic review](final_semantic_audit.md), [Final-v5 ledger](final_v5_checklist.md), [Round 3 ledger](round3_checklist.md) and [local verification](final_local_verification.md) remain historical and do not certify the new revision. The tag `manuscript-2026-10-04-polish` and [Zenodo version 3.0](https://doi.org/10.5281/zenodo.23269517) preserve that earlier manuscript.
 
-The current disclosure wording is preserved at the author's instruction. Repository publication and local verification do not constitute journal submission. A submission claim requires the revision channel's receipt and the hashes of the uploaded files.
+Repository publication and local verification do not constitute journal submission. A submission claim requires the revision channel's receipt and the hashes of the uploaded files.

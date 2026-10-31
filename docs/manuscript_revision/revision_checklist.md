@@ -6,7 +6,7 @@ This ledger accounts for all 122 checkbox actions in the supplied everything_to_
 
 Original checklist SHA-256: `3becfdf2f4014663296e7cae6c77cbedafc6f0d404aeffdfa874e5ae09048ead`.
 
-The AI statement and policy handling remain author-deferred. All work stays local. Optional new model experiments, robustness tables, token-count reconstruction and expedited services are unnecessary for the retained scope.
+All work stays local. Optional new model experiments, robustness tables, token-count reconstruction and expedited services are unnecessary for the retained scope.
 
 | Item / source line | Section | Action | Disposition | Evidence |
 |---|---|---|---|---|
