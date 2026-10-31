@@ -1,0 +1,13 @@
+population,recorded,recovered,inferred,unknown
+saved_Q_ranked_cohort,8,20,7,6
+saved_N_ranked_cohort,7,26,1,7
+saved_RDT1B_seed42_month4,6,27,1,7
+saved_RDT1B_seeds142_242_month6,7,22,6,6
+saved_RDT1B_seed42_month5_rerun,7,22,7,5
+saved_m128_seed142_month4,6,26,2,7
+saved_m128_seed42_month7_reruns,8,25,1,7
+month8_context_bank_and_numerical_sample,38,3,0,0
+R1_P,31,0,9,0
+R1_B1,31,0,9,0
+R1_S,31,0,9,0
+R1_M8_replay,40,0,0,0

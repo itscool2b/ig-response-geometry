@@ -26,12 +26,15 @@ BASE_FILES = frozenset({'references.bib', 'tmlr.sty', 'tmlr.bst', 'tmlr-LICENSE'
 TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                         ('baseline', 'budget', 'completeness', 'faithfulness', 'macros',
                          'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring', 'episode_influence',
-                         'revision_facts', 'paired_results'))
+                         'revision_facts', 'paired_results', 'r1_experiments', 'r1_identities',
+                         'r1_saved_summary', 'r1_methods_summary'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
                           'figures_revision/solver_endpoint.pdf',
                           *(f'figures_revision/{name}.pdf' for name in
-                            ('pipeline', 'response_mechanism', 'paired_effects', 'analytic_toys', 'numerical_diagnostics'))})
+                            ('pipeline', 'response_mechanism', 'paired_effects', 'analytic_toys', 'numerical_diagnostics',
+                             'r1_design', 'r1_saved_geometry', 'r1_success_tasks', 'r1_methods', 'r1_numerics'))})
 FRAGMENT_FILES = TABLE_FILES | frozenset({'appendix_aliasing.tex'})
+SUPPLEMENT_FILES = frozenset({'supplementary_derivations.tex'})
 TEX_PACKAGES = frozenset({'tmlr', 'url', 'hyperref', 'inputenc', 'caption', 'graphicx',
                           'placeins', 'amsmath', 'amssymb', 'amsthm', 'booktabs',
                           'algorithm', 'algorithmic', 'microtype', 'xcolor', 'fontspec',
@@ -125,7 +128,7 @@ def directives(text, command):
     return [match.group(1) for match in found]
 
 
-def manuscript_dependencies(text, *, top_level):
+def manuscript_dependencies(text, *, top_level, supplement=False):
     # Third-party style files are separately preserved, reviewed dependencies.
     # This check applies to the manuscript and its table fragments, which must
     # not acquire another uncurated loading route inside an otherwise safe name.
@@ -138,12 +141,16 @@ def manuscript_dependencies(text, *, top_level):
         if any(found.values()):
             raise ValueError('Nested manuscript data directives require explicit review')
         return set()
-    if found['bibliography'] != ['references'] or found['bibliographystyle'] not in (['tmlr'], ['nhsjs']):
+    if supplement:
+        if found['bibliography'] or found['bibliographystyle']:
+            raise ValueError('Unreviewed standalone supplement bibliography')
+    elif found['bibliography'] != ['references'] or found['bibliographystyle'] not in (['tmlr'], ['nhsjs']):
         raise ValueError('Changed bibliography or style target requires explicit review')
     if found['documentclass'] != ['article']:
         raise ValueError('Changed document class requires explicit review')
     packages = [name for group in found['usepackage'] for name in group.split(',')]
-    required = {'tmlr'} if found['bibliographystyle'] == ['tmlr'] else {'fontspec', 'natbib', 'geometry'}
+    required = ({'fontspec', 'geometry'} if supplement else
+                {'tmlr'} if found['bibliographystyle'] == ['tmlr'] else {'fontspec', 'natbib', 'geometry'})
     if not required <= set(packages) or any(name not in TEX_PACKAGES for name in packages):
         raise ValueError('Unreviewed template package or package path')
     if 'fontspec' in packages:
@@ -152,7 +159,7 @@ def manuscript_dependencies(text, *, top_level):
             raise ValueError('Unreviewed manuscript main font')
         if re.search(r'\\(?:setotherlanguage|newfontfamily|fontspec|setmathfont|setsansfont|setmonofont)\b', text):
             raise ValueError('Unreviewed manuscript font-loading directive')
-    names = set(BASE_FILES)
+    names = set() if supplement else set(BASE_FILES)
     if found['bibliographystyle'] == ['nhsjs']:
         names.add('nhsjs.bst')
     for name in found['input']:
@@ -169,7 +176,7 @@ def manuscript_dependencies(text, *, top_level):
     return names
 
 
-def build(root, output):
+def build(root, output, *, authorized_review=False):
     root, output = Path(root).resolve(), Path(output).resolve()
     validate_revision_assets(root)
     if output.exists():
@@ -180,6 +187,8 @@ def build(root, output):
     transformed = anonymous_source(source)
     files = {'paper.tex': transformed.encode('utf-8')}
     names = manuscript_dependencies(transformed, top_level=True)
+    if r'\bibliographystyle{nhsjs}' in transformed:
+        names.update(name for name in SUPPLEMENT_FILES if (root / 'paper' / name).is_file())
     inputs = {'paper/paper.tex': digest((root / 'paper/paper.tex').read_bytes())}
     for name in sorted(names):
         member_name(name)
@@ -191,21 +200,27 @@ def build(root, output):
             assert_anonymous(data.decode('utf-8'), name)
         if name in FRAGMENT_FILES:
             manuscript_dependencies(data.decode('utf-8'), top_level=False)
+        if name in SUPPLEMENT_FILES:
+            if manuscript_dependencies(data.decode('utf-8'), top_level=True, supplement=True):
+                raise ValueError('Standalone supplement must be self-contained: ' + name)
         files[name] = data
         inputs['paper/' + name] = digest(data)
     template_provenance = validate_template_bytes(files)
     files['README.txt'] = (
-        'Anonymous manuscript source component, working draft.\n'
+        ('Anonymous manuscript source component, author-authorized review copy.\n' if authorized_review else
+         'Anonymous manuscript source component, working draft.\n') +
         'Build the article with Tectonic: tectonic --only-cached --untrusted --reruns 3 paper.tex.\n'
         'Requires installed Times New Roman and an already populated TeX package cache.\n'
         'The legacy TMLR source can also use pdflatex, bibtex, then two pdflatex passes.\n'
         'Exact pinned TMLR files and both upstream license notices are preserved.\n'
         'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
         'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
-        'This contains manuscript sources, not the complete code/data supplement.\n'
-        'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n'
+        'This contains manuscript sources, not the complete code/data supplement.\n' +
+        ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review else
+         'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n')
     ).encode()
-    manifest = dict(kind='anonymous_manuscript_sources', status='working_draft_not_submission_ready',
+    manifest = dict(kind='anonymous_manuscript_sources', status=(
+                    'author_authorized_review_copy_not_journal_submission' if authorized_review else 'working_draft_not_submission_ready'),
                     artifacts_sha256={name:digest(data) for name,data in sorted(files.items())})
     files['manifest.json'] = (json.dumps(manifest,indent=2,sort_keys=True)+'\n').encode()
     # Validate every output member, including generated templates, before
@@ -219,7 +234,7 @@ def build(root, output):
         path = work / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-    archive = output / 'anonymous-manuscript-sources-draft.zip'
+    archive = output / ('anonymous-manuscript-sources.zip' if authorized_review else 'anonymous-manuscript-sources-draft.zip')
     with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED) as package:
         for name,data in sorted(files.items()):
             info = zipfile.ZipInfo(name, date_time=(1980,1,1,0,0,0))
@@ -239,5 +254,6 @@ def build(root, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
+    parser.add_argument('--authorized-review', action='store_true', help='Use only with owner authorization for the anonymous review copy; does not imply validation or submission')
     args = parser.parse_args()
-    build(Path(__file__).resolve().parents[1], args.out)
+    build(Path(__file__).resolve().parents[1], args.out, authorized_review=args.authorized_review)

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "access_model": "Unlisted bearer URLs; anyone with a link can download. No sign-in or authenticated access restriction.",
+  "full_registered_r1_cpu_replay_requires": [
+    "r1-complete-reviewer-archive.zip"
+  ],
+  "files": [
+    {
+      "filename": "r1-complete-reviewer-archive.zip",
+      "title": "Complete R1 reviewer archive",
+      "bytes": 37845117181,
+      "sha256": "f69fe5e79c66025fa1776701a96c15d6137fec753465ff8cd96412ef7f77c81d",
+      "description": "The full registered R1 CPU replay package: all raw R1 inputs, code, protocols, outcomes, frozen results, mathematical supplement and regeneration kit. Download this one package for the complete R1 analysis.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/r1-complete-reviewer-archive.zip",
+      "entire_public_download_verified": true
+    },
+    {
+      "filename": "reviewer-records.zip",
+      "title": "Compact reviewer records",
+      "bytes": 5487684410,
+      "sha256": "5c2210c7ef3f1eddb09b4c35c17375707926f5c3e146ad99d0ef4a133ab8452c",
+      "description": "Protocols, results, records, inventories, mathematical supplement and regeneration kit. The large raw tensors are listed by hash; use the complete R1 archive for those files.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/reviewer-records.zip",
+      "entire_public_download_verified": true
+    },
+    {
+      "filename": "anonymous-manuscript-sources.zip",
+      "title": "Anonymous manuscript sources",
+      "bytes": 210009,
+      "sha256": "c06cb3266930600331788963f0e41a1cff114e6e1006306c7aa24ed0baacd922",
+      "description": "Article and mathematical supplement source; verified fresh PDF rebuild.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-manuscript-sources.zip",
+      "entire_public_download_verified": true
+    },
+    {
+      "filename": "anonymous-research-supplement.zip",
+      "title": "Research supplement",
+      "bytes": 43368426,
+      "sha256": "2c25a7e85fa789afb60ea8fade5eb5bc8d7386ec282662c1317ec2dfe5d7aca0",
+      "description": "Analysis code, preserved small data, figures, tables and derivations.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-research-supplement.zip",
+      "entire_public_download_verified": true
+    },
+    {
+      "filename": "r1-regeneration-kit.zip",
+      "title": "Fresh-context regeneration kit",
+      "bytes": 894073642,
+      "sha256": "ba968ce109d0166eac1c0c88635c8dbb1b58472716f250d646e2b39a7401b84e",
+      "description": "All 1,702 manifest entries authenticated.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/r1-regeneration-kit.zip",
+      "entire_public_download_verified": true
+    },
+    {
+      "filename": "month8-raw-evidence.zip",
+      "title": "Month 8 raw-evidence companion",
+      "bytes": 25223845580,
+      "sha256": "3339ca4419e91c3057628ab889fed036f8e893d93784d1e99e70fffc9c7baf9d",
+      "description": "All five preserved evidence trees; 49 completion records and 5,698 artifact bindings authenticated.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/month8-raw-evidence.zip",
+      "entire_public_download_verified": true
+    }
+  ],
+  "validation": {
+    "runtime": {
+      "platform": "Linux x86-64",
+      "python": "3.12.3",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "torch": "2.8.0+cu128",
+      "mpmath": "1.3.0",
+      "execution": "CPU, four threads"
+    },
+    "complete_registered_analysis": true,
+    "outputs": 152,
+    "byte_identical_files": 137,
+    "files_with_preserved_hash_differences": 15,
+    "verified": true,
+    "byte_identity": false,
+    "contract": "Operation-specific map-reduction and summary bounds. Primary estimates, percentile intervals, labels, counts, missingness, ties, preferences and decisions match exactly. Optional BCa/t endpoints use an independently checked post hoc accuracy contract: outward 90-decimal interval arithmetic with pointwise 16u normal CDF and 8u inverse-CDF/power checks, u=2^-53. This is not a registered inference criterion, a universal library guarantee, or certification of unpreserved historical intermediates.",
+    "helper_sha256": "f0fdfec3d1cb24788fd21245330c7268043e16699f6a904dd6c26350482698df",
+    "verifier_sha256": "362a1ce63f9c14429686238316129db4c5645ea9d27c70f442b334c3236396a9"
+  }
+}

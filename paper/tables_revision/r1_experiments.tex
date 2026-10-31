@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{\textbf{Experimental and numerical configurations.} E is the historical endpoint-inclusive rule; T is trapezoidal; * marks an inferred budget. Precision gives forward/accumulation where both are specified. A0--A4 are defined in Targets, features and numerical estimators. Peg and YCB denote PegInsertionSide and PickSingleYCB. The offline sample has no completed 1B context. Saved curves do not preserve the original policy inputs.}
+\label{tab:r1-experiments}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{0.19\linewidth} p{0.17\linewidth} p{0.17\linewidth} p{0.18\linewidth} p{0.18\linewidth}}
+\toprule
+\textbf{Experiment} & \textbf{Estimator / budget} & \textbf{Precision} & \textbf{Context source} & \textbf{Preserved inputs} \\
+\midrule
+Saved Q, 170M & E64* & bf16/bf16 & PickCube & Curves only \\
+Saved N, 170M & E64 & bf16/bf16 & PickCube & Curves only \\
+Saved 1B, M4 & E64 & bf16/bf16 & PickCube & Curves only \\
+Saved 1B, M6 & E64 & bf16/bf16 & PickCube & Curves only \\
+Saved 1B, M5 & E64* & bf16/bf16 & PickCube & Curves only \\
+Saved m128, M4 & E128* & bf16/bf16 & Peg and YCB & Curves only \\
+Saved m128, M7 & E128 & bf16/bf16 & Peg and YCB & Curves only \\
+Offline M8, 170M & T128-1024 & fp32/fp32 & Four tasks & Contexts, projection \\
+Analytic examples & Exact; grids & Exact; fp32/64 & Constructed functions & Definitions \\
+R1 P, 170M & A0-A4 & bf16, fp32 & PickCube & All inputs \\
+R1 B1, 1B & A0, A1 & bf16; fp32 sum & PickCube & All inputs \\
+R1 S, 170M & A0, A1 & bf16; fp32 sum & StackCube & All inputs \\
+R1 M8, 170M/1B & A0-A4 & bf16, fp32 & Preserved contexts & Contexts, new calls \\
+\bottomrule
+\end{tabular}
+\end{table}

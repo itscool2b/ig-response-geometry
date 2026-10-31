@@ -71,9 +71,16 @@ REVISION_R1_FILES = (
     "scripts/launch_strict.py", "scripts/prepare_pinned_models.py", "scripts/build_regeneration_kit.py",
     "scripts/make_revision_protocol.py", "scripts/build_m8_overlay.py", "scripts/build_deploy_archive.py",
     "scripts/revision_pod.sh",
+    "scripts/build_nhsjs_revision_assets.py",
     # The archived historical kernel that the worker's verify gate and its tests compare against.
     "docs/tmlr-readiness/archives/active-originals/2026-10-01-stable-base/integrated_gradients.py.historical",
 )
+R1_DISPLAY_NAMES = ("r1_design", "r1_saved_geometry", "r1_success_tasks", "r1_methods", "r1_numerics")
+R1_PRESENTATION_FILES = (
+    "paper/supplementary_derivations.tex", "paper/figures_revision/r1_lineage.json",
+) + tuple(f"paper/figures_revision/{name}.{extension}" for name in R1_DISPLAY_NAMES
+          for extension in ("pdf", "png")) + tuple(f"paper/tables_revision/{name}.tex" for name in
+          ("r1_experiments", "r1_identities", "r1_saved_summary", "r1_methods_summary"))
 T5_TOKENIZER = "analysis/language_groups/vendor/spiece.model"
 OMITTED_TESTS = frozenset({"tests/test_legacy_workflows.py", "tests/test_paper_packaging.py",
     "tests/test_paper_packaging_paths.py", "tests/test_research_supplement.py",
@@ -90,11 +97,11 @@ ANONYMOUS_TOKENS = ("arjun", "bajpai", "windermere", "zenodo")
 # exactly once; the earlier form is kept so earlier commits still package as before.
 README_IDENTITY_FORMS = (
     ((r"^The sole current author is [^\n]*\n", ""), (r"^`CITATION\.cff` identifies [^\n]*\n", "")),
-    ((r"\[(October 4, 2026 polished snapshot)\]\(https://github\.com/[^)\s]*\)", r"\1"),
+    ((r"\[(October 4, 2026 polished snapshot|October 4 submitted snapshot)\]\(https://github\.com/[^)\s]*\)", r"\1"),
      (r"^The sole author is [^.\n]*\. ", ""),
-     (r"^The identified 19-page preprint was published [^\n]*\n\n", ""),
-     (r"^The earlier Zenodo versions [^\n]*\n\n", ""),
-     (r"^`CITATION\.cff` retains [^\n]*\n\n", ""),
+     (r"^The identified 19-page (?:submitted )?preprint was published [^\n]*\n\r?\n", ""),
+     (r"^The earlier Zenodo versions [^\n]*\n\r?\n", ""),
+     (r"^`CITATION\.cff` retains [^\n]*\n\r?\n", ""),
      (r"^The current \[Zenodo preprint\]\([^)\s]*\) is licensed under \[[^\]\n]*\]\([^)\s]*\)\. ", "")),
 )
 OUTPUT_PREFIX = "analysis/revision/results/2026-09-30-v2/"
@@ -153,7 +160,10 @@ def snapshot(root, revision):
             continue
         info, raw_name = entry.split(b"\t", 1)
         mode, kind, oid = info.split()
-        name = member_name(raw_name.decode("utf-8"))
+        # Private repositories also track notes with spaces and other non-export
+        # names. Inventory them without exporting them. Every selected member is
+        # still checked by read()/working_file() before any package is created.
+        name = raw_name.decode("utf-8")
         # A curated package never dereferences a Git symlink or submodule.
         if mode not in {b"100644", b"100755"} or kind != b"blob":
             continue
@@ -180,7 +190,7 @@ def working_snapshot(root, revision="HEAD"):
     root = Path(root).resolve()
     commit, index = snapshot(root, revision)
     candidates = set(ENTRYPOINTS) | set(DOCUMENTS) | set(PAPER_ASSETS) | set(PENDING_ADDITIONS) | set(REVISION_FILES) | \
-        set(REVISION_R1_FILES)
+        set(REVISION_R1_FILES) | set(R1_PRESENTATION_FILES)
     for prefix in REVISION_R1_PREFIXES:
         if (root / prefix).is_dir():
             candidates.update(path.relative_to(root).as_posix() for path in (root / prefix).rglob("*")
@@ -278,6 +288,11 @@ def collect(root, revision, extra_identifiers=(), *, working_copy=False):
     selected.update(p for p in index if p.startswith(REVISION_R1_PREFIXES) or p in REVISION_R1_FILES)
     if b"\\bibliographystyle{nhsjs}" in read("paper/paper.tex"):
         selected.update(REVISION_FILES)
+        # Require the complete current presentation when the manuscript uses it;
+        # older snapshots keep their existing, separately pinned presentation.
+        if active_manuscript_lineage(read("paper/paper.tex")).endswith("/r1_lineage.json"):
+            selected.update(R1_PRESENTATION_FILES)
+            selected.add("scripts/build_nhsjs_revision_assets.py")
         selected.update(p for p in index if p.startswith("analysis/manuscript_revision/")
                         and p.endswith((".py", ".md", ".json", ".csv")))
     selected.update(OUTPUT_PREFIX + name for name in RESULT_FILES)
@@ -583,7 +598,16 @@ def identity_hits(name, data, tokens):
     return sorted(token for token in tokens if any(token.encode() in view for view in views))
 
 
-def anonymous_candidate(contents, extra_identifiers):
+def active_manuscript_lineage(source):
+    """Select the reviewed display lineage from the manuscript's actual references."""
+    text = source.decode("utf-8")
+    if any(re.search(r"\\includegraphics(?:\[[^\]]*\])?\{figures_revision/" + name + r"\.pdf\}", text)
+           for name in R1_DISPLAY_NAMES):
+        return "paper/figures_revision/r1_lineage.json"
+    return "paper/figures_revision/lineage.json"
+
+
+def anonymous_candidate(contents, extra_identifiers, *, authorized_review=False):
     """Create a marked local proposal; never mutate or relicense canonical files."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     from scripts import package_paper_sources
@@ -608,14 +632,22 @@ def anonymous_candidate(contents, extra_identifiers):
     banner = ("PRIVATE ANONYMOUS CANDIDATE. Unapproved for external distribution or submission.\n"
               "The proposed own-author notice is for local review only; third-party notices remain intact.\n"
               "See SUPPLEMENT_README.md for scope and source-byte replay limitations.\n\n")
+    if authorized_review:
+        banner = ("ANONYMOUS RESEARCH SUPPLEMENT FOR REVIEW.\n"
+                  "The author authorized this review copy's anonymous own-author notice; third-party notices remain intact.\n"
+                  "Canonical author attribution remains unchanged. This package makes no journal-submission or acceptance claim.\n"
+                  "See SUPPLEMENT_README.md for scope and source-byte replay limitations.\n\n")
     transformed["README.md"] = (banner + readme).encode()
     transformed["paper/paper.tex"] = package_paper_sources.anonymous_source(contents["paper/paper.tex"].decode("utf-8")).encode()
-    lineage_path = "paper/figures_revision/lineage.json"
+    lineage_path = active_manuscript_lineage(contents["paper/paper.tex"])
     lineage = json.loads(contents[lineage_path])
-    if lineage["manuscript_source_sha256"] != digest(contents["paper/paper.tex"]):
-        raise ValueError("Canonical manuscript lineage differs before transformation")
-    lineage["manuscript_source_sha256"] = digest(transformed["paper/paper.tex"])
+    if "manuscript_source_sha256" in lineage:
+        if lineage["manuscript_source_sha256"] != digest(contents["paper/paper.tex"]):
+            raise ValueError("Canonical manuscript lineage differs before transformation")
+        lineage["manuscript_source_sha256"] = digest(transformed["paper/paper.tex"])
     manuscript_inputs = lineage.get("manuscript_inputs_sha256", {})
+    if "manuscript_source_sha256" not in lineage and "paper/paper.tex" not in manuscript_inputs:
+        raise ValueError("Active display lineage does not bind the manuscript source")
     if "paper/paper.tex" in manuscript_inputs:
         if manuscript_inputs["paper/paper.tex"] != digest(contents["paper/paper.tex"]):
             raise ValueError("Canonical manuscript input hash differs before transformation")
@@ -637,19 +669,31 @@ def anonymous_candidate(contents, extra_identifiers):
         omitted_members={name: dict(source_sha256=digest(contents[name])) for name in omitted},
         anonymous_token_count=len(tokens), pdf_drawn_text_scanned=pdf_reader_available(),
         manuscript_transform_sha256=digest(Path(package_paper_sources.__file__).read_bytes()),
-        licensing_status="proposed_review_copy_attribution_not_approved_for_external_distribution",
+        licensing_status=("author_authorized_anonymous_review_copy" if authorized_review else
+                          "proposed_review_copy_attribution_not_approved_for_external_distribution"),
         third_party_notices="preserved_exactly",canonical_public_license="unchanged")
 
 
-def build(root, revision, output, extra_identifiers=(), *, private_anonymous_candidate=False, working_copy=False):
-    if private_anonymous_candidate and Path(output).resolve().is_relative_to(Path(root).resolve()):
+def build(root, revision, output, extra_identifiers=(), *, private_anonymous_candidate=False,
+          working_copy=False, authorized_anonymous_review=False):
+    if private_anonymous_candidate and authorized_anonymous_review:
+        raise ValueError("Choose either a private candidate or an author-authorized review copy")
+    anonymous = private_anonymous_candidate or authorized_anonymous_review
+    if anonymous and Path(output).resolve().is_relative_to(Path(root).resolve()):
         raise ValueError("Private anonymous candidate output must be outside the canonical public repository")
     contents, audit = (collect(root, revision, extra_identifiers, working_copy=True) if working_copy
                        else collect(root, revision, extra_identifiers))
-    if private_anonymous_candidate:
-        contents, audit["anonymous_candidate"] = anonymous_candidate(contents, extra_identifiers)
+    if anonymous:
+        contents, audit["anonymous_candidate"] = anonymous_candidate(contents, extra_identifiers,
+            authorized_review=authorized_anonymous_review)
     audit["template_provenance"] = validate_template_bytes(contents)
-    contents["SUPPLEMENT_README.md"] = (ANONYMOUS_GUIDE if private_anonymous_candidate else GUIDE).encode()
+    guide = ANONYMOUS_GUIDE if anonymous else GUIDE
+    if authorized_anonymous_review:
+        guide = guide.replace("# Private anonymous research supplement candidate", "# Anonymous research supplement for review").replace(
+            "This is a local review candidate, unapproved for external distribution or\nsubmission. Its proposed own-author copyright attribution is pending review;",
+            "The author authorized this anonymous review copy and its anonymous own-author\ncopyright notice. Canonical public author attribution is unchanged;")
+        guide = guide.replace("candidate manuscript sources", "anonymous manuscript sources").replace("this anonymous candidate", "this anonymous review copy")
+    contents["SUPPLEMENT_README.md"] = guide.encode()
     if "analysis/manuscript_revision/report.py" in contents:
         contents["SUPPLEMENT_README.md"] += b"""
 
@@ -674,6 +718,19 @@ and are not included. This package does not perform a journal submission.
 """
     if "analysis/revision_gpu/v1/analyze.py" in contents:
         contents["SUPPLEMENT_README.md"] += REVISION_R1_GUIDE.encode()
+    if "paper/figures_revision/r1_lineage.json" in contents:
+        contents["SUPPLEMENT_README.md"] += b"""
+
+The active NHSJS R1 presentation uses five figures and four tables. After the
+historical evidence checks above, regenerate these displays with:
+
+    python scripts/build_nhsjs_revision_assets.py
+
+The declared display inputs are in analysis/manuscript_revision/nhsjs_r1/inputs/;
+paper/figures_revision/r1_lineage.json binds the active source and every display.
+The separate paper/supplementary_derivations.tex contains the full mathematical
+derivations and compiles with the same Times New Roman/Tectonic environment.
+"""
     if working_copy:
         contents["SUPPLEMENT_README.md"] = contents["SUPPLEMENT_README.md"].replace(
             b"Exported code is committed Git-blob bytes.", b"Exported code is an explicit hashed working-copy snapshot.")
@@ -682,7 +739,7 @@ and are not included. This package does not perform a journal submission.
     # This supplements the unchanged embedded notice and also covers the
     # configuration derived from the same pinned upstream project.
     sampler = contents["rdt_sampling.py"].decode("utf-8")
-    notice = sampler.split("Original sampler license:\n", 1)[1].split('"""', 1)[0].strip()
+    notice = re.split(r"Original sampler license:\r?\n", sampler, maxsplit=1)[1].split('"""', 1)[0].strip()
     contents["THIRD_PARTY_NOTICES.txt"] = ("rdt_sampling.py and configs/base_170m.yaml derive from the official RDT project.\n"
         "Source: https://github.com/thu-ml/RoboticsDiffusionTransformer/tree/cd79363a1387e8f81c7724d070ef7e45fd23150f\n\n" + notice + "\n").encode()
     if T5_TOKENIZER in contents:
@@ -690,16 +747,19 @@ and are not included. This package does not perform a journal submission.
             "\n" + T5_TOKENIZER + " is the SentencePiece model of google/t5-v1_1-xxl at revision\n"
             "3db67ab1af984cf10548a73467f0e5bca2aaaeb2 (https://huggingface.co/google/t5-v1_1-xxl),\n"
             "distributed under the Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0).\n").encode()
-    package_manifest = dict(kind="private_anonymous_research_supplement_candidate" if private_anonymous_candidate else "identified_research_supplement",
-        status="unapproved_for_external_distribution_or_submission" if private_anonymous_candidate else "working_draft_not_submission",
+    package_manifest = dict(kind=("anonymous_research_supplement_review_copy" if authorized_anonymous_review else
+        "private_anonymous_research_supplement_candidate" if anonymous else "identified_research_supplement"),
+        status=("author_authorized_review_copy_not_journal_submission" if authorized_anonymous_review else
+        "unapproved_for_external_distribution_or_submission" if anonymous else "working_draft_not_submission"),
         source_kind=audit.get("source_kind", "committed_git_blobs"),
         source_snapshot_sha256=audit.get("snapshot_sha256"),
-        **({"omitted_members": sorted(audit["anonymous_candidate"]["omitted_members"])} if private_anonymous_candidate else {}),
+        **({"omitted_members": sorted(audit["anonymous_candidate"]["omitted_members"])} if anonymous else {}),
         members={p:dict(sha256=digest(b),bytes=len(b)) for p,b in sorted(contents.items())})
     contents["SUPPLEMENT_MANIFEST.json"] = (json.dumps(package_manifest,indent=2)+"\n").encode()
     output = Path(output)
     output.mkdir(parents=True, exist_ok=False)
-    archive = output / ("private-anonymous-research-supplement-candidate.zip" if private_anonymous_candidate else "identified-research-supplement-draft.zip")
+    archive = output / ("anonymous-research-supplement.zip" if authorized_anonymous_review else
+        "private-anonymous-research-supplement-candidate.zip" if anonymous else "identified-research-supplement-draft.zip")
     with zipfile.ZipFile(archive,"x",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as stream:
         for name, data in sorted(contents.items()):
             member_name(name)
@@ -709,7 +769,8 @@ and are not included. This package does not perform a journal submission.
             info.external_attr = (0o100755 if name.endswith(".sh") else 0o100644) << 16
             stream.writestr(info,data)
     audit.update(packager_sha256=digest(Path(__file__).read_bytes()),
-        distribution_status="not_authorized_private_candidate_only" if private_anonymous_candidate else "identified_working_draft_not_submission",
+        distribution_status=("author_authorized_anonymous_review_copy" if authorized_anonymous_review else
+            "not_authorized_private_candidate_only" if anonymous else "identified_working_draft_not_submission"),
         archive=dict(file=archive.name,sha256=digest(archive.read_bytes()),bytes=archive.stat().st_size),
         packaged_members=len(contents),uncompressed_bytes=sum(map(len,contents.values())))
     (output/"packaging-audit.json").write_text(json.dumps(audit,indent=2)+"\n",encoding="utf-8")
@@ -727,10 +788,13 @@ def main():
         help="Optional private JSON list of additional identity tokens. The file is never packaged; findings stay in the external audit.")
     parser.add_argument("--private-anonymous-candidate",action="store_true",
         help="Prepare a private local candidate with proposed own-author attribution. This is not an approved license change or distribution.")
+    parser.add_argument("--authorized-anonymous-review", action="store_true",
+        help="Use only after the author has authorized an anonymous review copy and its own-author notice. Makes no journal approval claim.")
     args=parser.parse_args()
     extra_identifiers = audit_tokens(json.loads(args.audit_tokens_file.read_bytes())) if args.audit_tokens_file else ()
     result=build(args.root,args.commit or "HEAD",args.out,extra_identifiers,
-                 private_anonymous_candidate=args.private_anonymous_candidate,working_copy=args.working_copy)
+                 private_anonymous_candidate=args.private_anonymous_candidate,working_copy=args.working_copy,
+                 authorized_anonymous_review=args.authorized_anonymous_review)
     print(json.dumps({k:result[k] for k in ("commit","raw_inputs","packaged_members","archive","pending_uncommitted_additions")},indent=2))
 
 

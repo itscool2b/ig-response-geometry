@@ -191,3 +191,26 @@ def test_concurrent_source_change_does_not_publish_stale_pdf(builder, monkeypatc
     with pytest.raises(RuntimeError, match='changed during compilation'):
         run('--engine', 'tectonic')
     assert (root / 'paper/paper.pdf').read_bytes() == b'previous identified PDF'
+
+
+@pytest.mark.parametrize('r1', [False, True])
+def test_concurrent_active_lineage_change_does_not_publish_stale_pdf(builder, monkeypatch, r1):
+    root, _, run = builder
+    figures = root / 'paper/figures_revision'
+    figures.mkdir()
+    (figures / 'lineage.json').write_text('historical registry')
+    if r1:
+        (root / 'paper/paper.tex').write_text(r'\includegraphics{figures_revision/r1_design.pdf}')
+    active = figures / ('r1_lineage.json' if r1 else 'lineage.json')
+    active.write_text('original active registry')
+    original = build_paper.subprocess.run
+
+    def changing(command, *, cwd, **kwargs):
+        result = original(command, cwd=cwd, **kwargs)
+        active.write_text('changed active registry')
+        return result
+
+    monkeypatch.setattr(build_paper.subprocess, 'run', changing)
+    with pytest.raises(RuntimeError, match='changed during compilation'):
+        run('--engine', 'tectonic')
+    assert (root / 'paper/paper.pdf').read_bytes() == b'previous identified PDF'
