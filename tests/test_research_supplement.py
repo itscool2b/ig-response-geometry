@@ -78,6 +78,18 @@ def test_snapshot_uses_committed_blobs_not_working_or_private_files(tmp_path):
     assert b"value = 1" in package.git(tmp_path,"cat-file","blob",index["file.py"][1])
 
 
+def test_private_inventory_may_have_nonexported_note_names(tmp_path):
+    subprocess.run(['git', 'init', '-q', str(tmp_path)], check=True)
+    (tmp_path / 'private note.md').write_text('private note')
+    subprocess.run(['git', '-C', str(tmp_path), 'add', 'private note.md'], check=True)
+    subprocess.run(['git', '-C', str(tmp_path), '-c', 'user.name=Fixture', '-c',
+        'user.email=fixture@example.invalid', 'commit', '-qm', 'fixture'], check=True)
+    _, index = package.snapshot(tmp_path, 'HEAD')
+    assert 'private note.md' in index
+    with pytest.raises(ValueError, match='normalized relative POSIX'):
+        package.working_file(tmp_path, 'private note.md')
+
+
 def test_build_preserves_notices_and_creates_deterministic_archive(tmp_path,monkeypatch):
     sampler=b'"""Original sampler license:\nMIT License\nCopyright (c) 2024 TSAIL group\nPermission notice preserved.\n"""\n'
     contents={"LICENSE":b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n",
@@ -194,6 +206,43 @@ def test_private_candidate_scan_reads_paths_utf16_compressed_chunks_nested_zips_
 def test_private_candidate_cannot_be_written_inside_public_repository(tmp_path):
     with pytest.raises(ValueError,match="outside the canonical public"):
         package.build(tmp_path,"HEAD",tmp_path/"candidate",private_anonymous_candidate=True)
+
+
+def test_current_display_lineage_changes_only_anonymous_manuscript_hash():
+    paper = (b"\\author{\\name Arjun Bajpai\n\\addr Independent Researcher}\n"
+             b"\\includegraphics[width=0.9\\linewidth]{figures_revision/r1_design.pdf}\n")
+    legacy = b'{"manuscript_source_sha256":"historical source remains frozen"}\n'
+    lineage = {"manuscript_inputs_sha256": {"paper/paper.tex": package.digest(paper),
+               "paper/references.bib": "b" * 64}, "inputs_sha256": {"raw.json": "c" * 64},
+               "outputs_sha256": {"r1_design.pdf": "d" * 64}}
+    original = {"LICENSE": b"MIT License\nCopyright (c) 2026 Arjun Bajpai\n",
+        "README.md": b"The sole current author is Arjun Bajpai.\n`CITATION.cff` identifies the deposit.\nRecipe.\n",
+        "paper/paper.tex": paper, "paper/figures_revision/lineage.json": legacy,
+        "paper/figures_revision/r1_lineage.json": json.dumps(lineage).encode()}
+    result, audit = package.anonymous_candidate(original, [])
+    assert result["paper/figures_revision/lineage.json"] == legacy
+    expected = json.loads(json.dumps(lineage))
+    expected["manuscript_inputs_sha256"]["paper/paper.tex"] = package.digest(result["paper/paper.tex"])
+    assert json.loads(result["paper/figures_revision/r1_lineage.json"]) == expected
+    assert "paper/figures_revision/r1_lineage.json" in audit["transformations"]
+    authorized, permission = package.anonymous_candidate(original, [], authorized_review=True)
+    assert b'Unapproved' not in authorized['README.md']
+    assert b'author authorized' in authorized['README.md']
+    assert permission['licensing_status'] == 'author_authorized_anonymous_review_copy'
+    assert authorized['LICENSE'] == result['LICENSE']
+    assert set(permission['transformations']) == set(audit['transformations'])
+    for invalid in ({}, {"manuscript_inputs_sha256": {"paper/paper.tex": "0" * 64}}):
+        with pytest.raises(ValueError, match="lineage|input hash"):
+            package.anonymous_candidate(dict(original, **{
+                "paper/figures_revision/r1_lineage.json": json.dumps(invalid).encode()}), [])
+
+
+def test_current_anonymous_readme_handles_windows_checkouts_without_changing_science():
+    source = (Path(__file__).resolve().parents[1] / 'README.md').read_text(encoding='utf-8')
+    lf = package.anonymous_readme(source)
+    crlf = package.anonymous_readme(source.replace('\n', '\r\n'))
+    assert crlf.replace('\r\n', '\n') == lf
+    assert not package.identity_hits('README.md', crlf.encode(), package.IDENTIFIERS)
 
 
 def test_research_packager_rejects_actual_committed_member_bytes_before_output(tmp_path, monkeypatch):
