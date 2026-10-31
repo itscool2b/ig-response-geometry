@@ -1,8 +1,9 @@
 """Read-only, fail-closed comparison of a complete registered analysis replay.
 
 SHA-256 identity and numerical equivalence are separate results. The only
-permitted numerical differences are binary64 map L1/ratio/signed reductions
-and summaries independently reconstructed from those rows. All other floats,
+permitted numerical differences are binary64 map L1/ratio/signed reductions,
+summaries independently reconstructed from those rows, and explicitly certified
+optional BCa/t sensitivity endpoints. All other floats,
 counts, labels, missing values, method choices and intervals must be exact.
 No frozen result, input, or generated result is changed by this verifier.
 
@@ -23,6 +24,7 @@ import math
 from pathlib import Path, PurePosixPath
 import re
 import struct
+import types
 import zipfile
 
 
@@ -248,10 +250,11 @@ def _summary_values(blobs, unit):
 
 
 class _Compare:
-    def __init__(self, report, name, maximum_coordinates, summaries):
+    def __init__(self, report, name, maximum_coordinates, summaries, intervals=None):
         self.report, self.name = report, name
         self.maximum_coordinates, self.summaries = maximum_coordinates, summaries
         self.record = report["files"][name]
+        self.intervals = intervals or {}
 
     def fail(self, location, reason, expected=None, actual=None):
         self.report["failures"].append(dict(file=self.name, location=location, reason=reason,
@@ -271,11 +274,19 @@ class _Compare:
             return
         error = abs(a - b)
         accepted = bound is not None and math.isfinite(bound) and error <= bound
+        interval = self.intervals.get(location)
+        if interval is not None:
+            from decimal import Decimal
+            lo, hi = map(Decimal, interval["enclosure"])
+            accepted = lo <= Decimal(a) <= hi and lo <= Decimal(b) <= hi
+            self.count("certified_optional_interval_endpoints")
         item = dict(location=location, expected=a, actual=b, absolute_error=error,
                     symmetric_relative_error=error / max(abs(a), abs(b)),
                     ulp_distance=abs(_ordered(a) - _ordered(b)), accepted=accepted,
                     allowed_absolute_error=bound)
         self.record["numeric_differences"].append(item)
+        if interval is not None:
+            item["independent_operation_enclosure"] = interval["enclosure"]
         if not accepted:
             self.fail(location, "difference exceeds derived bound" if bound is not None else
                       "no approved numerical equivalence rule", a, b)
@@ -359,11 +370,29 @@ class _Compare:
                         self.fail(location, "categorical or missing value changed", x, y)
 
 
-def verify(expected_results, actual_results, archive_root, code_root):
+def _interval_helper(archive, index, supplied=None):
+    """Compile authenticated immutable source bytes, never import from sys.path."""
+    path = _path(archive, "reviewer_interval_certificate.py")
+    blob = _read(path)
+    if hashlib.sha256(blob).hexdigest() != index.get("reviewer_interval_certificate.py"):
+        raise ValueError("interval helper source hash mismatch")
+    if supplied is not None:
+        supplied_path, supplied_bytes = supplied
+        if _root(supplied_path) != path or supplied_bytes != blob:
+            raise ValueError("supplied interval helper differs from authenticated archive")
+    module = types.ModuleType("authenticated_reviewer_interval_certificate")
+    module.__file__ = str(path)
+    exec(compile(blob, str(path), "exec"), module.__dict__)
+    if _read(path) != blob:
+        raise ValueError("interval helper changed during import")
+    return module, path, blob
+
+
+def verify(expected_results, actual_results, archive_root, code_root, *, interval_source=None):
     """Return an anonymous JSON-compatible audit; failures never rewrite evidence."""
     supplied_roots = (expected_results, actual_results, archive_root, code_root)
     report = dict(schema_version=1, verified=False, byte_identity=False, complete=False,
-                  policy="Exact except authenticated binary64 map reductions and independently reconstructed comparison summaries.",
+                  policy="Exact except authenticated map reductions, reconstructed summaries, and independently enclosed optional BCa/t endpoints under explicit checked post hoc accuracy contracts:16u normal CDF,8u inverse CDFs/powers. Primary estimates, percentile intervals and decisions remain exact.",
                   comparator_sha256=_sha(Path(__file__)), files={}, failures=[], checks=Counter())
     try:
         expected, actual, archive, code = map(_root, supplied_roots)
@@ -427,9 +456,28 @@ def verify(expected_results, actual_results, archive_root, code_root):
                 if b is not None:
                     for key in ("min", "max", "median", "mean"):
                         summaries[name][row_index, key] = abs(a[key] - b[key]) + a.get(key + "_bound", 0.) + b.get(key + "_bound", 0.)
+        certificates = None
+        helper = None
+        source_bindings = {}
+        def read_bound(name):
+            path = _path(archive, name)
+            blob = _read(path)
+            digest = hashlib.sha256(blob).hexdigest()
+            if index.get(name) != digest:
+                raise ValueError("certificate input source hash mismatch: " + name)
+            source_bindings[name] = digest
+            return blob
         for name, record in report["files"].items():
-            compare = _Compare(report, name, report["map_metadata"]["maximum_coordinates"], summaries)
             a, b = blobs[0][name], blobs[1][name]
+            intervals = {}
+            if a != b and re.fullmatch(r"methods/(P|B1|S)/(decisions(?:_round_rule|_nominal_axis)?|contrasts)\.json", name):
+                if certificates is None:
+                    module, helper_path, helper_bytes = _interval_helper(archive, index, interval_source)
+                    helper = helper_path, helper_bytes
+                    certificates = module.Certificates(read_bound, _json, old)
+                    report["interval_helper_sha256"] = hashlib.sha256(helper_bytes).hexdigest()
+                intervals = certificates.for_file(name, _json(a), _json(b))
+            compare = _Compare(report, name, report["map_metadata"]["maximum_coordinates"], summaries, intervals)
             if name.endswith(".csv"):
                 compare.csv(a, b)
             elif name.endswith(".json"):
@@ -438,6 +486,14 @@ def verify(expected_results, actual_results, archive_root, code_root):
                 compare.fail("", "unknown changed output category")
             if a != b and not record["numeric_differences"] and not any(f.get("file") == name for f in report["failures"]):
                 compare.fail("", "unexplained byte representation difference")
+        if certificates is not None:
+            report["optional_interval_certificates"] = certificates.records
+            report["interval_source_bindings"] = source_bindings
+            for name, digest in source_bindings.items():
+                if hashlib.sha256(_read(_path(archive, name))).hexdigest() != digest:
+                    raise ValueError("certificate input changed during verification")
+            if _read(helper[0]) != helper[1]:
+                raise ValueError("interval helper changed during verification")
         report["complete"] = True
         report["byte_identity"] = all(record["byte_identity"] for record in report["files"].values())
         report["verified"] = not report["failures"]

@@ -334,14 +334,17 @@ def add_reproduction(out, code, coverage):
     shutil.copyfile(code, out / "code/research-supplement.zip")
     for source, target in (("scripts/reproduce_reviewer_archive.py", "reproduce.py"),
                            ("requirements-replay-linux.txt", "requirements-replay-linux.txt"),
-                           ("scripts/verify_reviewer_replay.py", "verify_replay.py")):
+                           ("scripts/verify_reviewer_replay.py", "verify_replay.py"),
+                           ("scripts/reviewer_interval_certificate.py", "reviewer_interval_certificate.py")):
         shutil.copyfile(reject_aliases(ROOT / source), out / target)
     config = dict(schema_version=1, code="code/research-supplement.zip",
                   expected_manifest="results/analysis/manifest.json",
                   plan=plans[0].relative_to(out).as_posix(), coverage=coverage_paths,
                   input_paths=input_paths, metrics=metrics, runtime_lock="requirements-replay-linux.txt",
                   equivalence_verifier="verify_replay.py",
-                  equivalence_verifier_sha256=sha256(out / "verify_replay.py"))
+                  equivalence_verifier_sha256=sha256(out / "verify_replay.py"),
+                  interval_certificate="reviewer_interval_certificate.py",
+                  interval_certificate_sha256=sha256(out / "reviewer_interval_certificate.py"))
     (out / "reproduction.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
@@ -425,7 +428,11 @@ def build(out, *, results, runs, identity, collections=(), kit=None, anonymous=F
                        "`verify_replay.py` authenticates the evidence and permits only differences justified "
                        "by operation-specific floating-point bounds; categorical decisions, counts, missing "
                        "values and all other outputs must match its explicit contract. Its detailed report is "
-                       "`numerical-equivalence-report.json`. An unsupported difference fails the replay. "
+                       "`numerical-equivalence-report.json`. The separate interval certificate uses a documented "
+                       "post hoc accuracy contract for optional BCa and t sensitivity endpoints; it is not a "
+                       "registered inference criterion or a universal library error guarantee. Primary estimates, "
+                       "percentile intervals and decisions remain exact. Both verifier sources are authenticated "
+                       "again immediately before use. An unsupported difference fails the replay. "
                        "A successful replay exits zero without changing frozen records. A GPU and access "
                        "to the original volume are unnecessary.\n")
         (out / "README.md").write_text(readme, encoding="utf-8", newline="\n")

@@ -339,6 +339,8 @@ data=dict(kind='nhsjs_r1_gpu_analysis',inputs=inputs,population={'P':{'available
     config_path = root / 'reproduction.json'
     config = json.loads(config_path.read_text())
     config.pop('equivalence_verifier')
+    config.pop('interval_certificate', None)
+    config.pop('interval_certificate_sha256', None)
     config_path.write_text(json.dumps(config))
     files = sorted(p for p in root.rglob('*') if p.is_file())
     (root / 'MANIFEST.sha256').write_text(''.join(archive.sha256(p) + '  ' + p.relative_to(root).as_posix() + '\n' for p in files))
@@ -511,4 +513,27 @@ def test_verifier_source_is_reauthenticated_after_long_replay(tmp_path):
     config['equivalence_verifier'] = 'verify_replay.py'
     (root / 'verify_replay.py').write_text('raise AssertionError("altered code executed")')
     with pytest.raises(ValueError, match='verifier changed'):
+        replay.check_equivalence(root, tmp_path / 'output', tmp_path / 'code', config)
+
+
+@pytest.mark.parametrize('change', ['before', 'during'])
+def test_interval_certificate_source_is_authenticated_across_use(tmp_path, change):
+    from scripts import reproduce_reviewer_archive as replay
+    root = portable_fixture(tmp_path)
+    helper = root / 'reviewer_interval_certificate.py'
+    helper.write_bytes(b'VALUE = 1\n')
+    verifier = ('from pathlib import Path\n'
+                'def verify(expected, actual, archive, code, *, interval_source):\n'
+                ' path, source = interval_source\n'
+                ' assert source == b"VALUE = 1\\n"\n'
+                ' assert Path(__file__).parent == archive\n'
+                ' path.write_bytes(b"VALUE = 2\\n")\n'
+                ' return {"verified": True, "byte_identity": True}\n').encode()
+    (root / 'verify_replay.py').write_bytes(verifier)
+    config = json.loads((root / 'reproduction.json').read_text())
+    config.update(equivalence_verifier='verify_replay.py', equivalence_verifier_sha256=sha(verifier),
+                  interval_certificate=helper.name, interval_certificate_sha256=sha(helper.read_bytes()))
+    if change == 'before':
+        helper.write_bytes(b'VALUE = 2\n')
+    with pytest.raises(ValueError, match='certificate changed|source changed during use'):
         replay.check_equivalence(root, tmp_path / 'output', tmp_path / 'code', config)

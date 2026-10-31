@@ -8,9 +8,157 @@ import math
 import os
 from pathlib import Path
 import subprocess
+import sys
+import types
 import zipfile
 
 import pytest
+
+
+def certificate():
+    path = Path(__file__).resolve().parents[1] / "scripts/reviewer_interval_certificate.py"
+    spec = importlib.util.spec_from_file_location("certificate_under_test", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_sensitivity_enclosure_is_narrow_and_rejects_outside():
+    np = pytest.importorskip("numpy")
+    module = certificate()
+    values = np.array([.1, .13, .28, .37, .52, .81])
+    rng = np.random.Generator(np.random.PCG64(19))
+    samples = values[rng.integers(0, len(values), size=(1000, len(values)))].mean(axis=1)
+    samples += 1e-8
+    result = module.enclose(values, samples, .05, kinds=("bca", "t"))
+    for kind in ("bca", "t"):
+        for item in result[kind]:
+            low, high = map(float, item["enclosure"])
+            assert high - low < 1e-10
+            assert module.contains(item, (low + high) / 2)
+            assert not module.contains(item, math.nextafter(low, -math.inf))
+            assert not module.contains(item, math.nextafter(high, math.inf))
+
+
+@pytest.mark.parametrize("values,samples", [([1., 1., 1.], [1.] * 100),
+                                           ([0., 1., 2.], [1.] * 100),
+                                           ([1., 1., math.nextafter(1., 2.)], [1.] * 100),
+                                           ([1., math.inf, 3.], [1.] * 100)])
+def test_sensitivity_uncertain_tie_variance_and_nonfinite_fail_closed(values, samples):
+    with pytest.raises(ValueError):
+        certificate().enclose(values, samples, .05)
+
+
+def test_subnormal_intermediate_domain_is_rejected_explicitly():
+    np = pytest.importorskip("numpy")
+    values = np.array([.1, .13, .28, .37, .52, .81])*1e-160
+    with pytest.raises(ValueError, match="normal range"):
+        certificate().enclose(values, values, .05, kinds=("t",))
+
+
+@pytest.mark.parametrize("degrees", [1, 2, 5, 39])
+def test_independent_integer_t_quantile_brackets_current_scipy(degrees):
+    from scipy.stats import t
+    module = certificate()
+    for probability in (.975, 1-.05/14, 1-.0125/2):
+        checks = []
+        box = module.contract(module.t_quantile(probability, degrees), t.ppf(probability, degrees), "student_t_ppf", checks)
+        assert module.contains(module.packed(box), t.ppf(probability, degrees))
+    if degrees == 1:
+        exact = 1/module.mp.tan(module.mp.pi*(1-module.mp.mpf(.975)))
+        assert module.contains(module.packed(module.t_quantile(.975, 1)), exact)
+
+
+def test_pointwise_accuracy_contract_rejects_unbounded_library_error():
+    module = certificate()
+    with pytest.raises(ValueError, match="accuracy contract"):
+        module.contract(module.iv(1), 1+32*2**-53, "normal_ppf", [])
+    with pytest.raises(ValueError, match="accuracy contract"):
+        module.contract(module.iv(1), 1+64*2**-53, "normal_cdf", [], module.CDF_ACCURACY_UNITS)
+
+
+def test_interval_endpoint_serialization_preserves_exact_binary_values():
+    from decimal import Decimal, localcontext
+    from fractions import Fraction
+    module = certificate()
+    values = [module.mp.mpf(0), module.mp.mpf(1), module.mp.mpf(-1),
+              module.mp.mpf(1)/3, -module.mp.mpf(1)/7,
+              module.mp.mpf(2)**-1000, module.mp.mpf(2)**1000]
+    for value in values:
+        sign, mantissa, exponent, _ = value._mpf_
+        exact = Fraction((-1 if sign else 1)*mantissa) * Fraction(2)**exponent
+        with localcontext() as ctx:
+            ctx.prec = 3
+            encoded = module.exact_decimal(value)
+        assert Fraction(Decimal(encoded)) == exact
+        assert module.mp.mpf(encoded)._mpf_ == value._mpf_
+    for value in (module.mp.inf, -module.mp.inf, module.mp.nan):
+        with pytest.raises(ValueError, match="nonfinite"):
+            module.exact_decimal(value)
+
+
+def test_quantile_closed_endpoints_and_crossed_bins_are_enclosed():
+    np = pytest.importorskip("numpy")
+    module = certificate()
+    samples = np.array([-1., -.2, .3, .7, 2.])
+    for p in (0., 1., .25, .5, .75):
+        bounds, _ = module.quantile_enclosure(samples, module.iv(p))
+        assert module.contains(module.packed(bounds), np.quantile(samples, p))
+    bounds, bins = module.quantile_enclosure(samples, module.iv(.25-1e-15, .25+1e-15))
+    assert bins == [0, 1]
+    for p in (.25-1e-15, .25, .25+1e-15):
+        assert module.contains(module.packed(bounds), np.quantile(samples, p))
+    assert module.contains(module.packed(module.t_quantile(.5, 1)), 0.)
+
+
+def test_preserved_primary_mean_is_required_for_tie_fallback():
+    np = pytest.importorskip("numpy")
+    module = certificate()
+    values = np.array([.2, .8])
+    samples = np.array([.2]*25+[.5]*50+[.8]*25)
+    with pytest.raises(ValueError, match="ties"):
+        module.enclose(values, samples, .05, kinds=("bca",))
+    proof = module.enclose(values, samples, .05, kinds=("bca",), authenticated_mean=.5)
+    assert proof["samples_equal_mean"] == 50 and proof["bias_mean_bound_exactly"]
+    with pytest.raises(ValueError, match="historical mean"):
+        module.enclose(values, samples, .05, kinds=("bca",), authenticated_mean=math.nextafter(.5, 1.))
+
+
+def test_manifest_bound_helper_ignores_ambient_module_and_checks_supplied_bytes(tmp_path, monkeypatch):
+    module = verifier()
+    archive = tmp_path / "archive"
+    archive.mkdir()
+    helper = archive / "reviewer_interval_certificate.py"
+    blob = b"answer = 42\n"
+    helper.write_bytes(blob)
+    (tmp_path / "reviewer_interval_certificate.py").write_text("raise AssertionError('ambient import')")
+    monkeypatch.syspath_prepend(str(tmp_path))
+    index = {helper.name: sha(blob)}
+    loaded, _, source = module._interval_helper(archive, index, (helper, blob))
+    assert loaded.answer == 42 and source == blob
+    with pytest.raises(ValueError, match="supplied"):
+        module._interval_helper(archive, index, (helper, b"answer = 99\n"))
+    helper.write_bytes(b"answer = 41\n")
+    with pytest.raises(ValueError, match="hash"):
+        module._interval_helper(archive, index)
+
+
+def test_helper_source_change_during_import_is_rejected(tmp_path):
+    helper = tmp_path / "reviewer_interval_certificate.py"
+    blob = b"from pathlib import Path\nPath(__file__).write_bytes(b'changed')\n"
+    helper.write_bytes(blob)
+    with pytest.raises(ValueError, match="changed during import"):
+        verifier()._interval_helper(tmp_path, {helper.name: sha(blob)})
+
+
+def test_interval_exception_does_not_cover_primary_t_or_decision_fields():
+    from collections import Counter
+    report = dict(files={"fixture": {"numeric_differences": []}}, checks=Counter(), failures=[])
+    compare = verifier()._Compare(report, "fixture", 8, {}, {"/sensitivity/bca/interval/0": {"enclosure": ["0.09", "0.11"]}})
+    compare.numeric(.1, math.nextafter(.1, 1.), "/primary/interval/0")
+    compare.numeric(.1, math.nextafter(.1, 1.), "/sensitivity/t/interval/0")
+    compare.value(True, False, "/unique")
+    assert len(report["failures"]) == 3
 
 
 def verifier():
@@ -107,6 +255,21 @@ def case(tmp_path):
 
 def run(case):
     return verifier().verify(case["expected"], case["actual"], case["archive"], case["code"])
+
+
+def test_direct_cli_and_immutable_launcher_loaded_module_agree(case, tmp_path):
+    path = Path(__file__).resolve().parents[1] / "scripts/verify_reviewer_replay.py"
+    report = tmp_path / "cli-report.json"
+    command = [sys.executable, str(path), "--expected-results", str(case["expected"]),
+               "--actual-results", str(case["actual"]), "--archive-root", str(case["archive"]),
+               "--code-root", str(case["code"]), "--report", str(report)]
+    result = subprocess.run(command, capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
+    namespace = types.ModuleType("immutable_launcher_verifier")
+    namespace.__file__ = str(path)
+    exec(compile(path.read_bytes(), str(path), "exec"), namespace.__dict__)
+    loaded = namespace.verify(case["expected"], case["actual"], case["archive"], case["code"])
+    assert loaded == json.loads(report.read_text())
 
 
 def test_exact_replay_accepts_without_modifying_any_file(case):

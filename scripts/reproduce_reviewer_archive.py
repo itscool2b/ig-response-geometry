@@ -22,7 +22,8 @@ import zipfile
 
 
 REPLAY_PACKAGES = {'numpy': '2.5.3', 'scipy': '1.18.1', 'torch': '2.8.0+cu128',
-                   'Pillow': '11.0.0', 'PyYAML': '6.0.2', 'filelock': '3.16.1'}
+                   'Pillow': '11.0.0', 'PyYAML': '6.0.2', 'filelock': '3.16.1',
+                   'mpmath': '1.3.0'}
 
 
 def check_runtime():
@@ -155,9 +156,25 @@ def check_equivalence(root, out, code, config):
         raise ValueError('Replay verifier changed after archive authentication')
     specification = importlib.util.spec_from_loader('archive_replay_verifier', loader=None)
     module = importlib.util.module_from_spec(specification)
+    module.__file__ = str(path)
+    sources = {config['equivalence_verifier']: config['equivalence_verifier_sha256']}
+    keyword = {}
+    if config.get('interval_certificate'):
+        helper = contained(root, config['interval_certificate'])
+        helper_source = helper.read_bytes()
+        expected = config['interval_certificate_sha256']
+        if hashlib.sha256(helper_source).hexdigest() != expected:
+            raise ValueError('Interval certificate changed after archive authentication')
+        sources[config['interval_certificate']] = expected
+        keyword['interval_source'] = (helper, helper_source)
     exec(compile(source, str(path), 'exec'), module.__dict__)
     expected = contained(root, config['expected_manifest']).parent
-    return module.verify(expected, out / 'analysis', root, code)
+    result = module.verify(expected, out / 'analysis', root, code, **keyword)
+    for name, digest in sources.items():
+        if sha256(contained(root, name)) != digest:
+            raise ValueError('Verification source changed during use: ' + name)
+    result['executed_verifier_sources_sha256'] = sources
+    return result
 
 
 def replay(root, out):
