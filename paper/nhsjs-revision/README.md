@@ -1,8 +1,8 @@
 # NHSJS revision manuscript and research downloads
 
-The November 1, 2026 identified clean Word manuscript is in [Online](Online/).
+The final November 1, 2026 identified clean Word manuscript is in [Online](Online/).
 It includes the full inline citations required for this variant and renders to
-20 pages. The abstract contains 221 words. Titles, headings and body text remain
+20 pages. The abstract contains 243 words. Titles, headings and body text remain
 12-point Times New Roman; prose headings are bold and unnumbered.
 
 The authoritative LaTeX and bibliography remain [paper.tex](../paper.tex) and
@@ -13,11 +13,10 @@ references include 37 primary papers, with 25 primary papers from 2022 through 2
 
 [Verified research download index](https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/index.html)
 
-[downloads.json](downloads.json) separates two current November 1 source/research
-packages from six unchanged October 31 snapshots. Both new packages were retrieved
-in full without authentication and verified by SHA-256. The six earlier archives
-retain their object identities; their full-download and replay receipts remain
-dated October 31. These unlisted links can be used by anyone holding them.
+[downloads.json](downloads.json) separates two final November 1 source/research
+packages from two earlier November 1 editorial snapshots and six unchanged October 31 snapshots. Both new packages were retrieved
+in full without authentication and verified by SHA-256. All eight earlier ZIP objects
+retain their identities. Full-download receipts retain their original dates; numerical replay receipts remain dated October 31. These unlisted links can be used by anyone holding them.
 
 For full registered R1 CPU replay, use the complete R1 reviewer archive. It includes
 raw R1 tensors, compact records, code, plans, the regeneration kit and a dedicated

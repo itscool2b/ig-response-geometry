@@ -1,34 +1,62 @@
 {
-  "schema_version": 2,
-  "updated_at_utc": "2026-11-01T05:14:27.820821+00:00",
+  "schema_version": 3,
+  "updated_at_utc": "2026-11-01T17:16:29.619704+00:00",
   "access_model": "Unlisted bearer URLs; anyone with a link can download. No sign-in or authenticated access restriction.",
   "full_registered_r1_cpu_replay_requires": [
     "r1-complete-reviewer-archive.zip"
   ],
   "files": [
     {
-      "filename": "anonymous-manuscript-sources-2026-11-01.zip",
+      "filename": "anonymous-manuscript-sources-2026-11-01-final.zip",
       "title": "Current anonymous manuscript sources",
-      "bytes": 212116,
-      "sha256": "f8af73b67a6ba5d949653acdc0eedb7ddc0f32a07bf1238ff7e809342dcb8b55",
-      "description": "November 1 editorial revision: article and mathematical supplement sources, all 41 references, figures and tables. Fresh extraction rebuilds the 18-page source article and 4-page supplement.",
-      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-manuscript-sources-2026-11-01.zip",
+      "description": "Final November 1 readability revision: article and mathematical supplement sources, all 41 references, figures and tables. Fresh extraction rebuilds the 18-page source article and 4-page supplement.",
+      "bytes": 212296,
+      "sha256": "42988279aea6bce7b8febb78504907e2003afb0f9a05482c0c943060ec6b81b5",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-manuscript-sources-2026-11-01-final.zip",
       "snapshot_date": "2026-11-01",
+      "revision_pass": "final_readability",
       "kind": "current_editorial_package",
       "entire_public_download_verified": true,
-      "verified_at_utc": "2026-11-01T05:12:32.577490+00:00"
+      "verified_at_utc": "2026-11-01T17:15:30.505571+00:00"
+    },
+    {
+      "filename": "anonymous-research-supplement-2026-11-01-final.zip",
+      "title": "Current anonymous research supplement",
+      "description": "Final November 1 readability revision: current manuscript, analysis code, preserved small data, figures, tables and derivations. Scientific data and analysis are unchanged. Keep these current-document files separate from authenticated replay files.",
+      "bytes": 43382042,
+      "sha256": "eef9258f3eef24e5634d4503386932a995f4b2d9628f7b85bc2fcee65decd51c",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-research-supplement-2026-11-01-final.zip",
+      "snapshot_date": "2026-11-01",
+      "revision_pass": "final_readability",
+      "kind": "current_editorial_package",
+      "entire_public_download_verified": true,
+      "verified_at_utc": "2026-11-01T17:16:16.986997+00:00"
+    },
+    {
+      "filename": "anonymous-manuscript-sources-2026-11-01.zip",
+      "title": "Earlier November 1 anonymous manuscript sources",
+      "bytes": 212116,
+      "sha256": "f8af73b67a6ba5d949653acdc0eedb7ddc0f32a07bf1238ff7e809342dcb8b55",
+      "description": "Preserved earlier November 1 editorial snapshot, superseded for current reading by the final packages above. November 1 editorial revision: article and mathematical supplement sources, all 41 references, figures and tables. Fresh extraction rebuilds the 18-page source article and 4-page supplement.",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-manuscript-sources-2026-11-01.zip",
+      "snapshot_date": "2026-11-01",
+      "kind": "superseded_editorial_package",
+      "entire_public_download_verified": true,
+      "verified_at_utc": "2026-11-01T05:12:32.577490+00:00",
+      "verification_basis": "Earlier complete public download and SHA-256 verification retained. The final pass rechecks unchanged object metadata, public size and ETag."
     },
     {
       "filename": "anonymous-research-supplement-2026-11-01.zip",
-      "title": "Current anonymous research supplement",
+      "title": "Earlier November 1 anonymous research supplement",
       "bytes": 43381859,
       "sha256": "903871783149ae20068d3b91c283fa7d00a5d57be653505a60b8fb5ee0cb5457",
-      "description": "November 1 editorial revision: current manuscript, analysis code, preserved small data, figures, tables and derivations. Scientific data and analysis are unchanged. This is a current-document package, not a replacement for authenticated replay files.",
+      "description": "Preserved earlier November 1 editorial snapshot, superseded for current reading by the final packages above. November 1 editorial revision: current manuscript, analysis code, preserved small data, figures, tables and derivations. Scientific data and analysis are unchanged. This is a current-document package, not a replacement for authenticated replay files.",
       "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/anonymous-research-supplement-2026-11-01.zip",
       "snapshot_date": "2026-11-01",
-      "kind": "current_editorial_package",
+      "kind": "superseded_editorial_package",
       "entire_public_download_verified": true,
-      "verified_at_utc": "2026-11-01T05:13:27.827487+00:00"
+      "verified_at_utc": "2026-11-01T05:13:27.827487+00:00",
+      "verification_basis": "Earlier complete public download and SHA-256 verification retained. The final pass rechecks unchanged object metadata, public size and ETag."
     },
     {
       "filename": "r1-complete-reviewer-archive.zip",
@@ -106,6 +134,7 @@
   "current_document_builds_separate_from_authenticated_replay": true,
   "current_validation": {
     "date": "2026-11-01",
+    "revision_pass": "final_readability",
     "article_pages": 18,
     "mathematical_supplement_pages": 4,
     "scientific_display_files_rebuilt_identically": 14,
