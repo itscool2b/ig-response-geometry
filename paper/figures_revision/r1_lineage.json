@@ -42,7 +42,7 @@
     "analysis/paired_rescoring/oneb_success/protocol.json": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629"
   },
   "manuscript_inputs_sha256": {
-    "paper/paper.tex": "eff31ef16f6fec61914f080bb79ad50bfc65d7a1851f0d951171e7d766ed18ec",
+    "paper/paper.tex": "72c1be8c3291333980abc3c417eb069f1650b4074431e6ce6b1383a3fbe328f1",
     "paper/supplementary_derivations.tex": "f17a226edf81501515bd8e56b1209475c6d7c426d6e3357b1f4df02780f900b7",
     "paper/references.bib": "68cf733a76693879369b8c26ea1d6aac4ae6cb504efb987ce929e90a07b4c749",
     "paper/tables_revision/revision_facts.tex": "8f93b8133b72034362ad13cae1b910246c457e01419c3e57e74b17e24ad544a4"
