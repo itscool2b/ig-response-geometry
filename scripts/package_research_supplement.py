@@ -730,6 +730,13 @@ The declared display inputs are in analysis/manuscript_revision/nhsjs_r1/inputs/
 paper/figures_revision/r1_lineage.json binds the active source and every display.
 The separate paper/supplementary_derivations.tex contains the full mathematical
 derivations and compiles with the same Times New Roman/Tectonic environment.
+
+This package carries the November 1, 2026 editorial manuscript snapshot. The
+large reviewer archives retain their authenticated October 31 replay snapshot,
+including the manuscript and code embedded there. Scientific inputs and results
+are unchanged. Keep current document builds in this separate extraction; do not
+replace files inside the authenticated complete-archive replay tree. Use that
+complete archive and its dedicated lock for registered raw-data replay.
 """
     if working_copy:
         contents["SUPPLEMENT_README.md"] = contents["SUPPLEMENT_README.md"].replace(

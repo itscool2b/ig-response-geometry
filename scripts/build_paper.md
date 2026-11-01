@@ -1,6 +1,6 @@
 # Local manuscript builds
 
-The R1 source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Five figures, four tables and 34 references accompany a 221-word abstract and six keywords. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
+The R1 source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Five figures, four tables and 41 references (37 primary papers, including 25 published in 2022 through 2026) accompany a 221-word abstract and six keywords. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
 
 ## Rebuild current displays and PDFs
 

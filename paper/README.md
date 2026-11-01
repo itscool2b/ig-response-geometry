@@ -1,6 +1,6 @@
 # Current paper
 
-[How Scoring Responses Change Attribution Evaluation in a Diffusion Policy](paper.pdf), by Arjun Bajpai, is the R1 revision prepared from the October 4 submitted snapshot. The affiliation is Independent Researcher. The one-paragraph abstract contains 221 words, followed by six keywords. The revision contains five figures, four numbered tables and 34 references, including 30 peer-reviewed primary research articles.
+[How Scoring Responses Change Attribution Evaluation in a Diffusion Policy](paper.pdf), by Arjun Bajpai, is the R1 revision prepared from the October 4 submitted snapshot. The affiliation is Independent Researcher. The one-paragraph abstract contains 221 words, followed by six keywords. The revision contains five figures, four numbered tables and 41 references, including 37 peer-reviewed primary research articles, including 25 published from 2022 through 2026.
 
 - [paper.tex](paper.tex) and [references.bib](references.bib) are authoritative.
 - [paper.pdf](paper.pdf) is the identified reading copy; [paper-revision.pdf](paper-revision.pdf) is its byte-identical compatibility copy.
