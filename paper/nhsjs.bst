@@ -1,7 +1,7 @@
 % Minimal numeric bibliography for this manuscript.
 % Citation order is preserved. Every author is printed with initials first.
 ENTRY
-  { author title journal booktitle volume number pages year doi url publisher note }
+  { author title journal booktitle volume number pages year doi url urldate publisher note }
   {} {}
 INTEGERS { nameptr namesleft numnames }
 STRINGS { s t }
@@ -63,6 +63,7 @@ FUNCTION {output.entry}
     { url empty$ { "." write$ } { ", \url{" write$ url write$ "}." write$ } if$ }
     { ", \url{https://doi.org/" write$ doi write$ "}." write$ }
   if$
+  urldate empty$ { } { " (accessed " write$ urldate write$ ")." write$ } if$
   note empty$ { } { " " write$ note add.period$ write$ } if$
   newline$
 }

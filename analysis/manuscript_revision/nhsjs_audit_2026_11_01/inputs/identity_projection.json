@@ -1509,7 +1509,7 @@
           "status": "recorded"
         },
         "project_code_version": {
-          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "value": "Study source d10de3d61747; production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
           "status": "recorded"
         },
         "preserved_inputs": {
@@ -1674,7 +1674,7 @@
           "status": "recorded"
         },
         "project_code_version": {
-          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "value": "Study source d10de3d61747; production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
           "status": "recorded"
         },
         "preserved_inputs": {
@@ -1839,7 +1839,7 @@
           "status": "recorded"
         },
         "project_code_version": {
-          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "value": "Study source d10de3d61747; production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
           "status": "recorded"
         },
         "preserved_inputs": {
@@ -2004,7 +2004,7 @@
           "status": "recorded"
         },
         "project_code_version": {
-          "value": "Tag nhsjs-r1-1 code with the Month 8 forward files swapped in by the replay overlay (code tree /workspace/nhsjs/code/nhsjs-r1-1-m8; pipeline.py a66c4b9f... and per_step_attribution.py 137f4e44...)",
+          "value": "Study source d10de3d61747 with the Month 8 forward files swapped in by the replay overlay (code tree /workspace/nhsjs/code/nhsjs-r1-1-m8; pipeline.py a66c4b9f... and per_step_attribution.py 137f4e44...)",
           "status": "recorded"
         },
         "preserved_inputs": {
@@ -2012,6 +2012,25 @@
           "status": "recorded"
         }
       }
+    }
+  ],
+  "presentation_note": "Redundant private-tag display labels are omitted. Code digests, field statuses and recorded code-tree paths remain. Frozen source records and their existing public history are unchanged; this projection does not assert total unlinkability.",
+  "presentation_fields": [
+    {
+      "population": "R1_P",
+      "field": "project_code_version"
+    },
+    {
+      "population": "R1_B1",
+      "field": "project_code_version"
+    },
+    {
+      "population": "R1_S",
+      "field": "project_code_version"
+    },
+    {
+      "population": "R1_M8_replay",
+      "field": "project_code_version"
     }
   ]
 }

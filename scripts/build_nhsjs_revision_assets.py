@@ -148,7 +148,7 @@ def build(figures, tables_out):
     audit.design(figures); audit.saved_geometry(figures); audit.tail_geometry(figures)
     audit.success_tasks(figures); audit.methods(figures); numerics(figures); audit.offline_numerics(figures); audit.tables(tables_out)
     registry={'schema_version':2,'presentation':'NHSJS audit revision 2026-11-01','inputs_sha256':USED,
-              'manuscript_inputs_sha256':{p:digest(ROOT/p) for p in ['paper/paper.tex','paper/supplementary_derivations.tex','paper/references.bib','paper/appendix_aliasing.tex','paper/tables_revision/revision_facts.tex']},
+              'manuscript_inputs_sha256':{p:digest(ROOT/p) for p in ['paper/paper.tex','paper/supplementary_derivations.tex','paper/references.bib','paper/tables_revision/revision_facts.tex']},
               'builder_sha256':digest(Path(__file__)), 'populations':POPULATIONS,
               'outputs_sha256':{p.relative_to(ROOT).as_posix():digest(p) for folder in (figures,tables_out) for p in sorted(folder.glob('r1_*')) if p.suffix in ('.pdf','.png','.tex')}}
     (figures/'r1_lineage.json').write_text(json.dumps(registry,indent=2,allow_nan=False)+'\n',encoding='utf-8',newline='\n')

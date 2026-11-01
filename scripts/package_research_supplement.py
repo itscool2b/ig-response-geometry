@@ -612,6 +612,35 @@ def active_manuscript_lineage(source):
     return "paper/figures_revision/lineage.json"
 
 
+def current_presentation(contents):
+    """Keep current document dependencies and displays, plus template notices."""
+    from scripts import package_paper_sources as source_package
+    source=source_package.selected_source(contents['paper/paper.tex'].decode('utf-8'),anonymous=True)
+    keep={'paper/paper.tex',*('paper/'+name for name in source_package.BASE_FILES),
+          'paper/ijcai26.sty','paper/named.bst'}
+    pending=[('paper/paper.tex',source,True,False)];visited=set()
+    if r'\bibliographystyle{nhsjs}' in source and 'paper/supplementary_derivations.tex' in contents:
+        pending.append(('paper/supplementary_derivations.tex',contents['paper/supplementary_derivations.tex'].decode('utf-8'),True,True))
+    while pending:
+        name,text,top,supplement=pending.pop()
+        if name in visited:continue
+        visited.add(name);keep.add(name)
+        for relative in source_package.manuscript_dependencies(text,top_level=top,supplement=supplement):
+            dependency='paper/'+relative
+            if dependency not in contents:raise ValueError('Current manuscript dependency is absent: '+dependency)
+            keep.add(dependency)
+            if dependency.endswith('.tex'):
+                pending.append((dependency,contents[dependency].decode('utf-8'),False,False))
+    lineage_path=active_manuscript_lineage(contents['paper/paper.tex'])
+    if lineage_path in contents:
+        lineage=json.loads(contents[lineage_path]);keep.add(lineage_path)
+        keep.update(name for name in lineage.get('outputs_sha256',{}) if name.startswith('paper/'))
+        obsolete={name for name in lineage.get('manuscript_inputs_sha256',{}) if name.startswith('paper/')}-keep
+        if obsolete:raise ValueError('Unused manuscript fragments remain bound in the current lineage: '+str(sorted(obsolete)))
+    omitted=sorted(name for name in contents if name.startswith('paper/') and name not in keep)
+    return {name:data for name,data in contents.items() if name not in omitted},omitted
+
+
 def anonymous_candidate(contents, extra_identifiers, *, authorized_review=False, review_route=None):
     """Create a marked local proposal; never mutate or relicense canonical files."""
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -643,10 +672,7 @@ def anonymous_candidate(contents, extra_identifiers, *, authorized_review=False,
               "The proposed own-author notice is for local review only; third-party notices remain intact.\n"
               "See SUPPLEMENT_README.md for scope and source-byte replay limitations.\n\n")
     if authorized_review:
-        banner = ("ANONYMOUS RESEARCH SUPPLEMENT FOR REVIEW.\n"
-                  "The author authorized this review copy's anonymous own-author notice; third-party notices remain intact.\n"
-                  "Canonical author attribution remains unchanged. This package makes no journal-submission or acceptance claim.\n"
-                  "See SUPPLEMENT_README.md for scope and source-byte replay limitations.\n\n")
+        banner = ""
     transformed["README.md"] = (banner + readme).encode()
     transformed["paper/paper.tex"] = package_paper_sources.anonymous_source(
         contents["paper/paper.tex"].decode("utf-8"), review_route=review_route).encode()
@@ -714,15 +740,21 @@ Regenerate current manuscript displays in a fresh extraction:
     python scripts/build_nhsjs_revision_assets.py
     python scripts/build_paper.py --engine tectonic
 
+Recompute the current retrospective reporting analysis with 10,000 resamples:
+
+    python -m analysis.manuscript_revision.nhsjs_audit_2026_11_01.report --output runs/current-report
+
+The resulting report.json can be compared with the recorded report in
+analysis/manuscript_revision/nhsjs_audit_2026_11_01/results/2026-11-01-v1/.
+
 Times New Roman and cached public TeX resources are required. The standalone
 supplement compiles with Tectonic. This smaller supplement does not contain the
 complete raw model-call tensor bundle. Registered multi-method replay uses the
 separate complete data archive and its pinned Linux environment. GPU policy
 regeneration additionally requires the recorded models and simulator runtime.
 
-The author authorized anonymous attribution under the included MIT license.
-Third-party license notices are retained, including the TMLR Apache-2.0 license
-and bibliography LPPL-1.0-or-later notice. No journal receipt is implied.
+The MIT license and third-party notices are retained, including the TMLR
+Apache-2.0 license and bibliography LPPL-1.0-or-later notice.
 """
 
 
@@ -740,6 +772,8 @@ def build(root, revision, output, extra_identifiers=(), *, private_anonymous_can
         raise ValueError("Private anonymous candidate output must be outside the canonical public repository")
     contents, audit = (collect(root, revision, extra_identifiers, working_copy=True) if working_copy
                        else collect(root, revision, extra_identifiers))
+    if authorized_anonymous_review or public_release:
+        contents,audit['release_omitted_presentation_members']=current_presentation(contents)
     if public_release:
         omitted = [name for name in contents if name.startswith('docs/manuscript_revision/')
                    or name in ('paper/arxiv_abstract.txt', 'scripts/build_paper.md')]
@@ -821,13 +855,12 @@ Use that complete archive and its dedicated lock for registered raw-data replay.
         contents['SUPPLEMENT_README.md'] = review_readme().encode('utf-8')
     elif public_release:
         contents['SUPPLEMENT_README.md'] = review_readme().replace(
-            '# Anonymous research supplement', '# Research supplement for the current public revision').replace(
-            'The author authorized anonymous attribution under the included MIT license.',
-            'The identified author attribution is retained under the included MIT license.').encode('utf-8')
+            '# Anonymous research supplement', '# Research supplement for the current public revision').encode('utf-8')
+        contents['README.md'] = contents['SUPPLEMENT_README.md']
     package_manifest = dict(kind=("anonymous_research_supplement_review_copy" if authorized_anonymous_review else
         "private_anonymous_research_supplement_candidate" if anonymous else "identified_research_supplement"),
-        status=("public_revision_not_journal_submission" if public_release else
-        "author_authorized_review_copy_not_journal_submission" if authorized_anonymous_review else
+        status=("public_revision" if public_release else
+        "anonymous_review_copy" if authorized_anonymous_review else
         "unapproved_for_external_distribution_or_submission" if anonymous else "working_draft_not_submission"),
         source_kind=audit.get("source_kind", "committed_git_blobs"),
         source_snapshot_sha256=audit.get("snapshot_sha256"),

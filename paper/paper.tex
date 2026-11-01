@@ -59,6 +59,11 @@
 \makeatother
 
 \setcounter{secnumdepth}{0}
+% TeX-only: keep narrow paragraph table cells left aligned.
+\makeatletter
+\let\NHSJSarrayparboxrestore\@arrayparboxrestore
+\def\@arrayparboxrestore{\NHSJSarrayparboxrestore\raggedright\arraybackslash}
+\makeatother
 \begin{document}
 \setlength{\abovedisplayskip}{6pt plus 2pt minus 2pt}
 \setlength{\belowdisplayskip}{6pt plus 2pt minus 2pt}
@@ -159,10 +164,10 @@ The extra endpoint weight can produce error proportional to $1/m$. Exact integra
 % audit-anchor: r1-estimators
 Numerical variants change model precision, summation and rule (Table~\ref{tab:r1-experiments}; Supplementary Table S8). Corrected 16-bit calculations sum at 32 bits, about seven significant digits. Midpoint and Gauss-Legendre rules use interior nodes; adaptive Gauss-Kronrod adds nodes using an error estimate. Without an exact policy answer, qualification requires adaptive convergence and pairwise agreement among adaptive integration, 128-node Gauss-Legendre and the 512-interval 32-bit trapezoid: relative L1 difference below 0.1\%. Relative L1 is the absolute coordinate-difference sum divided by the absolute comparator-coordinate sum. Supplementary Table S5 separates the diagnostic populations.
 
+\input{tables_revision/r1_experiments.tex}
+
 % audit-anchor: endpoint-example
 Even a linear action example exposes endpoint sensitivity. For $g(u)=u$, baseline zero and input one, exact N attribution is 0.999999, slightly below one because of the stabilizer. At 64 intervals, equal endpoint weights underestimate it by 1.54\%, and trapezoidal weights by 0.78\%. Midpoint and 64-node Gauss-Legendre estimates slightly exceed it, each by about one part per million. N's gradient falls sharply to zero near the actual-input endpoint. Over the tested budgets, that unresolved transition gives approximately first-order trapezoidal error. With fixed positive epsilon the integrand is smooth and this is not a universal asymptotic claim.
-
-\input{tables_revision/r1_experiments.tex}
 
 % audit-anchor: methods-design
 Seven methods rank groups by summed absolute values: Q/N IG, Q/N mean path gradients, input difference, and Q/N original equal-weight IG. Path gradients omit IG's input-difference factor; input difference ranks baseline-to-input change alone. Ordinary IG/path gradients use 512 trapezoidal intervals, a 16-bit model and 32-bit accumulation. Chance controls average 32 image orders, 64 token orders and all $8!=40{,}320$ state orders. Raster, reverse and center-out image orders, plus forward/reverse token or joint orders, test attribution-free alternatives.
@@ -179,6 +184,17 @@ A separate retrospective report uses 10,000 paired episode-bootstrap draws, seed
 Completeness residual is the absolute attribution-sum error divided by the absolute target change. Coordinate differences, Spearman rank correlation, the share of top-ranked groups in common, overlap of replaced-feature sets and AUC changes are reported separately. Zero denominators remain undefined. The 1\% completeness and 0.01 AUC-change thresholds are study-specific diagnostics, not guarantees. Separate 32-bit diagnostics cover twelve contexts per modality/target from six episodes across four tasks, with no completed RDT-1B context. They demonstrate possible numerical failures without estimating frequency.\par
 All experiments are simulated, involve no human or animal subjects and require no IRB approval.
 
+% audit-anchor: figure-overview
+Figure~\ref{fig:r1-design} connects the workflow, scoring responses and constructed examples.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_design.pdf}
+% audit-anchor: fig-design
+\caption{\textbf{Target and scoring response are separate choices.} \textbf{A)} Workflow. \textbf{B)} One actual saved curve scored by Q and N; shading defines AUC and $r>B$ marks an overshoot. \textbf{C)} Analytic responses versus squared residual ratio $r/B$, with their gap in the zero-stabilizer limit. \textbf{D)} IG shares for $g(x_1,x_2)=x_1^2+0.8x_2$, divided by each target's total change. Labels identify input features. The constructed reversal is not an observed PickCube result; the supplement gives the function and proof.}
+\label{fig:r1-design}
+\end{figure}
+
 \section{Results}
 \subsection{Response identity and saved curves}
 % audit-anchor: identity-introduction
@@ -190,14 +206,6 @@ C_Q-C_N=\frac{(\sqrt{r+\epsilon}-\sqrt\epsilon)(\sqrt{B+\epsilon}-\sqrt{r+\epsil
 \end{equation}
 % audit-anchor: identity-results
 The difference is positive when $0<r<B$, zero at $r=0,B$, and negative at overshoots. If every sampled point is in range, $r\le B$, then $\Delta\ge0$, strictly when some positive-weight point satisfies $0<r<B$. Thus N makes the same ranking look better for deletion and worse for insertion. The saved schedule gives $\Delta\le0.2175$ for every defined curve. Figure~\ref{fig:r1-design}B--D illustrates the score, identity and a constructed target reversal; proofs are in Supplementary Equations S1--S6.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.90\linewidth]{figures_revision/r1_design.pdf}
-% audit-anchor: fig-design
-\caption{\textbf{Target and scoring response are separate choices.} \textbf{A)} Workflow. \textbf{B)} One actual saved curve scored by Q and N; shading defines AUC and $r>B$ marks an overshoot. \textbf{C)} Analytic responses versus squared residual ratio $r/B$, with their gap in the zero-stabilizer limit. \textbf{D)} IG shares for $g(x_1,x_2)=x_1^2+0.8x_2$, divided by each target's total change. Labels identify input features. The constructed reversal is not an observed PickCube result; the supplement gives the function and proof.}
-\label{fig:r1-design}
-\end{figure}
 
 % audit-anchor: analytic-random-reference
 The usual 0.5 benchmark corresponds to a straight-line normalized response; random-order areas need not equal it. If every feature contributes equally and independently, every ordering gives insertion/deletion AUC 0.65976 under Q on the saved 100-feature schedule, versus 0.5 under unstabilized N. Thus 0.5 misstates Q's chance performance. These are analytic examples, not RDT controls. A three-feature construction also reverses ordering preference by changing only the response (supplement).

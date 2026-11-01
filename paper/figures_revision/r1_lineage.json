@@ -4,7 +4,7 @@
   "inputs_sha256": {
     "analysis/revision/response_geometry_theory.py": "f61bbc69e6a4e93a09c7441634fac9765f2ac0512284ac7ce28c1ce95435015e",
     "analysis/revision_gpu/v1/figures.py": "a38e19eb9ed03a64ee046eca5826fb6392002c2787fcfc227e396a5513d6ca8d",
-    "scripts/nhsjs_audit_displays.py": "07770c4e05d7c2e3a3b906667b74d8d45a9f6d7fa1c220c8849eb4c94bc8e528",
+    "scripts/nhsjs_audit_displays.py": "0a533d71c013d42474b9f7d420ddc47b99ef13cde288ffaa68dfba32a704ac35",
     "analysis/manuscript_revision/nhsjs_r1/inputs/manifest.json": "8aa59967c86d4fbf5238bb0a3062d8754fa4ea475ea9d88bb2eca86c2092b163",
     "analysis/manuscript_revision/nhsjs_audit_2026_11_01/results/2026-11-01-v1/report.json": "47f097bef752554931e61fe49d9961f2631562f6c10f405ce99d9697535c286c",
     "analysis/manuscript_revision/nhsjs_audit_2026_11_01/report.py": "e9881b7f14ae6f785073b4b310b298c4ef13099cbca0b214795bf5e3196f9c3a",
@@ -29,7 +29,7 @@
     "analysis/numerical_case/2026-10-01-v1/inputs/sealed_v6.json": "c5c265b3cfaf38d76d3de99c4db1b57b6177f74cfbaa5131b8bf9e49ed117098",
     "analysis/manuscript_revision/nhsjs_r1/inputs/contrasts.csv": "7d93f3ea2436e2c3ddd4b3596856fc46a4df5be46c36b74aaec126c28f299c60",
     "analysis/manuscript_revision/results/2026-10-03-v2/paired_summary.csv": "0ec5072cb5736553346be30a64b8df124aebeded60975e48b87f7106aaa82f04",
-    "analysis/manuscript_revision/nhsjs_audit_2026_11_01/inputs/identity_projection.json": "25743a27a92df35803cf67d08346678060fce690d3c158cd35f93b76514a6204",
+    "analysis/manuscript_revision/nhsjs_audit_2026_11_01/inputs/identity_projection.json": "2461f15da4ef7933402132206b2fc7b911f93452817f8585b10910ff81bce2df",
     "analysis/manuscript_revision/nhsjs_r1/inputs/identity_values.json": "350538f87c40bc9aa463f66d5acffcbf09b8209336023bb1dca0df585bddbb68",
     "analysis/manuscript_revision/nhsjs_r1/inputs/methods_decisions.csv": "46023e3c42c7319244e3150c3b49c236f3ca093f6eedb58cff42a1afdc95f296",
     "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/numerics/qualification.csv": "2a8377e38bfe2c788f52915949c9285f9d52ae4260e5abc5462d5da984993b01",
@@ -42,13 +42,12 @@
     "analysis/paired_rescoring/oneb_success/protocol.json": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629"
   },
   "manuscript_inputs_sha256": {
-    "paper/paper.tex": "d63f5f1a766baf31e2228a37a6cac7ed376349ed7e4f14b108694a5654a6dcfa",
+    "paper/paper.tex": "eff31ef16f6fec61914f080bb79ad50bfc65d7a1851f0d951171e7d766ed18ec",
     "paper/supplementary_derivations.tex": "f17a226edf81501515bd8e56b1209475c6d7c426d6e3357b1f4df02780f900b7",
-    "paper/references.bib": "33eb65bd371dec095404c84cfe3eca07a16b1953135ee301294009454c8490b6",
-    "paper/appendix_aliasing.tex": "e5f45fd17cdfdd4472c849bd5f85f01647a5794f0e99dbcbfaa13fee7c1e02cf",
+    "paper/references.bib": "68cf733a76693879369b8c26ea1d6aac4ae6cb504efb987ce929e90a07b4c749",
     "paper/tables_revision/revision_facts.tex": "8f93b8133b72034362ad13cae1b910246c457e01419c3e57e74b17e24ad544a4"
   },
-  "builder_sha256": "9105ad6b3b84b19d61f7dc37544707e7918ef10c5fce08730fe98d460ddf6872",
+  "builder_sha256": "bd9840926d00eb9f5da73a382393f2dc97e5c813d4cd0a4d21089f9521682c69",
   "populations": {
     "r1_design": {
       "construction": {
@@ -1868,9 +1867,9 @@
     "paper/tables_revision/r1_calibration.tex": "a9d2667b85c7d70b3e157642debc7c9ec51638abbb1884a7f3626dc67a8292f1",
     "paper/tables_revision/r1_diagnostics.tex": "9d97b40bcc85e7676346f4ca31f300766fa9ad93f92de30bfcd7eab8a1d00daa",
     "paper/tables_revision/r1_estimators.tex": "cb43f859e934172cd85b5806ff3709d832e24dad47c0e75a100797004f0c8895",
-    "paper/tables_revision/r1_experiments.tex": "b3c68c6ca609bb6ffd6d50d6ac9e2cc3a499c11702c2030ff9b27afd3c7f2530",
-    "paper/tables_revision/r1_identities.tex": "ebb101202de760dc77021d49470098ab9bf1fae914d34a706061ba4939788246",
-    "paper/tables_revision/r1_methods_summary.tex": "153da2f755e8a09366546416a6cb21c153af00baea28c5bf8b1eba703ef858c8",
+    "paper/tables_revision/r1_experiments.tex": "2fe2d9950943af4cfe01644cc3a52ca5af10a985d27b98083fba76eec40f34c2",
+    "paper/tables_revision/r1_identities.tex": "983875f76c29c0ccba873573d9b3507b4634a91cae63b7ac24a23b55ad12bb82",
+    "paper/tables_revision/r1_methods_summary.tex": "537fbbd1b136a73471f697c98ce1082144e763bf152d1380914361e0a4a1de79",
     "paper/tables_revision/r1_saved_summary.tex": "e2fe6044a5f2a3676cb9932a3c093686c330e7dd07d6b70cb13fdff84d891263",
     "paper/tables_revision/r1_stability.tex": "fa421484e7c1ae172a85e1251d0ff3a4c4addd3e9c49126a7f81b566044cc8c4",
     "paper/tables_revision/r1_success_summary.tex": "32c6b853b3091cea0acfc9193b620e55b01ce7fe8475bbd542f244f435634983"

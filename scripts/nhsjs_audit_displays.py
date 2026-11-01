@@ -46,8 +46,9 @@ def table(out, name, caption, label, headers, data, widths, long=False):
                  r'\midrule\endfirsthead', r'\toprule', header, r'\midrule\endhead',
                  r'\bottomrule\endfoot']
     else:
+        padding = 3 if name in {'r1_experiments', 'r1_methods_summary'} else 2
         lines = [r'\begin{table}[htbp]', r'\centering', r'\caption{' + caption + '}',
-                 r'\label{' + label + '}', r'\setlength{\tabcolsep}{2pt}',
+                 r'\label{' + label + '}', rf'\setlength{{\tabcolsep}}{{{padding}pt}}',
                  r'\begin{tabular}{' + columns + '}', r'\toprule', header, r'\midrule']
     lines += [' & '.join(text(v) for v in row) + r' \\' for row in data]
     lines += [r'\end{longtable}'] if long else [r'\bottomrule', r'\end{tabular}', r'\end{table}']
@@ -324,7 +325,7 @@ class AuditDisplays:
             ['New StackCube 170M, targets Q/N','30 (0) / 60','Trapezoid, 512; old rule','bf16 / fp32','Complete contexts'],
             ['Preserved four-task sample','21 contexts','Numerical checks','bf16 and fp32','Contexts'],
             ['Separate offline diagnostics','6 / 12 per input and target','Trapezoid, 128 to 1,024','fp32 / fp32','Contexts and outputs']]
-        table(out,'r1_experiments',r'\textbf{Study groups answer different questions.} Counts are episodes (successes) / calls unless stated. Precision is model / accumulation: bf16 is 16-bit, fp32 32-bit. Budgets count intervals; equal weighting uses one extra evaluation. Asterisks indicate inferred budgets. The saved 1B rerun is excluded. Preserved and offline samples overlap. Supplementary Tables S2 and S8 give identities and variants.', 'tab:r1-experiments',
+        table(out,'r1_experiments',r'\textbf{Study groups answer different questions.} Counts are episodes (successes) / calls unless stated. Precision is model / accumulation: bf16 is 16-bit, fp32 32-bit. Budgets count intervals; equal weighting uses one extra evaluation. Asterisks indicate inferred budgets. The saved 1B rerun is excluded. Preserved and offline samples overlap. Saved runs measure response shifts, matched groups compare methods, and other contexts test numerics. Saved 170M weights are recovered; matched weights are recorded. Tables S2 and S8 give full identities, statuses and variants.', 'tab:r1-experiments',
               ['Group','Episodes / calls','Rule and budget','Precision','Preserved'],experiments,[.25,.14,.21,.18,.14])
         contrasts=[r for r in self.rows(self.inputs/'contrasts.csv') if r['bank']=='P' and r['metric']=='normalized_auc']
         if len(contrasts)!=7:raise ValueError('Expected exactly seven primary contrasts')
@@ -425,7 +426,8 @@ class AuditDisplays:
         table(out,'r1_identities',r'\textbf{Component identity status for the main saved and new groups.} Recorded means captured during that experiment; recovered means reconstructed from dated evidence; inferred means supported but not established; unknown means unavailable. Recovery does not imply a runtime hash. Full values and all 12 population inventories accompany the public source projection. Saved checkpoint and encoder files can be recovered, while most runtime versions remain unknown. New runtime entries include incomplete host captures and do not establish every host individually.',
               'tab:r1-identities',['Component','Saved Q','Saved N','New 170M PickCube','New 1B PickCube','New 170M StackCube'],data,[.29,.12,.12,.13,.13,.13],long=True)
         values=json.loads(self.source(self.inputs/'identity_values.json').read_text(encoding='utf-8'))
-        value_rows=[[r['component'],r['value'].replace('d10de3d)','d10de3d61747)').replace('384 x 384','384 × 384'),r['status']] for r in values['rows']]
+        value_rows=[[r['component'],re.sub(r'project tag \S+ \(d10de3d\)',
+                    'study source d10de3d61747',r['value']).replace('384 x 384','384 × 384'),r['status']] for r in values['rows']]
         path=out/'r1_identities.tex';existing=path.read_text(encoding='utf-8')
         remaining=[p['id'] for p in projection['populations'] if p['id'] not in columns]
         population_names={'saved_RDT1B_seed42_month4':'Saved 1B, seed 42',

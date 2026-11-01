@@ -243,9 +243,23 @@ def build(root, output, *, authorized_review=False, review_url_file=None, identi
         ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review or identified else
          'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n')
     ).encode()
+    if authorized_review or identified:
+        files['README.txt'] = (
+            ('Manuscript sources for the public revision.\n' if identified else
+             'Manuscript sources for anonymous review.\n') +
+            'paper.tex contains the article.\n' +
+            ('supplementary_derivations.tex contains the supplementary material.\n' if 'supplementary_derivations.tex' in names else '') +
+            'Compile with Tectonic:\n'
+            '    tectonic --only-cached --untrusted --reruns 3 paper.tex\n' +
+            ('    tectonic --only-cached --untrusted --reruns 3 supplementary_derivations.tex\n' if 'supplementary_derivations.tex' in names else '') +
+            'Times New Roman and a populated TeX package cache are required.\n'
+            'The separate research and data archives provide scientific reproduction inputs and commands.\n'
+            'Template provenance and upstream notices are retained in tmlr-source.json and tmlr-LICENSE.\n'
+            'The TMLR template uses Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
+        ).encode()
     manifest = dict(kind='identified_manuscript_sources' if identified else 'anonymous_manuscript_sources', status=(
-                    'public_revision_not_journal_submission' if identified else
-                    'author_authorized_review_copy_not_journal_submission' if authorized_review else 'working_draft_not_submission_ready'),
+                    'public_revision' if identified else
+                    'anonymous_review_copy' if authorized_review else 'working_draft_not_submission_ready'),
                     artifacts_sha256={name:digest(data) for name,data in sorted(files.items())})
     files['manifest.json'] = (json.dumps(manifest,indent=2,sort_keys=True)+'\n').encode()
     # Validate every output member, including generated templates, before

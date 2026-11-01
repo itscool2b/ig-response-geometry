@@ -84,9 +84,10 @@ def test_authorized_review_package_preserves_every_scientific_member(tmp_path):
             if name not in {'README.txt', 'manifest.json'}:
                 assert before.read(name) == after.read(name), name
         readme = after.read('README.txt').decode()
-        assert 'working draft' not in readme and 'submission or receipt' in readme
+        assert 'supplementary_derivations.tex' in readme
+        assert all(text not in readme for text in ('working draft', 'author-authorized', 'submission or receipt'))
         manifest = json.loads(after.read('manifest.json'))
-        assert manifest['status'] == 'author_authorized_review_copy_not_journal_submission'
+        assert manifest['status'] == 'anonymous_review_copy'
         assert 'author_authorized' not in json.loads(before.read('manifest.json'))['status']
 
 
