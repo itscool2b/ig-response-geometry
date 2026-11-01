@@ -4,7 +4,7 @@
   "inputs_sha256": {
     "analysis/revision/response_geometry_theory.py": "f61bbc69e6a4e93a09c7441634fac9765f2ac0512284ac7ce28c1ce95435015e",
     "analysis/revision_gpu/v1/figures.py": "a38e19eb9ed03a64ee046eca5826fb6392002c2787fcfc227e396a5513d6ca8d",
-    "scripts/nhsjs_audit_displays.py": "ea84a0b7fc589141561d6237c1b98988b1ac32940fb556903ef12036af67ba60",
+    "scripts/nhsjs_audit_displays.py": "07770c4e05d7c2e3a3b906667b74d8d45a9f6d7fa1c220c8849eb4c94bc8e528",
     "analysis/manuscript_revision/nhsjs_r1/inputs/manifest.json": "8aa59967c86d4fbf5238bb0a3062d8754fa4ea475ea9d88bb2eca86c2092b163",
     "analysis/manuscript_revision/nhsjs_audit_2026_11_01/results/2026-11-01-v1/report.json": "47f097bef752554931e61fe49d9961f2631562f6c10f405ce99d9697535c286c",
     "analysis/manuscript_revision/nhsjs_audit_2026_11_01/report.py": "e9881b7f14ae6f785073b4b310b298c4ef13099cbca0b214795bf5e3196f9c3a",
@@ -42,8 +42,8 @@
     "analysis/paired_rescoring/oneb_success/protocol.json": "ba0856eee5116faa27251a85c210c2ef93896ef1ea42d8b2b9f2e6309fadd629"
   },
   "manuscript_inputs_sha256": {
-    "paper/paper.tex": "2786acd098bf2329c2b94a30bbeec88e5322bcff4992726aab522d58501c58db",
-    "paper/supplementary_derivations.tex": "1b0b446846b331350f3515b011b8156049e132b194236dde3f0ee22076cf132f",
+    "paper/paper.tex": "d63f5f1a766baf31e2228a37a6cac7ed376349ed7e4f14b108694a5654a6dcfa",
+    "paper/supplementary_derivations.tex": "f17a226edf81501515bd8e56b1209475c6d7c426d6e3357b1f4df02780f900b7",
     "paper/references.bib": "33eb65bd371dec095404c84cfe3eca07a16b1953135ee301294009454c8490b6",
     "paper/appendix_aliasing.tex": "e5f45fd17cdfdd4472c849bd5f85f01647a5794f0e99dbcbfaa13fee7c1e02cf",
     "paper/tables_revision/revision_facts.tex": "8f93b8133b72034362ad13cae1b910246c457e01419c3e57e74b17e24ad544a4"
@@ -1873,6 +1873,6 @@
     "paper/tables_revision/r1_methods_summary.tex": "153da2f755e8a09366546416a6cb21c153af00baea28c5bf8b1eba703ef858c8",
     "paper/tables_revision/r1_saved_summary.tex": "e2fe6044a5f2a3676cb9932a3c093686c330e7dd07d6b70cb13fdff84d891263",
     "paper/tables_revision/r1_stability.tex": "fa421484e7c1ae172a85e1251d0ff3a4c4addd3e9c49126a7f81b566044cc8c4",
-    "paper/tables_revision/r1_success_summary.tex": "54d4ff6d3edc7a27425f77507aa7040d7db2380f7ed25e418fd1211959e3c1e1"
+    "paper/tables_revision/r1_success_summary.tex": "32c6b853b3091cea0acfc9193b620e55b01ce7fe8475bbd542f244f435634983"
   }
 }

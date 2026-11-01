@@ -275,7 +275,7 @@ Overshoots produce tails in both successful and failed runs. The primary matched
 The findings extend Huber's and TRACE's output-dependent preferences. Hama considers monotone transformations\citep{hama2023deletion}; N is strictly increasing in Q. Its condition is a strictly increasing transformation of additive feature contributions on binary inputs. That can hold here since $x_1^2=x_1$ for binary inputs. Its IG argument uses constant feature slopes before transformation, whereas our quadratic construction changes gradient direction. This different setting is not a counterexample. Our additions concern normalization, overshoots, separate targets/responses and matched numerical comparisons.
 
 % audit-anchor: discussion-literature
-These results agree with the metric sensitivity reported by TRACE and Blücher. They extend Makino's integration-budget question to precision and rule choice. Zhu's reconstruction changes interventions, whereas this study rescores fixed predictions.
+Like TRACE and Blücher, these findings show metric sensitivity. They extend Makino's integration-budget tests to precision and rule choice. Zhu reconstructs interventions; here predictions stay fixed.
 
 % audit-anchor: discussion-interpretation
 Q's tails leave IG-versus-random comparisons inconclusive. Nine failed episodes give an uncertain negative median, while larger extremes occur among successes; neither implies causation. Numerical qualification remains failed despite plausible endpoint effects, and most saved rankings miss the completeness criterion. The 0.448/0.291 example illustrates sensitivity to an illustrative 0.40 rule, not justification for it.
@@ -292,7 +292,7 @@ The identity proves an in-range ordering for fixed predictions. Unsuccessful sim
 
 \section*{Data and code availability}
 % audit-anchor: availability
-Saved records reproduce response summaries, plots, success splits and completeness checks on a CPU. Missing observations and noise prevent regenerating original executions and rankings. The matched experiment preserves those inputs, with a fresh-machine reconstruction verified. Research packages provide code, plans, records, identities, supplementary results and replay instructions.
+A CPU reproduces saved response summaries, plots, success splits and completeness checks. Missing observations and noise prevent original execution and ranking regeneration. Matched inputs support verified fresh-machine reconstruction. Packages supply code, plans, records, identities, supplementary results and replay instructions.
 \ifanonymous
 Anonymous materials are available through the \href{https://review.invalid/archive}{review archive}. This unlisted link requires no account; anyone holding it can download. The archive distinguishes current manuscript materials from scientific replay evidence.
 \else

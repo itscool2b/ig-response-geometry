@@ -389,7 +389,7 @@ class AuditDisplays:
             data.append([r['group']+' '+r['direction'],f"{r['episodes']} / {r['calls']}",f"{r['median']:.4f}".replace('-','−')+' '+interval(r['ci_lo'],r['ci_hi']),
                          f"{r['overshoot']}/{r['calls']}",f"{r['below_minus_1']}/{r['calls']}",number(r['minimum'])])
         table(out,'r1_success_summary',r'\textbf{Vision response changes by success and task.} Counts are episodes / calls. All intervals resample whole episodes; the new 1B intervals are retrospective. Overshoot and extreme-tail counts are call counts. Unequal sample sizes affect extrema, and episode dependence remains. The saved 1B rows use the 64-interval equal-weight rule, the new 1B rows the 512-interval trapezoid, and the additional tasks the 128-interval equal-weight rule. All use target Q. All additional-task episodes failed.',
-              'tab:r1-success-summary',['Group / direction','Episodes / calls','Median [95% interval]','Overshoot','Below -1','Minimum'],data,[.25,.12,.24,.11,.11,.09],long=True)
+              'tab:r1-success-summary',['Group / direction','Episodes / calls','Median [95% interval]','Overshoot','Below -1','Min.'],data,[.25,.12,.24,.11,.11,.09],long=True)
         self.language_success_table(out)
         data=[]
         for bank in ('P','B1','S'):
@@ -483,7 +483,7 @@ class AuditDisplays:
                     data.append([label,outcome+' '+direction,r['n_defined_episodes']+' / '+r['n_defined_calls'],f"{float(r['paired_median']):.4f}".replace('-','−')+' '+ci,number(100*float(r['overshoot_share'])),number(r['min_delta'])])
         path=out/'r1_success_summary.tex';before=path.read_text(encoding='utf-8')
         table(out,'r1_language_success',r'\textbf{Saved task-trained language results, separate by seed and baseline.} Seed 42 uses the RDT developers\textquotesingle{} precomputed instruction embedding and a zeroed baseline; seeds 142 and 242 use generated T5-XXL embeddings and encoded PAD/EOS baselines. The separate seed-42 rerun uses generated embeddings and an encoded baseline and is a sensitivity sample, excluded from the 60 primary episodes. All use target Q. Intervals resample whole episodes. The single successful seed-142 episode cannot support an episode-bootstrap interval. Overshoots are percentages of calls.',
-              'tab:r1-language-success',['Seed, baseline','Outcome / direction','Episodes / calls','Median [95% interval]','Overshoot (%)','Minimum'],data,[.17,.22,.12,.23,.10,.08],long=True)
+              'tab:r1-language-success',['Seed, baseline','Outcome / direction','Episodes / calls','Median [95% interval]','Overshoot (%)','Min.'],data,[.17,.22,.12,.23,.11,.07],long=True)
         addition=(out/'r1_language_success.tex').read_text(encoding='utf-8').replace(r'\caption{',r'\caption*{').replace(r'\label{tab:r1-language-success}','')
         path.write_text(before+'\n'+addition,encoding='utf-8',newline='\n');(out/'r1_language_success.tex').unlink()
 
