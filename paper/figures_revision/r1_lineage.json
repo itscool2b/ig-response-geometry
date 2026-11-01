@@ -20,12 +20,12 @@
     "analysis/manuscript_revision/nhsjs_r1/inputs/contrasts.csv": "7d93f3ea2436e2c3ddd4b3596856fc46a4df5be46c36b74aaec126c28f299c60"
   },
   "manuscript_inputs_sha256": {
-    "paper/paper.tex": "26fb8624b89b0d4ba8783564a0384c84de53048d2edf0f4469a78f24993895b4",
-    "paper/references.bib": "b4c6dfd304e9d83ede8175a4f0741bab2058ec54bad89a503074df2f52ceae0f",
+    "paper/paper.tex": "502f70375a10a0413248fbb920ed7017742f3a6a7205c848db019bfc4f24074c",
+    "paper/references.bib": "0314e7d7602a20619212f2b8116bdc028b91bee36fe3b12ec921957b27b9c550",
     "paper/appendix_aliasing.tex": "e5f45fd17cdfdd4472c849bd5f85f01647a5794f0e99dbcbfaa13fee7c1e02cf",
     "paper/tables_revision/revision_facts.tex": "8f93b8133b72034362ad13cae1b910246c457e01419c3e57e74b17e24ad544a4"
   },
-  "builder_sha256": "39d03ca207dfdd3128f59668fa2151353d73d27d19fd1b818651ae81f2d8f6ae",
+  "builder_sha256": "d88452811eaf64d5d921e18655a3a740669a2d61a1c512b44c136eed9012163b",
   "populations": {
     "r1_design": {
       "kind": "analytic illustration, not an observed policy reversal",
@@ -687,9 +687,9 @@
     "paper/figures_revision/r1_saved_geometry.png": "23721ee8015de334821397e49ce49ef95f8b0f39a90a84d730f3652d45a1a77d",
     "paper/figures_revision/r1_success_tasks.pdf": "f2c5be0c5ea49a39e06e5584f5d159106ba792d40cbceb5a52b9136fbd739a1c",
     "paper/figures_revision/r1_success_tasks.png": "f7e68cd2626c150a99bf5ef96e0c2180b698d31ae3e0a251a1cb911709cc1f86",
-    "paper/tables_revision/r1_experiments.tex": "162b03857e0d92e2a38dbd8b885b9493d02dc4002997324b7ee1ac0d46d6d4d3",
-    "paper/tables_revision/r1_identities.tex": "b8d7309cba3866b45b9894fc4140098d191e2c592f374508c458fd994d9f094a",
-    "paper/tables_revision/r1_methods_summary.tex": "068145e8be82a96441b177e5c6b0bb38ccb9fa79aa163a6df0e70d1bbc13a7ac",
-    "paper/tables_revision/r1_saved_summary.tex": "e647bef151b4b272df49b57d285bfad1176c6f2bc0cf033c6ba26bf9024f7610"
+    "paper/tables_revision/r1_experiments.tex": "9b1ff25c5323c49fa893733af168b87f9f8364ba517b31ead64de226ef390e96",
+    "paper/tables_revision/r1_identities.tex": "111de79bc5dc8c65909798df4199f9de0abe44b4282b4c2874e9da11359e8252",
+    "paper/tables_revision/r1_methods_summary.tex": "3abbaf8cf4ffb1d4bc07dd8ebad169b3cdee5f7e065524f277b29859137a2c38",
+    "paper/tables_revision/r1_saved_summary.tex": "b0309b306721e7e6c055ab068499409be65dc17b78ea6862adf2c52a5145cd27"
   }
 }

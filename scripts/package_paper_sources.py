@@ -216,6 +216,9 @@ def build(root, output, *, authorized_review=False):
         'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
         'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
         'This contains manuscript sources, not the complete code/data supplement.\n' +
+        ('This is the November 1, 2026 editorial manuscript snapshot.\n'
+         'The large reviewer archives retain their October 31 replay snapshot.\n'
+         'Build these sources separately; do not replace files inside an authenticated replay extraction.\n' if 'figures_revision/r1_design.pdf' in names else '') +
         ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review else
          'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n')
     ).encode()

@@ -1,6 +1,8 @@
 # Manuscript revision guide
 
-The active R1 revision keeps the title *How Scoring Responses Change Attribution Evaluation in a Diffusion Policy*, with Arjun Bajpai as sole named author and Independent Researcher as affiliation. `paper/paper.tex` and `paper/references.bib` are authoritative. The revision contains a 221-word abstract, six keywords, five consolidated figures, four numbered tables and 34 references, of which 30 qualify as peer-reviewed primary articles.
+The active R1 revision keeps the title *How Scoring Responses Change Attribution Evaluation in a Diffusion Policy*, with Arjun Bajpai as sole named author and Independent Researcher as affiliation. `paper/paper.tex` and `paper/references.bib` are authoritative. The revision contains a 243-word abstract, six keywords, five consolidated figures, four numbered tables and 41 references, of which 37 qualify as peer-reviewed primary articles and 25 were published from 2022 through 2026.
+
+The final November 1 readability revision preserves the October 31 scientific results and delivery. It explains the task before notation, separates historical and matched comparisons, and retains the expanded literature coverage without changing equations, data or experimental results. The final pass further clarifies the abstract, defines essential experimental terms and separates dense numerical comparisons. The seven added references address related evaluation questions; their methods are not described as experiments performed here.
 
 The original fixed-ranking response result is retained. New material adds successful and failed historical 1B episodes, PegInsertionSide and PickSingleYCB, the matched P/B1/S methods study with measured random and fixed controls, all seven primary contrasts, and precision and quadrature comparisons. Original headline ranking accuracy remains unverified. Missing historical inputs, unsuccessful runs, full tails, exact method ties and small Month 8 strata remain explicit limitations.
 
@@ -11,3 +13,5 @@ The delivery consists of an anonymous tracked Standard DOCX, a clean identified 
 The records in this directory predating October 31 describe the submitted version. In particular, [the October 4 edit ledger](exact_edits_checklist.md), [claim map](claim_map.md), [semantic review](final_semantic_audit.md), [Final-v5 ledger](final_v5_checklist.md), [Round 3 ledger](round3_checklist.md) and [local verification](final_local_verification.md) remain historical and do not certify the new revision. The tag `manuscript-2026-10-04-polish` and [Zenodo version 3.0](https://doi.org/10.5281/zenodo.23269517) preserve that earlier manuscript.
 
 Repository publication and local verification do not constitute journal submission. A submission claim requires the revision channel's receipt and the hashes of the uploaded files.
+
+The current small manuscript and research downloads are separate editorial snapshots. The large archives retain the October 31 manuscript and authenticated replay files. Compile current documents in a separate extraction; do not overwrite the replay archive's embedded source or manifest.
