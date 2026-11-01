@@ -33,5 +33,5 @@ or full numerical replay was performed for this editorial revision.
 
 [MANIFEST.json](MANIFEST.json) binds the current Word file, guide and download index.
 Private author records, the scientific claim map and reviewer correspondence remain
-in the private repository. This revision has not been merged or submitted to NHSJS;
+in the private repository. This revision has not been submitted to NHSJS;
 file readiness is not journal acceptance. A later rewrite requires fresh checks.
