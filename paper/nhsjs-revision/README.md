@@ -22,4 +22,4 @@ The retrospective report uses 10,000 paired episode-resampling draws, seed 93001
 
 Current packages exclude superseded manuscript text and internal drafting notes. Earlier archives and verification records remain preserved as historical records. AI tools assisted with code, analyses, scientific checks, manuscript text and reviewer documentation; the manuscript contains the full disclosure.
 
-[MANIFEST.json](MANIFEST.json) binds the published Word copy, guide and public download index. Microsoft Word pagination and equation inspection are a distinct release gate; other renderers do not certify that check.
+[MANIFEST.json](MANIFEST.json) binds the published Word copy, supplement, guide and public download index. The clean Standard and Online manuscripts render to 17 and 20 pages in LibreOffice. Microsoft Word pagination and equation inspection remain pending; other renderers do not certify that check. This is an AI-assisted working package, with no journal submission or claim of compliance with the author-only-writing condition.

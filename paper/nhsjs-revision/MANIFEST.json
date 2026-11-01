@@ -1,20 +1,30 @@
 {
   "schema_version": 1,
   "date": "2026-11-01",
-  "scope": "Identified manuscript and public research download guide",
+  "scope": "Identified AI-assisted working manuscript, supplement and public research downloads",
   "submission_status": "not_submitted_by_explicit_scope",
+  "microsoft_word_verification": "pending",
+  "libreoffice_clean_pages": {
+    "standard": 17,
+    "online": 20
+  },
+  "author_only_writing_condition_met": false,
   "files": {
     "downloads.json": {
-      "bytes": 11501,
-      "sha256": "c88a0674671492ee6372858f5de86680a34072475cc5b891b45e180dd52da4a5"
-    },
-    "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
-      "bytes": 700946,
-      "sha256": "1cb0d0fadbc476e915114ce6781a8860e24d5a1245ea2f10ea552eec408d6957"
+      "bytes": 2927,
+      "sha256": "471372fd0b8635d67afcace34916b4039604c4518270f864463b92f0c5437b55"
     },
     "README.md": {
-      "bytes": 2600,
-      "sha256": "672132680c996b7a0eae419476ba4e5e10f94df5f9283280f8c16b46fd42306c"
+      "bytes": 3594,
+      "sha256": "73ad53347d793c369144dcaf1249b0a0f3b8c538e211e16ca14c70199d91d739"
+    },
+    "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
+      "bytes": 681632,
+      "sha256": "3b9cb3daaeb59cc13ace02a1a0129030c9334e82982df85c66dae0970cb41089"
+    },
+    "Supplement/supplementary-material.pdf": {
+      "bytes": 346811,
+      "sha256": "d84e50476c51e67c40a472242dae2f5437e42f282d6873b224ad86a133399e88"
     }
   }
 }
