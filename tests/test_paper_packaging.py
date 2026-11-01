@@ -14,7 +14,8 @@ def test_standalone_math_supplement_has_no_unreviewed_dependencies():
     if not path.exists():
         pytest.skip('Current mathematical supplement absent from this historical snapshot')
     text = path.read_text(encoding='utf-8')
-    assert not manuscript_dependencies(text, top_level=True, supplement=True)
+    dependencies = manuscript_dependencies(text, top_level=True, supplement=True)
+    assert all((root / 'paper' / name).is_file() for name in dependencies)
     assert_anonymous(text, path.name)
     with pytest.raises(ValueError, match='Unreviewed manuscript input'):
         manuscript_dependencies(text + '\n\\input{private}', top_level=True, supplement=True)
@@ -32,7 +33,11 @@ def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     else:
         assert r'\author{\name Anonymous authors}' in result
         assert r'\usepackage[preprint]{tmlr}' in result and r'\usepackage{tmlr}' not in result
-    assert r'\appendix' in result
+    if r'\bibliographystyle{nhsjs}' in source:
+        assert r'\appendix' not in result
+        assert 'Supplementary' in result
+    else:
+        assert r'\appendix' in result
     for value in ('working draft', 'remain pending', 'under review as submission', 'paper under double-blind review'):
         assert value not in result.lower()
     assert r'\bibliography{references}' in result
@@ -52,6 +57,10 @@ def test_source_package_is_curated_and_does_not_include_private_provenance(tmp_p
         assert not any('legacy' in n or 'lineage' in n or 'paper.pdf' in n for n in names)
         manifest = json.loads(archive.read('manifest.json'))
         assert set(manifest['artifacts_sha256']) == set(names)-{'manifest.json'}
+        if 'supplementary_derivations.tex' in names:
+            from scripts.package_paper_sources import manuscript_dependencies
+            dependencies = manuscript_dependencies(archive.read('supplementary_derivations.tex').decode(), top_level=True, supplement=True)
+            assert dependencies <= set(names)
     assert (root/'paper/paper.tex').read_bytes() == original
     with pytest.raises(FileExistsError):
         build(root,tmp_path/'first')

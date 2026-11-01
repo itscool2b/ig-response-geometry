@@ -3,14 +3,22 @@
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
 \setlength{\emergencystretch}{2em}
-\usepackage{amsmath,amssymb,hyperref}
+\usepackage{amsmath,amssymb,hyperref,graphicx,booktabs,tabularx,array,longtable,caption}
+\hypersetup{pdfauthor={},pdftitle={Supplementary evidence and derivations}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\DeclareCaptionLabelSeparator{bar}{\textbf{\space |\space}}
+\captionsetup{font=normalsize,labelfont=bf,labelsep=bar,justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{position=top}
+\renewcommand{\arraystretch}{1.12}
 \setcounter{secnumdepth}{0}
-\title{Supplementary derivations: How Scoring Responses Change Attribution Evaluation in a Diffusion Policy}
+\title{Supplementary evidence and derivations for How Scoring Responses Change Attribution Evaluation in a Diffusion Policy}
 \author{}
 \date{}
 \begin{document}
 \maketitle
-These derivations preserve the complete analytic arguments accompanying the revised manuscript. They use the same definitions of Q, N, the squared residual r and the all-baseline residual B. Numerical examples here are analytic constructions, not observed robot-policy ranking reversals.
+This supplement gives the proofs, experimental details and complete numerical tables supporting the main paper. Q scores negative squared action distance and N scores negative stabilized distance. The squared distance from the fixed reference action is $r$; replacing all features gives $B$. Constructed examples establish mathematical possibilities, while the experimental tables describe their stated recorded populations. These two forms of evidence are kept separate.
 \appendix
 \section{Response identities and target-induced reversal}
 \label{sec:proofs}
@@ -18,7 +26,7 @@ These derivations preserve the complete analytic arguments accompanying the revi
 \subsection{Normalized response difference}
 \label{sec:response-proof}
 
-Assume exact self-reference and $B>0$. Set $\eta=\sqrt{\epsilon}$, $b=\sqrt{B+\epsilon}$ and $z=\sqrt{r+\epsilon}$, so $B=(b-\eta)(b+\eta)$. Then
+The identity proves how the normalized response changes while intervention predictions remain fixed. Exact self-reference means that the actual input reproduces the reference prediction, giving $r(x)=0$. Assume $B>0$. Let $\eta=\sqrt{\epsilon}$ be the stabilizer's square root, $b=\sqrt{B+\epsilon}$ the stabilized all-baseline distance and $z=\sqrt{r+\epsilon}$ the stabilized intermediate distance. Then $B=(b-\eta)(b+\eta)$ and
 \begin{equation}
 C_Q-C_N=\frac{b^2-z^2}{B}-\frac{b-z}{b-\eta}
 =\frac{(z-\eta)(b-z)}{B}.
@@ -28,12 +36,12 @@ For $\eta\le z\le b$, the product is nonnegative and maximized at $z=(\eta+b)/2$
 0\le C_Q-C_N\le\frac{(b-\eta)^2}{4B}
 =\frac{b-\eta}{4(b+\eta)}\le\frac14.
 \end{equation}
-For $z>b$, the difference is negative, so the $1/4$ upper bound holds for all $r\ge0$. Nonnegative AUC weights sum to one, yielding $\Delta\le1/4$ for every defined curve. On the nine-point schedule they are $(0.005,0.025,0.045,0.075,0.10,0.15,0.225,0.25,0.125)$. The endpoints contribute zero difference and have total weight 0.13, giving $\Delta\le0.87/4=0.2175$. For positive $\epsilon$ and finite $B$, the fixed-$B$ schedule bound $0.87(b-\eta)/[4(b+\eta)]$ is strictly smaller. Fully in-range curves additionally satisfy $\Delta\ge0$, strictly if a point with positive AUC weight has $0<r<B$. If $B=0$, normalization is undefined. When the 1\% and 5\% language values coincide, dropping the 1\% node changes their combined AUC weight by 0.02; the $1/4$ pointwise bound therefore bounds the paired change by $0.02/4=0.005$ for fully in-range calls.
+For $z>b$, the difference is negative, so the $1/4$ upper bound holds for all $r\ge0$. Nonnegative AUC weights sum to one, yielding $\Delta\le1/4$ for every defined curve. On the nine-point schedule they are $(0.005,0.025,0.045,0.075,0.10,0.15,0.225,0.25,0.125)$. The endpoints contribute zero difference and have total weight 0.13, giving $\Delta\le0.87/4=0.2175$. For positive $\epsilon$ and finite $B$, the fixed-$B$ schedule bound $0.87(b-\eta)/[4(b+\eta)]$ is strictly smaller. Fully in-range curves additionally satisfy $\Delta\ge0$, strictly if a point with positive AUC weight has $0<r<B$. If $B=0$, normalization is undefined. When the 1\% and 5\% language values coincide, dropping the 1\% node changes their combined AUC weight by 0.02; the $1/4$ pointwise bound therefore bounds the paired change by $0.02/4=0.005$ for fully in-range calls when only that duplicate node is removed. This also describes the realized-fraction change for the twenty-token schedule. For sixteen or twenty-five tokens, other realized fractions move as well, so 0.005 does not bound their total nominal-to-realized change.
 
 \subsection{Finite-stabilizer rank reversal}
 \label{sec:reversal-proof}
 
-Let $g(x_1,x_2)=x_1^2+\beta x_2$, with $\beta=4/5$, $x'=(0,0)$ and $x=(1,1)$. Along the diagonal, the scalar action residual and its square are
+This example shows that changing only the attributed target can reverse the exact IG ranking. It is a constructed possibility, not an observed PickCube reversal. Let $g(x_1,x_2)=x_1^2+\beta x_2$, with $\beta=4/5$, $x'=(0,0)$ and $x=(1,1)$. Along the diagonal, the scalar action residual and its square are
 \[
 \rho(\alpha)=(1-\alpha)(1+\alpha+\beta),\qquad r(\alpha,\alpha)=\rho(\alpha)^2.
 \]
@@ -68,10 +76,14 @@ Thus $A_1^N-A_2^N\ge0.1999975$. Every coordinate is positive, so ordinary and ab
 \subsection{Finite-grid random-order calibration}
 \label{sec:random-calibration}
 
+This calculation shows why a random-order reference depends on the response, even when every input feature contributes equally to the action.
+
 For $g(x)=\sum_{i=1}^n x_i$, an all-one input and zero baseline, every feature order gives residual distances $k$ after $k$ deletions and $n-k$ after $k$ insertions. At $q=k/n$, normalized Q curves are $1-q^2$ and $1-(1-q)^2$. Both have second derivative $-2$, so their trapezoidal areas underestimate their common integral $2/3$ by $1/(6n^2)$ on the full-prefix grid. Their identical curvature also gives identical quadrature errors on any common grid, including an asymmetric one. The nine-point schedule with $n=100$ gives area 0.65976. Unstabilized N gives the lines $1-q$ and $q$, both with trapezoidal area 0.5 on either schedule.
 
 \subsection{A common response change can reorder rankings}
 \label{sec:ranking-comparison}
+
+The response can also reverse which of two fixed feature orders has the better score. The following construction holds both orders and their intervention predictions fixed.
 
 Take three features and insertion fractions $\{0,1/3,2/3,1\}$, with $B=1$. Let orders $(1,2,3)$ and $(3,2,1)$ give residual sequences $(1,1/4,1/4,0)$ and $(1,16/25,0,0)$, respectively. Their intermediate subsets are distinct, so these values can belong to one scalar policy with the same endpoints. Q insertion AUCs are $2/3$ and $31/50=0.620$; with $\epsilon=0$, N AUCs are $1/2$ and $17/30\approx0.567$. Thus the better order reverses. The inequalities persist at $\epsilon=10^{-12}$. This establishes possibility, not a measured comparison of the saved cohorts.
 
@@ -80,6 +92,8 @@ Take three features and insertion fractions $\{0,1/3,2/3,1\}$, with $B=1$. Let o
 
 \subsection{Unresolved coordinate variation}
 \label{sec:aliasing-proof}
+
+A smooth function can hide coordinate variation from every tested grid while its attribution sum remains exact. This example separates completeness and grid agreement from correct feature rankings.
 
 For an integer $K>0$, define
 \begin{align}
@@ -151,6 +165,8 @@ integer. Coordinates remain inexact; exact $2K$ recovery belongs to the trapezoi
 \subsection{Exact IG and perturbation quality}
 \label{sec:aliasing-quality}
 
+Recovering the exact integral need not optimize a chosen insertion or deletion score. The same construction makes that distinction explicit.
+
 Set $K=128$, so $h(1/2)=0$ and the whole-feature interventions give
 $g(1,0)=2/5$ and $g(0,1)=3/5$. Under the same normalized Q response
 and fractions $\{0,1/2,1\}$, feature-2-first insertion values are
@@ -166,5 +182,87 @@ CPU fp32/fp64 checks at $K=128$ verify trapezoidal coordinates, completeness,
 repeatability and responses: budgets 32, 64 and 128 alias; 256 recovers the analytic
 order to numerical tolerance. The endpoint-inclusive result is analytic only;
 these checks use no RDT data.
+
+\section{Endpoint transitions and tail bounds}
+
+The stabilized norm target has a narrow endpoint transition that explains the tested integration behavior. In the linear action example, write the remaining action distance as $t=1-\alpha$. The gradient magnitude is $t/\sqrt{t^2+\epsilon}$, and the exact integral is $\sqrt{1+\epsilon}-\sqrt\epsilon$. With $\epsilon=10^{-12}$, grids of 64 through 512 intervals do not resolve the transition near $t=0$. Assigning weight to its zero endpoint then produces approximately inverse-budget error. This describes the tested regime, not the asymptotic order for fixed positive epsilon. A sufficiently fine grid resolves the smooth transition and restores second-order trapezoidal convergence. Midpoint and Gauss-Legendre rules avoid endpoint nodes but still require accuracy checks for the particular integrand.
+
+Some tail thresholds follow from the response identity and cannot be treated as independent observations. Put $R=\max r/B$ over interior nodes and $s=\sqrt R$. Assume $R>1$, as required for a negative $\Delta$. For an overshooting point, stabilization reduces the magnitude of the negative difference relative to its zero-stabilizer limit; the minimum is bounded below by $s(1-s)$. Since the saved schedule's interior weights sum to 0.87, $\Delta\ge0.87s(1-s)$. Consequently, for $a>0$, $\Delta<-a$ requires
+\[
+R>\left[\frac{1+\sqrt{1+4a/0.87}}{2}\right]^2.
+\]
+For $a=1$ and $a=100$ the required ratios are approximately 2.83 and 126.2. The empirical findings are the actual residual ratios, small baseline distances and concentration in particular calls, not the fact that these necessary thresholds hold. The sixteen correlation groups comprise eight saved pretrained PickCube cases, two pooled task-trained vision cases and six seed-specific task-trained language cases. Their negative rank correlations mean that larger residual ratios accompany more negative $\Delta$.
+
+\section{Experimental details and complete results}
+
+The following tables retain each population separately. The two saved pretrained PickCube runs use different ranking targets and language baselines; shared simulator seeds do not make them matched experiments. The saved task-trained PickCube primary sample pools seeds 42, 142 and 242, with 20 episodes each, respectively 320, 480 and 399 calls, and 9, 1 and 5 successes. The separate 334-call rerun is a sensitivity sample and is excluded from the 1,199-call primary total. Each saved additional task pools two eight-episode runs at 128 intervals. The 800 language curves used to check distinct StackCube 1\%/5\% responses comprise two 200-call runs and both intervention directions.
+
+The offline diagnostic collection contains twelve completed contexts per input type and target from six episodes. The preserved bank used in the matched numerical campaign contains the same 21 available identifiers from that collection's 24 planned identifiers. It has four pretrained contexts each for PickCube, StackCube, PegInsertionSide and PickSingleYCB, two task-trained PickCube contexts and three task-trained StackCube contexts, from twelve source episodes overall. Only twelve pretrained contexts had complete offline diagnostic results at the collection's sealed cutoff. These counts describe different subsets and must not be combined as independent episodes. Small complete-case strata have at most two episodes. Nominal 95\% percentile intervals contain the known value in only about 9\%--50\% of the examined small-sample simulations; those strata support no population-level conclusion.
+
+Saved analyses use the nominal percentage axis and bootstrap seed zero. Matched analyses use the actual fractions selected by stored masks and seed 930011, with nominal-axis sensitivity results retained. The endpoint grids share 513 gradient samples, allowing nested trapezoidal and equal-weight estimates through 512 intervals and midpoint estimates through 256. Original-estimator sums can depend on GPU summation order; the separate 32-bit-sum alternative remains recorded. Repeated saved IG sums can differ despite identical target changes, which is another reason endpoint agreement does not authenticate the missing original computation. Unstabilized RMS action distance normalizes to the same curve as unstabilized N and supplies no third independent normalized metric.
+
+\subsection{Saved response summaries}
+Table S1 retains the eight saved cases, including tails and uncertainty. Its intervals condition on the recorded episodes; repeated calls and shared extreme episodes do not constitute independent replications.
+\input{tables_revision/r1_saved_summary.tex}
+
+\clearpage
+\subsection{Component identities and recovery status}
+Table S2 distinguishes information written at run time, recovered from dated records, inferred indirectly and unknown. A matching downloaded file history does not mean its hash was recorded during a saved run. Full hashes and machine captures remain in the research archive.
+\input{tables_revision/r1_identities.tex}
+
+\clearpage
+\subsection{All matched method comparisons}
+Table S3 includes the twelve vision cells and eight pretrained-PickCube language/state cells. Best-versus-second comparisons are selected on the same data, adjusted within each four-cell family and interpreted as exploratory. Individual method intervals do not test a paired difference between two methods.
+\input{tables_revision/r1_all_methods.tex}
+
+\clearpage
+\subsection{Calibration and fixed decision rules}
+Table S4 reports scaled preferences, fixed-order controls and illustrative fixed-bar decisions. Subtracting the same random reference shifts every method equally within one response. Per-context scaling changes weights before episode averaging and is a different operation. Neither 0.40 nor 0.50 is a validated pass/fail criterion.
+\input{tables_revision/r1_calibration.tex}
+
+\clearpage
+\subsection{Separate numerical diagnostics}
+Table S5 distinguishes completeness, coordinate difference, ranking agreement and response-score change. It identifies each population and keeps the registered reference-qualification rule unchanged. Agreement between two numerical procedures is evidence of consistency, not proof that either equals the integral.
+\input{tables_revision/r1_diagnostics.tex}
+
+\clearpage
+\subsection{Success splits and additional tasks}
+Table S6 reports medians, episode-resampling intervals, overshoots and extreme-tail rates. Different sample sizes affect observed minima. Success and failure are observed outcomes, not randomized treatments, and differences between the saved and matched groups cannot be attributed to success alone.
+\input{tables_revision/r1_success_summary.tex}
+
+\clearpage
+\subsection{Retrospective winner stability}
+Table S7 uses the seven attribution methods on common complete episodes, with the same resampled episodes for Q and N. Each of 10,000 draws, seed 930011, produces the same unique winner, different unique winners or an undetermined tie. Raw means average per-episode advantages, scaled means first divide each context by the standard deviation of its random-order scores, and episode medians take the median of per-episode means. These frequencies describe sensitivity to resampling the recorded episodes. They are not probabilities about a population's true preferred method and were not part of the registered primary analysis.
+\input{tables_revision/r1_stability.tex}
+
+\subsection{Numerical estimator definitions}
+Table S8 specifies model precision, accumulation, integration rule and node budgets for each numerical variant.
+\input{tables_revision/r1_estimators.tex}
+
+\clearpage
+\section{Additional visual evidence}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_tail_geometry.pdf}
+\caption{\textbf{Extreme response differences occur with small baseline distances and large residual ratios.} The 3,000 plotted vision calls retain their recorded case identity: insertion in A/B, deletion in C/D, with first calls distinguished from later calls. Baseline squared distance is $B$; the interior residual ratio is the largest sampled $r/B$. Lines at ratios one and two mark overshoot and a conservative threshold. Symmetric-log response axes are linear for $|\Delta|\le0.25$ and compress larger magnitudes while preserving sign. Mathematical threshold constraints are described above; the display supports a descriptive, unproven mechanism.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_methods.pdf}
+\caption{\textbf{Matched vision-deletion scores depend on the response and the recorded group.} The three groups are pretrained PickCube, task-trained PickCube and pretrained StackCube, each evaluated under Q and N. Zero is the response-matched random mean; positive advantage favors the ranking. Intervals resample whole episodes. Separate intervals do not establish paired method differences; Table S3 gives those adjusted comparisons. Stars mark raw-mean winners, diamonds input difference when it is not the winner. Blue/orange distinguish Q/N targets; black marks input difference and fixed controls. IG and path gradients use the 512-interval trapezoid; equal-weight IG uses the original 64-interval estimator. A divider separates fixed controls. Wider Q panels reflect extreme tails.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_success_tasks.pdf}
+\caption{\textbf{Positive median response differences do not remove overshoots.} Vision insertion and deletion summaries retain saved task-trained PickCube, the two saved additional tasks, and the new task-trained PickCube group separately. Counts and 95\% whole-episode bootstrap intervals identify each population. The failed new group's deletion median is uncertain rather than evidence for a negative population effect. Table S6 supplies the full intervals and tail shares.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\linewidth]{figures_revision/r1_offline_numerics.pdf}
+\caption{\textbf{Repeated function agreement does not establish attribution convergence.} The original 32-bit offline diagnostic sample contains twelve contexts from six episodes across four pretrained-model tasks. \textbf{A), D)} Relative L1 changes in IG coordinates between adjacent integration budgets; \textbf{B), E)} corresponding path-gradient changes. The horizontal coordinate is the finer budget in each $m$ versus $2m$ comparison. \textbf{C), F)} Completeness residuals at each budget. All vertical quantities are percentages; symmetric-log axes retain exact zeros and are linear through 0.01\%. Dotted horizontal lines mark the study-specific 1\% criterion. Blue/orange denote Q/N targets; circles, squares and triangles denote vision, language and state. The finest pairs use 256/512 intervals for vision and language, 512/1,024 for state. The finer estimate is a comparator, not truth. Comparisons are dependent and do not estimate numerical-failure frequency. Supplementary Table S5 gives maxima and the 1,800 recorded repeat checks.}
+\end{figure}
 
 \end{document}

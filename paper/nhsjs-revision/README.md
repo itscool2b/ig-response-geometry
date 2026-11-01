@@ -1,37 +1,25 @@
-# NHSJS revision manuscript and research downloads
+# Manuscript and research downloads
 
-The final November 1, 2026 identified clean Word manuscript is in [Online](Online/).
-It includes the full inline citations required for this variant and renders to
-20 pages. The abstract contains 243 words. Titles, headings and body text remain
-12-point Times New Roman; prose headings are bold and unnumbered.
+The [canonical manuscript](../paper.tex) and [bibliography](../references.bib) define the current revision. The identified Word copy is in [Online](Online/). It uses full inline citations, one-inch margins and 12-point Times New Roman. The abstract has 249 words. The three main figures and two tables are accompanied by a numbered supplement.
 
-The authoritative LaTeX and bibliography remain [paper.tex](../paper.tex) and
-[references.bib](../references.bib). This editorial revision clarifies the
-research question, comparison groups, numerical checks and limitations. It retains
-the title, equations, scientific figures, data, analysis and results. The 41 cited
-references include 37 primary papers, with 25 primary papers from 2022 through 2026.
+The bibliography contains 46 references: 42 primary papers, including 30 from 2022 through 2026. The manuscript distinguishes seven preplanned method contrasts from exploratory preferences under raw means, scaled means and episode medians. New retrospective bootstrap results are kept in a separate reporting layer; frozen scientific records and protocols are preserved.
 
-[Verified research download index](https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/fe4136aa48f1119a6c98247fe952f16c5a43a661be5b90a3/index.html)
+[downloads.json](downloads.json) lists current public packages, their byte sizes and SHA-256 checksums. These public URLs are separate from private reviewer access.
 
-[downloads.json](downloads.json) separates two final November 1 source/research
-packages from two earlier November 1 editorial snapshots and six unchanged October 31 snapshots. Both new packages were retrieved
-in full without authentication and verified by SHA-256. All eight earlier ZIP objects
-retain their identities. Full-download receipts retain their original dates; numerical replay receipts remain dated October 31. These unlisted links can be used by anyone holding them.
+| Package | Contents and purpose |
+| --- | --- |
+| Manuscript sources | Current article, supplement, bibliography, figures and tables, with instructions for rebuilding the PDFs. |
+| Research supplement | Current reporting code and manuscript sources, preserved small data, and the retrospective bootstrap report. |
+| Complete study data | Full archived tensors, plans, outcomes, code and results for the registered CPU analysis replay. |
+| Stored four-task evidence | Preserved observations and numerical evidence underlying the separate diagnostic collection. |
+| Regeneration kit | Inputs and instructions for reconstructing selected policy contexts. This is a separate workflow from CPU rescoring. |
 
-For full registered R1 CPU replay, use the complete R1 reviewer archive. It includes
-raw R1 tensors, compact records, code, plans, the regeneration kit and a dedicated
-Linux runtime lock. Its embedded manuscript is the October 31 replay snapshot.
-Keep current document builds separate from those authenticated replay files.
-The Month 8 companion contains separate complete Month 8 evidence. GPU regeneration
-is a separate kit workflow. Each package's README defines its scope.
+The saved curves reproduce response summaries, plots, success splits and completeness checks on a CPU. They cannot regenerate original robot executions or rankings because the original observations and diffusion noise were not saved. The matched experiment preserves those inputs. The regeneration evidence records exact reconstruction of selected contexts, not hardware independence in general.
 
-The October 31 replay checked 152 outputs: 137 were byte-identical and 15 retained
-explicitly bounded numerical differences. Primary estimates, percentile intervals,
-counts, missingness, ties and decisions matched exactly. Optional sensitivity
-checks used documented post hoc pointwise accuracy contracts. No new GPU experiment
-or full numerical replay was performed for this editorial revision.
+For the complete registered analysis, extract the complete study data package into a new directory, install its exact Linux x86-64 Python 3.12 runtime lock, and run its `reproduce.py --out NEW_DIRECTORY`. Outputs must be written outside the authenticated input tree. The verifier checks episode membership, analysis plans, counts, missingness, ties, decisions and numerical equivalence. Numerical equivalence is distinct from byte identity; any differences remain explicitly reported.
 
-[MANIFEST.json](MANIFEST.json) binds the current Word file, guide and download index.
-Private author records, the scientific claim map and reviewer correspondence remain
-in the private repository. This revision has not been submitted to NHSJS;
-file readiness is not journal acceptance. A later rewrite requires fresh checks.
+The retrospective report uses 10,000 paired episode-resampling draws, seed 930011. Its winner frequencies describe stability of the recorded samples and do not estimate a probability that a true population winner changes. The [reporting guide](../../analysis/manuscript_revision/nhsjs_audit_2026_11_01/README.md) gives its reproduction command.
+
+Current packages exclude superseded manuscript text and internal drafting notes. Earlier archives and verification records remain preserved as historical records. AI tools assisted with code, analyses, scientific checks, manuscript text and reviewer documentation; the manuscript contains the full disclosure.
+
+[MANIFEST.json](MANIFEST.json) binds the published Word copy, guide and public download index. Microsoft Word pagination and equation inspection are a distinct release gate; other renderers do not certify that check.

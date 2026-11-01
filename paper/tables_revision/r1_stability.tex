@@ -1,0 +1,20 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.240\linewidth} p{0.210\linewidth} p{0.160\linewidth} p{0.180\linewidth} p{0.130\linewidth}}
+\caption{\textbf{Retrospective stability of vision-deletion choices.} Entries are percentages of 10,000 paired whole-episode bootstrap draws, seed 930011. Every draw uses the same episodes for both responses and all seven methods. Exact ties are retained separately. These are resampling frequencies for these episodes, not probabilities of a true population winner. The median criterion uses per-episode mean raw advantages.}\label{tab:r1-stability}\\
+\toprule
+\textbf{Group} & \textbf{Criterion} & \textbf{Same winner (\%)} & \textbf{Different winners (\%)} & \textbf{Any tie (\%)} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group} & \textbf{Criterion} & \textbf{Same winner (\%)} & \textbf{Different winners (\%)} & \textbf{Any tie (\%)} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 170M & Raw mean & 20.37 & 79.63 & 0.00 \\
+PickCube 170M & Scaled mean & 90.02 & 9.98 & 0.00 \\
+PickCube 170M & Episode median & 36.71 & 63.29 & 0.00 \\
+PickCube 1B & Raw mean & 35.87 & 64.13 & 0.00 \\
+PickCube 1B & Scaled mean & 98.48 & 1.52 & 0.00 \\
+PickCube 1B & Episode median & 54.92 & 45.08 & 0.00 \\
+StackCube 170M & Raw mean & 69.95 & 30.05 & 0.00 \\
+StackCube 170M & Scaled mean & 60.47 & 39.53 & 0.00 \\
+StackCube 170M & Episode median & 37.13 & 62.87 & 0.00 \\
+\end{longtable}

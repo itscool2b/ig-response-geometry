@@ -1,0 +1,119 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.220\linewidth} p{0.120\linewidth} p{0.200\linewidth} p{0.200\linewidth} p{0.180\linewidth}}
+\caption{\textbf{Reference qualification distinguishes agreement from accuracy.} Eight contexts comprise four new PickCube contexts and four preserved contexts, one per task. Columns show median relative L1 differences (fractions). Qualification retains the registered three-way 0.001 tolerance and adaptive convergence condition: Q 15/24, N 5/24. Close adaptive/Gauss-Legendre agreement for N vision and language, with a larger trapezoid discrepancy, is consistent with unresolved endpoint behavior; it does not certify an exact integral. State retains larger independent-rule differences.}\label{tab:r1-diagnostics}\\
+\toprule
+\textbf{Target / input} & \textbf{Qualified} & \textbf{Adaptive vs Gauss} & \textbf{Adaptive vs trapezoid} & \textbf{Gauss vs trapezoid} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Target / input} & \textbf{Qualified} & \textbf{Adaptive vs Gauss} & \textbf{Adaptive vs trapezoid} & \textbf{Gauss vs trapezoid} \\
+\midrule\endhead
+\bottomrule\endfoot
+Q vision & 5/8 & 0.000000621 & 0.00000214 & 0.00000226 \\
+Q language & 8/8 & 0.000000858 & 0.00000493 & 0.00000532 \\
+Q state & 2/8 & 0.00635 & 0.0000179 & 0.00622 \\
+N vision & 3/8 & 0.0000119 & 0.00171 & 0.00171 \\
+N language & 1/8 & 0.00000230 & 0.00172 & 0.00172 \\
+N state & 1/8 & 0.00426 & 0.000801 & 0.00499 \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.120\linewidth} p{0.250\linewidth} p{0.120\linewidth} p{0.220\linewidth} p{0.210\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Matched trapezoidal completeness residuals.} These percentages use the same twelve pretrained-PickCube vision contexts in every row. Model precision changes; accumulation remains 32-bit. Figure 3 lower panels use eight of these twelve contexts because the 16-bit rule maps were available for only eight. Those eight are not the mixed-task qualification sample above. This comparison supports the precision statement without mixing the 120-, twelve- and eight-context subsets.}\\
+\toprule
+\textbf{Target} & \textbf{Calculation} & \textbf{Contexts} & \textbf{64 intervals (\%)} & \textbf{512 intervals (\%)} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Target} & \textbf{Calculation} & \textbf{Contexts} & \textbf{64 intervals (\%)} & \textbf{512 intervals (\%)} \\
+\midrule\endhead
+\bottomrule\endfoot
+Q & 16-bit model & 12 & 1.05 & 0.991 \\
+Q & 32-bit model & 12 & 0.0261 & 0.000321 \\
+N & 16-bit model & 12 & 4.76 & 4.46 \\
+N & 32-bit model & 12 & 1.54 & 0.192 \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.150\linewidth} p{0.100\linewidth} p{0.150\linewidth} p{0.160\linewidth} p{0.230\linewidth} p{0.130\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Coordinate, ranking and perturbation diagnostics remain separate.} Each comparison applies the old equal-weight 64-interval estimator to new pretrained-PickCube vision contexts and compares it with the corrected 16-bit, 512-interval trapezoid. Coordinate differences are relative L1 fractions. Ranking entries are minimum scored-order Spearman correlations; AUC changes concern deletion. Target and scoring response are separate in the first column.}\\
+\toprule
+\textbf{Target / score} & \textbf{Contexts} & \textbf{Median L1} & \textbf{Min. rank correlation} & \textbf{Median / max AUC change} & \textbf{Changes above 0.01} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Target / score} & \textbf{Contexts} & \textbf{Median L1} & \textbf{Min. rank correlation} & \textbf{Median / max AUC change} & \textbf{Changes above 0.01} \\
+\midrule\endhead
+\bottomrule\endfoot
+Q/Q & 120 & 0.0182 & 0.99931 & 0.00181 / 221 & 12/120 \\
+Q/N & 120 & 0.0182 & 0.99931 & 0.00111 / 6.82 & 4/120 \\
+N/Q & 120 & 0.0207 & 0.99957 & 0.00218 / 2.29 & 12/120 \\
+N/N & 120 & 0.0207 & 0.99957 & 0.00151 / 0.527 & 7/120 \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.240\linewidth} p{0.180\linewidth} p{0.100\linewidth} p{0.130\linewidth} p{0.130\linewidth} p{0.140\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{The 21 preserved contexts also receive numerical checks.} Entries are median completeness residuals in percent, with the same contexts across each row. These 21 contexts are all available members of the 24-context collection underlying the separate twelve-context completed diagnostic sample. They are not independent new robot runs. Each stratum has only two source episodes and supports no population inference. Old denotes the bf16 equal-weight 64-interval estimator. The two corrected columns use the 512-interval trapezoid and 32-bit accumulation, with 16-bit or 32-bit model calculations.}\\
+\toprule
+\textbf{Preserved group} & \textbf{Input / target} & \textbf{Contexts} & \textbf{Old (\%)} & \textbf{16-bit (\%)} & \textbf{32-bit (\%)} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Preserved group} & \textbf{Input / target} & \textbf{Contexts} & \textbf{Old (\%)} & \textbf{16-bit (\%)} & \textbf{32-bit (\%)} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 170M & vision Q & 4 & 1.25 & 2.89 & 0.0000524 \\
+PickCube 170M & vision N & 4 & 9.07 & 7.41 & 0.0845 \\
+PickCube 170M & language Q & 4 & 3.49 & 3.61 & 0.00103 \\
+PickCube 170M & language N & 4 & 12.5 & 11.8 & 0.113 \\
+PickCube 170M & state Q & 4 & 2.55 & 0.624 & 0.000422 \\
+PickCube 170M & state N & 4 & 2.45 & 0.881 & 0.0441 \\
+PickCube 1B & vision Q & 2 & 1.64 & 0.325 & 0.000217 \\
+PickCube 1B & vision N & 2 & 4.25 & 2.62 & 0.0469 \\
+PickCube 1B & language Q & 2 & 5.30 & 5.81 & 0.000831 \\
+PickCube 1B & language N & 2 & 18.5 & 18.2 & 0.0712 \\
+PickCube 1B & state Q & 2 & 53.1 & 8.55 & 2.86 \\
+PickCube 1B & state N & 2 & 60.3 & 6.97 & 2.32 \\
+StackCube 170M & vision Q & 4 & 2.92 & 1.67 & 0.000272 \\
+StackCube 170M & vision N & 4 & 7.30 & 3.02 & 0.162 \\
+StackCube 170M & language Q & 4 & 2.67 & 1.04 & 0.000527 \\
+StackCube 170M & language N & 4 & 8.43 & 5.40 & 0.172 \\
+StackCube 170M & state Q & 4 & 19.3 & 1.94 & 0.0157 \\
+StackCube 170M & state N & 4 & 9.74 & 1.40 & 0.0420 \\
+StackCube 1B & vision Q & 3 & 2.13 & 0.338 & 0.000206 \\
+StackCube 1B & vision N & 3 & 2.75 & 0.985 & 0.0299 \\
+StackCube 1B & language Q & 3 & 3.62 & 4.78 & 0.000383 \\
+StackCube 1B & language N & 3 & 20.4 & 19.8 & 0.0989 \\
+StackCube 1B & state Q & 3 & 0.466 & 0.296 & 0.000406 \\
+StackCube 1B & state N & 3 & 2.01 & 1.24 & 0.109 \\
+Peg insertion 170M & vision Q & 4 & 7.28 & 4.87 & 0.000710 \\
+Peg insertion 170M & vision N & 4 & 9.11 & 6.49 & 0.250 \\
+Peg insertion 170M & language Q & 4 & 3.15 & 0.639 & 0.000672 \\
+Peg insertion 170M & language N & 4 & 7.71 & 5.89 & 0.137 \\
+Peg insertion 170M & state Q & 4 & 3.34 & 2.93 & 0.00174 \\
+Peg insertion 170M & state N & 4 & 8.04 & 6.70 & 0.0782 \\
+Object pickup 170M & vision Q & 4 & 3.78 & 0.999 & 0.000131 \\
+Object pickup 170M & vision N & 4 & 5.29 & 3.29 & 0.0361 \\
+Object pickup 170M & language Q & 4 & 5.05 & 2.31 & 0.000702 \\
+Object pickup 170M & language N & 4 & 9.57 & 8.00 & 0.248 \\
+Object pickup 170M & state Q & 4 & 68.4 & 25.2 & 33.5 \\
+Object pickup 170M & state N & 4 & 44.2 & 19.5 & 23.1 \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.180\linewidth} p{0.130\linewidth} p{0.160\linewidth} p{0.160\linewidth} p{0.160\linewidth} p{0.140\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Separate original offline diagnostics: twelve contexts, six episodes, four pretrained tasks.} This is the completed subset of the sealed collection, distinct from the later 21-context reruns. The model and summation use 32-bit arithmetic on stored 16-bit-valued weights and encoded image/language inputs; state is readapted and the self-reference recomputed in 32 bits. It is not a native 32-bit rollout. All 1,800 recorded equality checks passed, but repeatability did not establish quadrature accuracy. Entries are maxima for the two finest budgets: 256 versus 512 intervals for vision/language, 512 versus 1,024 for state. The finer estimate is a comparator, not ground truth. Any failed check counts contexts violating at least one recorded finer-pair criterion; these dependent checks do not estimate a failure frequency. IG and path-gradient columns are relative L1 differences. RMS is the largest pointwise response-curve change divided by baseline RMS, across both ranking types and directions. Extrema can come from different contexts. Two state contexts exceed 1\% finest-budget completeness under each target. Figure S4 retains all adjacent-budget trajectories, including exact zeros.}\\
+\toprule
+\textbf{Input / target} & \textbf{Any failed check} & \textbf{Max. IG L1 (\%)} & \textbf{Max. path L1 (\%)} & \textbf{Max. residual (\%)} & \textbf{Max. RMS (\%)} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Input / target} & \textbf{Any failed check} & \textbf{Max. IG L1 (\%)} & \textbf{Max. path L1 (\%)} & \textbf{Max. residual (\%)} & \textbf{Max. RMS (\%)} \\
+\midrule\endhead
+\bottomrule\endfoot
+language N & 0/12 & 0.402 & 0.425 & 0.315 & 0 \\
+language Q & 0/12 & 0.00568 & 0.00537 & 0.00176 & 0 \\
+state N & 2/12 & 20.8 & 22.0 & 6.65 & 18.6 \\
+state Q & 2/12 & 32.1 & 34.4 & 11.4 & 1.64 \\
+vision N & 4/12 & 1.23 & 1.19 & 0.288 & 7.36 \\
+vision Q & 1/12 & 2.05 & 2.02 & 0.124 & 0 \\
+\end{longtable}

@@ -1,0 +1,16 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.230\linewidth} p{0.180\linewidth} p{0.270\linewidth} p{0.240\linewidth}}
+\caption{\textbf{Numerical variants and their purpose.} The old rule generated saved attributions and is reapplied to new contexts; these are distinct data sources. Numerical agreement is a diagnostic, not an exactness guarantee.}\label{tab:r1-estimators}\\
+\toprule
+\textbf{Variant} & \textbf{Calculation / sum} & \textbf{Rule and evaluations} & \textbf{Purpose} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Variant} & \textbf{Calculation / sum} & \textbf{Rule and evaluations} & \textbf{Purpose} \\
+\midrule\endhead
+\bottomrule\endfoot
+Old equal-weight rule & bf16 / bf16 & 65 uniformly spaced nodes, equal weights & Recover the old implementation \\
+Reduced-precision check & bf16 / fp32 & 513 shared nodes: equal-weight/trapezoid through 512 intervals; midpoint through 256 & Separate summation from model precision \\
+32-bit check & fp32 / fp32 & The same 513 nodes and nested rules & Matched precision comparison \\
+Gauss-Legendre & fp32 / fp32 & 32, 64 or 128 interior nodes & Independent rule comparison \\
+Adaptive Gauss-Kronrod & fp32 / fp32 & Adaptive interior nodes & Independent convergence check \\
+\end{longtable}

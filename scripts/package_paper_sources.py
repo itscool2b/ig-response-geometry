@@ -18,6 +18,7 @@ import zipfile
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.build_paper import validate_revision_assets
 from scripts.validate_template_provenance import validate_template_bytes
+from scripts.review_route import load_review_url, render_review_route, review_binding
 
 IDENTIFIERS = ('arjun bajpai', 'arjunbajpai2009', 'itscool2b',
                'the-readout-not-the-denoiser-repo', 'ig-response-geometry')
@@ -28,17 +29,20 @@ TABLE_FILES = frozenset('tables_revision/' + name + '.tex' for name in
                          'oneb', 'rescore', 'sanity', 'variants', 'numerical_roster', 'numerical_diagnostics', 'paired_rescoring', 'episode_influence',
                          'revision_facts', 'paired_results', 'r1_experiments', 'r1_identities',
                          'r1_saved_summary', 'r1_methods_summary'))
+TABLE_FILES |= frozenset('tables_revision/' + name + '.tex' for name in
+                         ('r1_all_methods', 'r1_calibration', 'r1_diagnostics', 'r1_success_summary', 'r1_stability', 'r1_estimators'))
 FIGURE_FILES = frozenset({'figures_revision/response_geometry.pdf',
                           'figures_revision/solver_endpoint.pdf',
                           *(f'figures_revision/{name}.pdf' for name in
                             ('pipeline', 'response_mechanism', 'paired_effects', 'analytic_toys', 'numerical_diagnostics',
                              'r1_design', 'r1_saved_geometry', 'r1_success_tasks', 'r1_methods', 'r1_numerics'))})
+FIGURE_FILES |= frozenset({'figures_revision/r1_tail_geometry.pdf', 'figures_revision/r1_offline_numerics.pdf'})
 FRAGMENT_FILES = TABLE_FILES | frozenset({'appendix_aliasing.tex'})
 SUPPLEMENT_FILES = frozenset({'supplementary_derivations.tex'})
 TEX_PACKAGES = frozenset({'tmlr', 'url', 'hyperref', 'inputenc', 'caption', 'graphicx',
                           'placeins', 'amsmath', 'amssymb', 'amsthm', 'booktabs',
                           'algorithm', 'algorithmic', 'microtype', 'xcolor', 'fontspec',
-                          'geometry', 'natbib', 'tabularx', 'array'})
+                          'geometry', 'natbib', 'tabularx', 'array', 'longtable'})
 DATA_DIRECTIVES = ('input', 'includegraphics', 'bibliography', 'bibliographystyle',
                    'documentclass', 'usepackage')
 
@@ -47,7 +51,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def anonymous_source(text):
+def selected_source(text, *, anonymous):
     # No verbatim/literal-percent environment occurs in this manuscript. Refuse
     # that extension until the transformation has a corresponding parser.
     if re.search(r'\\begin\{(?:verbatim\*?|lstlisting|minted)\}', text):
@@ -65,12 +69,13 @@ def anonymous_source(text):
         value = match.group()
         if value in (r'\ifdefined\TMLRAnonymous', r'\ifanonymous'):
             stack.append((active, False))
+            active = active and anonymous
         elif value == r'\else':
             if not stack or stack[-1][1]:
                 raise ValueError('Unmatched or repeated anonymous conditional else')
             parent, _ = stack[-1]
             stack[-1] = (parent, True)
-            active = False
+            active = parent and not anonymous
         else:
             if not stack:
                 raise ValueError('Unmatched anonymous conditional end')
@@ -85,8 +90,12 @@ def anonymous_source(text):
         raise ValueError('Unclosed anonymous conditional')
     if active:
         pieces.append(text[start:])
-    text = ''.join(pieces)
-    text = re.sub(r'\\anonymoustrue\s*', '', text)
+    return re.sub(r'\\anonymous(?:true|false)\s*', '', ''.join(pieces))
+
+
+def anonymous_source(text, *, review_route=None):
+    text = selected_source(text, anonymous=True)
+    text = render_review_route(text, review_route, anonymous=True)
     # Preserve the old reviewed TMLR syntax, and accept the article's one
     # already-anonymous declaration only after selecting anonymous branches.
     text, count = re.subn(r'\\author\{\\name [^\n]*\n\\addr [^\n]*\}',
@@ -176,21 +185,32 @@ def manuscript_dependencies(text, *, top_level, supplement=False):
     return names
 
 
-def build(root, output, *, authorized_review=False):
+def build(root, output, *, authorized_review=False, review_url_file=None, identified=False):
     root, output = Path(root).resolve(), Path(output).resolve()
+    if identified and (authorized_review or review_url_file is not None):
+        raise ValueError('Identified packages cannot receive a private review route')
+    review = load_review_url(review_url_file)
+    if review and (not authorized_review or output.is_relative_to(root)):
+        raise ValueError('A private review route requires an authorized package outside the repository')
     validate_revision_assets(root)
     if output.exists():
         raise FileExistsError('Choose a fresh package directory')
     # Apply the same exact-byte decoding as the research supplement. Universal
     # newline conversion here would give two different anonymous source files.
     source = (root / 'paper/paper.tex').read_bytes().decode('utf-8')
-    transformed = anonymous_source(source)
+    transformed = (render_review_route(selected_source(source, anonymous=False), anonymous=False)
+                   if identified else anonymous_source(source, review_route=review))
     files = {'paper.tex': transformed.encode('utf-8')}
     names = manuscript_dependencies(transformed, top_level=True)
     if r'\bibliographystyle{nhsjs}' in transformed:
         names.update(name for name in SUPPLEMENT_FILES if (root / 'paper' / name).is_file())
     inputs = {'paper/paper.tex': digest((root / 'paper/paper.tex').read_bytes())}
-    for name in sorted(names):
+    pending = set(names)
+    while pending:
+        name = min(pending)
+        pending.remove(name)
+        if name in files:
+            continue
         member_name(name)
         path = (root / 'paper' / name).resolve()
         if not path.is_relative_to(root / 'paper') or not path.is_file():
@@ -201,13 +221,15 @@ def build(root, output, *, authorized_review=False):
         if name in FRAGMENT_FILES:
             manuscript_dependencies(data.decode('utf-8'), top_level=False)
         if name in SUPPLEMENT_FILES:
-            if manuscript_dependencies(data.decode('utf-8'), top_level=True, supplement=True):
-                raise ValueError('Standalone supplement must be self-contained: ' + name)
+            dependencies = manuscript_dependencies(data.decode('utf-8'), top_level=True, supplement=True)
+            names.update(dependencies)
+            pending.update(dependencies - set(files))
         files[name] = data
         inputs['paper/' + name] = digest(data)
     template_provenance = validate_template_bytes(files)
     files['README.txt'] = (
-        ('Anonymous manuscript source component, author-authorized review copy.\n' if authorized_review else
+        ('Identified manuscript source component.\n' if identified else
+         'Anonymous manuscript source component, author-authorized review copy.\n' if authorized_review else
          'Anonymous manuscript source component, working draft.\n') +
         'Build the article with Tectonic: tectonic --only-cached --untrusted --reruns 3 paper.tex.\n'
         'Requires installed Times New Roman and an already populated TeX package cache.\n'
@@ -216,13 +238,13 @@ def build(root, output, *, authorized_review=False):
         'The upstream repository license is Apache-2.0; tmlr.bst retains its LPPL-1.0-or-later notice.\n'
         'See tmlr-source.json and tmlr-LICENSE; no license override is asserted.\n'
         'This contains manuscript sources, not the complete code/data supplement.\n' +
-        ('This is the November 1, 2026 editorial manuscript snapshot.\n'
-         'The large reviewer archives retain their October 31 replay snapshot.\n'
-         'Build these sources separately; do not replace files inside an authenticated replay extraction.\n' if 'figures_revision/r1_design.pdf' in names else '') +
-        ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review else
+        ('This archive contains the current manuscript and supplementary source.\n'
+         'Use the separate data archives for authenticated scientific replay.\n' if 'figures_revision/r1_design.pdf' in names else '') +
+        ('Technical validation is recorded in the accompanying verification. This archive does not establish a journal submission or receipt.\n' if authorized_review or identified else
          'Technical validation of this exact archive is recorded in the accompanying local verification. Human submission review remains open.\n')
     ).encode()
-    manifest = dict(kind='anonymous_manuscript_sources', status=(
+    manifest = dict(kind='identified_manuscript_sources' if identified else 'anonymous_manuscript_sources', status=(
+                    'public_revision_not_journal_submission' if identified else
                     'author_authorized_review_copy_not_journal_submission' if authorized_review else 'working_draft_not_submission_ready'),
                     artifacts_sha256={name:digest(data) for name,data in sorted(files.items())})
     files['manifest.json'] = (json.dumps(manifest,indent=2,sort_keys=True)+'\n').encode()
@@ -237,7 +259,8 @@ def build(root, output, *, authorized_review=False):
         path = work / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
-    archive = output / ('anonymous-manuscript-sources.zip' if authorized_review else 'anonymous-manuscript-sources-draft.zip')
+    archive = output / ('manuscript-sources.zip' if identified else
+                        'anonymous-manuscript-sources.zip' if authorized_review else 'anonymous-manuscript-sources-draft.zip')
     with zipfile.ZipFile(archive, 'x', compression=zipfile.ZIP_DEFLATED) as package:
         for name,data in sorted(files.items()):
             info = zipfile.ZipInfo(name, date_time=(1980,1,1,0,0,0))
@@ -245,7 +268,8 @@ def build(root, output, *, authorized_review=False):
             info.external_attr = 0o644 << 16
             package.writestr(info,data)
     provenance = dict(canonical_inputs_sha256=inputs, template_provenance=template_provenance,
-                      source_transform='anonymous_branch_only_comments_and_author_removed',
+                      private_review_route=review_binding(review),
+                      source_transform=('identified_branch_only_comments_removed' if identified else 'anonymous_branch_only_comments_and_author_removed'),
                       package_sha256=digest(archive.read_bytes()), files=len(files),
                       further_checks=['compile_exact_derivative','all_page_render_review','PDF_text_metadata_links_embedded_assets',
                                       'complete_anonymous_code_data_supplement','scientific_and_author_specific_submission_gates'])
@@ -258,5 +282,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--authorized-review', action='store_true', help='Use only with owner authorization for the anonymous review copy; does not imply validation or submission')
+    parser.add_argument('--review-url-file', type=Path, help='Private review URL file; never included in the archive')
+    parser.add_argument('--identified', action='store_true', help='Export the identified publication branch without any review route')
     args = parser.parse_args()
-    build(Path(__file__).resolve().parents[1], args.out, authorized_review=args.authorized_review)
+    build(Path(__file__).resolve().parents[1], args.out, authorized_review=args.authorized_review,
+          review_url_file=args.review_url_file, identified=args.identified)

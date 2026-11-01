@@ -1,0 +1,2017 @@
+{
+  "source_sha256": "63680766f1510f3d4942cb29e237dce778a38d89a7f55f40a881709b6afa34ee",
+  "populations": [
+    {
+      "id": "saved_Q_ranked_cohort",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained RDT-170M, no ManiSkill fine-tune)",
+          "status": "recovered"
+        },
+        "model_revision": {
+          "value": "Not pinned: the code downloads 'main'. Throughout 2026 'main' resolved to 8aa386cac3bbfd9540676c75b3d767cc7f88a10a, and pytorch_model.bin has had one content since commit 1ba658876c26 (2024-10-23 13:26 UTC).",
+          "status": "recovered"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin, sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 332,520,250 bytes",
+          "status": "recovered"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "configs/base_170m.yaml: hidden 1024, depth 14, 32 heads; 64-step action chunk; 128-dim state; img_history_size 2 x num_cameras 3 = 6 image slots; tokenizer_max_length 1024; adaptors lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu; DDPM 1000 train steps, 5 inference steps, squaredcos_cap_v2, prediction_type sample",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "T5-v1.1-XXL encoder (google/t5-v1_1-xxl, hub 'main' = 3db67ab1af984cf10548a73467f0e5bca2aaaeb2 since 2023-01-24) run on the pod by encode_task_lang.py: SentencePiece pieces of the committed instruction plus EOS (id 1), bf16 encoder output zero-padded to (1, 1024, 4096) with the mask on the attended positions. The embedding files were not preserved.",
+          "status": "inferred"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] = token ids [0, 1] through T5, zero-padded to 1024 positions; the task attention mask is held fixed for the baseline; then the language adaptor",
+          "status": "inferred"
+        },
+        "language_positions": {
+          "value": "20 attended positions (19 SentencePiece pieces + EOS) for 'Grasp a red cube and move it to a target goal position.'",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Language, image and state adaptors are submodules of RDTRunner whose weights are inside pytorch_model.bin (loaded with strict=True); architectures mlp2x_gelu, mlp2x_gelu, mlp3x_gelu (state adaptor input 128 state + 128 mask). No separate adaptor hash.",
+          "status": "recovered"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400 and --max-policy-calls 30 in the code; every episode (15 per seed) ended at 400 environment steps after 25 policy calls, truncated, no success",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "env.reset(seed = seed_base + episode): 42..56 and 142..156",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (field solver_steps = 5 in all 750 step rows)",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 64",
+          "status": "inferred"
+        },
+        "ig_target": {
+          "value": "Q, the historical 'logpi' target: -0.5/sigma^2 x mean over the 512 active entries (64 steps x 8 dims) of (a - a_ref)^2 with sigma^2 = 1, i.e. -r/(2 x 512)",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (native target values; f_input = -0.0 at the actual input; 9-point insertion and deletion curves per modality)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "3.12.x (Ubuntu 24.04 system python with --break-system-packages)",
+          "status": "inferred"
+        },
+        "sw_torch": {
+          "value": "2.8 with CUDA 12.8 build (patch level not recorded)",
+          "status": "inferred"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod RTX PRO 6000 Blackwell Server Edition 96 GB, NVIDIA driver 580 (minor version not recorded), Ubuntu 24.04, LunarG Vulkan SDK 1.4.313",
+          "status": "inferred"
+        },
+        "project_code_version": {
+          "value": "Run-era code 8c65708..0ebaf0b: per_step_ig.py 5ac523b0, per_step_attribution.py 32a201d9, integrated_gradients.py 27119521, faithfulness.py 49bbc4c8, pipeline.py f88834bf, configs/base_170m.yaml 20e1ee4b",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs (no observations, proprioception, noise, reference actions, language embedding files, attribution sidecars or masks). Preserved: step rows (gaps, IG sums, completeness errors, reference-action norm, per-joint state attributions, env_step_at_call, wall time, sidecar path) and faithfulness rows (9-point Q curves, endpoints, AUCs, deltas at 1/5/10%), 375 calls per seed",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "Own step files by fingerprint: 375 of 375 rows per seed in both forms (original form -step.vision_gap = faith.vision_f_baseline; general form step.gap = f_input - f_baseline), relative 1e-6; the regeneration base run, _l2 and _maxdev files match 0 of 375",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_N_ranked_cohort",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained RDT-170M, no ManiSkill fine-tune)",
+          "status": "recovered"
+        },
+        "model_revision": {
+          "value": "Not pinned: the code downloads 'main'. Throughout 2026 'main' resolved to 8aa386cac3bbfd9540676c75b3d767cc7f88a10a, and pytorch_model.bin has had one content since commit 1ba658876c26 (2024-10-23 13:26 UTC).",
+          "status": "recovered"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin, sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 332,520,250 bytes",
+          "status": "recovered"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "configs/base_170m.yaml: hidden 1024, depth 14, 32 heads; 64-step action chunk; 128-dim state; img_history_size 2 x num_cameras 3 = 6 image slots; tokenizer_max_length 1024; adaptors lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu; DDPM 1000 train steps, 5 inference steps, squaredcos_cap_v2, prediction_type sample",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "RDT authors' precomputed T5-XXL embedding lang_embeds/text_embed_PickCube-v1.pt from robotics-diffusion-transformer/maniskill-model (sha256 a9ac30bc88ef12b171e9323b8a2c64f0b0ae9a54715deb061c021deaadb37f7a, bf16, shape (1, 20, 4096), unchanged since commit 7fdb1b3 2024-12-17), converted on the pod to a zero-padded (1, 1024, 4096) tensor with an attention mask over the 20 positions. The conversion code was not committed and the converted file was not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Zeroed placeholder baseline (an all-zero (1, 1024, 4096) embedding standing in for the BOS/EOS baseline), task attention mask held fixed, then passed through the language adaptor (so the adapted baseline is the adaptor's response to zeros, not zero)",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "20 attended positions (the authors' PickCube embedding has 20 positions)",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Language, image and state adaptors are submodules of RDTRunner whose weights are inside pytorch_model.bin (loaded with strict=True); architectures mlp2x_gelu, mlp2x_gelu, mlp3x_gelu (state adaptor input 128 state + 128 mask). No separate adaptor hash.",
+          "status": "recovered"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400 and --max-policy-calls 30 in the code; every episode ended at 400 environment steps after 25 calls, truncated, no success",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "seed_base + episode: 42..56 and 142..156",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (from configs/base_170m.yaml; no solver-step override existed in the code until e3ef7e2 on 2026-06-09)",
+          "status": "recovered"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 64",
+          "status": "recovered"
+        },
+        "ig_target": {
+          "value": "N, the stabilized norm 'l2': -sqrt(sum over the 512 active entries of (a - a_ref)^2 + 1e-12)",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "N (native target values; f_input about -1e-6)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "unknown (uv venv; version not recorded)",
+          "status": "unknown"
+        },
+        "sw_torch": {
+          "value": "PyTorch 2.x CUDA 12.8 build (exact version not recorded)",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod 2 x RTX 4090 pod (213.173.99.48), NVIDIA driver 580.126.20, Vulkan 1.4.312 through LunarG SDK 1.4.313; the alternative-target runs used both GPUs (GPU per seed not recorded)",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Code of b887a96 (2026-05-29): per_step_ig.py 8b1246de, per_step_attribution.py b376b402, integrated_gradients.py 27119521, faithfulness.py 7cdfefe0, pipeline.py f3019d25",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs (as for the Q-ranked cohort). Preserved: step and faithfulness rows (9-point N curves). The seed-42 files hold 24 duplicate rows from a --resume restart that differ only in wall_seconds",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "Own step files metrics_PickCube-v1_170m_seed{42,142}_l2.jsonl: general form 375 of 375 per seed; original form (step -vision_gap = faith vision_f_baseline within 1e-6) 366 of 375 (vision) and 369 of 375 (language) per seed, because N's stored f_input is -1e-6 and the original form assumes f_input = 0; base run, _logpi and _maxdev files match 0 of 375",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_RDT1B_seed42_month4",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/maniskill-model, file rdt/mp_rank_00_model_states.pt (the RDT authors' ManiSkill fine-tune of RDT-1B), loaded from the local path checkpoints/rdt_maniskill_authors/mp_rank_00_model_states.pt with strict=False (missing/unexpected key counts printed, not recorded)",
+          "status": "recovered"
+        },
+        "model_revision": {
+          "value": "Hub 'main' = 9622afab2b7ce2312a6cf1febc526928589b77eb (latest commit 2024-12-28); the checkpoint file has one content since its first upload at b2e8159b (2024-12-16 08:42 UTC)",
+          "status": "recovered"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "mp_rank_00_model_states.pt, sha256 3fa89cbf7bbb1b2559b29f9ae153b431541cdaa0b3f1ee44b83b9934599b9fb8, 2,456,799,148 bytes",
+          "status": "recovered"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "Upstream configs/base.yaml: hidden 2048, depth 28, 32 heads; same adaptor types and DDPM settings as the 170M config, 5 inference steps",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "RDT authors' precomputed T5-XXL embedding lang_embeds/text_embed_PickCube-v1.pt from robotics-diffusion-transformer/maniskill-model (sha256 a9ac30bc88ef12b171e9323b8a2c64f0b0ae9a54715deb061c021deaadb37f7a, bf16, shape (1, 20, 4096), unchanged since commit 7fdb1b3 2024-12-17), converted on the pod to a zero-padded (1, 1024, 4096) tensor with an attention mask over the 20 positions. The conversion code was not committed and the converted file was not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Zeroed placeholder baseline (an all-zero (1, 1024, 4096) embedding standing in for the BOS/EOS baseline), task attention mask held fixed, then passed through the language adaptor (so the adapted baseline is the adaptor's response to zeros, not zero)",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "20 attended positions",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Adaptor weights are inside the authors' checkpoint (lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu); no separate adaptor hash",
+          "status": "recovered"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, --max-policy-calls 30; 9 of 20 episodes succeeded (ending at 3 to 175 steps), 11 ran to 400 steps",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "42..61",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (upstream configs/base.yaml; no override option in the code)",
+          "status": "recovered"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 64",
+          "status": "recovered"
+        },
+        "ig_target": {
+          "value": "Q ('logpi'), the only target implemented at this code version",
+          "status": "recovered"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (f_input = -0.0)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_torch": {
+          "value": "PyTorch 2.x CUDA 12.8 build (exact version not recorded)",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod 2 x RTX 4090 pod (213.173.99.48), GPU0, driver 580.126.20",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Code of 393607b (2026-05-25): per_step_ig.py e66ce122, per_step_attribution.py 33829266, integrated_gradients.py 27119521, faithfulness.py 69d57503, pipeline.py f3019d25",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs. Preserved: 320 step rows, 20 episode_end rows, 320 faithfulness rows (Q curves)",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "Own step file: 320 of 320 rows",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_RDT1B_seeds142_242_month6",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/maniskill-model, file rdt/mp_rank_00_model_states.pt (the RDT authors' ManiSkill fine-tune of RDT-1B), loaded from the local path checkpoints/rdt_maniskill_authors/mp_rank_00_model_states.pt with strict=False (missing/unexpected key counts printed, not recorded)",
+          "status": "inferred"
+        },
+        "model_revision": {
+          "value": "Hub 'main' = 9622afab2b7ce2312a6cf1febc526928589b77eb (latest commit 2024-12-28); the checkpoint file has one content since its first upload at b2e8159b (2024-12-16 08:42 UTC)",
+          "status": "inferred"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "mp_rank_00_model_states.pt, sha256 3fa89cbf7bbb1b2559b29f9ae153b431541cdaa0b3f1ee44b83b9934599b9fb8, 2,456,799,148 bytes",
+          "status": "inferred"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "Upstream configs/base.yaml: hidden 2048, depth 28, 32 heads; same adaptor types and DDPM settings as the 170M config, 5 inference steps",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "T5-v1.1-XXL encoder (google/t5-v1_1-xxl, hub 'main' = 3db67ab1af984cf10548a73467f0e5bca2aaaeb2 since 2023-01-24) run on the pod by encode_task_lang.py: SentencePiece pieces of the committed instruction plus EOS (id 1), bf16 encoder output zero-padded to (1, 1024, 4096) with the mask on the attended positions. The embedding files were not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] = token ids [0, 1] through T5, zero-padded to 1024 positions; the task attention mask is held fixed for the baseline; then the language adaptor",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "20 attended positions",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Adaptor weights are inside the authors' checkpoint (lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu); no separate adaptor hash",
+          "status": "inferred"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, --max-policy-calls 30; seed 142: 1 success of 20; seed 242: 5 of 20",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "142..161 and 242..261",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (solver_steps field in every step row)",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 64",
+          "status": "recovered"
+        },
+        "ig_target": {
+          "value": "Q ('logpi')",
+          "status": "recovered"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (f_input = -0.0)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "3.12.x (Ubuntu 24.04 system python)",
+          "status": "inferred"
+        },
+        "sw_torch": {
+          "value": "2.8 with CUDA 12.8 build",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod RTX PRO 6000 Blackwell Server Edition 96 GB, driver 580, Ubuntu 24.04; seeds 142 and 242 ran concurrently on the one GPU",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Run-era code 8c65708..443e8f5 (same blobs as the Q-ranked cohort)",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs. Preserved: 480 and 399 step rows with episode_end rows, and faithfulness rows (Q curves)",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "Own step files: all rows",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_RDT1B_seed42_month5_rerun",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/maniskill-model, file rdt/mp_rank_00_model_states.pt (the RDT authors' ManiSkill fine-tune of RDT-1B), loaded from the local path checkpoints/rdt_maniskill_authors/mp_rank_00_model_states.pt with strict=False (missing/unexpected key counts printed, not recorded)",
+          "status": "inferred"
+        },
+        "model_revision": {
+          "value": "Hub 'main' = 9622afab2b7ce2312a6cf1febc526928589b77eb (latest commit 2024-12-28); the checkpoint file has one content since its first upload at b2e8159b (2024-12-16 08:42 UTC)",
+          "status": "inferred"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "mp_rank_00_model_states.pt, sha256 3fa89cbf7bbb1b2559b29f9ae153b431541cdaa0b3f1ee44b83b9934599b9fb8, 2,456,799,148 bytes",
+          "status": "inferred"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "Upstream configs/base.yaml: hidden 2048, depth 28, 32 heads; same adaptor types and DDPM settings as the 170M config, 5 inference steps",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "T5-v1.1-XXL encoder (google/t5-v1_1-xxl, hub 'main' = 3db67ab1af984cf10548a73467f0e5bca2aaaeb2 since 2023-01-24) run on the pod by encode_task_lang.py: SentencePiece pieces of the committed instruction plus EOS (id 1), bf16 encoder output zero-padded to (1, 1024, 4096) with the mask on the attended positions. The embedding files were not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] = token ids [0, 1] through T5, zero-padded to 1024 positions; the task attention mask is held fixed for the baseline; then the language adaptor",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "20 attended positions",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Adaptor weights are inside the authors' checkpoint (lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu); no separate adaptor hash",
+          "status": "inferred"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, --max-policy-calls 30; 8 of 20 episodes succeeded",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "42..61",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (solver_steps field)",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 64",
+          "status": "inferred"
+        },
+        "ig_target": {
+          "value": "Q ('logpi')",
+          "status": "inferred"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (f_input = -0.0)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "unknown (venv on /workspace with system torch)",
+          "status": "unknown"
+        },
+        "sw_torch": {
+          "value": "2.8 with CUDA 12.8 build (system torch of the image)",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "0.38",
+          "status": "recovered"
+        },
+        "sw_transformers": {
+          "value": "5.10",
+          "status": "recovered"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod RTX PRO 6000 Blackwell Server Edition 96 GB, driver 580, Ubuntu 24.04, LunarG Vulkan SDK 1.4.313",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Code of e3ef7e2 (2026-06-09): per_step_ig.py 657cf17f, per_step_attribution.py b376b402, integrated_gradients.py 27119521, faithfulness.py 7cdfefe0, pipeline.py f88834bf",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs. Preserved: 334 step rows with episode_end rows, 334 faithfulness rows",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "Own step file: 334 of 334 rows",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_m128_seed142_month4",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained RDT-170M, no ManiSkill fine-tune)",
+          "status": "recovered"
+        },
+        "model_revision": {
+          "value": "Not pinned: the code downloads 'main'. Throughout 2026 'main' resolved to 8aa386cac3bbfd9540676c75b3d767cc7f88a10a, and pytorch_model.bin has had one content since commit 1ba658876c26 (2024-10-23 13:26 UTC).",
+          "status": "recovered"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin, sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 332,520,250 bytes",
+          "status": "recovered"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "configs/base_170m.yaml: hidden 1024, depth 14, 32 heads; 64-step action chunk; 128-dim state; img_history_size 2 x num_cameras 3 = 6 image slots; tokenizer_max_length 1024; adaptors lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu; DDPM 1000 train steps, 5 inference steps, squaredcos_cap_v2, prediction_type sample",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "PegInsertionSide-v1: the authors' text_embed_PegInsertionSide-v1.pt (sha256 da798aab9df67a230259095c0d087772d10ff2dd089bd71762a1b6d1696dbbf3, 25 positions). PickSingleYCB-v1: the authors' repository has no PickSingleYCB embedding, so the PickCube embedding (a9ac30bc..., 20 positions) was used as a proxy. Both converted to zero-padded (1, 1024, 4096) with masks on the pod; converted files not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Zeroed placeholder baseline (an all-zero (1, 1024, 4096) embedding standing in for the BOS/EOS baseline), task attention mask held fixed, then passed through the language adaptor (so the adapted baseline is the adaptor's response to zeros, not zero)",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "25 (PegInsertionSide) and 20 (PickSingleYCB, PickCube proxy)",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Language, image and state adaptors are submodules of RDTRunner whose weights are inside pytorch_model.bin (loaded with strict=True); architectures mlp2x_gelu, mlp2x_gelu, mlp3x_gelu (state adaptor input 128 state + 128 mask). No separate adaptor hash.",
+          "status": "recovered"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PegInsertionSide-v1 and PickSingleYCB-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400; every episode (8 per task) ended at 400 steps after 25 calls without success",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "142..149",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (config; no override option in the code)",
+          "status": "recovered"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code (library defaults); gradient checkpointing on by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 128 for the step files (file-name tag '_m128' given at run time); the m used by the rankings behind the saved faithfulness curves is inferred from the Month 4 run order",
+          "status": "inferred"
+        },
+        "ig_target": {
+          "value": "Q ('logpi', only target at this code version)",
+          "status": "recovered"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (f_input = -0.0)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_torch": {
+          "value": "PyTorch 2.x CUDA 12.8 build (exact version not recorded)",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod 2 x RTX 4090 pod, GPU0 for E2 m=128 IG and E5 m=128 faithfulness, driver 580.126.20",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Pre-b887a96 code (393607b blobs; sidecar paths without seed or m tag)",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs. Preserved: step and faithfulness rows; PegInsertionSide files repeat 19 calls of episode 1 (resume)",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "200 of 200 rows against the m=128 step files and also against the m=64 regeneration step files",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "saved_m128_seed42_month7_reruns",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained RDT-170M, no ManiSkill fine-tune)",
+          "status": "recovered"
+        },
+        "model_revision": {
+          "value": "Not pinned: the code downloads 'main'. Throughout 2026 'main' resolved to 8aa386cac3bbfd9540676c75b3d767cc7f88a10a, and pytorch_model.bin has had one content since commit 1ba658876c26 (2024-10-23 13:26 UTC).",
+          "status": "recovered"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin, sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 332,520,250 bytes",
+          "status": "recovered"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "thu-ml/RoboticsDiffusionTransformer cd79363a1387e8f81c7724d070ef7e45fd23150f (default-branch HEAD from 2026-01-21 to today)",
+          "status": "recovered"
+        },
+        "model_config": {
+          "value": "configs/base_170m.yaml: hidden 1024, depth 14, 32 heads; 64-step action chunk; 128-dim state; img_history_size 2 x num_cameras 3 = 6 image slots; tokenizer_max_length 1024; adaptors lang mlp2x_gelu, img mlp2x_gelu, state mlp3x_gelu; DDPM 1000 train steps, 5 inference steps, squaredcos_cap_v2, prediction_type sample",
+          "status": "recovered"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 through upstream SiglipVisionTower (last_hidden_state patch tokens, 729 x 1152), bf16 on GPU; loaded from hub 'main' with no revision; 'main' = 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 since 2024-09-26; model.safetensors sha256 ea2abad2b7f8a9c1aa5e49a244d5d57ffa71c56f720c94bc5d240ef4d6e1d94a (unchanged since 2024-01-08)",
+          "status": "recovered"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor from the same revision: resize to 384 x 384 (resample 3, bicubic), rescale by 1/255, normalize with mean 0.5 and std 0.5 per channel",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "T5-v1.1-XXL encoder (google/t5-v1_1-xxl, hub 'main' = 3db67ab1af984cf10548a73467f0e5bca2aaaeb2 since 2023-01-24) run on the pod by encode_task_lang.py: SentencePiece pieces of the committed instruction plus EOS (id 1), bf16 encoder output zero-padded to (1, 1024, 4096) with the mask on the attended positions. The embedding files were not preserved.",
+          "status": "recovered"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] = token ids [0, 1] through T5, zero-padded to 1024 positions; the task attention mask is held fixed for the baseline; then the language adaptor",
+          "status": "recovered"
+        },
+        "language_positions": {
+          "value": "25 (PegInsertionSide) and 16 (PickSingleYCB)",
+          "status": "recovered"
+        },
+        "adaptor_identity": {
+          "value": "Language, image and state adaptors are submodules of RDTRunner whose weights are inside pytorch_model.bin (loaded with strict=True); architectures mlp2x_gelu, mlp2x_gelu, mlp3x_gelu (state adaptor input 128 state + 128 mask). No separate adaptor hash.",
+          "status": "recovered"
+        },
+        "simulator_package_versions": {
+          "value": "unknown (mani_skill, sapien and gymnasium versions not recorded)",
+          "status": "unknown"
+        },
+        "task": {
+          "value": "PegInsertionSide-v1 and PickSingleYCB-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos (absolute joint targets); obs_mode state_dict; num_envs 1; render_mode rgb_array",
+          "status": "recovered"
+        },
+        "action_subsampling": {
+          "value": "64-step predicted chunk, denormalized with fixed ACTION_MIN/ACTION_MAX; every 4th action executed, 16 environment steps per policy call",
+          "status": "recovered"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400; every episode (8 per task) ended at 400 steps after 25 calls without success",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "42..49",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "env.render() RGB frame (1 x 512 x 512 x 3 uint8 on this pod type per the render smoke), resized with PIL Image.resize to 384 x 384, placed as the current external-camera slot (index 3) of six SigLIP slots [bg, bg, bg, obs, bg, bg]; the other five slots are a constant image of colour int(255 x 0.5) = 127 per channel; the vision baseline replaces slot 3 by a uniform (128, 128, 128) image. Previous-frame and wrist slots are never filled.",
+          "status": "recovered"
+        },
+        "proprioception_preprocessing": {
+          "value": "qpos[:, :8] min-max normalized with fixed STATE_MIN/STATE_MAX to [-1, 1] and written at MANISKILL_INDICES [0,1,2,3,4,5,6,10] of a 128-dim state vector; state baseline all zeros",
+          "status": "recovered"
+        },
+        "diffusion_sampler": {
+          "value": "Upstream RDTRunner.conditional_sample with diffusers DPMSolverMultistepScheduler(num_train_timesteps=1000, beta_schedule='squaredcos_cap_v2', prediction_type='sample'); every other scheduler argument at the defaults of the installed diffusers version (version not recorded)",
+          "status": "recovered"
+        },
+        "solver_steps": {
+          "value": "5 (solver_steps field)",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "Global torch RNG reseeded with torch.manual_seed(seed) and torch.cuda.manual_seed_all(seed) before every conditional_sample call, seed = environment seed of the episode (seed_base + episode); the initial noise is torch.randn in bf16 on CUDA inside RDTRunner, so every call and every IG node of an episode reuses one draw; the faithfulness run reseeds with the row's seed. Noise tensors were not stored.",
+          "status": "recovered"
+        },
+        "precision_dtype": {
+          "value": "bf16 model weights and activations (RDT and SigLIP); IG inputs (adapted tokens, raw state) bf16; gradients bf16; IG accumulation in a bf16 tensor (zeros_like(input)); target scalar computed in fp32 from bf16 actions; reference action bf16",
+          "status": "recovered"
+        },
+        "runtime_determinism_settings": {
+          "value": "None set by the code: PyTorch defaults of the installed version (deterministic algorithms off, cuDNN benchmark default, TF32 defaults); gradient checkpointing enabled by default",
+          "status": "recovered"
+        },
+        "ig_estimator": {
+          "value": "Endpoint-inclusive average (paper Equation 3): path gradients at alpha = k/m for k = 0..m, each weight 1/(m+1), multiplied by (x - x')",
+          "status": "recovered"
+        },
+        "ig_budget": {
+          "value": "m = 128 (file names and attr_file names carry '_m128')",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q ('logpi')",
+          "status": "recovered"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Nonfinite gradients replaced by 0 (torch.nan_to_num) before accumulation; their count was not recorded",
+          "status": "recovered"
+        },
+        "stored_scoring_response": {
+          "value": "Q (f_input = -0.0)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent; groups ranked by the sum of absolute coordinate attributions per group; k = max(1, int(round(G x p / 100))) groups at each interior fraction; G = 729 vision patches of the external camera; deletion replaces ranked groups by adapted baseline tokens, insertion inserts actual tokens into the baseline; the reference action is recomputed in the rebuilt context from the sidecar obs_image and proprio with the row's seed",
+          "status": "recovered"
+        },
+        "sw_python": {
+          "value": "unknown (venv on system torch)",
+          "status": "unknown"
+        },
+        "sw_torch": {
+          "value": "2.8.0 with CUDA 12.8 (template runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404)",
+          "status": "recovered"
+        },
+        "sw_numpy": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_diffusers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_transformers": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_mani_skill": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "sw_sapien": {
+          "value": "unknown",
+          "status": "unknown"
+        },
+        "hardware": {
+          "value": "RunPod RTX 5090 32 GB, driver 570.211.01, LunarG Vulkan SDK 1.4.313 (noble)",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Code of 6c1c6ce..f5a84fc (per_step_ig.py d5112679 with the m tag, per_step_attribution.py 48a256e7, faithfulness.py 49bbc4c8, pipeline.py ad9b1588, integrated_gradients.py 27119521)",
+          "status": "inferred"
+        },
+        "preserved_inputs": {
+          "value": "None of the policy inputs. Preserved: step and faithfulness rows",
+          "status": "recorded"
+        },
+        "fingerprint": {
+          "value": "200 of 200 rows (unique match)",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "month8_context_bank_and_numerical_sample",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (four 170M strata); robotics-diffusion-transformer/maniskill-model rdt/mp_rank_00_model_states.pt (PickCube and StackCube 1B strata)",
+          "status": "recorded"
+        },
+        "model_revision": {
+          "value": "rdt-170m 8aa386cac3bbfd9540676c75b3d767cc7f88a10a (recorded in each 170M manifest); maniskill-model 9622afab2b7ce2312a6cf1febc526928589b77eb (runtime model manifest)",
+          "status": "recorded"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133 (324 keys loaded, none missing); mp_rank_00_model_states.pt sha256 3fa89cbf7bbb1b2559b29f9ae153b431541cdaa0b3f1ee44b83b9934599b9fb8",
+          "status": "recorded"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "cd79363a1387e8f81c7724d070ef7e45fd23150f (clean)",
+          "status": "recorded"
+        },
+        "model_config": {
+          "value": "config_sha256 a143f26178c68c173338a802d2488a8ab6b1f377af05804c1f793e709cd90b00 (170M) and b6818246fd9acbcef7b0c068857afadb2540d0177a8d45470fd225c6953abf8c (1B); gradient checkpointing off",
+          "status": "recorded"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 (model.safetensors sha256 ea2abad2...)",
+          "status": "recorded"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor of that revision: 384 x 384, bicubic, 1/255, mean/std 0.5",
+          "status": "recovered"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "lang-20260930 inputs generated in Month 8 with T5-v1.1-XXL revision 3db67ab1af984cf10548a73467f0e5bca2aaaeb2, bf16, by encode_task_lang.py (source sha256 cb799eea...); task embedding sha256 PickCube c3b9cf56..., StackCube 73aaee3a..., PegInsertionSide 66536ebc..., PickSingleYCB b4956232... (the PickSingleYCB stratum uses its own instruction)",
+          "status": "recorded"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] zero-padded (baseline_bos_eos.pt sha256 bb87b3070945e5b01ff31001190c596b003b1adc6382d36bc9684b17e558d41d); task attention mask held fixed",
+          "status": "recorded"
+        },
+        "language_positions": {
+          "value": "Token ids and masks stored in the language files: 20 / 30 / 25 / 16 positions",
+          "status": "recorded"
+        },
+        "adaptor_identity": {
+          "value": "Inside the recorded checkpoints; no separate adaptor hash",
+          "status": "recorded"
+        },
+        "simulator_package_versions": {
+          "value": "mani_skill 3.0.1, sapien 3.0.3",
+          "status": "recorded"
+        },
+        "task": {
+          "value": "PickCube-v1, StackCube-v1, PegInsertionSide-v1, PickSingleYCB-v1 (RDT-170M); PickCube-v1, StackCube-v1 (RDT-1B); 2 episodes per stratum",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos",
+          "status": "recorded"
+        },
+        "action_subsampling": {
+          "value": "4 (16 env steps per call)",
+          "status": "recorded"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, max_policy_calls 13 (capped episodes end at 208 steps); 1B PickCube episodes succeeded after 6 calls, 1B StackCube episode 0 after 7",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "seed_base 920100 (PickCube 170M), 920200 (StackCube 170M), 920300 (PegInsertionSide), 920400 (PickSingleYCB), 921100 (PickCube 1B), 921200 (StackCube 1B), plus episode",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "one_current_external_camera_five_background_slots; stored observation is the 384 x 384 x 3 uint8 image after resizing (the raw render is not stored)",
+          "status": "recorded"
+        },
+        "proprioception_preprocessing": {
+          "value": "Raw qpos[:8] stored (float32); normalization as in the code (STATE_MIN/STATE_MAX)",
+          "status": "recorded"
+        },
+        "diffusion_sampler": {
+          "value": "Explicit-noise adapter explicit_noise_local_scheduler_v1 around upstream cd79363 with diffusers DPMSolverMultistepScheduler config stored per call: num_train_timesteps 1000, beta_start 0.0001, beta_end 0.02, squaredcos_cap_v2, solver_order 2, prediction_type sample, algorithm_type dpmsolver++, solver_type midpoint, lower_order_final true, final_sigmas_type zero, timestep_spacing linspace, thresholding false",
+          "status": "recorded"
+        },
+        "solver_steps": {
+          "value": "5",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "fixed_episode_seed_stored_per_context: one draw per episode seed (noise_seed = seed_base + episode) used for every call of the episode; stored per call as float32 (1, 64, 128) with its SHA-256",
+          "status": "recorded"
+        },
+        "precision_dtype": {
+          "value": "Collection: bf16 forward. Numerical sample (E01 v6): fp32 forward with bf16-rounded weights and cached bf16 image/language representations lifted to fp32, state re-adapted in fp32, new fp32 self-reference; fp32 arithmetic",
+          "status": "recorded"
+        },
+        "runtime_determinism_settings": {
+          "value": "Collection: source settings (cuDNN TF32 allowed, deterministic algorithms off, matmul TF32 off, highest fp32 matmul precision). Numerical sample: strict bundle (CUBLAS :4096:8, deterministic algorithms, no TF32, cuDNN deterministic)",
+          "status": "recorded"
+        },
+        "ig_estimator": {
+          "value": "Numerical sample: composite trapezoidal rule (paper Equation 4); IG and mean path-gradient maps kept separate. Collection computed no IG.",
+          "status": "recorded"
+        },
+        "ig_budget": {
+          "value": "Vision and language m = 128, 256, 512; state m = 256, 512, 1024; finest budget computed twice; fixed-alpha gradients at seven path positions repeated three times",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q and N (L2) for every modality",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Counted, not replaced: nonfinite_count = 0 in all 288 recorded observations of the 12 complete contexts; 288 finite_map checks satisfied",
+          "status": "recorded"
+        },
+        "stored_scoring_response": {
+          "value": "Common fp32 responses Q, N (L2) and RMS (score_definition common_scores)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Fractions [0, 0.01, 0.05, 0.1, 0.2, 0.3, 0.5, 0.75, 1]; realized masks and action values stored in the probe outputs",
+          "status": "recorded"
+        },
+        "sw_python": {
+          "value": "3.12.3 (/workspace/tmlr/venv, system site packages)",
+          "status": "recovered"
+        },
+        "sw_torch": {
+          "value": "2.8.0+cu128",
+          "status": "recorded"
+        },
+        "sw_numpy": {
+          "value": "1.26.4",
+          "status": "recorded"
+        },
+        "sw_diffusers": {
+          "value": "0.27.2",
+          "status": "recorded"
+        },
+        "sw_transformers": {
+          "value": "4.41.0",
+          "status": "recorded"
+        },
+        "sw_mani_skill": {
+          "value": "3.0.1",
+          "status": "recorded"
+        },
+        "sw_sapien": {
+          "value": "3.0.3",
+          "status": "recorded"
+        },
+        "hardware": {
+          "value": "RunPod RTX PRO 6000 Blackwell Server Edition 96 GB, driver 595.91.07, image runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404 (bank collected on container host a08e2311394f; the v6 probe used four matching Blackwell workers)",
+          "status": "recovered"
+        },
+        "project_code_version": {
+          "value": "Bank: source_sha256 of 8 files (pipeline.py a66c4b9f..., per_step_attribution.py 137f4e44..., rdt_sampling.py 90cf039d..., checkpoint_contract.py 9ee97510..., experiment_io.py 2f6b54f7..., collect_contexts.py 82ba343b..., integrated_gradients.py aa71d8cf..., per_step_ig.py 4ac116eb...); exact bytes preserved in docs/nhsjs-revision/month8/code-bank-v4-pathfix (Windows working copies with mixed line endings, not reproducible from git). Numerical sample: E01 v6 protocol sha256 e5265025... with source hashes in sealed_v6.json; its faithfulness.py working copy (65fcd2bc...), which no git commit holds, is preserved in docs/nhsjs-revision/month8/code-probe-v6-numpyfix/ (copied from the RunPod volume and checked against its manifest)",
+          "status": "recorded"
+        },
+        "preserved_inputs": {
+          "value": "Every executed call (up to 13 per episode, 12 episodes): observation image, proprioception, fp32 initial noise, bf16 reference action, language/action masks, control frequency and sampler metadata; language input files; bank in docs/nhsjs-revision/month8 (216 files listed in MANIFEST.sha256). Numerical sample: sealed projection with per-context observations and checks (in git); raw v6 maps on the RunPod volume (numerics-probe-v6-numpyfix, 24 GB); locally verified raw tensors only for the YCB contexts",
+          "status": "recorded"
+        },
+        "coverage": {
+          "value": "24 planned contexts (calls 0 and 12 of 12 episodes); 21 available (3 not reached, all RDT-1B); 12 completed numerical contexts, all RDT-170M (PickCube e0/e1, StackCube e0/e1, PegInsertionSide e1, PickSingleYCB e1; calls 0 and 12); 9 incomplete at the sealed 03:36 UTC audit",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "R1_P",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained checkpoint)",
+          "status": "recorded"
+        },
+        "model_revision": {
+          "value": "8aa386cac3bbfd9540676c75b3d767cc7f88a10a",
+          "status": "recorded"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 324 keys loaded, none missing or unexpected",
+          "status": "recorded"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "cd79363a1387e8f81c7724d070ef7e45fd23150f, clean (tree 4c5ec58b...)",
+          "status": "recorded"
+        },
+        "model_config": {
+          "value": "config_sha256 a143f26178c68c173338a802d2488a8ab6b1f377af05804c1f793e709cd90b00; bf16; gradient checkpointing off",
+          "status": "recorded"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 (model.safetensors 3,511,950,624 bytes in the pod cache)",
+          "status": "recorded"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor: resize 384 x 384, resample 3, rescale 1/255, normalize mean/std 0.5 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "Month 8 inputs lang-20260930 (T5-v1.1-XXL 3db67ab, bf16): task embedding sha256 c3b9cf56ce8202ed8726f450de2215f212a491cede3b2657d9c5b48a825d4793 (PickCube)",
+          "status": "recorded"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] zero-padded, sha256 bb87b3070945e5b01ff31001190c596b003b1adc6382d36bc9684b17e558d41d, task mask held fixed",
+          "status": "recorded"
+        },
+        "language_positions": {
+          "value": "20 (PickCube)",
+          "status": "recorded"
+        },
+        "adaptor_identity": {
+          "value": "Inside the recorded checkpoint; per-adaptor parameter hashes: img_adaptor 05fb85c88f11cf76eb399ff5877e2d6769a67c9aad74f4aef503ed508459cb47, lang_adaptor 4f04b7dff23c43e1d9235f2db37f3f3906efabcd8a402014a938fd263f8d3cc6, state_adaptor 6bcbbdf0315e858d5b86a5af4b72fc546e0a36dc614580a1fc6e2e24515e77c1 (identical on pod 1, pod 2 and pod 3)",
+          "status": "recorded"
+        },
+        "simulator_package_versions": {
+          "value": "mani_skill 3.0.1, sapien 3.0.3, gymnasium 1.3.0 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos; captured: control_freq 20 Hz, sim_freq 100 Hz",
+          "status": "recorded"
+        },
+        "action_subsampling": {
+          "value": "4 (every 4th of 64 actions; 16 env steps per call)",
+          "status": "recorded"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, max_policy_calls 26 (never binds: 400 steps take 25 calls); 60 episodes, 0 successes, 1,500 policy calls",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "simulator seeds 930100..930159; policy-noise seeds 940100..940159",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "one_current_external_camera_five_background_slots; frame from env.render() resized to 384 x 384 and stored as uint8; environment as captured on the pod: PickCube-v1: robot panda, render camera 512 x 512 (fov 1, near 0.01, far 100, shader pack minimal, Pose(raw_pose=tensor([[ 0.6000,  0.7000,  0.6000,  0.4142,  0.1199,  0.0552, -0.9006]]))), render frame (1, 512, 512, 3) torch.uint8, control pd_joint_pos at 20 Hz, sim_freq 100 Hz, physics physx_cpu, render backend sapien_cuda (pod 1, pod 2 and pod 3)",
+          "status": "recorded"
+        },
+        "proprioception_preprocessing": {
+          "value": "Raw qpos[:8] stored; normalization by STATE_MIN/STATE_MAX in per_step_attribution.py",
+          "status": "recorded"
+        },
+        "diffusion_sampler": {
+          "value": "Explicit-noise adapter explicit_noise_local_scheduler_v1 (rdt_sampling.py, adapted from upstream cd79363) with DPMSolverMultistepScheduler from diffusers 0.27.2; configuration stored in every context sidecar",
+          "status": "recorded"
+        },
+        "solver_steps": {
+          "value": "5",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "separate_policy_episode_seed_stored_per_context: policy seed = policy_seed_base + episode (separate from the simulator seed), used at every call of the episode, so each call starts from the same draw; the draw comes from a private CUDA generator in bf16 and is stored as float32 in every context sidecar with its SHA-256",
+          "status": "recorded"
+        },
+        "precision_dtype": {
+          "value": "Collection: bf16 forward. Numerics: A0 bf16 forward and bf16 accumulation; A1 bf16 forward, fp32 accumulation; A2 to A4 fp32 forward (first 6 episodes; A4 first 2 episodes); scoring: one common bf16 forward",
+          "status": "recorded"
+        },
+        "runtime_determinism_settings": {
+          "value": "Strict bundle for collection and source replay: CUBLAS_WORKSPACE_CONFIG :4096:8, deterministic algorithms on (warn_only false), cuDNN deterministic, cuDNN benchmark off, no TF32, float32 matmul precision highest",
+          "status": "recorded"
+        },
+        "ig_estimator": {
+          "value": "A0: historical bf16 replica of the archived kernel (endpoint-inclusive average, bf16 accumulation, nonfinite counted then zeroed as historically) at m = 64; A1: bf16 forward with fp32 accumulation on a 513-node nested grid giving trapezoid T_m and endpoint-inclusive E_m for m up to 512 and midpoint M_n for n up to 256; A2: same nested rules with an fp32 forward on the fp32 probe context; A3: Gauss-Legendre n = 32, 64, 128 (fp32); A4: adaptive vector Gauss-Kronrod 21-point, rtol 1e-4, at most 49 intervals (fp32); plus path-gradient (PG) maps and input_difference rankings; random (32 vision / 64 language permutations, exact state) and fixed-order controls",
+          "status": "recorded"
+        },
+        "ig_budget": {
+          "value": "m = 16, 32, 64, 128, 256, 512 (nested grid); historical m = 64; GL 32/64/128; adaptive snapshots at 105/231/441/861 evaluations; vision maps stored for T64, T512, E64, M256, language and state maps all",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q and N for vision, language and state",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Counted by arm, stage, node and sign; never replaced except in the A0 replica, which counts then zeroes",
+          "status": "recorded"
+        },
+        "stored_scoring_response": {
+          "value": "Q, N and RMS under one common bf16 forward; every mask and active action stored",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "Nominal fractions [0, 1, 5, 10, 20, 30, 50, 75, 100] percent with the historical max(1, round) count rule ('max1_round'); 'round' as a sensitivity",
+          "status": "recorded"
+        },
+        "sw_python": {
+          "value": "3.12.3, /workspace/tmlr/venv/bin/python (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_torch": {
+          "value": "2.8.0+cu128, CUDA 12.8, cuDNN 91002 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_numpy": {
+          "value": "1.26.4 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_diffusers": {
+          "value": "0.27.2 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_transformers": {
+          "value": "4.41.0, tokenizers 0.19.1 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_mani_skill": {
+          "value": "3.0.1 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_sapien": {
+          "value": "3.0.3 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "hardware": {
+          "value": "pod 1 = RunPod 7pgsokpes8p7ed (node 415d25582a09; the collection; computed 29 of 120 contexts, every phase of each; from pod1-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-1cf44de0-3510-823a-31af-a252b61193fc, PCI 00000000:F3:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 2 = RunPod 8u5vbgrqkvkz6i (node 039d6bdedd9b; computed 29 of 120 contexts, every phase of each; from pod2-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-62ed18bf-1100-fa6c-9b3f-d183f55a67d4, PCI 00000000:04:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; pod 3 = RunPod 6lda9whkfqwdrs (node 8268bf1eb0cb; computed 59 of 120 contexts, every phase of each; from pod3-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-dd185315-6e60-f062-6e15-944f4ba4c945, PCI 00000000:F4:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 4 = RunPod bf8gozkxtcnm0d (node d7b7e233d853; computed 3 of 120 contexts, every phase of each; from pod4-m8-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-93f6e85e-3c45-2959-a62b-6036aef0b481, PCI 00000000:74:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; common to these captures: Ubuntu 24.04.3 LTS, kernel 6.8.0-147-generic, Vulkan instance 1.3.275",
+          "status": "recorded"
+        },
+        "project_code_version": {
+          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "status": "recorded"
+        },
+        "preserved_inputs": {
+          "value": "Every executed call: observation (384 x 384 uint8), proprioception, fp32 noise, reference action, masks, control frequency, policy seed and sampler metadata; locked selection of 2 calls per episode (120 contexts); scoring masks and actions",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "R1_B1",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/maniskill-model rdt/mp_rank_00_model_states.pt (authors' checkpoint)",
+          "status": "recorded"
+        },
+        "model_revision": {
+          "value": "9622afab2b7ce2312a6cf1febc526928589b77eb",
+          "status": "recorded"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "mp_rank_00_model_states.pt sha256 3fa89cbf7bbb1b2559b29f9ae153b431541cdaa0b3f1ee44b83b9934599b9fb8, 618 keys loaded, none missing or unexpected",
+          "status": "recorded"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "cd79363a1387e8f81c7724d070ef7e45fd23150f, clean (tree 4c5ec58b...)",
+          "status": "recorded"
+        },
+        "model_config": {
+          "value": "config_sha256 b6818246fd9acbcef7b0c068857afadb2540d0177a8d45470fd225c6953abf8c; bf16; gradient checkpointing off",
+          "status": "recorded"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 (model.safetensors 3,511,950,624 bytes in the pod cache)",
+          "status": "recorded"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor: resize 384 x 384, resample 3, rescale 1/255, normalize mean/std 0.5 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "Month 8 inputs lang-20260930 (T5-v1.1-XXL 3db67ab, bf16): task embedding sha256 c3b9cf56ce8202ed8726f450de2215f212a491cede3b2657d9c5b48a825d4793 (PickCube)",
+          "status": "recorded"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] zero-padded, sha256 bb87b3070945e5b01ff31001190c596b003b1adc6382d36bc9684b17e558d41d, task mask held fixed",
+          "status": "recorded"
+        },
+        "language_positions": {
+          "value": "20 (PickCube)",
+          "status": "recorded"
+        },
+        "adaptor_identity": {
+          "value": "Inside the recorded checkpoint; per-adaptor parameter hashes: img_adaptor ef93ebe952782877259a6851478a418e393e9bbf662369d45e403b5f7f93f647, lang_adaptor c78750519af855b3e9b14fc81ddbd727d691ec45d4cd70f44b7f7db7dc3e470b, state_adaptor 4ce107558cc3b815ae03a8330c60b4dd08a20064442b5ad98e71c17e6be6cfae (pod 1)",
+          "status": "recorded"
+        },
+        "simulator_package_versions": {
+          "value": "mani_skill 3.0.1, sapien 3.0.3, gymnasium 1.3.0 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "task": {
+          "value": "PickCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos; captured: control_freq 20 Hz, sim_freq 100 Hz",
+          "status": "recorded"
+        },
+        "action_subsampling": {
+          "value": "4 (every 4th of 64 actions; 16 env steps per call)",
+          "status": "recorded"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, max_policy_calls 26; 40 episodes, 31 successes, 400 policy calls",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "simulator seeds 930300..930339; policy-noise seeds 940300..940339",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "one_current_external_camera_five_background_slots; frame from env.render() resized to 384 x 384 and stored as uint8; environment as captured on the pod: PickCube-v1: robot panda, render camera 512 x 512 (fov 1, near 0.01, far 100, shader pack minimal, Pose(raw_pose=tensor([[ 0.6000,  0.7000,  0.6000,  0.4142,  0.1199,  0.0552, -0.9006]]))), render frame (1, 512, 512, 3) torch.uint8, control pd_joint_pos at 20 Hz, sim_freq 100 Hz, physics physx_cpu, render backend sapien_cuda (pod 1)",
+          "status": "recorded"
+        },
+        "proprioception_preprocessing": {
+          "value": "Raw qpos[:8] stored; normalization by STATE_MIN/STATE_MAX in per_step_attribution.py",
+          "status": "recorded"
+        },
+        "diffusion_sampler": {
+          "value": "Explicit-noise adapter explicit_noise_local_scheduler_v1 (rdt_sampling.py, adapted from upstream cd79363) with DPMSolverMultistepScheduler from diffusers 0.27.2; configuration stored in every context sidecar",
+          "status": "recorded"
+        },
+        "solver_steps": {
+          "value": "5",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "separate_policy_episode_seed_stored_per_context: policy seed = policy_seed_base + episode (separate from the simulator seed), used at every call of the episode, so each call starts from the same draw; the draw comes from a private CUDA generator in bf16 and is stored as float32 in every context sidecar with its SHA-256",
+          "status": "recorded"
+        },
+        "precision_dtype": {
+          "value": "Collection bf16; numerics bf16 phase only (A0 bf16/bf16, A1 bf16 forward with fp32 accumulation); scoring common bf16 forward; no fp32 or adaptive arms",
+          "status": "recorded"
+        },
+        "runtime_determinism_settings": {
+          "value": "Strict bundle for collection and source replay: CUBLAS_WORKSPACE_CONFIG :4096:8, deterministic algorithms on (warn_only false), cuDNN deterministic, cuDNN benchmark off, no TF32, float32 matmul precision highest",
+          "status": "recorded"
+        },
+        "ig_estimator": {
+          "value": "A0 and A1 only (vision); method rankings and controls as in P",
+          "status": "recorded"
+        },
+        "ig_budget": {
+          "value": "Nested grid m up to 512, historical m = 64; vision maps stored for T64, T512, E64, M256",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q and N, vision only",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Counted; A0 replica zeroes after counting",
+          "status": "recorded"
+        },
+        "stored_scoring_response": {
+          "value": "Q, N, RMS (common bf16 forward)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "As in P",
+          "status": "recorded"
+        },
+        "sw_python": {
+          "value": "3.12.3, /workspace/tmlr/venv/bin/python (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_torch": {
+          "value": "2.8.0+cu128, CUDA 12.8, cuDNN 91002 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_numpy": {
+          "value": "1.26.4 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_diffusers": {
+          "value": "0.27.2 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_transformers": {
+          "value": "4.41.0, tokenizers 0.19.1 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_mani_skill": {
+          "value": "3.0.1 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_sapien": {
+          "value": "3.0.3 (pod 1 capture); pod 2 and pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "hardware": {
+          "value": "pod 1 = RunPod 7pgsokpes8p7ed (node 415d25582a09; the collection; computed 53 of 80 contexts, every phase of each; from pod1-1b.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-1cf44de0-3510-823a-31af-a252b61193fc, PCI 00000000:F3:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 2 = RunPod 8u5vbgrqkvkz6i (node 039d6bdedd9b; computed 17 of 80 contexts, every phase of each; from pod2-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-62ed18bf-1100-fa6c-9b3f-d183f55a67d4, PCI 00000000:04:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; pod 4 = RunPod bf8gozkxtcnm0d (node d7b7e233d853; computed 10 of 80 contexts, every phase of each; from pod4-m8-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-93f6e85e-3c45-2959-a62b-6036aef0b481, PCI 00000000:74:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; common to these captures: Ubuntu 24.04.3 LTS, kernel 6.8.0-147-generic, Vulkan instance 1.3.275",
+          "status": "recorded"
+        },
+        "project_code_version": {
+          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "status": "recorded"
+        },
+        "preserved_inputs": {
+          "value": "As in P; 80 selected contexts",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "R1_S",
+      "fields": {
+        "model_repository": {
+          "value": "robotics-diffusion-transformer/rdt-170m (public pretrained checkpoint)",
+          "status": "recorded"
+        },
+        "model_revision": {
+          "value": "8aa386cac3bbfd9540676c75b3d767cc7f88a10a",
+          "status": "recorded"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "pytorch_model.bin sha256 2e87fccee0292b25ee4f714670dd7d8da8876ea092da3744db3292db070b7133, 324 keys loaded, none missing or unexpected",
+          "status": "recorded"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "cd79363a1387e8f81c7724d070ef7e45fd23150f, clean (tree 4c5ec58b...)",
+          "status": "recorded"
+        },
+        "model_config": {
+          "value": "config_sha256 a143f26178c68c173338a802d2488a8ab6b1f377af05804c1f793e709cd90b00; bf16; gradient checkpointing off",
+          "status": "recorded"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 (model.safetensors 3,511,950,624 bytes in the pod cache)",
+          "status": "recorded"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor: resize 384 x 384, resample 3, rescale 1/255, normalize mean/std 0.5 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "Month 8 inputs lang-20260930 (T5-v1.1-XXL 3db67ab, bf16): task embedding sha256 73aaee3a3097faa83ec58e0b6a4a8c403c027b5187ba57ea61b52d87c0038c01 (StackCube)",
+          "status": "recorded"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] zero-padded, sha256 bb87b3070945e5b01ff31001190c596b003b1adc6382d36bc9684b17e558d41d, task mask held fixed",
+          "status": "recorded"
+        },
+        "language_positions": {
+          "value": "30 (StackCube)",
+          "status": "recorded"
+        },
+        "adaptor_identity": {
+          "value": "Inside the recorded checkpoint; per-adaptor parameter hashes: img_adaptor 05fb85c88f11cf76eb399ff5877e2d6769a67c9aad74f4aef503ed508459cb47, lang_adaptor 4f04b7dff23c43e1d9235f2db37f3f3906efabcd8a402014a938fd263f8d3cc6, state_adaptor 6bcbbdf0315e858d5b86a5af4b72fc546e0a36dc614580a1fc6e2e24515e77c1 (identical on pod 1, pod 2 and pod 3)",
+          "status": "recorded"
+        },
+        "simulator_package_versions": {
+          "value": "mani_skill 3.0.1, sapien 3.0.3, gymnasium 1.3.0 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "task": {
+          "value": "StackCube-v1",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos; captured: control_freq 20 Hz, sim_freq 100 Hz",
+          "status": "recorded"
+        },
+        "action_subsampling": {
+          "value": "4 (every 4th of 64 actions; 16 env steps per call)",
+          "status": "recorded"
+        },
+        "episode_horizon": {
+          "value": "max_episode_steps 400, max_policy_calls 26; 30 episodes, 0 successes, 750 policy calls",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "simulator seeds 930500..930529; policy-noise seeds 940500..940529",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "one_current_external_camera_five_background_slots; frame from env.render() resized to 384 x 384 and stored as uint8; environment as captured on the pod: StackCube-v1: robot panda_wristcam, render camera 512 x 512 (fov 1, near 0.01, far 100, shader pack minimal, Pose(raw_pose=tensor([[ 0.6000,  0.7000,  0.6000,  0.4142,  0.1199,  0.0552, -0.9006]]))), render frame (1, 512, 512, 3) torch.uint8, control pd_joint_pos at 20 Hz, sim_freq 100 Hz, physics physx_cpu, render backend sapien_cuda (pod 1)",
+          "status": "recorded"
+        },
+        "proprioception_preprocessing": {
+          "value": "Raw qpos[:8] stored; normalization by STATE_MIN/STATE_MAX in per_step_attribution.py",
+          "status": "recorded"
+        },
+        "diffusion_sampler": {
+          "value": "Explicit-noise adapter explicit_noise_local_scheduler_v1 (rdt_sampling.py, adapted from upstream cd79363) with DPMSolverMultistepScheduler from diffusers 0.27.2; configuration stored in every context sidecar",
+          "status": "recorded"
+        },
+        "solver_steps": {
+          "value": "5",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "separate_policy_episode_seed_stored_per_context: policy seed = policy_seed_base + episode (separate from the simulator seed), used at every call of the episode, so each call starts from the same draw; the draw comes from a private CUDA generator in bf16 and is stored as float32 in every context sidecar with its SHA-256",
+          "status": "recorded"
+        },
+        "precision_dtype": {
+          "value": "As B1 (bf16 phase and scoring only)",
+          "status": "recorded"
+        },
+        "runtime_determinism_settings": {
+          "value": "Strict bundle for collection and source replay: CUBLAS_WORKSPACE_CONFIG :4096:8, deterministic algorithms on (warn_only false), cuDNN deterministic, cuDNN benchmark off, no TF32, float32 matmul precision highest",
+          "status": "recorded"
+        },
+        "ig_estimator": {
+          "value": "A0 and A1 only (vision)",
+          "status": "recorded"
+        },
+        "ig_budget": {
+          "value": "As B1",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q and N, vision only",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Counted; A0 replica zeroes after counting",
+          "status": "recorded"
+        },
+        "stored_scoring_response": {
+          "value": "Q, N, RMS (common bf16 forward)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "As in P (StackCube G = 30 language positions not used: vision only)",
+          "status": "recorded"
+        },
+        "sw_python": {
+          "value": "3.12.3, /workspace/tmlr/venv/bin/python (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_torch": {
+          "value": "2.8.0+cu128, CUDA 12.8, cuDNN 91002 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_numpy": {
+          "value": "1.26.4 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_diffusers": {
+          "value": "0.27.2 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_transformers": {
+          "value": "4.41.0, tokenizers 0.19.1 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_mani_skill": {
+          "value": "3.0.1 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "sw_sapien": {
+          "value": "3.0.3 (pod 1, pod 2 and pod 3 captures); pod 4: no capture of this code tree on that pod (pods terminated after the campaign); it ran the same venv and code tree from the shared volume, whose pip freeze, packages and source tree are equal in every capture",
+          "status": "inferred"
+        },
+        "hardware": {
+          "value": "pod 1 = RunPod 7pgsokpes8p7ed (node 415d25582a09; the collection; computed 44 of 60 contexts, every phase of each; from pod1-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-1cf44de0-3510-823a-31af-a252b61193fc, PCI 00000000:F3:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 2 = RunPod 8u5vbgrqkvkz6i (node 039d6bdedd9b; computed 8 of 60 contexts, every phase of each; from pod2-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-62ed18bf-1100-fa6c-9b3f-d183f55a67d4, PCI 00000000:04:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; pod 3 = RunPod 6lda9whkfqwdrs (node 8268bf1eb0cb; computed 5 of 60 contexts, every phase of each; from pod3-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-dd185315-6e60-f062-6e15-944f4ba4c945, PCI 00000000:F4:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 4 = RunPod bf8gozkxtcnm0d (node d7b7e233d853; computed 3 of 60 contexts, every phase of each; from pod4-m8-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-93f6e85e-3c45-2959-a62b-6036aef0b481, PCI 00000000:74:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; common to these captures: Ubuntu 24.04.3 LTS, kernel 6.8.0-147-generic, Vulkan instance 1.3.275",
+          "status": "recorded"
+        },
+        "project_code_version": {
+          "value": "Tag nhsjs-r1-1 (d10de3d); production protocol binds source hashes (revision_numerics.py 6ca04e54..., ig_quadrature.py 8c05ac0c..., per_step_attribution.py e52650f1..., pipeline.py 7ebdda90..., rdt_sampling.py 90cf039d..., faithfulness.py b7f3dd5f..., integrated_gradients.py aa71d8cf...)",
+          "status": "recorded"
+        },
+        "preserved_inputs": {
+          "value": "As in P; 60 selected contexts",
+          "status": "recorded"
+        }
+      }
+    },
+    {
+      "id": "R1_M8_replay",
+      "fields": {
+        "model_repository": {
+          "value": "Month 8 bank models: rdt-170m (4 strata) and the authors' RDT-1B checkpoint (2 strata)",
+          "status": "recorded"
+        },
+        "model_revision": {
+          "value": "rdt-170m 8aa386c...; maniskill-model 9622afab... (checkpoint_path in the protocol)",
+          "status": "recorded"
+        },
+        "model_weight_file_and_sha256": {
+          "value": "2e87fcce... (170M) and 3fa89cbf... (1B), as recorded in the Month 8 bank manifests",
+          "status": "recorded"
+        },
+        "rdt_upstream_code_commit": {
+          "value": "cd79363a1387e8f81c7724d070ef7e45fd23150f, clean (tree 4c5ec58b...)",
+          "status": "recorded"
+        },
+        "model_config": {
+          "value": "config_sha256 a143f261... (170M) and b6818246... (1B)",
+          "status": "recorded"
+        },
+        "vision_encoder": {
+          "value": "google/siglip-so400m-patch14-384 revision 9fdffc58afc957d1a03a25b10dba0329ab15c2a3 (model.safetensors 3,511,950,624 bytes in the pod cache)",
+          "status": "recorded"
+        },
+        "vision_preprocessor": {
+          "value": "SiglipImageProcessor: resize 384 x 384, resample 3, rescale 1/255, normalize mean/std 0.5 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "language_encoder_or_embedding_source": {
+          "value": "Month 8 inputs lang-20260930 (all four tasks), as recorded in the bank manifests",
+          "status": "recorded"
+        },
+        "language_baseline": {
+          "value": "Encoded [PAD, EOS] zero-padded, sha256 bb87b3070945e5b01ff31001190c596b003b1adc6382d36bc9684b17e558d41d, task mask held fixed",
+          "status": "recorded"
+        },
+        "language_positions": {
+          "value": "20 / 30 / 25 / 16",
+          "status": "recorded"
+        },
+        "adaptor_identity": {
+          "value": "Inside the recorded checkpoints (bank manifests); per-adaptor parameter hashes: RDT-170M img_adaptor 05fb85c88f11cf76eb399ff5877e2d6769a67c9aad74f4aef503ed508459cb47, lang_adaptor 4f04b7dff23c43e1d9235f2db37f3f3906efabcd8a402014a938fd263f8d3cc6, state_adaptor 6bcbbdf0315e858d5b86a5af4b72fc546e0a36dc614580a1fc6e2e24515e77c1 (identical on pod 2 and pod 4); RDT-1B img_adaptor ef93ebe952782877259a6851478a418e393e9bbf662369d45e403b5f7f93f647, lang_adaptor c78750519af855b3e9b14fc81ddbd727d691ec45d4cd70f44b7f7db7dc3e470b, state_adaptor 4ce107558cc3b815ae03a8330c60b4dd08a20064442b5ad98e71c17e6be6cfae (identical on pod 2 and pod 3)",
+          "status": "recorded"
+        },
+        "simulator_package_versions": {
+          "value": "mani_skill 3.0.1, sapien 3.0.3, gymnasium 1.3.0 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "task": {
+          "value": "PickCube-v1, StackCube-v1, PegInsertionSide-v1, PickSingleYCB-v1 (170M); PickCube-v1, StackCube-v1 (1B)",
+          "status": "recorded"
+        },
+        "control_mode": {
+          "value": "pd_joint_pos, as recorded for the Month 8 collection; the replay executes no controller",
+          "status": "recorded"
+        },
+        "action_subsampling": {
+          "value": "4 (16 env steps per call), as recorded for the Month 8 collection; not exercised by the replay",
+          "status": "recorded"
+        },
+        "episode_horizon": {
+          "value": "Month 8 bank: max_policy_calls 13, max_episode_steps 400; 21 available contexts (16 RDT-170M, 5 RDT-1B)",
+          "status": "recorded"
+        },
+        "environment_reset_seeds": {
+          "value": "Month 8 seeds 920100.. (see the Month 8 population)",
+          "status": "recorded"
+        },
+        "camera_observation_pipeline_and_image_size": {
+          "value": "Stored Month 8 observations (384 x 384 uint8); no new rendering",
+          "status": "recorded"
+        },
+        "proprioception_preprocessing": {
+          "value": "Stored Month 8 qpos[:8]",
+          "status": "recorded"
+        },
+        "diffusion_sampler": {
+          "value": "Explicit-noise adapter explicit_noise_local_scheduler_v1 (rdt_sampling.py, adapted from upstream cd79363) with DPMSolverMultistepScheduler from diffusers 0.27.2; configuration stored in every context sidecar",
+          "status": "recorded"
+        },
+        "solver_steps": {
+          "value": "5",
+          "status": "recorded"
+        },
+        "noise_policy": {
+          "value": "Month 8 stored fp32 noise per context (fixed_episode_seed_stored_per_context), reused exactly",
+          "status": "recorded"
+        },
+        "precision_dtype": {
+          "value": "bf16 phase (A0, A1) and fp32 phase (A2, A3; A4 on the first context of each RDT-170M stratum) on all contexts; scoring common bf16 forward",
+          "status": "recorded"
+        },
+        "runtime_determinism_settings": {
+          "value": "R1 replay under the strict bundle (CUBLAS :4096:8, deterministic algorithms, no TF32, cuDNN deterministic, highest fp32 matmul precision); the Month 8 collection itself ran under the source settings recorded in the Month 8 population",
+          "status": "recorded"
+        },
+        "ig_estimator": {
+          "value": "A0: historical bf16 replica of the archived kernel (endpoint-inclusive average, bf16 accumulation, nonfinite counted then zeroed as historically) at m = 64; A1: bf16 forward with fp32 accumulation on a 513-node nested grid giving trapezoid T_m and endpoint-inclusive E_m for m up to 512 and midpoint M_n for n up to 256; A2: same nested rules with an fp32 forward on the fp32 probe context; A3: Gauss-Legendre n = 32, 64, 128 (fp32); A4: adaptive vector Gauss-Kronrod 21-point, rtol 1e-4, at most 49 intervals (fp32)",
+          "status": "recorded"
+        },
+        "ig_budget": {
+          "value": "Nested grid to m = 512; historical m = 64, plus m = 128 on PegInsertionSide and PickSingleYCB; vision maps stored for T16..T512, E16..E512, M64, M256",
+          "status": "recorded"
+        },
+        "ig_target": {
+          "value": "Q and N for vision, language and state",
+          "status": "recorded"
+        },
+        "nonfinite_gradient_handling": {
+          "value": "Counted; A0 replica zeroes after counting",
+          "status": "recorded"
+        },
+        "stored_scoring_response": {
+          "value": "Q, N, RMS (common bf16 forward)",
+          "status": "recorded"
+        },
+        "intervention_schedule_and_count_rule": {
+          "value": "As in P",
+          "status": "recorded"
+        },
+        "sw_python": {
+          "value": "3.12.3, /workspace/tmlr/venv/bin/python (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_torch": {
+          "value": "2.8.0+cu128, CUDA 12.8, cuDNN 91002 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_numpy": {
+          "value": "1.26.4 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_diffusers": {
+          "value": "0.27.2 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_transformers": {
+          "value": "4.41.0, tokenizers 0.19.1 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_mani_skill": {
+          "value": "3.0.1 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "sw_sapien": {
+          "value": "3.0.3 (pod 2, pod 3 and pod 4 captures)",
+          "status": "recorded"
+        },
+        "hardware": {
+          "value": "pod 2 = RunPod 8u5vbgrqkvkz6i (node 039d6bdedd9b; computed 10 of 21 contexts, every phase of each (peginsertionside-170m, pickcube-170m, pickcube-1b); from pod2-m8-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-62ed18bf-1100-fa6c-9b3f-d183f55a67d4, PCI 00000000:04:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; pod 3 = RunPod 6lda9whkfqwdrs (node 8268bf1eb0cb; computed 3 of 21 contexts, every phase of each (stackcube-1b); from pod3-m8-1b.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-dd185315-6e60-f062-6e15-944f4ba4c945, PCI 00000000:F4:00.0, VBIOS 98.02.81.00.01, driver 595.91.07, CUDA driver API 13.2; pod 4 = RunPod bf8gozkxtcnm0d (node d7b7e233d853; computed 8 of 21 contexts, every phase of each (picksingleycb-170m, stackcube-170m); from pod4-m8-170m.json): NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB, compute capability 12.0, GPU UUID GPU-93f6e85e-3c45-2959-a62b-6036aef0b481, PCI 00000000:74:00.0, VBIOS 98.02.8D.00.01, driver 595.91.07, CUDA driver API 13.2; common to these captures: Ubuntu 24.04.3 LTS, kernel 6.8.0-147-generic, Vulkan instance 1.3.275",
+          "status": "recorded"
+        },
+        "project_code_version": {
+          "value": "Tag nhsjs-r1-1 code with the Month 8 forward files swapped in by the replay overlay (code tree /workspace/nhsjs/code/nhsjs-r1-1-m8; pipeline.py a66c4b9f... and per_step_attribution.py 137f4e44...)",
+          "status": "recorded"
+        },
+        "preserved_inputs": {
+          "value": "The Month 8 bank itself (see that population); R1 outputs add maps, masks and responses",
+          "status": "recorded"
+        }
+      }
+    }
+  ]
+}

@@ -11,6 +11,11 @@ import shutil
 import subprocess
 import tempfile
 
+if __package__:
+    from .review_route import load_review_url, render_review_route, review_binding
+else:
+    from review_route import load_review_url, render_review_route, review_binding
+
 
 def checkout_digests(blob: bytes) -> set[str]:
     """SHA-256 of blob and of its uniform Git LF/CRLF checkout counterpart.
@@ -103,11 +108,17 @@ def main() -> None:
     parser.add_argument("--engine", default="auto", help="auto, pdflatex, tectonic, or an executable path. Tectonic uses only its existing cache.")
     parser.add_argument("--allow-resource-downloads", action="store_true", help="Allow Tectonic to fetch missing public TeX resources into its local cache; manuscript files remain local")
     parser.add_argument("--keep-intermediates-dir", type=Path, help="Fresh local directory for the final AUX, BBL, logs and build identities, for document conversion and review")
+    parser.add_argument("--review-url-file", type=Path, help="Private URL file for an anonymous output outside the repository")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     paper = root / "paper"
+    if args.review_url_file and not args.anonymous:
+        parser.error("A private review route requires --anonymous")
+    review = load_review_url(args.review_url_file)
     requested = args.output or paper / ("paper-anonymous-draft.pdf" if args.anonymous else "paper.pdf")
     output = requested.resolve()
+    if review and output.is_relative_to(root):
+        parser.error("A PDF containing a private review route must be written outside the repository")
     identified = [(paper / name).resolve() for name in ("paper.pdf", "paper-revision.pdf")]
     if args.anonymous and output in identified:
         parser.error("An anonymous build cannot overwrite either current identified PDF.")
@@ -120,12 +131,16 @@ def main() -> None:
         parser.error("The historical legacy/pre-response-geometry archive must not be overwritten.")
     if args.keep_intermediates_dir:
         args.keep_intermediates_dir = args.keep_intermediates_dir.resolve()
+        if review and args.keep_intermediates_dir.is_relative_to(root):
+            parser.error('Intermediates containing a private review route must remain outside the repository')
         if args.keep_intermediates_dir.exists():
             parser.error("--keep-intermediates-dir must be a fresh directory")
         if args.keep_intermediates_dir.is_relative_to(archive.resolve()):
             parser.error("Build intermediates must not be written inside the historical archive")
     validate_revision_assets(root)
     source = (paper / "paper.tex").read_text(encoding="utf-8")
+    canonical_bytes = (paper / "paper.tex").read_bytes()
+    staged_source = render_review_route(canonical_bytes.decode("utf-8"), review, anonymous=args.anonymous)
     registry_path = paper / ("figures_revision/r1_lineage.json"
                             if "{figures_revision/r1_design.pdf}" in source else "figures_revision/lineage.json")
     registry_before = registry_path.read_bytes() if registry_path.is_file() else None
@@ -140,6 +155,7 @@ def main() -> None:
         work = Path(scratch)
         for name in ("paper.tex", "appendix_aliasing.tex", "references.bib", "tmlr.sty", "tmlr.bst"):
             shutil.copyfile(paper / name, work / name)
+        (work / "paper.tex").write_bytes(staged_source.encode("utf-8"))
         for name in ("nhsjs.bst",):
             if (paper / name).is_file():
                 shutil.copyfile(paper / name, work / name)
@@ -165,9 +181,11 @@ def main() -> None:
         if "There were undefined references" in log or ("Citation" in log and "undefined" in log) or "Label(s) may have changed" in log:
             raise RuntimeError("Undefined reference or citation in final LaTeX pass.\n" + log[-20000:])
         validate_revision_assets(root)
-        if ((paper / "paper.tex").read_bytes() != (work / "paper.tex").read_bytes()
+        if ((paper / "paper.tex").read_bytes() != canonical_bytes
                 or (registry_before is not None and registry_path.read_bytes() != registry_before)):
             raise RuntimeError("Manuscript or lineage changed during compilation; refresh assets and rebuild")
+        if args.review_url_file and load_review_url(args.review_url_file) != review:
+            raise RuntimeError("Private review route changed during compilation")
         if args.keep_intermediates_dir:
             retained = args.keep_intermediates_dir
             retained.mkdir(parents=True, exist_ok=False)
@@ -178,7 +196,9 @@ def main() -> None:
             identities = {
                 "engine": engine, "executable": executable, "anonymous": args.anonymous,
                 "resource_downloads_allowed": args.allow_resource_downloads,
-                "manuscript_sha256": hashlib.sha256((work / "paper.tex").read_bytes()).hexdigest(),
+                "manuscript_sha256": hashlib.sha256(canonical_bytes).hexdigest(),
+                "compiled_manuscript_sha256": hashlib.sha256((work / "paper.tex").read_bytes()).hexdigest(),
+                "private_review_route": review_binding(review),
                 "pdf_sha256": hashlib.sha256((work / "revision.pdf").read_bytes()).hexdigest(),
                 "intermediates_sha256": {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
                                          for path in sorted(retained.iterdir())},
