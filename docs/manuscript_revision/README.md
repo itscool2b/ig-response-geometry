@@ -10,6 +10,6 @@ Standard is an anonymous DOCX with real tracked revisions against the immutable 
 
 [Public research downloads](../../paper/nhsjs-revision/README.md) distinguish current manuscript material, CPU analysis replay and policy-context regeneration. Private reviewer access is supplied through separate build configuration and is absent from public outputs. Current packages exclude superseded manuscript prose while preserving authenticated scientific records.
 
-AI assistance includes drafting and editing the manuscript and reviewer documentation. The manuscript retains the original AI-use disclosure. These working materials do not constitute a journal submission.
+The manuscript retains the original AI-use disclosure. These materials do not constitute a journal submission.
 
 Older edit ledgers, the [October 4 claim map](claim_map.md), semantic reviews and delivery receipts in this directory remain historical records. They do not certify the current revision.

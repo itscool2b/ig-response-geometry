@@ -8,15 +8,14 @@
     "standard": 17,
     "online": 20
   },
-  "author_only_writing_condition_met": false,
   "files": {
     "downloads.json": {
       "bytes": 2928,
       "sha256": "18ac910a1f282af34394978eb0dc57975e40d54a653e3e30bff9ceca9fbd8efc"
     },
     "README.md": {
-      "bytes": 4136,
-      "sha256": "8a65137cb39d8e6ec0ae0009d040b3abdcccaced1efdaa982f1be783b99ca075"
+      "bytes": 4070,
+      "sha256": "4304f46886fe3da299e26b535929c9087e4dca41450d6cb3ff5bd076a9b4c77d"
     },
     "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
       "bytes": 681598,

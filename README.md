@@ -12,7 +12,7 @@ The identified 19-page submitted preprint was published on October 9, 2026 as [Z
 
 The earlier Zenodo versions retain their own titles and DOIs: [Response Geometry in Integrated Gradients: A Diffusion-Policy Case Study](https://doi.org/10.5281/zenodo.23091579) is version 2, and [The Readout, Not the Denoiser: Per-Step Integrated Gradients for Diffusion-Policy Vision-Language-Action Models](https://doi.org/10.5281/zenodo.22133507) is version 1. Their histories and licenses remain preserved.
 
-The revision retains the author-supplied affiliation, funding and competing-interest information and the approved mentor acknowledgments. AI tools assisted with code, analyses, verification and drafting of manuscript and reviewer-facing text. The manuscript retains the original AI-use disclosure. Repository publication and local delivery checks do not constitute journal submission or acceptance; that requires the revision channel's receipt.
+The revision retains the author-supplied affiliation, funding and competing-interest information and the approved mentor acknowledgments. The manuscript retains the original AI-use disclosure. Repository publication and local delivery checks do not constitute journal submission or acceptance; that requires the revision channel's receipt.
 
 ## Evidence guide
 

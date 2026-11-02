@@ -4,7 +4,7 @@ The [canonical manuscript](../paper.tex) and [bibliography](../references.bib) d
 
 The bibliography contains 46 references: 42 primary papers, including 30 from 2022 through 2026. The manuscript distinguishes seven preplanned method contrasts from exploratory preferences under raw means, scaled means and episode medians. New retrospective bootstrap results are kept in a separate reporting layer; frozen scientific records and protocols are preserved.
 
-[downloads.json](downloads.json) lists the current packages at [nhsjs-revision-2026-11-02](https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-revision-2026-11-02), with byte sizes and SHA-256 checksums. The source packages include the approved 250-word abstract, original AI-use disclosure and current body and supplement corrections. The supplementary PDF includes the updated replication intervals. The three scientific archives retain their previously verified bytes. The earlier [audit snapshot](https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-audit-2026-11-01) and its downloads remain preserved. These public URLs are separate from private reviewer access.
+[downloads.json](downloads.json) lists the current packages with byte sizes and SHA-256 checksums. The tag [nhsjs-revision-2026-11-02](https://github.com/itscool2b/ig-response-geometry/blob/nhsjs-revision-2026-11-02/paper/paper.tex) identifies their canonical manuscript source. The source packages include the approved 250-word abstract, original AI-use disclosure and current body and supplement corrections. The supplementary PDF includes the updated replication intervals. The three scientific archives retain their previously verified bytes. Earlier source snapshots and downloads remain preserved. These public URLs are separate from private reviewer access.
 
 | Package | Contents and purpose |
 | --- | --- |
@@ -23,4 +23,4 @@ The retrospective report uses 10,000 paired episode-resampling draws, seed 93001
 
 The current packages exclude earlier manuscript versions and internal drafting notes. Earlier artifacts and verification records remain preserved. The current reporting and wording corrections leave the frozen scientific data and protocols unchanged.
 
-[MANIFEST.json](MANIFEST.json) binds the working Word copy, supplement, guide and public download index. The current clean Standard and Online manuscripts rendered to 17 and 20 pages in LibreOffice. Microsoft Word was not used. This remains an AI-assisted working package; no journal submission has occurred.
+[MANIFEST.json](MANIFEST.json) binds the working Word copy, supplement, guide and public download index. The current clean Standard and Online manuscripts rendered to 17 and 20 pages in LibreOffice. Microsoft Word was not used. No journal submission has occurred.
