@@ -338,7 +338,7 @@ class AuditDisplays:
             data.append(row)
         mixed=next(r for r in contrasts if r['contrast']=='matched_calibrated')
         data.append(['IG-Q at Q minus IG-N at N',number(mixed['estimate'])+' '+interval(mixed['percentile_lo'],mixed['percentile_hi']),'Mixed responses'])
-        table(out,'r1_methods_summary',r"\textbf{Primary contrasts and response-dependent choices.} A: seven preplanned vision-deletion contrasts on 60 PickCube 170M episodes, with Bonferroni-adjusted intervals. The last row mixes response units. B: vision-deletion point-estimate winners. Scaling divides each call's advantage by its random-order standard deviation before averaging; medians use episode means. IG uses a 512-interval trapezoid, equal-weight IG 64 intervals, both with 16-bit model calculations. Winners need not separate statistically. Supplementary Tables S3 and S4 retain all comparisons and controls.",
+        table(out,'r1_methods_summary',r"\textbf{Primary contrasts and response-dependent choices.} A: seven preplanned image-patch deletion contrasts, 60 pretrained-PickCube episodes, Bonferroni-adjusted intervals. The last row mixes response units. B: image-patch deletion point-estimate winners. Scaling divides each call's advantage by its random-order standard deviation before averaging; medians use episode means. IG uses 512 trapezoidal intervals; equal-weight IG uses 64 intervals. Both use 16-bit models. Winners need not separate statistically. Supplementary Tables S3 and S4 give all comparisons and controls.",
               'tab:r1-methods-summary',['Contrast','Q: estimate [interval]','N: estimate [interval]'],data,[.35,.29,.29])
         target=out/'r1_methods_summary.tex';content=target.read_text(encoding='utf-8').replace(r'\end{table}','')
         content=content.replace(r'\begin{tabular}',r'\par\textbf{A. Primary contrasts}\par\smallskip\begin{tabular}',1)
@@ -380,6 +380,7 @@ class AuditDisplays:
                         number(r['best_minus_best_fixed_mean'])+' '+interval(r['best_minus_best_fixed_adjusted_lo'],r['best_minus_best_fixed_adjusted_hi'])])
         table(out,'r1_all_methods',r'\textbf{All 20 new-experiment method comparisons.} The winner maximizes the raw episode-mean advantage. The gap is winner minus runner-up, with the registered interval adjusted across four response/direction cells within each group and input type. These selected contrasts do not correct for choosing the winner on the same data, nor across all groups. Three intervals exclude zero: one vision cell and two language cells.',
               'tab:r1-all-methods',['Group and input','Scoring / direction','Raw winner','Mean advantage','Gap [adjusted interval]','Excludes zero'],data,[.21,.14,.18,.11,.21,.08],long=True)
+        self.replication_contrast_table(out)
         table(out,'r1_calibration',r'\textbf{Scaled choices and fixed-order comparisons.} Scaling is per context before episode averaging. Fixed orders use no learned attribution. The gap compares the best raw attribution method with the highest-mean fixed order; negative values favor that fixed order. Brackets retain the registered adjusted intervals. Mean comparisons can be tail-sensitive and do not establish a generally superior explanation.',
               'tab:r1-calibration',['Group and input','Scoring / direction','Scaled winner','Best fixed order','Gap [adjusted interval]'],cal,[.23,.16,.19,.17,.18],long=True)
         self.fixed_bar_table(out)
@@ -413,6 +414,71 @@ class AuditDisplays:
             content=re.sub(r'(\\begin\{longtable\}\{[^\n]+\}\n)(?=\\caption\*)',
                            lambda match: match.group(1)+r'\noalign{\addtocounter{table}{-1}}'+'\n',content)
             path.write_text(content,encoding='utf-8',newline='\n')
+
+    def replication_contrast_table(self, out):
+        """Expose saved replication intervals without rerunning or pooling analyses."""
+        source_path = self.inputs / 'contrasts.csv'
+        definitions = {
+            'P1': ('IG_Q_A1T512', '', 'Q'),
+            'P2': ('IG_Q_A1T512', '', 'N'),
+            'P3': ('IG_N_A1T512', '', 'Q'),
+            'P4': ('IG_N_A1T512', '', 'N'),
+            'P5': ('IG_Q_A1T512', 'IG_N_A1T512', 'Q'),
+            'P6': ('IG_Q_A1T512', 'IG_N_A1T512', 'N'),
+        }
+        selected = [r for r in self.rows(source_path)
+                    if r['bank'] in ('S', 'B1') and r['id'] in definitions
+                    and r['metric'] == 'normalized_auc'
+                    and r['modality'] == 'vision' and r['direction'] == 'deletion']
+        keyed = {(r['bank'], r['id']): r for r in selected}
+        expected = {(bank, contrast) for bank in ('S', 'B1') for contrast in definitions}
+        if len(selected) != 12 or set(keyed) != expected:
+            raise ValueError('Expected exactly twelve saved S/B1 replication contrasts')
+        data, ordered = [], []
+        for bank, episodes in (('S', 30), ('B1', 40)):
+            for contrast, definition in definitions.items():
+                r = keyed[bank, contrast]
+                if ((r['method'], r['control'], r['response']) != definition
+                        or r['contrast'] != ('method_minus_method' if r['control'] else 'method_minus_random')
+                        or r['role'] != 'replication, descriptive 95%'
+                        or float(r['alpha']) != .05
+                        or int(r['episodes']) != episodes
+                        or int(r['planned_episodes']) != episodes
+                        or int(r['excluded_episodes']) != 0):
+                    raise ValueError(f'Unexpected replication definition or population: {bank}/{contrast}')
+                control = self.labels[r['control']] if r['control'] else 'random'
+                data.append([f'{BANKS[bank]} ({episodes})',
+                             f"{self.labels[r['method']]} − {control} / {r['response']}",
+                             number(r['estimate']), interval(r['percentile_lo'], r['percentile_hi']),
+                             interval(r['bca_lo'], r['bca_hi'])])
+                ordered.append(dict(r))
+        name = 'r1_replication_contrasts'
+        table(out, name,
+              r'\textbf{Table S3 continued: saved replication image-patch deletion contrasts.} '
+              r'IG-Q and IG-N use Q and N attribution targets; the response follows the slash. '
+              r'Advantage is random-order AUC minus method AUC. Each estimate subtracts the control advantage from the first method advantage; positive values favor the first method, negative values the control. '
+              r'These saved percentile and bias-corrected and accelerated (BCa) 95\% intervals are descriptive, without the Bonferroni adjustment used for the primary family or a simultaneous guarantee. '
+              r'For task-trained PickCube, IG-N versus random under N excludes zero with the percentile interval but includes it with BCa. No episodes were excluded.',
+              'tab:r1-replication-contrasts',
+              ['Group (episodes)', 'Contrast / response', 'Mean', 'Percentile 95% interval', 'BCa 95% interval'],
+              data, [.19, .22, .13, .20, .20], long=True)
+        continuation_path = out / f'{name}.tex'
+        continuation = continuation_path.read_text(encoding='utf-8').replace(
+            r'\caption{', r'\caption*{', 1).replace(r'\label{tab:r1-replication-contrasts}', '')
+        target = out / 'r1_all_methods.tex'
+        target.write_text(target.read_text(encoding='utf-8') + '\n' + continuation,
+                          encoding='utf-8', newline='\n')
+        continuation_path.unlink()
+        self.populations[name] = {
+            'source': source_path.relative_to(self.root).as_posix(),
+            'metric': 'normalized_auc', 'modality': 'vision', 'direction': 'deletion',
+            'episodes': {'S': 30, 'B1': 40}, 'excluded_episodes': 0,
+            'role': 'replication, descriptive 95%', 'alpha': .05,
+            'advantage': 'random-order AUC minus method AUC',
+            'estimate': 'first method advantage minus control advantage; positive favors first method',
+            'intervals': ['percentile', 'bca'], 'multiple_testing_adjustment': None,
+            'rows': ordered,
+        }
 
     def identity_table(self,out):
         projection=json.loads(self.source(self.root/AUDIT/'inputs/identity_projection.json').read_text(encoding='utf-8'))

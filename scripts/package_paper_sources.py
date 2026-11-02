@@ -108,6 +108,21 @@ def anonymous_source(text, *, review_route=None):
     return text
 
 
+def manuscript_summary(text):
+    """Describe the included abstract and disclosure without copying author fields."""
+    text = selected_source(text, anonymous=True)
+    abstract = re.search(r'\\begin\{abstract\}(.*?)\\end\{abstract\}', text, re.S)
+    disclosure = re.search(r'\\section\*\{AI-use disclosure\}\s*(.*?)(?=\\(?:section|bibliography)|\Z)', text, re.S)
+    lines = []
+    if abstract:
+        plain = re.sub(r'\\([%&#_{}$])', r'\1', abstract[1])
+        if '\\' not in plain and not re.search(r'(?<!\\)\$', abstract[1]):
+            lines.append(f'Abstract length: {len(plain.split())} words.')
+    if disclosure:
+        lines.append('AI-use disclosure: ' + ' '.join(disclosure[1].split()))
+    return '\n'.join(lines) + ('\n' if lines else '')
+
+
 def assert_anonymous(text, name):
     lowered = text.lower()
     hits = [value for value in IDENTIFIERS if value in lowered]
@@ -248,6 +263,7 @@ def build(root, output, *, authorized_review=False, review_url_file=None, identi
             ('Manuscript sources for the public revision.\n' if identified else
              'Manuscript sources for anonymous review.\n') +
             'paper.tex contains the article.\n' +
+            manuscript_summary(transformed) +
             ('supplementary_derivations.tex contains the supplementary material.\n' if 'supplementary_derivations.tex' in names else '') +
             'Compile with Tectonic:\n'
             '    tectonic --only-cached --untrusted --reruns 3 paper.tex\n' +

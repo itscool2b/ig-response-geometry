@@ -666,7 +666,7 @@ def anonymous_candidate(contents, extra_identifiers, *, authorized_review=False,
     transformed["LICENSE"] = transformed["LICENSE"].replace(old_notice, b"Copyright (c) 2026 Anonymous author")
     # Keep the exact frozen runtime recipes/model revisions, removing only the
     # reviewed identity/deposit statements. New identity syntax fails below.
-    readme = (review_readme() if authorized_review else
+    readme = (review_readme(contents['paper/paper.tex'].decode('utf-8')) if authorized_review else
               anonymous_readme(contents["README.md"].decode("utf-8")))
     banner = ("PRIVATE ANONYMOUS CANDIDATE. Unapproved for external distribution or submission.\n"
               "The proposed own-author notice is for local review only; third-party notices remain intact.\n"
@@ -718,12 +718,16 @@ def anonymous_candidate(contents, extra_identifiers, *, authorized_review=False,
         third_party_notices="preserved_exactly",canonical_public_license="unchanged")
 
 
-def review_readme():
+def review_readme(source=None):
+    from scripts.package_paper_sources import manuscript_summary
+    summary = manuscript_summary(source) if source is not None else ''
     return """# Anonymous research supplement
 
 The manuscript source is paper/paper.tex; supplementary material is in
 paper/supplementary_derivations.tex. The included input files and recorded
 scientific outputs are authenticated by SUPPLEMENT_MANIFEST.json.
+
+""" + summary + """
 
 For CPU saved-record reproduction, install the environment documented in
 docs/cpu_reproduction.md and use the analysis-specific README files. The 99
@@ -852,9 +856,9 @@ Use that complete archive and its dedicated lock for registered raw-data replay.
             "3db67ab1af984cf10548a73467f0e5bca2aaaeb2 (https://huggingface.co/google/t5-v1_1-xxl),\n"
             "distributed under the Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0).\n").encode()
     if authorized_anonymous_review:
-        contents['SUPPLEMENT_README.md'] = review_readme().encode('utf-8')
+        contents['SUPPLEMENT_README.md'] = review_readme(contents['paper/paper.tex'].decode('utf-8')).encode('utf-8')
     elif public_release:
-        contents['SUPPLEMENT_README.md'] = review_readme().replace(
+        contents['SUPPLEMENT_README.md'] = review_readme(contents['paper/paper.tex'].decode('utf-8')).replace(
             '# Anonymous research supplement', '# Research supplement for the current public revision').encode('utf-8')
         contents['README.md'] = contents['SUPPLEMENT_README.md']
     package_manifest = dict(kind=("anonymous_research_supplement_review_copy" if authorized_anonymous_review else

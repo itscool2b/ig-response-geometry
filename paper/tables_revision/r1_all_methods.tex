@@ -29,3 +29,28 @@ StackCube 170M vision & Q insertion & Path-gradient N & 0.0872 & 0.00480 [−0.0
 StackCube 170M vision & N deletion & Equal-weight IG-N & 0.510 & 0.000862 [−0.000444, 0.00286] & No \\
 StackCube 170M vision & N insertion & Path-gradient N & 0.128 & 0.00297 [−0.00157, 0.00739] & No \\
 \end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.190\linewidth} p{0.220\linewidth} p{0.130\linewidth} p{0.200\linewidth} p{0.200\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Table S3 continued: saved replication image-patch deletion contrasts.} IG-Q and IG-N use Q and N attribution targets; the response follows the slash. Advantage is random-order AUC minus method AUC. Each estimate subtracts the control advantage from the first method advantage; positive values favor the first method, negative values the control. These saved percentile and bias-corrected and accelerated (BCa) 95\% intervals are descriptive, without the Bonferroni adjustment used for the primary family or a simultaneous guarantee. For task-trained PickCube, IG-N versus random under N excludes zero with the percentile interval but includes it with BCa. No episodes were excluded.}\\
+\toprule
+\textbf{Group (episodes)} & \textbf{Contrast / response} & \textbf{Mean} & \textbf{Percentile 95\% interval} & \textbf{BCa 95\% interval} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group (episodes)} & \textbf{Contrast / response} & \textbf{Mean} & \textbf{Percentile 95\% interval} & \textbf{BCa 95\% interval} \\
+\midrule\endhead
+\bottomrule\endfoot
+StackCube 170M (30) & IG-Q − random / Q & 0.514 & [0.439, 0.593] & [0.444, 0.600] \\
+StackCube 170M (30) & IG-Q − random / N & 0.483 & [0.432, 0.537] & [0.436, 0.542] \\
+StackCube 170M (30) & IG-N − random / Q & 0.553 & [0.470, 0.640] & [0.474, 0.647] \\
+StackCube 170M (30) & IG-N − random / N & 0.509 & [0.451, 0.569] & [0.455, 0.573] \\
+StackCube 170M (30) & IG-Q − IG-N / Q & −0.0397 & [−0.0684, −0.0179] & [−0.0788, −0.0218] \\
+StackCube 170M (30) & IG-Q − IG-N / N & −0.0254 & [−0.0444, −0.0114] & [−0.0532, −0.0140] \\
+PickCube 1B (40) & IG-Q − random / Q & −3.10 & [−8.60, 0.249] & [−13.2, −0.241] \\
+PickCube 1B (40) & IG-Q − random / N & 0.347 & [0.183, 0.459] & [0.0960, 0.439] \\
+PickCube 1B (40) & IG-N − random / Q & −3.80 & [−10.8, 0.294] & [−17.1, −0.232] \\
+PickCube 1B (40) & IG-N − random / N & 0.346 & [0.130, 0.484] & [−0.0260, 0.460] \\
+PickCube 1B (40) & IG-Q − IG-N / Q & 0.698 & [−0.0576, 2.19] & [−0.0492, 3.68] \\
+PickCube 1B (40) & IG-Q − IG-N / N & 0.000437 & [−0.0321, 0.0546] & [−0.0275, 0.104] \\
+\end{longtable}

@@ -73,7 +73,7 @@
 
 \begin{abstract}
 % audit-anchor: abstract
-Evaluating an explanation of a robot's actions requires a score for changes in its predictions. A robot predicts many action coordinates, so different scores can judge the same explanation differently. This study separates the quantity explained by Integrated Gradients, which uses numerical integration, from the response used to score input removal and restoration. In a diffusion policy, Q is negative squared distance from the reference action; N is negative distance with a small stabilizer. An exact identity shows that, for the same curve, N's normalized area never exceeds Q's when partial input replacement moves predictions no farther than replacing all inputs. Larger changes, called overshoots, can reverse this ordering. In saved simulated cube-picking runs of a 170-million-parameter model with no successful episodes, all case medians of Q-minus-N differences are positive, but extreme calls make most means negative. A matched study of 60 episodes finds that N-target Integrated Gradients exceeds Q-target Integrated Gradients under both responses; both exceed random ordering under N, but neither separates from random under Q. Across three groups, the highest raw mean changes with the response, whereas scaled means and episode medians agree in two groups. Only one of twelve vision comparisons clearly separates the two highest means. Numerical checks on twelve matched contexts of one pretrained model show that 16-bit versus 32-bit calculations and integration rule affect recovery. These samples demonstrate possible numerical failures, not their frequency, and do not verify the original rankings. Response choice, ranking quality and numerical accuracy therefore require separate evidence.
+Robots predict many action coordinates, so evaluation scores can disagree. For a diffusion policy, we separate the quantity explained by Integrated Gradients, which uses numerical integration, from the response scoring input removal and restoration. Q is negative squared distance from the reference action; N is negative distance with a small stabilizer. An exact identity shows that, for the same curve, N's normalized area never exceeds Q's when partial input replacement moves predictions no farther than replacing every feature of the tested input type. Larger changes, called overshoots, can reverse this ordering. In saved simulated cube-picking runs of a 170-million-parameter model with no successful episodes, all medians of Q-minus-N differences are positive, but extreme calls make most means negative. For image-patch deletion in three matched groups (130 episodes), N-target Integrated Gradients exceeds Q-target under both responses in pretrained PickCube and StackCube; both beat random under N in all three, but under Q only in StackCube. The raw-mean winner is the method maximizing mean advantage over random ordering. Switching Q and N changes it in 80\% of pretrained PickCube deletion resamples, whereas scaled winners match in 90\% and 98\% for pretrained and task-trained PickCube. Only 1 of 12 image-patch comparisons statistically separates the top two. Checks on twelve matched contexts of one pretrained model show 16-bit versus 32-bit calculations and integration rule affect attribution recovery. These samples demonstrate possible numerical failures, not their frequency, and do not verify the original rankings; response choice, ranking quality and numerical accuracy therefore require separate evidence.
 \end{abstract}
 
 \textbf{Keywords:} integrated gradients, attribution evaluation, diffusion policies, perturbation metrics, numerical integration, robotics, explainable AI
@@ -103,7 +103,7 @@ Output-dependent preferences are already known: TRACE finds different winners fo
 Completeness means that attributions sum to the baseline-to-input target change, assuming path gradients integrate to that change\citep{lundstrom2022rigorous}, but does not establish usefulness\citep{bilodeau2024impossibility}. Alternative paths change the explanation\citep{akhtar2023credible}; IDGI redirects sampled contributions rather than improving quadrature for standard IG\citep{yang2023idgi}. Ground-truth benchmarks\citep{arras2022clevrxai}, synthetic simulations\citep{kim2022sanity} and model-randomization critiques\citep{binder2023shortcomings} test other properties. Signed contributions may cancel in metrics\citep{jang2025timing}. Integration-budget checks\citep{makino2024integration} complement ranking evaluation, but do not establish accuracy for this diffusion policy in 16-bit arithmetic.
 
 % audit-anchor: intro-questions
-The study asks how response choice changes fixed curves, how this appears in successful and failed episodes, whether matched method preferences depend on the criterion, and how precision and integration rule affect recovery. Results follow that order. For saved Q-ranked vision deletion, median AUC is 0.448 under Q versus 0.291 under N: an illustrative, unvalidated 0.40 cutoff judges identical predictions differently.
+We examine response changes to fixed curves, their appearance in successful and failed episodes, criterion-dependent method preferences, and precision and integration-rule effects on recovery, in that order. For saved Q-ranked vision deletion, median AUC is 0.448 under Q versus 0.291 under N: an illustrative, unvalidated 0.40 cutoff judges identical predictions differently.
 
 \section{Methods}
 \subsection{Experiments and preserved evidence}
@@ -111,7 +111,7 @@ The study asks how response choice changes fixed curves, how this appears in suc
 An \emph{episode} is one simulated task attempt; a \emph{call} predicts 64 timesteps of seven joint values and one gripper value. A \emph{context} fixes that call's observation, instruction, state and diffusion noise. Two saved PickCube runs each contain thirty episodes and 750 calls, all unsuccessful. PickCube requires moving a cube to a goal. One run ranked by Q, the other by N; both used pretrained RDT-170M without task fine-tuning\citep{rdt170mrelease}. \emph{Rescoring} computes another response from saved intervention predictions, without rerunning the robot or recovering missing observations and noise.
 
 % audit-anchor: new-contexts
-Matched groups comprise pretrained PickCube (60 episodes, 120 contexts), task-trained PickCube (40, 80), and pretrained StackCube (30, 60). They respectively match the saved setting, add a model that often succeeds, and change the task to stacking cubes. The RDT developers' task-trained RDT-1B has about 1.2 billion parameters versus 170 million. Two calls actually used by the simulator are selected uniformly without replacement per episode, under a rule fixed before collection. Numerical tests add all 21 available contexts from the collection underlying twelve completed offline diagnostics, giving 281 contexts. Separate saved runs cover task-trained PickCube, side peg insertion and household-object picking.
+Matched groups are pretrained PickCube (60 episodes, 120 contexts), task-trained PickCube (40, 80), and pretrained StackCube (30, 60): respectively, the saved setting, frequent success, and cube stacking. The RDT developers' task-trained RDT-1B has about 1.2 billion parameters versus 170 million. Per episode, two calls used by the simulator are selected uniformly without replacement under a rule fixed before collection. Numerical tests add all 21 available contexts from the collection underlying twelve completed offline diagnostics, totaling 281 contexts. Separate saved runs cover task-trained PickCube, side peg insertion and household-object picking.
 
 % audit-anchor: identity-inventory
 Identities are recorded, recovered from unchanged file histories, inferred, or unknown (Supplementary Table S2). Saved code requested the latest model versions rather than recording a revision. Both saved runs' weights are recovered as the same files fixed for the matched study: revision \texttt{8aa386cac3bb}, \texttt{pytorch\_model.bin}, hash prefix \texttt{2e87fccee029}; no run-time hash exists. SigLIP image-encoder revision \texttt{9fdffc58afc9} and preprocessing (384-by-384 bicubic, scale 1/255, mean/standard deviation 0.5) are recovered; original software versions are mostly unknown. Five denoising steps with the DPM-Solver++ sampler\citep{lu2022dpm} are recorded for Q and recovered for N. Resetting the seed at each call reused one noise draw per episode; missing inputs still prevent exact regeneration.
@@ -128,19 +128,19 @@ r(u)=\lVert a-g(u)\rVert_2^2,\quad Q(u)=-\frac{r(u)}{2d_a},\quad N(u)=-\sqrt{r(u
 \label{eq:targets}
 \end{equation}
 % audit-anchor: target-interpretation
-Here $r$ is squared action distance. Q scales it by twice the number of action coordinates, resembling a Gaussian log-likelihood without being the policy's likelihood. N uses distance rather than squared distance; its stabilizer makes the gradient finite at zero. The reference action and noise remain fixed throughout each intervention curve.
+Here $r$ is squared action distance. Q divides its negative by twice the action-coordinate count, resembling a Gaussian log-likelihood without representing the policy's likelihood. N uses stabilized distance to keep its gradient finite at zero. The reference action and noise stay fixed throughout each curve.
 
 % audit-anchor: features
 Vision features are 729 patches in a 27-by-27 external-image grid; five other camera slots stay fixed. A gray-image representation supplies the baseline. Released SigLIP and T5 variants encode images and language, respectively\citep{zhai2023siglip,raffel2020t5}. Language features are attended token positions after the adaptor. Saved Q rankings use encoded padding/end-of-sequence tokens; saved N rankings use the RDT developers' precomputed representation with a zeroed baseline. These baselines prevent cross-run language ranking comparisons. State has seven joint readings and one gripper reading, baseline zero. Baselines are not uniquely neutral\citep{sturmfels2020visualizing}; interpolated representations may not encode valid language\citep{sanyal2021discretized}.
 
 % audit-anchor: normalization
-Let $B=r(x')>0$ measure the squared action change when every feature is replaced. For either response $S\in\{Q,N\}$,
+Let $B=r(x')>0$ measure the squared action change when every feature of the tested modality is replaced. For either response $S\in\{Q,N\}$,
 \begin{equation}
 % audit-anchor: eq-normalization
 C_S(u)=\frac{S(u)-S(x')}{S(x)-S(x')},\qquad \Delta=\mathrm{AUC}_Q-\mathrm{AUC}_N.
 \label{eq:normalization}
 \end{equation}
-The normalized response is zero at the all-baseline input and one at the actual input. AUC is its trapezoidal area over replacement fractions, using identical weights for Q and N. A \emph{paired} difference scores the same curve two ways. If partial replacement moves the prediction farther than replacing every feature, $r>B$: this is an \emph{overshoot}. Responses and AUCs can then leave the range zero to one and can be very negative when $B$ is small. Normalization is undefined at $B=0$.
+The normalized response is zero at the tested modality's baseline and one at its actual input; other modalities stay fixed. AUC integrates it over replacement fractions with identical trapezoidal weights for Q and N. A \emph{paired} difference scores one curve under both responses. An \emph{overshoot} means partial replacement moves predictions farther than replacing every feature of that modality, $r>B$. Responses and AUCs can leave the range zero to one and be very negative when $B$ is small. Normalization is undefined at $B=0$.
 
 % audit-anchor: intervention-schedule
 Saved curves use nominal percentages 0, 1, 5, 10, 20, 30, 50, 75 and 100. At an intermediate percentage $p$, $k=\max(1,\operatorname{round}(Gp/100))$ groups are selected, with half-integer ties rounded to the nearest even integer. Here $G$ counts attended language-token positions. Reconstructed tokenization gives 20, 30, 25 and 16 for PickCube, StackCube, PegInsertionSide and PickSingleYCB. Missing original masks limit run-specific recovery. For $G=16,20,25$, both 1\% and 5\% select one token: all 3,000 saved PickCube language curves (two runs, 750 calls and two directions) have equal responses at those points. The 800 saved StackCube curves do not. Their composition and realized-fraction checks appear in the supplement. Saved rescoring retains nominal fractions; matched experiments use preserved masks and actual selected fractions.
@@ -173,7 +173,7 @@ Even a linear action example exposes endpoint sensitivity. For $g(u)=u$, baselin
 Seven methods rank groups by summed absolute values: Q/N IG, Q/N mean path gradients, input difference, and Q/N original equal-weight IG. Path gradients omit IG's input-difference factor; input difference ranks baseline-to-input change alone. Ordinary IG/path gradients use 512 trapezoidal intervals, a 16-bit model and 32-bit accumulation. Chance controls average 32 image orders, 64 token orders and all $8!=40{,}320$ state orders. Raster, reverse and center-out image orders, plus forward/reverse token or joint orders, test attribution-free alternatives.
 
 % audit-anchor: statistics-design
-Advantage is method-minus-random AUC for insertion and random-minus-method for deletion, so larger values favor a method. The primary criterion averages within each episode, then across episodes having defined values for every method. Subtracting a common random reference cannot reorder methods within one response. Scaling each context's advantage by its random-order standard deviation before episode averaging changes the weighting and can change the winner; the state reference enumerates every order. Episode medians and illustrative deletion cutoffs of 0.40 and 0.50 provide separate sensitivity checks.
+Advantage is method-minus-random AUC for insertion and random-minus-method for deletion; larger values favor a method. The primary criterion averages within episodes, then across episodes with defined values for every method. A common random reference cannot reorder methods within one response. Scaling context advantages by their random-order standard deviations before episode averaging changes weights and may change winners; the state reference enumerates every order. Episode medians and illustrative deletion cutoffs of 0.40 and 0.50 check sensitivity.
 
 The collection protocol, analysis plan and three amendments were recorded before their governed outcomes were examined. The seven primary pretrained-PickCube vision-deletion contrasts in Table~\ref{tab:r1-methods-summary}A use 10,000 bootstrap draws that resample entire episodes to retain dependence between their calls. Bonferroni adjustment divides the error allowance among seven comparisons, giving alpha $0.05/7$. Best-versus-second intervals use $0.05/4$ for each group's four cells, two responses times two directions. Equal highest values have no unique winner. These selected comparisons are exploratory and do not jointly test a winner across all groups. Simulated interval coverage was checked before examining results. Saved-run medians and positive shares were emphasized retrospectively because means are tail-sensitive, but all means remain reported. Intervals describe recorded episodes, not variation across training runs, checkpoints or tasks.
 
@@ -239,19 +239,21 @@ The saved peg-insertion and household-object tasks each contain sixteen unsucces
 
 \subsection{Matched rankings and criterion sensitivity}
 % audit-anchor: primary-contrasts
-On sixty pretrained-PickCube episodes, N-target IG exceeds Q-target IG under both responses (Table~\ref{tab:r1-methods-summary}A). Both exceed random ordering under N; neither separates from random under Q, whose tails widen intervals. Changing both target and response gives $-0.438$, adjusted interval $[-3.91,2.44]$, an inconclusive comparison in different normalized units.
-
-% audit-anchor: preferred-methods
-Raw-mean vision-deletion winners differ between Q and N in all three groups; scaled means and episode medians agree in both PickCube groups but differ in StackCube (Table~\ref{tab:r1-methods-summary}B). Only one of twelve vision cells separates its top two means: pretrained PickCube Q deletion, 0.0998, adjusted interval $[0.0181,0.315]$. Two language cells also separate, giving three of twenty overall. Supplementary Table S3 reports every modality and selection flag.
+For image-patch deletion on sixty pretrained-PickCube episodes, N-target IG exceeds Q-target IG under both responses (Table~\ref{tab:r1-methods-summary}A). Both exceed random ordering under N; neither separates from random under Q, whose tails widen intervals. Changing both target and response gives $-0.438$, adjusted interval $[-3.91,2.44]$, an inconclusive comparison in different normalized units.
 
 \input{tables_revision/r1_methods_summary.tex}
+
+% audit-anchor: replication-contrasts
+Descriptive 95\% percentile deletion intervals favor N-target over Q-target IG under both responses in StackCube, but not task-trained PickCube. Both variants exceed random under N in all three groups; under Q, only in StackCube. The task-trained N-target-versus-random comparison under N includes zero under the bias-corrected and accelerated (BCa) interval (Supplementary Table S3).
+
+% audit-anchor: preferred-methods
+Image-patch deletion point estimates give different raw-mean winners under Q/N in all three groups; scaled and episode-median winners differ only in StackCube (Table~\ref{tab:r1-methods-summary}B). Raw winners differ in 79.63\% of pretrained-PickCube resamples versus 30.05\% in StackCube. Scaled winners match in 90.02\% and 98.48\% for pretrained and task-trained PickCube; median agreement is less stable (Supplementary Table S7). Only one of twelve image-patch top-two intervals excludes zero: pretrained PickCube Q deletion, 0.0998, adjusted interval $[0.0181,0.315]$. Two language cells also separate, three of twenty overall (Supplementary Table S3).
 
 % audit-anchor: calibration-results
 Fixed orders beat every attribution method's raw mean in three vision cells: pretrained PickCube insertion under Q and N, and task-trained PickCube deletion under Q. The latter winner, input difference, also falls below random. Scaling and medians change these comparisons (Supplementary Table S4). Unvalidated 0.40 and 0.50 cutoffs each disagree with calibrated preferences in four of six deletion cells. Supplementary Table S7 reports bootstrap winner stability with ties separate.
 
 \subsection{Numerical recovery and diagnostic limits}
-% audit-anchor: historical-completeness
-Most saved vision rankings miss the study's 1\% completeness criterion: median residuals are 1.96\% for Q-ranked and 4.76\% for N-ranked calls, with 77.2\% and 99.6\% above 1\%. Their sums fall short of the baseline-to-input target change in 87.5\% and 99.1\%. This one-sided deficit fits endpoint bias; storage rounding alone can err in either direction. Individual coordinate errors remain unknown. Figure~\ref{fig:r1-numerics} compares matched numerical recovery.
+Figure~\ref{fig:r1-numerics} compares matched numerical recovery.
 
 \begin{figure}[htbp]
 \centering
@@ -260,6 +262,9 @@ Most saved vision rankings miss the study's 1\% completeness criterion: median r
 \caption{\textbf{Precision and rule affect recovery on matched contexts.} \textbf{A)--B)} Median completeness residuals, twelve pretrained-PickCube vision contexts; horizontal line: study-specific 1\% threshold. \textbf{C)--D)} Relative L1 differences from the 32-bit, 512-interval trapezoid, eight stored-map contexts. Open/dashed markers/lines indicate 16-bit calculations, filled/solid 32-bit; shapes identify rules. Original-estimator stars are offset for visibility. The comparator is not exact IG: its N endpoint discrepancy contributes to D's midpoint plateau. Its zero self-difference is omitted on logarithmic axes.}
 \label{fig:r1-numerics}
 \end{figure}
+
+% audit-anchor: historical-completeness
+Most saved vision rankings miss the study's 1\% completeness criterion: median residuals are 1.96\% for Q-ranked and 4.76\% for N-ranked calls, with 77.2\% and 99.6\% above 1\%. Their sums fall short of the baseline-to-input target change in 87.5\% and 99.1\%. This one-sided deficit fits endpoint bias; storage rounding alone can err in either direction. Individual coordinate errors remain unknown.
 
 % audit-anchor: precision-results
 On twelve matched pretrained-PickCube vision contexts, increasing trapezoidal intervals from 64 to 512 changes 16-bit median completeness residuals from 4.76\% to 4.46\% for N and 1.05\% to 0.991\% for Q. With 32-bit model calculations, N falls from 1.54\% to 0.192\% and Q from 0.0261\% to 0.000321\%. Additional 16-bit points help little. At sixteen intervals, 32-bit midpoint N reaches about 0.0275\%. Rule and interval count both matter.
@@ -277,26 +282,25 @@ The separate four-task sample shows agreement of repeated function evaluations d
 
 \section{Discussion}
 % audit-anchor: discussion-evidence
-Overshoots produce tails in both successful and failed runs. The primary matched experiment favors N-target IG; exploratory winners depend on averaging and scaling, with eleven of twelve vision top-two intervals including zero. Subtracting a common random reference cannot reorder methods. Raw-mean preference is therefore not general superiority.
+Both successful and failed runs have overshoot tails. Primary matched contrasts favor N-target IG, while exploratory winners depend on averaging and scaling: eleven of twelve image-patch top-two intervals include zero. Raw-mean preference does not establish general superiority.
 
 % audit-anchor: discussion-context
 The findings extend Huber's and TRACE's output-dependent preferences. Hama considers monotone transformations\citep{hama2023deletion}; N is strictly increasing in Q. Its condition is a strictly increasing transformation of additive feature contributions on binary inputs. That can hold here since $x_1^2=x_1$ for binary inputs. Its IG argument uses constant feature slopes before transformation, whereas our quadratic construction changes gradient direction. This different setting is not a counterexample. Our additions concern normalization, overshoots, separate targets/responses and matched numerical comparisons.
-
 % audit-anchor: discussion-literature
-Like TRACE and Blücher, these findings show metric sensitivity. They extend Makino's integration-budget tests to precision and rule choice. Zhu reconstructs interventions; here predictions stay fixed.
+These findings extend Makino's integration-budget tests to precision and rule choice. Zhu reconstructs interventions; here predictions stay fixed.
 
 % audit-anchor: discussion-interpretation
-Q's tails leave IG-versus-random comparisons inconclusive. Nine failed episodes give an uncertain negative median, while larger extremes occur among successes; neither implies causation. Numerical qualification remains failed despite plausible endpoint effects, and most saved rankings miss the completeness criterion. The 0.448/0.291 example illustrates sensitivity to an illustrative 0.40 rule, not justification for it.
+Under Q, percentile IG-versus-random deletion intervals include zero in both PickCube groups but not StackCube. Nine failed episodes give an uncertain median; successes show larger extremes. Neither implies causation. Numerical qualification fails despite plausible endpoint effects; most saved rankings miss the completeness criterion. The 0.448/0.291 example shows sensitivity to the illustrative 0.40 rule, not justification for it.
 
 % audit-anchor: reporting-guidance
-State targets and responses because they answer different questions; preserve references, noise, baselines and groups to repeat comparisons. Random and fixed controls reveal what scores reward. Means, medians, tails and undefined cases expose different sample properties; resampling episodes retains call dependence. Completeness, coordinate, rank and score agreement need separate checks because none guarantees the others.
+Report targets and responses because they answer different questions; preserve references, noise, baselines and groups for replication. Random and fixed controls reveal what scores reward. Means, medians, tails and undefined cases describe different sample properties; episode resampling retains call dependence. Check completeness, coordinates, ranks and scores separately: none guarantees the others.
 
 \subsection{Limitations and conclusion}
 % audit-anchor: limitations
 The saved rankings' numerical accuracy remains unverified; missing inputs prevent regeneration and their Q/N runs are unmatched. Original pretrained PickCube evidence is entirely unsuccessful; all successful evidence comes from task-trained PickCube. Only one model family, simulation, two responses, chosen baselines/groups and mostly gradient-based methods are studied. No weight-randomization test of dependence on learned weights was performed\citep{adebayo2018sanity}. The tail mechanism, including distribution shift from partial replacement, remains untested. Small numerical samples show possible failures, not frequencies. Other successful policies, responses, attribution families and physical robots require matched studies.
 
 % audit-anchor: conclusions
-The identity proves an in-range ordering for fixed predictions. Unsuccessful simulated PickCube runs show its size and tail-dominated means; successful runs also overshoot. Primary comparisons favor N-target IG. Raw-mean winners change in all three groups; scaled means and episode medians differ only in StackCube. Numerical experiments show possible failures, not their frequency, and do not validate original rankings. Evaluation must establish scoring choice, numerical recovery and ranking quality separately.
+The identity proves in-range ordering for fixed predictions. Unsuccessful simulated PickCube runs show its size and tail-dominated means; successful runs also overshoot. Primary comparisons favor N-target IG. Image-patch deletion point estimates change raw-mean winners in all three groups, but scaled and median winners only in StackCube; bootstrap stability varies. Numerical experiments show possible failures, not their frequency, and do not validate original rankings. Scoring choice, numerical recovery and ranking quality require separate evidence.
 
 \section*{Data and code availability}
 % audit-anchor: availability
@@ -304,7 +308,7 @@ A CPU reproduces saved response summaries, plots, success splits and completenes
 \ifanonymous
 Anonymous materials are available through the \href{https://review.invalid/archive}{review archive}. This unlisted link requires no account; anyone holding it can download. The archive distinguishes current manuscript materials from scientific replay evidence.
 \else
-The exact source and saved analyses for this revision are identified by \href{https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-audit-2026-11-01}{the public revision tag}. Its download guide supplies the corresponding public research materials.
+The exact source and saved analyses for this revision are identified by \href{https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-revision-2026-11-02}{the public revision tag}. Its download guide supplies the corresponding public research materials.
 \fi
 
 \ifanonymous\else

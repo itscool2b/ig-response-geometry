@@ -66,6 +66,45 @@ def test_matched_numerical_display_records_actual_context_populations():
         assert len(panel["contexts"]) == len(set(panel["contexts"])) == panel["n"]
 
 
+def test_replication_continuation_retains_saved_contrasts_and_original_twenty_cells(tmp_path):
+    import hashlib
+    from scripts.nhsjs_audit_displays import interval, number
+
+    module = runpy.run_path(str(ROOT / "scripts/build_nhsjs_revision_assets.py"))
+    module["tables"](tmp_path)
+    content = (tmp_path / 'r1_all_methods.tex').read_bytes()
+    original = content.split(b'\\end{longtable}\n', 1)[0] + b'\\end{longtable}\n'
+    assert hashlib.sha256(original).hexdigest() == '20045a6a27629c71ba7e5466b567260a93c0a47b22ee67be25d16901df05fcfc'
+    metadata = module['POPULATIONS']['r1_replication_contrasts']
+    assert metadata['episodes'] == {'S': 30, 'B1': 40}
+    assert metadata['alpha'] == .05 and metadata['multiple_testing_adjustment'] is None
+    expected_keys = {(bank, f'P{i}') for bank in ('S', 'B1') for i in range(1, 7)}
+    actual = {(r['bank'], r['id']): r for r in metadata['rows']}
+    assert len(metadata['rows']) == 12 and set(actual) == expected_keys
+    with (ROOT / metadata['source']).open(encoding='utf-8', newline='') as handle:
+        source = {(r['bank'], r['id']): r for r in csv.DictReader(handle)
+                  if r['metric'] == 'normalized_auc' and (r['bank'], r['id']) in expected_keys}
+    assert actual == source, 'Preserve every recorded value and the original method-minus-control sign'
+    continuation = content[len(original):].decode('utf-8')
+    for r in actual.values():
+        assert r['role'] == 'replication, descriptive 95%'
+        assert r['modality'] == 'vision' and r['direction'] == 'deletion'
+        assert r['excluded_episodes'] == '0'
+        assert number(r['estimate']) + ' & ' + interval(r['percentile_lo'], r['percentile_hi']) + ' & ' + interval(r['bca_lo'], r['bca_hi']) in continuation
+    assert float(actual['S', 'P5']['percentile_hi']) < 0
+    assert float(actual['S', 'P6']['percentile_hi']) < 0
+    assert float(actual['B1', 'P5']['percentile_lo']) < 0 < float(actual['B1', 'P5']['percentile_hi'])
+    assert float(actual['B1', 'P6']['percentile_lo']) < 0 < float(actual['B1', 'P6']['percentile_hi'])
+    assert float(actual['B1', 'P4']['percentile_lo']) > 0 > float(actual['B1', 'P4']['bca_lo'])
+    assert continuation.count(r'\caption*') == 1
+    assert continuation.count(r'\noalign{\addtocounter{table}{-1}}') == 1
+    assert r'\label{' not in continuation
+    assert continuation.count('StackCube 170M (30) &') == 6
+    assert continuation.count('PickCube 1B (40) &') == 6
+    assert 'positive values favor the first method' in continuation
+    assert 'includes it with BCa' in continuation
+
+
 def test_full_saved_zoom_counts_and_new_success_intervals_are_retained():
     registry=json.loads((ROOT/'paper/figures_revision/r1_lineage.json').read_text())
     cases=registry['populations']['r1_saved_geometry']['saved_cases']

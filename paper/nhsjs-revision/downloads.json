@@ -1,54 +1,54 @@
 {
   "schema_version": 1,
-  "revision": "nhsjs-audit-2026-11-01",
-  "source_version": "https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-audit-2026-11-01",
-  "release_status": "AI-assisted working package; not approved for journal submission.",
-  "microsoft_word_verification": "pending",
+  "revision": "nhsjs-revision-2026-11-02",
+  "source_version": "https://github.com/itscool2b/ig-response-geometry/tree/nhsjs-revision-2026-11-02",
+  "release_status": "Current working manuscript and verified research materials; not submitted.",
+  "microsoft_word_verification": "not_performed; LibreOffice alternative accepted by owner",
   "files": [
     {
       "filename": "manuscript-sources.zip",
-      "label": "Verified audit manuscript sources",
-      "description": "Article and supplementary sources, figures, tables and bibliography from the verified audit snapshot.",
-      "bytes": 351684,
-      "sha256": "f930a9d8795d99a547f19b9f2ffdae418ae42178b5e74f4d59c829e4465cc51b",
-      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/manuscript-sources.zip"
+      "label": "Current manuscript sources",
+      "description": "Current article, supplement, bibliography, figures and tables.",
+      "bytes": 352595,
+      "sha256": "3d839483d15a770c6f1f360fc925d521f1f0c50a425ace221e19b9be2e6656b0",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-revision-2026-11-02/manuscript-sources.zip"
     },
     {
       "filename": "research-supplement.zip",
-      "label": "Verified audit research supplement",
-      "description": "Analysis code, saved inputs, recorded results and manuscript sources from the verified audit snapshot.",
-      "bytes": 42883740,
-      "sha256": "36f8610042d096541390ae3ec60667e801f66f8c18f6d30d8b8aad82b0fc2035",
-      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/research-supplement.zip"
+      "label": "Current research supplement",
+      "description": "Current reporting code and manuscript sources, saved inputs and recorded results.",
+      "bytes": 42888528,
+      "sha256": "24e9cf2116dc13aa3b5673841228c003afe311c32f194cdc137a299b9260c1bc",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-revision-2026-11-02/research-supplement.zip"
     },
     {
       "filename": "supplementary-material.pdf",
-      "label": "Verified audit supplementary PDF",
-      "description": "Supplementary derivations, Tables S1-S8 and Figures S1-S4 from the verified audit snapshot.",
-      "bytes": 346811,
-      "sha256": "d84e50476c51e67c40a472242dae2f5437e42f282d6873b224ad86a133399e88",
-      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/supplementary-material.pdf"
+      "label": "Current supplementary PDF",
+      "description": "Supplementary derivations, complete results and additional displays.",
+      "bytes": 348978,
+      "sha256": "636b252579b2eeaa5cfff7afec4cbf02fdbd60bb77f3f52c42b928f1bd260b17",
+      "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-revision-2026-11-02/supplementary-material.pdf"
     },
     {
       "filename": "complete-study-data-v2.zip",
-      "label": "Complete study data: audit snapshot",
-      "description": "Authenticated raw records, frozen numerical code and the registered CPU replay preserved with the verified audit snapshot.",
+      "label": "Complete study data",
+      "description": "Authenticated raw records, frozen code and the registered CPU replay.",
       "bytes": 37841947743,
       "sha256": "bee3293d00572d362ff6e19d6f23bced24233c3d06152c9b687ecd41bc41e405",
       "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/complete-study-data-v2.zip"
     },
     {
       "filename": "stored-four-task-evidence-v2.zip",
-      "label": "Stored four-task evidence: audit snapshot",
-      "description": "Preserved policy calls, simulator provenance and raw outputs from the verified audit snapshot.",
+      "label": "Stored evidence from four tasks",
+      "description": "Preserved policy calls, simulator provenance and raw outputs.",
       "bytes": 25223124487,
       "sha256": "cd371d5c2f846451c126a06472119121880d1f798af25592fcf0388d767edf25",
       "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/stored-four-task-evidence-v2.zip"
     },
     {
       "filename": "r1-regeneration-kit.zip",
-      "label": "Regeneration kit: audit snapshot",
-      "description": "Recorded model revisions, protocols, launchers and runtime requirements from the verified audit snapshot.",
+      "label": "Regeneration kit",
+      "description": "Recorded model revisions, protocols, launchers and runtime requirements.",
       "bytes": 894073642,
       "sha256": "ba968ce109d0166eac1c0c88635c8dbb1b58472716f250d646e2b39a7401b84e",
       "url": "https://pub-5f100ffa0ca74b5ca2147f2fa3cc497d.r2.dev/nhsjs-audit-2026-11-01/r1-regeneration-kit.zip"

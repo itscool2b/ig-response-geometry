@@ -7,6 +7,28 @@ import pytest
 from scripts.package_paper_sources import anonymous_source, assert_anonymous, build
 
 
+def test_package_metadata_uses_selected_abstract_and_exact_disclosure():
+    from scripts.package_paper_sources import manuscript_summary
+    source = r'''\author{Private identity}
+\begin{abstract}
+% This review comment does not count.
+Three plain words.
+\end{abstract}
+\section*{AI-use disclosure}
+Original code and analysis disclosure.
+\bibliographystyle{nhsjs}
+'''
+    expected = 'Abstract length: 3 words.\nAI-use disclosure: Original code and analysis disclosure.\n'
+    assert manuscript_summary(source) == expected
+    from scripts.package_research_supplement import review_readme
+    guide = review_readme(source)
+    assert expected in guide and 'Private identity' not in guide
+    assert 'Abstract length:' not in manuscript_summary(source.replace('Three plain words.', r'$x + y$'))
+    assert 'Abstract length:' not in manuscript_summary(source.replace('Three plain words.', r'An \unexpanded command.'))
+    assert manuscript_summary(source.replace('Three plain words.', r'An 80\% share.')) == expected
+    assert manuscript_summary(source.replace('Three plain words.', r'Only \$5 remains.')) == expected
+
+
 def test_standalone_math_supplement_has_no_unreviewed_dependencies():
     from scripts.package_paper_sources import manuscript_dependencies
     root = Path(__file__).resolve().parents[1]

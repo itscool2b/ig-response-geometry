@@ -1,6 +1,6 @@
 # Local manuscript builds
 
-The current source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Three main figures, two main tables and 46 references (42 primary papers, including 30 published in 2022 through 2026) accompany a 249-word abstract and seven keywords. The supplement contains eight numbered tables and four figures. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
+The current source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Three main figures, two main tables and 46 references (42 primary papers, including 30 published in 2022 through 2026) accompany a 250-word abstract and seven keywords. The supplement contains eight numbered tables and four figures. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
 
 ## Rebuild current displays and PDFs
 
