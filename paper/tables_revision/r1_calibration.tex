@@ -1,0 +1,71 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.230\linewidth} p{0.160\linewidth} p{0.190\linewidth} p{0.170\linewidth} p{0.180\linewidth}}
+\caption{\textbf{Scaled choices and fixed-order comparisons.} Scaling is per context before episode averaging. Fixed orders use no learned attribution. The gap compares the best raw attribution method with the highest-mean fixed order; negative values favor that fixed order. Brackets retain the registered adjusted intervals. Mean comparisons can be tail-sensitive and do not establish a generally superior explanation.}\label{tab:r1-calibration}\\
+\toprule
+\textbf{Group and input} & \textbf{Scoring / direction} & \textbf{Scaled winner} & \textbf{Best fixed order} & \textbf{Gap [adjusted interval]} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group and input} & \textbf{Scoring / direction} & \textbf{Scaled winner} & \textbf{Best fixed order} & \textbf{Gap [adjusted interval]} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 1B vision & Q deletion & Path-gradient N & Raster & −1.89 [−9.45, 1.80] \\
+PickCube 1B vision & Q insertion & Equal-weight IG-Q & Center-out & 0.804 [−1.07, 3.76] \\
+PickCube 1B vision & N deletion & Path-gradient N & Center-out & 0.0440 [−0.274, 0.232] \\
+PickCube 1B vision & N insertion & Equal-weight IG-N & Center-out & 0.298 [0.217, 0.439] \\
+PickCube 170M language & Q deletion & IG-Q & Reverse tokens & −1.30 [−3.29, −0.327] \\
+PickCube 170M language & Q insertion & Path-gradient N & Reverse tokens & −0.372 [−1.53, 0.122] \\
+PickCube 170M language & N deletion & IG-Q & Reverse tokens & −0.287 [−0.501, −0.132] \\
+PickCube 170M language & N insertion & Path-gradient N & Reverse tokens & 0.0263 [−0.109, 0.118] \\
+PickCube 170M state & Q deletion & Input difference & Reverse joints & 0.232 [0.155, 0.332] \\
+PickCube 170M state & Q insertion & Input difference & Reverse joints & 0.327 [0.198, 0.507] \\
+PickCube 170M state & N deletion & Input difference & Reverse joints & 0.192 [0.164, 0.221] \\
+PickCube 170M state & N insertion & Input difference & Reverse joints & 0.223 [0.181, 0.272] \\
+PickCube 170M vision & Q deletion & IG-N & Raster & 6.37 [−1.13, 26.2] \\
+PickCube 170M vision & Q insertion & Path-gradient N & Raster & −18.3 [−60.9, 0.424] \\
+PickCube 170M vision & N deletion & IG-N & Reverse raster & 0.257 [0.0924, 0.656] \\
+PickCube 170M vision & N insertion & Path-gradient N & Reverse raster & −0.0393 [−0.561, 0.231] \\
+StackCube 170M vision & Q deletion & Path-gradient N & Reverse raster & 0.103 [0.0452, 0.150] \\
+StackCube 170M vision & Q insertion & Path-gradient N & Reverse raster & 0.0876 [0.0451, 0.130] \\
+StackCube 170M vision & N deletion & Equal-weight IG-N & Reverse raster & 0.124 [0.0910, 0.152] \\
+StackCube 170M vision & N insertion & Path-gradient N & Reverse raster & 0.112 [0.0884, 0.138] \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.230\linewidth} p{0.090\linewidth} p{0.300\linewidth} p{0.300\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Illustrative fixed-bar choices for vision deletion.} Each cell lists all methods tied for the largest fraction of calls with AUC at or below the bar, and that fraction. These arbitrary bars are not validated decision rules. This criterion differs from the raw mean choice in four of six cells for either bar.}\\
+\toprule
+\textbf{Group} & \textbf{Scoring} & \textbf{Bar 0.40} & \textbf{Bar 0.50} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group} & \textbf{Scoring} & \textbf{Bar 0.40} & \textbf{Bar 0.50} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 170M & Q & IG-N (75.8\%) & Equal-weight IG-N; IG-N (89.2\%) \\
+PickCube 170M & N & Equal-weight IG-N; IG-N; Equal-weight IG-Q; IG-Q (93.3\%) & Equal-weight IG-N; IG-N; Input difference (98.3\%) \\
+PickCube 1B & Q & Path-gradient N (92.5\%) & Equal-weight IG-N; IG-N; Path-gradient N (98.8\%) \\
+PickCube 1B & N & Equal-weight IG-N; IG-N; Path-gradient N (100.0\%) & Equal-weight IG-N; IG-N; Path-gradient N (100.0\%) \\
+StackCube 170M & Q & Equal-weight IG-N; IG-N (70.0\%) & Equal-weight IG-N; IG-N (85.0\%) \\
+StackCube 170M & N & Path-gradient N (98.3\%) & Equal-weight IG-N; IG-N; Equal-weight IG-Q; IG-Q; Path-gradient N (100.0\%) \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.250\linewidth} p{0.220\linewidth} p{0.110\linewidth} p{0.120\linewidth} p{0.100\linewidth} p{0.120\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Fixed-order raw means can be driven by unusual episodes.} These three vision cells have a fixed-order raw mean above every attribution method. Rows retain that fixed winner, the raw and scaled attribution winners, and the additional task-trained center-out comparator. Counts in parentheses are complete episodes. All statistics first average calls within episodes; positive is the percentage of episode-mean advantages above zero. Scaling divides each call by its random-order standard deviation before averaging. These descriptive contrasts show sensitivity to aggregation, not significance or general method superiority.}\\
+\toprule
+\textbf{Group, scoring, direction (episodes)} & \textbf{Method / order} & \textbf{Raw mean} & \textbf{Episode median} & \textbf{Positive (\%)} & \textbf{Scaled mean} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group, scoring, direction (episodes)} & \textbf{Method / order} & \textbf{Raw mean} & \textbf{Episode median} & \textbf{Positive (\%)} & \textbf{Scaled mean} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 170M, Q insertion (60) & Raster & 7.06 & −0.3126 & 10.0 & −5.32 \\
+PickCube 170M, Q insertion (60) & Path-gradient N & −11.3 & 0.0857 & 81.7 & 0.993 \\
+PickCube 170M, N insertion (60) & Reverse raster & 0.0354 & 0.0022 & 53.3 & −0.335 \\
+PickCube 170M, N insertion (60) & Path-gradient N & −0.00388 & 0.1274 & 88.3 & 1.60 \\
+PickCube 1B, Q deletion (40) & Raster & 1.31 & 0.0003 & 50.0 & 0.618 \\
+PickCube 1B, Q deletion (40) & Input difference & −0.572 & 0.0171 & 57.5 & 0.494 \\
+PickCube 1B, Q deletion (40) & Path-gradient N & −3.77 & 0.5819 & 87.5 & 8.55 \\
+PickCube 1B, Q deletion (40) & Center-out & 0.813 & 0.2637 & 90.0 & 3.53 \\
+\end{longtable}

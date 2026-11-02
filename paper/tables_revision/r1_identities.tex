@@ -1,24 +1,182 @@
-\begin{table}[htbp]
-\centering
-\caption{\textbf{Pinned R1 identities and their evidence status.} Revisions and digests show 12-character prefixes; the archive supplies full strings, adaptor hashes and evidence for each phase. Recorded means captured by the experiment. Inferred software/preprocessing entries reflect incomplete host captures; they do not mean every host was individually captured. Across all 12 historical and new populations, the inventory has 220 recorded, 171 recovered, 52 inferred and 45 unknown fields. Historical unknowns remain unknown.}
-\label{tab:r1-identities}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{0.19\linewidth} p{0.57\linewidth} p{0.13\linewidth}}
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.290\linewidth} p{0.120\linewidth} p{0.120\linewidth} p{0.130\linewidth} p{0.130\linewidth} p{0.130\linewidth}}
+\caption{\textbf{Component identity status for the main saved and new groups.} Recorded means captured during that experiment; recovered means reconstructed from dated evidence; inferred means supported but not established; unknown means unavailable. Recovery does not imply a runtime hash. Full values and all 12 population inventories accompany the public source projection. Saved checkpoint and encoder files can be recovered, while most runtime versions remain unknown. New runtime entries include incomplete host captures and do not establish every host individually.}\label{tab:r1-identities}\\
+\toprule
+\textbf{Component} & \textbf{Saved Q} & \textbf{Saved N} & \textbf{New 170M PickCube} & \textbf{New 1B PickCube} & \textbf{New 170M StackCube} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Component} & \textbf{Saved Q} & \textbf{Saved N} & \textbf{New 170M PickCube} & \textbf{New 1B PickCube} & \textbf{New 170M StackCube} \\
+\midrule\endhead
+\bottomrule\endfoot
+model repository & recovered & recovered & recorded & recorded & recorded \\
+model revision & recovered & recovered & recorded & recorded & recorded \\
+model weight file and sha256 & recovered & recovered & recorded & recorded & recorded \\
+rdt upstream code commit & recovered & recovered & recorded & recorded & recorded \\
+model config & recovered & recovered & recorded & recorded & recorded \\
+vision encoder & recovered & recovered & recorded & recorded & recorded \\
+vision preprocessor & recovered & recovered & inferred & inferred & inferred \\
+language encoder or embedding source & inferred & recovered & recorded & recorded & recorded \\
+language baseline & inferred & recovered & recorded & recorded & recorded \\
+language positions & recovered & recovered & recorded & recorded & recorded \\
+adaptor identity & recovered & recovered & recorded & recorded & recorded \\
+simulator package versions & unknown & unknown & inferred & inferred & inferred \\
+task & recorded & recorded & recorded & recorded & recorded \\
+control mode & recovered & recovered & recorded & recorded & recorded \\
+action subsampling & recovered & recovered & recorded & recorded & recorded \\
+episode horizon & recorded & recorded & recorded & recorded & recorded \\
+environment reset seeds & recorded & recorded & recorded & recorded & recorded \\
+camera observation pipeline and image size & recovered & recovered & recorded & recorded & recorded \\
+proprioception preprocessing & recovered & recovered & recorded & recorded & recorded \\
+diffusion sampler & recovered & recovered & recorded & recorded & recorded \\
+solver steps & recorded & recovered & recorded & recorded & recorded \\
+noise policy & recovered & recovered & recorded & recorded & recorded \\
+precision dtype & recovered & recovered & recorded & recorded & recorded \\
+runtime determinism settings & recovered & recovered & recorded & recorded & recorded \\
+ig estimator & recovered & recovered & recorded & recorded & recorded \\
+ig budget & inferred & recovered & recorded & recorded & recorded \\
+ig target & recorded & recorded & recorded & recorded & recorded \\
+nonfinite gradient handling & recovered & recovered & recorded & recorded & recorded \\
+stored scoring response & recorded & recorded & recorded & recorded & recorded \\
+intervention schedule and count rule & recovered & recovered & recorded & recorded & recorded \\
+sw python & inferred & unknown & inferred & inferred & inferred \\
+sw torch & inferred & recovered & inferred & inferred & inferred \\
+sw numpy & unknown & unknown & inferred & inferred & inferred \\
+sw diffusers & unknown & unknown & inferred & inferred & inferred \\
+sw transformers & unknown & unknown & inferred & inferred & inferred \\
+sw mani skill & unknown & unknown & inferred & inferred & inferred \\
+sw sapien & unknown & unknown & inferred & inferred & inferred \\
+hardware & inferred & recovered & recorded & recorded & recorded \\
+project code version & inferred & inferred & recorded & recorded & recorded \\
+preserved inputs & recorded & recorded & recorded & recorded & recorded \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.320\linewidth} p{0.150\linewidth} p{0.150\linewidth} p{0.150\linewidth} p{0.150\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Identity status, continued: additional saved and preserved populations.} The source projection retains full values and evidence status for every field.}\\
+\toprule
+\textbf{Component} & \textbf{Saved 1B, seed 42} & \textbf{Saved 1B, seeds 142/242} & \textbf{Saved 1B rerun} & \textbf{Additional tasks, seed 142} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Component} & \textbf{Saved 1B, seed 42} & \textbf{Saved 1B, seeds 142/242} & \textbf{Saved 1B rerun} & \textbf{Additional tasks, seed 142} \\
+\midrule\endhead
+\bottomrule\endfoot
+model repository & recovered & inferred & inferred & recovered \\
+model revision & recovered & inferred & inferred & recovered \\
+model weight file and sha256 & recovered & inferred & inferred & recovered \\
+rdt upstream code commit & recovered & recovered & recovered & recovered \\
+model config & recovered & recovered & recovered & recovered \\
+vision encoder & recovered & recovered & recovered & recovered \\
+vision preprocessor & recovered & recovered & recovered & recovered \\
+language encoder or embedding source & recovered & recovered & recovered & recovered \\
+language baseline & recovered & recovered & recovered & recovered \\
+language positions & recovered & recovered & recovered & recovered \\
+adaptor identity & recovered & inferred & inferred & recovered \\
+simulator package versions & unknown & unknown & unknown & unknown \\
+task & recorded & recorded & recorded & recorded \\
+control mode & recovered & recovered & recovered & recovered \\
+action subsampling & recovered & recovered & recovered & recovered \\
+episode horizon & recorded & recorded & recorded & recorded \\
+environment reset seeds & recorded & recorded & recorded & recorded \\
+camera observation pipeline and image size & recovered & recovered & recovered & recovered \\
+proprioception preprocessing & recovered & recovered & recovered & recovered \\
+diffusion sampler & recovered & recovered & recovered & recovered \\
+solver steps & recovered & recorded & recorded & recovered \\
+noise policy & recovered & recovered & recovered & recovered \\
+precision dtype & recovered & recovered & recovered & recovered \\
+runtime determinism settings & recovered & recovered & recovered & recovered \\
+ig estimator & recovered & recovered & recovered & recovered \\
+ig budget & recovered & recovered & inferred & inferred \\
+ig target & recovered & recovered & inferred & recovered \\
+nonfinite gradient handling & recovered & recovered & recovered & recovered \\
+stored scoring response & recorded & recorded & recorded & recorded \\
+intervention schedule and count rule & recovered & recovered & recovered & recovered \\
+sw python & unknown & inferred & unknown & unknown \\
+sw torch & recovered & recovered & recovered & recovered \\
+sw numpy & unknown & unknown & unknown & unknown \\
+sw diffusers & unknown & unknown & recovered & unknown \\
+sw transformers & unknown & unknown & recovered & unknown \\
+sw mani skill & unknown & unknown & unknown & unknown \\
+sw sapien & unknown & unknown & unknown & unknown \\
+hardware & recovered & recovered & recovered & recovered \\
+project code version & inferred & inferred & inferred & inferred \\
+preserved inputs & recorded & recorded & recorded & recorded \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.320\linewidth} p{0.200\linewidth} p{0.200\linewidth} p{0.200\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Identity status, continued: additional saved and preserved populations.} The source projection retains full values and evidence status for every field.}\\
+\toprule
+\textbf{Component} & \textbf{Additional tasks, seed 42} & \textbf{Four-task collection} & \textbf{Preserved-context checks} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Component} & \textbf{Additional tasks, seed 42} & \textbf{Four-task collection} & \textbf{Preserved-context checks} \\
+\midrule\endhead
+\bottomrule\endfoot
+model repository & recovered & recorded & recorded \\
+model revision & recovered & recorded & recorded \\
+model weight file and sha256 & recovered & recorded & recorded \\
+rdt upstream code commit & recovered & recorded & recorded \\
+model config & recovered & recorded & recorded \\
+vision encoder & recovered & recorded & recorded \\
+vision preprocessor & recovered & recovered & recorded \\
+language encoder or embedding source & recovered & recorded & recorded \\
+language baseline & recovered & recorded & recorded \\
+language positions & recovered & recorded & recorded \\
+adaptor identity & recovered & recorded & recorded \\
+simulator package versions & unknown & recorded & recorded \\
+task & recorded & recorded & recorded \\
+control mode & recovered & recorded & recorded \\
+action subsampling & recovered & recorded & recorded \\
+episode horizon & recorded & recorded & recorded \\
+environment reset seeds & recorded & recorded & recorded \\
+camera observation pipeline and image size & recovered & recorded & recorded \\
+proprioception preprocessing & recovered & recorded & recorded \\
+diffusion sampler & recovered & recorded & recorded \\
+solver steps & recorded & recorded & recorded \\
+noise policy & recovered & recorded & recorded \\
+precision dtype & recovered & recorded & recorded \\
+runtime determinism settings & recovered & recorded & recorded \\
+ig estimator & recovered & recorded & recorded \\
+ig budget & recorded & recorded & recorded \\
+ig target & recovered & recorded & recorded \\
+nonfinite gradient handling & recovered & recorded & recorded \\
+stored scoring response & recorded & recorded & recorded \\
+intervention schedule and count rule & recovered & recorded & recorded \\
+sw python & unknown & recovered & recorded \\
+sw torch & recovered & recorded & recorded \\
+sw numpy & unknown & recorded & recorded \\
+sw diffusers & unknown & recorded & recorded \\
+sw transformers & unknown & recorded & recorded \\
+sw mani skill & unknown & recorded & recorded \\
+sw sapien & unknown & recorded & recorded \\
+hardware & recovered & recovered & recorded \\
+project code version & inferred & recorded & recorded \\
+preserved inputs & recorded & recorded & recorded \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.210\linewidth} p{0.570\linewidth} p{0.140\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Values for the new experiment.} Revisions and digests are 12-character prefixes. The saved 170M checkpoint and SigLIP revision were recovered as the same files, without runtime hashes. Complete per-population values remain in the source projection.}\\
 \toprule
 \textbf{Component} & \textbf{Value} & \textbf{Status} \\
-\midrule
-RDT-170M checkpoint & rdt-170m; revision 8aa386cac3bb; SHA-256 2e87fccee029 & Recorded \\
-RDT-1B checkpoint & maniskill-model/rdt; revision 9622afab2b7c; SHA-256 3fa89cbf7bbb & Recorded \\
-Vision encoder & SigLIP so400m-patch14-384; revision 9fdffc58afc9 & Recorded \\
-Language encoder & T5-v1.1-XXL; revision 3db67ab1af98; preserved bf16 task embeddings & Recorded \\
-Code & RDT upstream cd79363a1387; project tag nhsjs-r1-1 (d10de3d) & Recorded \\
-Sampler & DPMSolverMultistepScheduler; 5 steps; explicit-noise adapter v1 & Recorded \\
-Runtime & Python 3.12.3; torch 2.8.0+cu128; diffusers 0.27.2; transformers 4.41.0 & Inferred \\
-Simulator & ManiSkill 3.0.1; SAPIEN 3.0.3; gymnasium 1.3.0 & Inferred \\
-Control & pd\_joint\_pos; 20 Hz control / 100 Hz simulation; 400-step horizon & Recorded \\
-Determinism & Deterministic algorithms; no TF32; cuDNN deterministic; benchmark off & Recorded \\
-Image preprocessing & SigLIP: 384 x 384; resample 3; scale 1/255; mean/std 0.5 & Inferred \\
-Adaptors & Checkpoint-contained: image/language mlp2x\_gelu; state mlp3x\_gelu; hashes archived & Recorded \\
-\bottomrule
-\end{tabular}
-\end{table}
+\midrule\endfirsthead
+\toprule
+\textbf{Component} & \textbf{Value} & \textbf{Status} \\
+\midrule\endhead
+\bottomrule\endfoot
+RDT-170M checkpoint & rdt-170m; revision 8aa386cac3bb; SHA-256 2e87fccee029 & recorded \\
+RDT-1B checkpoint & maniskill-model/rdt; revision 9622afab2b7c; SHA-256 3fa89cbf7bbb & recorded \\
+Vision encoder & SigLIP so400m-patch14-384; revision 9fdffc58afc9 & recorded \\
+Language encoder & T5-v1.1-XXL; revision 3db67ab1af98; preserved bf16 task embeddings & recorded \\
+Code & RDT upstream cd79363a1387; study source d10de3d61747 & recorded \\
+Sampler & DPMSolverMultistepScheduler; 5 steps; explicit-noise adapter v1 & recorded \\
+Runtime & Python 3.12.3; torch 2.8.0+cu128; diffusers 0.27.2; transformers 4.41.0 & inferred \\
+Simulator & ManiSkill 3.0.1; SAPIEN 3.0.3; gymnasium 1.3.0 & inferred \\
+Control & pd\_joint\_pos; 20 Hz control / 100 Hz simulation; 400-step horizon & recorded \\
+Determinism & Deterministic algorithms; no TF32; cuDNN deterministic; benchmark off & recorded \\
+Image preprocessing & SigLIP: 384 × 384; resample 3; scale 1/255; mean/std 0.5 & inferred \\
+Adaptors & Checkpoint-contained: image/language mlp2x\_gelu; state mlp3x\_gelu; hashes archived & recorded \\
+\end{longtable}

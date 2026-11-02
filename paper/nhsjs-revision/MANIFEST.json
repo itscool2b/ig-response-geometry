@@ -1,20 +1,32 @@
 {
   "schema_version": 1,
-  "date": "2026-11-01",
-  "scope": "Identified manuscript and public research download guide",
+  "date": "2026-11-02",
+  "scope": "Current approved abstract and whole-paper revision, with verified current supplement and research downloads",
   "submission_status": "not_submitted_by_explicit_scope",
+  "microsoft_word_verification": "not_performed; LibreOffice alternative accepted by owner",
+  "libreoffice_clean_pages": {
+    "standard": 17,
+    "online": 20
+  },
   "files": {
     "downloads.json": {
-      "bytes": 11501,
-      "sha256": "c88a0674671492ee6372858f5de86680a34072475cc5b891b45e180dd52da4a5"
-    },
-    "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
-      "bytes": 700946,
-      "sha256": "1cb0d0fadbc476e915114ce6781a8860e24d5a1245ea2f10ea552eec408d6957"
+      "bytes": 2928,
+      "sha256": "18ac910a1f282af34394978eb0dc57975e40d54a653e3e30bff9ceca9fbd8efc"
     },
     "README.md": {
-      "bytes": 2600,
-      "sha256": "672132680c996b7a0eae419476ba4e5e10f94df5f9283280f8c16b46fd42306c"
+      "bytes": 4070,
+      "sha256": "4304f46886fe3da299e26b535929c9087e4dca41450d6cb3ff5bd076a9b4c77d"
+    },
+    "Online/How Scoring Responses Change Attribution Evaluation in a Diffusion Policy.docx": {
+      "bytes": 681598,
+      "sha256": "2e516b7dee94468fa5b6ce3cd5de92bd2d52d52818b1a31dc29aa762de6124c9"
+    },
+    "Supplement/supplementary-material.pdf": {
+      "bytes": 348978,
+      "sha256": "636b252579b2eeaa5cfff7afec4cbf02fdbd60bb77f3f52c42b928f1bd260b17"
     }
-  }
+  },
+  "manuscript_source_sha256": "4197c2c52053dbd227ee7ce0009d23dbbe1c62bb36ea467eb1e85ba6444efad3",
+  "current_revision_tag": "nhsjs-revision-2026-11-02",
+  "historical_audit_snapshot": "nhsjs-audit-2026-11-01"
 }

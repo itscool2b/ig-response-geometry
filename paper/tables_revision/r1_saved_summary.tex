@@ -1,20 +1,19 @@
-\begin{table}[htbp]
-\centering
-\caption{\textbf{Saved response changes retain positive medians and negative tails.} Each row contains 750 calls from 30 episodes. Medians and positive shares weight calls equally; means weight episodes equally. Brackets give descriptive 95\% whole-episode bootstrap intervals conditional on these records. They do not capture training-run, checkpoint or task variation. V denotes vision, L language, ins insertion and del deletion. The Q- and N-ranked cohorts are unmatched and do not compare ranking quality.}
-\label{tab:r1-saved-summary}
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{p{0.12\linewidth} p{0.10\linewidth} p{0.11\linewidth} p{0.13\linewidth} p{0.30\linewidth} p{0.11\linewidth}}
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.230\linewidth} p{0.230\linewidth} p{0.140\linewidth} p{0.230\linewidth} p{0.100\linewidth}}
+\caption{\textbf{All eight saved response-change cases.} Each row contains 750 calls in 30 episodes. Q/N identifies the ranking target. Brackets give descriptive 95\% whole-episode bootstrap intervals, conditional on recorded episodes, not variation across training runs, checkpoints or tasks. Medians weight calls equally and means weight episodes equally. Positive means $\Delta>0$; overshoot means $r>B$ at an interior sample. Both columns are percentages. These unmatched runs do not compare ranking quality. Three negative mean intervals include zero.}\label{tab:r1-saved-summary}\\
 \toprule
-\textbf{Case} & \textbf{Median} & \textbf{Positive (\%)} & \textbf{Overshoot (\%)} & \textbf{Mean [interval]} & \textbf{Minimum} \\
-\midrule
-Q V ins & 0.1042 & 88.1 & 41.6 & -17.1 [-33.8, -3.97] & -4.44e+03 \\
-Q V del & 0.1588 & 92.5 & 16.9 & 0.123 [0.106, 0.138] & -1.9 \\
-Q L ins & 0.1169 & 75.6 & 74.0 & -0.182 [-0.405, -0.0277] & -71.8 \\
-Q L del & 0.1189 & 88.5 & 37.5 & -0.00947 [-0.102, 0.0631] & -23.8 \\
-N V ins & 0.1041 & 90.0 & 38.9 & -18.6 [-37.9, -3.17] & -5.24e+03 \\
-N V del & 0.1590 & 94.3 & 16.0 & 0.0184 [-0.204, 0.138] & -80.5 \\
-N L ins & 0.1279 & 84.1 & 65.5 & -0.0329 [-0.0963, 0.0266] & -13.3 \\
-N L del & 0.1205 & 83.2 & 41.6 & -1.37 [-4.21, 0.078] & -1.06e+03 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\textbf{Target, input, direction} & \textbf{Median [interval]} & \textbf{Positive / overshoot (\%)} & \textbf{Mean [interval]} & \textbf{Minimum} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Target, input, direction} & \textbf{Median [interval]} & \textbf{Positive / overshoot (\%)} & \textbf{Mean [interval]} & \textbf{Minimum} \\
+\midrule\endhead
+\bottomrule\endfoot
+Q vision insertion & 0.1042 [0.0961, 0.112] & 88.1 / 41.6 & −17.1 [−33.8, −3.97] & −4,439 \\
+Q vision deletion & 0.1588 [0.148, 0.169] & 92.5 / 16.9 & 0.123 [0.106, 0.138] & −1.90 \\
+Q language insertion & 0.1169 [0.0667, 0.137] & 75.6 / 74.0 & −0.182 [−0.405, −0.0277] & −71.8 \\
+Q language deletion & 0.1189 [0.0912, 0.138] & 88.5 / 37.5 & −0.00947 [−0.102, 0.0631] & −23.8 \\
+N vision insertion & 0.1041 [0.0947, 0.113] & 90.0 / 38.9 & −18.6 [−37.9, −3.17] & −5,243 \\
+N vision deletion & 0.1590 [0.146, 0.169] & 94.3 / 16.0 & 0.0184 [−0.204, 0.138] & −80.5 \\
+N language insertion & 0.1279 [0.111, 0.145] & 84.1 / 65.5 & −0.0329 [−0.0963, 0.0266] & −13.3 \\
+N language deletion & 0.1205 [0.0991, 0.131] & 83.2 / 41.6 & −1.37 [−4.21, 0.0780] & −1,055 \\
+\end{longtable}

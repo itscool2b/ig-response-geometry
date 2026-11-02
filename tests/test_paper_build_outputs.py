@@ -63,6 +63,32 @@ def test_anonymous_default_leaves_identified_and_history_unchanged(builder):
     assert (root / "legacy/pre-response-geometry/paper.pdf").read_bytes() == b"historical PDF"
 
 
+def test_private_route_requires_anonymous_external_pdf_and_intermediates(builder,tmp_path):
+    root,calls,run=builder
+    route=tmp_path/'route.json';route.write_text('{"review_archive_url":"https://files.example.test/review/index.html"}')
+    for args in [[],['--anonymous'],['--anonymous','--output',tmp_path/'private.pdf','--keep-intermediates-dir',root/'intermediates']]:
+        with pytest.raises(SystemExit):run(*args,'--review-url-file',route)
+    assert not calls
+
+
+def test_private_route_staging_binds_canonical_and_private_bytes(builder,tmp_path,monkeypatch):
+    import hashlib
+    root,calls,run=builder;route=tmp_path/'route.txt';url='https://files.example.test/review/index.html';route.write_text(url)
+    canonical=r'Available: \href{https://review.invalid/archive}{review files}.'
+    (root/'paper/paper.tex').write_text(canonical)
+    original=build_paper.subprocess.run
+    def inspect(command,*,cwd,**kwargs):
+        assert (cwd/'paper.tex').read_text()==canonical.replace('https://review.invalid/archive',url)
+        return original(command,cwd=cwd,**kwargs)
+    monkeypatch.setattr(build_paper.subprocess,'run',inspect)
+    run('--anonymous','--output',tmp_path/'private.pdf','--keep-intermediates-dir',tmp_path/'private-intermediates','--review-url-file',route)
+    record=json.loads((tmp_path/'private-intermediates/build.json').read_text())
+    assert record['manuscript_sha256']==hashlib.sha256(canonical.encode()).hexdigest()
+    assert record['compiled_manuscript_sha256']==hashlib.sha256(canonical.replace('https://review.invalid/archive',url).encode()).hexdigest()
+    assert record['private_review_route']['source_sha256']==hashlib.sha256(route.read_bytes()).hexdigest()
+    assert url not in json.dumps(record) and (root/'paper/paper.tex').read_text()==canonical
+
+
 @pytest.mark.parametrize("name", ["paper.pdf", "paper-revision.pdf"])
 def test_anonymous_cannot_overwrite_either_identified_name(builder, name):
     root, calls, run = builder

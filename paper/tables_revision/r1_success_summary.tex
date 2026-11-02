@@ -1,0 +1,52 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.250\linewidth} p{0.120\linewidth} p{0.240\linewidth} p{0.110\linewidth} p{0.110\linewidth} p{0.090\linewidth}}
+\caption{\textbf{Vision response changes by success and task.} Counts are episodes / calls. All intervals resample whole episodes; the new 1B intervals are retrospective. Overshoot and extreme-tail counts are call counts. Unequal sample sizes affect extrema, and episode dependence remains. The saved 1B rows use the 64-interval equal-weight rule, the new 1B rows the 512-interval trapezoid, and the additional tasks the 128-interval equal-weight rule. All use target Q. All additional-task episodes failed.}\label{tab:r1-success-summary}\\
+\toprule
+\textbf{Group / direction} & \textbf{Episodes / calls} & \textbf{Median [95\% interval]} & \textbf{Overshoot} & \textbf{Below -1} & \textbf{Min.} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group / direction} & \textbf{Episodes / calls} & \textbf{Median [95\% interval]} & \textbf{Overshoot} & \textbf{Below -1} & \textbf{Min.} \\
+\midrule\endhead
+\bottomrule\endfoot
+Saved 1B success insertion & 15 / 74 & 0.0653 [0.0522, 0.0755] & 18/74 & 1/74 & −2.35 \\
+Saved 1B failure insertion & 45 / 1125 & 0.0868 [0.0775, 0.0939] & 326/1125 & 8/1125 & −57.7 \\
+New 1B success insertion & 31 / 62 & 0.0616 [0.0486, 0.0744] & 13/62 & 2/62 & −89.9 \\
+New 1B failure insertion & 9 / 18 & 0.0913 [0.0661, 0.104] & 7/18 & 0/18 & 0.0465 \\
+Peg insertion insertion & 16 / 400 & 0.0990 [0.0705, 0.125] & 276/400 & 34/400 & −212 \\
+Object pickup insertion & 16 / 400 & 0.0954 [0.0815, 0.110] & 118/400 & 6/400 & −35.4 \\
+Saved 1B success deletion & 15 / 74 & 0.0747 [0.0422, 0.0995] & 31/74 & 0/74 & −0.347 \\
+Saved 1B failure deletion & 45 / 1125 & 0.1035 [0.0908, 0.115] & 355/1125 & 4/1125 & −74.5 \\
+New 1B success deletion & 31 / 62 & 0.0212 [0.00230, 0.0500] & 41/62 & 4/62 & −57.7 \\
+New 1B failure deletion & 9 / 18 & −0.0086 [−0.177, 0.0608] & 13/18 & 0/18 & −0.639 \\
+Peg insertion deletion & 16 / 400 & 0.1152 [0.0745, 0.145] & 166/400 & 3/400 & −24.7 \\
+Object pickup deletion & 16 / 400 & 0.1405 [0.123, 0.155] & 98/400 & 5/400 & −4.37 \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.170\linewidth} p{0.220\linewidth} p{0.120\linewidth} p{0.230\linewidth} p{0.110\linewidth} p{0.070\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Saved task-trained language results, separate by seed and baseline.} Seed 42 uses the RDT developers\textquotesingle{} precomputed instruction embedding and a zeroed baseline; seeds 142 and 242 use generated T5-XXL embeddings and encoded PAD/EOS baselines. The separate seed-42 rerun uses generated embeddings and an encoded baseline and is a sensitivity sample, excluded from the 60 primary episodes. All use target Q. Intervals resample whole episodes. The single successful seed-142 episode cannot support an episode-bootstrap interval. Overshoots are percentages of calls.}\\
+\toprule
+\textbf{Seed, baseline} & \textbf{Outcome / direction} & \textbf{Episodes / calls} & \textbf{Median [95\% interval]} & \textbf{Overshoot (\%)} & \textbf{Min.} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Seed, baseline} & \textbf{Outcome / direction} & \textbf{Episodes / calls} & \textbf{Median [95\% interval]} & \textbf{Overshoot (\%)} & \textbf{Min.} \\
+\midrule\endhead
+\bottomrule\endfoot
+42, zeroed & success insertion & 9 / 45 & −0.0973 [−0.134, 0.0104] & 93.3 & −10.8 \\
+42, zeroed & success deletion & 9 / 45 & 0.0384 [−0.0508, 0.0932] & 80.0 & −1.29 \\
+42, zeroed & failure insertion & 11 / 275 & 0.0186 [−0.0521, 0.0772] & 80.0 & −145 \\
+42, zeroed & failure deletion & 11 / 275 & 0.1000 [0.0154, 0.147] & 56.7 & −1.98 \\
+142, encoded & success insertion & 1 / 5 & −0.0764 Not estimable & 100 & −0.869 \\
+142, encoded & success deletion & 1 / 5 & −0.3160 Not estimable & 100 & −2.52 \\
+142, encoded & failure insertion & 19 / 475 & 0.0533 [−0.00712, 0.0840] & 85.3 & −95.9 \\
+142, encoded & failure deletion & 19 / 475 & 0.1095 [0.0854, 0.131] & 59.8 & −2.83 \\
+242, encoded & success insertion & 5 / 24 & −0.0460 [−0.171, 0.103] & 91.7 & −5.32 \\
+242, encoded & success deletion & 5 / 24 & 0.0071 [−0.0694, 0.110] & 83.3 & −1.01 \\
+242, encoded & failure insertion & 15 / 375 & 0.0640 [0.00874, 0.0863] & 88.5 & −109 \\
+242, encoded & failure deletion & 15 / 375 & 0.0492 [−0.0132, 0.0915] & 72.8 & −549 \\
+42 rerun, encoded & success insertion & 8 / 34 & −0.0431 [−0.253, 0.0728] & 97.1 & −7.10 \\
+42 rerun, encoded & success deletion & 8 / 34 & −0.0732 [−0.197, 0.0628] & 85.3 & −2.00 \\
+42 rerun, encoded & failure insertion & 12 / 300 & 0.0578 [−0.240, 0.0965] & 82.7 & −158 \\
+42 rerun, encoded & failure deletion & 12 / 300 & 0.0825 [−0.0696, 0.131] & 69.0 & −281 \\
+\end{longtable}

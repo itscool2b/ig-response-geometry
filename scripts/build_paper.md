@@ -1,6 +1,6 @@
 # Local manuscript builds
 
-The R1 source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Five figures, four tables and 41 references (37 primary papers, including 25 published in 2022 through 2026) accompany a 221-word abstract and six keywords. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
+The current source uses Times New Roman 12 point, Letter paper, one-inch margins, single spacing and unnumbered bold headings. Three main figures, two main tables and 46 references (42 primary papers, including 30 published in 2022 through 2026) accompany a 250-word abstract and seven keywords. The supplement contains eight numbered tables and four figures. Both clean Word manuscript views must render within 20 pages. Formatting success does not establish journal submission or acceptance.
 
 ## Rebuild current displays and PDFs
 
@@ -18,7 +18,7 @@ Use fresh intermediate directories. The display builder reads authenticated save
 
 The builder validates source, numerical and display hashes before and after compilation. Preserved AUX and BBL files include hashes tied to the source and PDF. Identified default builds update `paper/paper.pdf` and `paper/paper-revision.pdf` together. Anonymous default builds update `paper/paper-anonymous-draft.pdf`; opposing reserved names and the historical archive are protected.
 
-The anonymous extended mathematical supplement is standalone:
+The anonymous supplement includes the generated tables and figures as source dependencies:
 
 ```powershell
 tectonic --only-cached --untrusted --reruns 1 --outdir runs/math paper/supplementary_derivations.tex
@@ -28,18 +28,18 @@ tectonic --only-cached --untrusted --reruns 1 --outdir runs/math paper/supplemen
 
 The revision delivery includes the source-first Word tooling, original templates and immutable comparison baseline. It accepts explicit repository, Pandoc, compiled-source, citation processor, renderer and output paths. Both citation variants derive from the same ordered key groups and repaired NHSJS CSL styles. Equations are native OMML; tables and text remain editable. Generated citations are plain output, not tested live Zotero fields. The Zotero import and styles are retained for handoff.
 
-A pinned Open XML PowerTools wrapper creates real tracked revisions with author `Author`. Its accepted projection must equal the revised anonymous master; its rejected projection must equal the submitted baseline, including effective formatting, mathematics, tables, image bytes and hyperlink targets. Equivalent repairs to pre-existing baseline XML are documented without modifying the original files. Portable LibreOffice renders in an isolated profile. The checked PDF, page images and DOCX hashes must match; page counts are measured from actual rendering.
+A pinned Open XML PowerTools wrapper creates real tracked revisions with author `Author`. Its accepted projection must equal the revised anonymous master; its rejected projection must equal the submitted baseline, including effective formatting, mathematics, tables, image bytes and hyperlink targets. Equivalent repairs to pre-existing baseline XML are documented without modifying the original files. Portable LibreOffice renders in an isolated profile. The checked PDF, page images and DOCX hashes must match; page counts are measured from actual rendering. Microsoft Word pagination and equation inspection require actual Word evidence; LibreOffice does not certify that gate.
 
 `scripts/export_online_docx.py` is the preserved October 4 exporter with literal TeX equations. It is not the current native-equation delivery workflow. Earlier Word files and receipts remain historical.
 
 ## Source and research archives
 
 ```powershell
-python scripts/package_paper_sources.py --out runs/source-package
-python scripts/package_research_supplement.py --working-copy --out runs/research-package
+python scripts/package_paper_sources.py --identified --out runs/source-package
+python scripts/package_research_supplement.py --working-copy --public-release --out runs/research-package
 ```
 
-Each destination must be new. The source package curates the anonymous manuscript and dependencies. The research package captures an explicit source snapshot, saved inputs, analyses, numerical outputs and current display builder. Its manifest hashes exact members. A recorded base commit is not a claim that later working-copy edits came from that commit. Concurrent changes invalidate packaging.
+Each destination must be new. The commands above curate identified public material. Anonymous reviewer exports use the authorized-review options and an external --review-url-file; outputs containing that route must be outside the repository. Public exports reject private route configuration. The research package captures an explicit source snapshot, saved inputs, analyses, numerical outputs and current display builder. Its manifest hashes exact members. A recorded base commit is not a claim that later working-copy edits came from that commit. Concurrent changes invalidate packaging.
 
 The separate reviewer archive includes preserved R1 contexts and raw tensors required for registered-analysis replay. Reproducing saved outputs is distinct from GPU regeneration of a policy execution. Verify all manifests after extraction, then use the archive's reproduction launcher. Do not claim complete analysis reproduction from the smaller archive that omits the raw tensor bundle.
 

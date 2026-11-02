@@ -7,6 +7,28 @@ import pytest
 from scripts.package_paper_sources import anonymous_source, assert_anonymous, build
 
 
+def test_package_metadata_uses_selected_abstract_and_exact_disclosure():
+    from scripts.package_paper_sources import manuscript_summary
+    source = r'''\author{Private identity}
+\begin{abstract}
+% This review comment does not count.
+Three plain words.
+\end{abstract}
+\section*{AI-use disclosure}
+Original code and analysis disclosure.
+\bibliographystyle{nhsjs}
+'''
+    expected = 'Abstract length: 3 words.\nAI-use disclosure: Original code and analysis disclosure.\n'
+    assert manuscript_summary(source) == expected
+    from scripts.package_research_supplement import review_readme
+    guide = review_readme(source)
+    assert expected in guide and 'Private identity' not in guide
+    assert 'Abstract length:' not in manuscript_summary(source.replace('Three plain words.', r'$x + y$'))
+    assert 'Abstract length:' not in manuscript_summary(source.replace('Three plain words.', r'An \unexpanded command.'))
+    assert manuscript_summary(source.replace('Three plain words.', r'An 80\% share.')) == expected
+    assert manuscript_summary(source.replace('Three plain words.', r'Only \$5 remains.')) == expected
+
+
 def test_standalone_math_supplement_has_no_unreviewed_dependencies():
     from scripts.package_paper_sources import manuscript_dependencies
     root = Path(__file__).resolve().parents[1]
@@ -14,7 +36,8 @@ def test_standalone_math_supplement_has_no_unreviewed_dependencies():
     if not path.exists():
         pytest.skip('Current mathematical supplement absent from this historical snapshot')
     text = path.read_text(encoding='utf-8')
-    assert not manuscript_dependencies(text, top_level=True, supplement=True)
+    dependencies = manuscript_dependencies(text, top_level=True, supplement=True)
+    assert all((root / 'paper' / name).is_file() for name in dependencies)
     assert_anonymous(text, path.name)
     with pytest.raises(ValueError, match='Unreviewed manuscript input'):
         manuscript_dependencies(text + '\n\\input{private}', top_level=True, supplement=True)
@@ -32,7 +55,11 @@ def test_anonymous_derivative_removes_inactive_identity_and_acknowledgments():
     else:
         assert r'\author{\name Anonymous authors}' in result
         assert r'\usepackage[preprint]{tmlr}' in result and r'\usepackage{tmlr}' not in result
-    assert r'\appendix' in result
+    if r'\bibliographystyle{nhsjs}' in source:
+        assert r'\appendix' not in result
+        assert 'Supplementary' in result
+    else:
+        assert r'\appendix' in result
     for value in ('working draft', 'remain pending', 'under review as submission', 'paper under double-blind review'):
         assert value not in result.lower()
     assert r'\bibliography{references}' in result
@@ -52,6 +79,10 @@ def test_source_package_is_curated_and_does_not_include_private_provenance(tmp_p
         assert not any('legacy' in n or 'lineage' in n or 'paper.pdf' in n for n in names)
         manifest = json.loads(archive.read('manifest.json'))
         assert set(manifest['artifacts_sha256']) == set(names)-{'manifest.json'}
+        if 'supplementary_derivations.tex' in names:
+            from scripts.package_paper_sources import manuscript_dependencies
+            dependencies = manuscript_dependencies(archive.read('supplementary_derivations.tex').decode(), top_level=True, supplement=True)
+            assert dependencies <= set(names)
     assert (root/'paper/paper.tex').read_bytes() == original
     with pytest.raises(FileExistsError):
         build(root,tmp_path/'first')
@@ -75,9 +106,10 @@ def test_authorized_review_package_preserves_every_scientific_member(tmp_path):
             if name not in {'README.txt', 'manifest.json'}:
                 assert before.read(name) == after.read(name), name
         readme = after.read('README.txt').decode()
-        assert 'working draft' not in readme and 'submission or receipt' in readme
+        assert 'supplementary_derivations.tex' in readme
+        assert all(text not in readme for text in ('working draft', 'author-authorized', 'submission or receipt'))
         manifest = json.loads(after.read('manifest.json'))
-        assert manifest['status'] == 'author_authorized_review_copy_not_journal_submission'
+        assert manifest['status'] == 'anonymous_review_copy'
         assert 'author_authorized' not in json.loads(before.read('manifest.json'))['status']
 
 

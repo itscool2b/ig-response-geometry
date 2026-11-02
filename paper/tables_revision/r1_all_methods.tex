@@ -1,0 +1,56 @@
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.210\linewidth} p{0.140\linewidth} p{0.180\linewidth} p{0.110\linewidth} p{0.210\linewidth} p{0.080\linewidth}}
+\caption{\textbf{All 20 new-experiment method comparisons.} The winner maximizes the raw episode-mean advantage. The gap is winner minus runner-up, with the registered interval adjusted across four response/direction cells within each group and input type. These selected contrasts do not correct for choosing the winner on the same data, nor across all groups. Three intervals exclude zero: one vision cell and two language cells.}\label{tab:r1-all-methods}\\
+\toprule
+\textbf{Group and input} & \textbf{Scoring / direction} & \textbf{Raw winner} & \textbf{Mean advantage} & \textbf{Gap [adjusted interval]} & \textbf{Excludes zero} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group and input} & \textbf{Scoring / direction} & \textbf{Raw winner} & \textbf{Mean advantage} & \textbf{Gap [adjusted interval]} & \textbf{Excludes zero} \\
+\midrule\endhead
+\bottomrule\endfoot
+PickCube 1B vision & Q deletion & Input difference & −0.572 & 2.53 [−1.02, 12.2] & No \\
+PickCube 1B vision & Q insertion & IG-Q & 5.17 & 0.000714 [−0.000990, 0.00401] & No \\
+PickCube 1B vision & N deletion & Path-gradient N & 0.355 & 0.00840 [−0.0667, 0.0461] & No \\
+PickCube 1B vision & N insertion & IG-Q & 0.503 & 0.000276 [−0.000717, 0.00183] & No \\
+PickCube 170M language & Q deletion & Path-gradient Q & −0.255 & 0.0238 [−0.0383, 0.102] & No \\
+PickCube 170M language & Q insertion & Path-gradient N & −0.0531 & 0.0959 [0.0181, 0.215] & Yes \\
+PickCube 170M language & N deletion & IG-Q & 0.0205 & 0.000507 [−0.00132, 0.00258] & No \\
+PickCube 170M language & N insertion & Path-gradient N & 0.0603 & 0.0405 [0.0158, 0.0709] & Yes \\
+PickCube 170M state & Q deletion & Path-gradient Q & 0.278 & 0.00124 [−0.0704, 0.102] & No \\
+PickCube 170M state & Q insertion & IG-N & 0.306 & 0.00711 [−0.0766, 0.106] & No \\
+PickCube 170M state & N deletion & Input difference & 0.256 & 0.00479 [−0.00612, 0.0195] & No \\
+PickCube 170M state & N insertion & Input difference & 0.303 & 0.0117 [−0.0146, 0.0380] & No \\
+PickCube 170M vision & Q deletion & Path-gradient N & 3.87 & 0.0998 [0.0181, 0.315] & Yes \\
+PickCube 170M vision & Q insertion & Path-gradient N & −11.3 & 8.51 [−0.109, 23.8] & No \\
+PickCube 170M vision & N deletion & Equal-weight IG-Q & 0.476 & 0.0101 [−0.0149, 0.0606] & No \\
+PickCube 170M vision & N insertion & Path-gradient N & −0.00388 & 0.0601 [−0.00149, 0.198] & No \\
+StackCube 170M vision & Q deletion & Path-gradient N & 0.559 & 0.00352 [−0.0159, 0.0285] & No \\
+StackCube 170M vision & Q insertion & Path-gradient N & 0.0872 & 0.00480 [−0.00250, 0.0174] & No \\
+StackCube 170M vision & N deletion & Equal-weight IG-N & 0.510 & 0.000862 [−0.000444, 0.00286] & No \\
+StackCube 170M vision & N insertion & Path-gradient N & 0.128 & 0.00297 [−0.00157, 0.00739] & No \\
+\end{longtable}
+
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{p{0.190\linewidth} p{0.220\linewidth} p{0.130\linewidth} p{0.200\linewidth} p{0.200\linewidth}}
+\noalign{\addtocounter{table}{-1}}
+\caption*{\textbf{Table S3 continued: saved replication image-patch deletion contrasts.} IG-Q and IG-N use Q and N attribution targets; the response follows the slash. Advantage is random-order AUC minus method AUC. Each estimate subtracts the control advantage from the first method advantage; positive values favor the first method, negative values the control. These saved percentile and bias-corrected and accelerated (BCa) 95\% intervals are descriptive, without the Bonferroni adjustment used for the primary family or a simultaneous guarantee. For task-trained PickCube, IG-N versus random under N excludes zero with the percentile interval but includes it with BCa. No episodes were excluded.}\\
+\toprule
+\textbf{Group (episodes)} & \textbf{Contrast / response} & \textbf{Mean} & \textbf{Percentile 95\% interval} & \textbf{BCa 95\% interval} \\
+\midrule\endfirsthead
+\toprule
+\textbf{Group (episodes)} & \textbf{Contrast / response} & \textbf{Mean} & \textbf{Percentile 95\% interval} & \textbf{BCa 95\% interval} \\
+\midrule\endhead
+\bottomrule\endfoot
+StackCube 170M (30) & IG-Q − random / Q & 0.514 & [0.439, 0.593] & [0.444, 0.600] \\
+StackCube 170M (30) & IG-Q − random / N & 0.483 & [0.432, 0.537] & [0.436, 0.542] \\
+StackCube 170M (30) & IG-N − random / Q & 0.553 & [0.470, 0.640] & [0.474, 0.647] \\
+StackCube 170M (30) & IG-N − random / N & 0.509 & [0.451, 0.569] & [0.455, 0.573] \\
+StackCube 170M (30) & IG-Q − IG-N / Q & −0.0397 & [−0.0684, −0.0179] & [−0.0788, −0.0218] \\
+StackCube 170M (30) & IG-Q − IG-N / N & −0.0254 & [−0.0444, −0.0114] & [−0.0532, −0.0140] \\
+PickCube 1B (40) & IG-Q − random / Q & −3.10 & [−8.60, 0.249] & [−13.2, −0.241] \\
+PickCube 1B (40) & IG-Q − random / N & 0.347 & [0.183, 0.459] & [0.0960, 0.439] \\
+PickCube 1B (40) & IG-N − random / Q & −3.80 & [−10.8, 0.294] & [−17.1, −0.232] \\
+PickCube 1B (40) & IG-N − random / N & 0.346 & [0.130, 0.484] & [−0.0260, 0.460] \\
+PickCube 1B (40) & IG-Q − IG-N / Q & 0.698 & [−0.0576, 2.19] & [−0.0492, 3.68] \\
+PickCube 1B (40) & IG-Q − IG-N / N & 0.000437 & [−0.0321, 0.0546] & [−0.0275, 0.104] \\
+\end{longtable}

@@ -1,15 +1,20 @@
 # Current paper
 
-[How Scoring Responses Change Attribution Evaluation in a Diffusion Policy](paper.pdf), by Arjun Bajpai, is the R1 revision prepared from the October 4 submitted snapshot. The affiliation is Independent Researcher. The one-paragraph abstract contains 243 words, followed by six keywords. The revision contains five figures, four numbered tables and 41 references, including 37 peer-reviewed primary research articles, including 25 published from 2022 through 2026.
+[How Scoring Responses Change Attribution Evaluation in a Diffusion Policy](paper.pdf), by Arjun Bajpai, studies how the response used to score an explanation differs from the quantity it explains. The affiliation remains Independent Researcher.
 
-- [paper.tex](paper.tex) and [references.bib](references.bib) are authoritative.
-- [paper.pdf](paper.pdf) is the identified reading copy; [paper-revision.pdf](paper-revision.pdf) is its byte-identical compatibility copy.
-- [paper-anonymous-draft.pdf](paper-anonymous-draft.pdf) is the anonymous reading copy. The journal's Standard delivery is a separate DOCX with genuine tracked revisions.
-- `figures_revision/r1_*` and `tables_revision/r1_*` are the current displays. [Their lineage](figures_revision/r1_lineage.json) records source hashes, generated hashes and actual plotted populations.
-- [supplementary_derivations.tex](supplementary_derivations.tex) preserves extended mathematical arguments as an anonymous standalone supplement. The manuscript retains a short essential appendix.
+The manuscript has three figures, two tables, seven keywords and a 250-word abstract. Its 46 cited references include 42 peer-reviewed primary papers, 30 published from 2022 through 2026. The supplement contains extended proofs, eight numbered tables and four additional figures.
 
-The Standard and Online Word variants are generated from the same source, with native equations and editable tables. Citation formatting and identifying material differ by template. The Online version uses full citations in double parentheses. The Standard version is compared with the immutable anonymous submitted baseline, and both acceptance and rejection projections are checked. See the [build guide](../scripts/build_paper.md) and [revision guide](../docs/manuscript_revision/README.md).
+- [paper.tex](paper.tex) and [references.bib](references.bib) are the canonical manuscript and bibliography.
+- [paper.pdf](paper.pdf) is the identified reading copy; [paper-revision.pdf](paper-revision.pdf) is its compatibility copy.
+- [paper-anonymous-draft.pdf](paper-anonymous-draft.pdf) is a sanitized reading copy. Private review access is supplied separately.
+- [Supplementary derivations](supplementary_derivations.tex) contains proofs, complete method results, identity statuses, calibration results and numerical diagnostics.
+- [Display lineage](figures_revision/r1_lineage.json) binds each generated display to its sources and populations.
+- [Research downloads](nhsjs-revision/README.md) explains the packages and their distinct reproduction scopes.
 
-The [October 4 tag](https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04-polish), its submitted PDFs and earlier delivery receipts remain historical. The identified 19-page preprint published on October 9 as [Zenodo version 3.0](https://doi.org/10.5281/zenodo.23269517) contains those earlier bytes, not the R1 revision. Earlier [version 2](https://doi.org/10.5281/zenodo.23091579) and [version 1](https://doi.org/10.5281/zenodo.22133507) retain their own titles, history and licenses.
+The Standard and Online Word documents derive from the same source and canonical bibliography. They use native equations and editable tables. Standard uses numbered superscript citations and anonymous tracked changes against the original submission. Online contains the author block and full citations in double parentheses. [Build instructions](../scripts/build_paper.md) describe source compilation.
 
-Local validation, repository publication and prepared files do not establish journal submission or acceptance.
+The preplanned matched comparisons are separated from exploratory method preferences. An additional [retrospective reporting layer](../analysis/manuscript_revision/nhsjs_audit_2026_11_01/README.md) computes paired episode-bootstrap winner stability and success/failure median intervals without changing frozen data, protocols or original results.
+
+The manuscript retains the original AI-use disclosure. Repository publication does not establish journal submission or acceptance.
+
+The [original submission tag](https://github.com/itscool2b/ig-response-geometry/tree/manuscript-2026-10-04-polish) and earlier delivery records remain historical snapshots. They do not identify the current revision.

@@ -13,6 +13,40 @@ from scripts import package_research_supplement as package
 from scripts.validate_template_provenance import FILE_SHA256
 
 
+def test_current_release_retains_document_closure_and_scientific_payload():
+    root = Path(__file__).resolve().parents[1]
+    contents = {path.relative_to(root).as_posix(): path.read_bytes()
+                for path in (root / 'paper').rglob('*') if path.is_file()}
+    scientific = {'analysis/raw.bin': b'\x00\xffsealed', 'analysis/report.py': b'print(42)\n'}
+    contents.update(scientific)
+    kept, omitted = package.current_presentation(contents)
+    assert {name: kept[name] for name in scientific} == scientific
+    assert 'paper/appendix_aliasing.tex' in omitted
+    assert 'paper/tables_revision/baseline.tex' in omitted
+    assert 'paper/figures_revision/response_geometry.pdf' in omitted
+    lineage = json.loads(kept['paper/figures_revision/r1_lineage.json'])
+    assert len(lineage['outputs_sha256']) == 24
+    for name, expected in lineage['outputs_sha256'].items():
+        assert hashlib.sha256(kept[name]).hexdigest() == expected
+    assert kept['paper/supplementary_derivations.tex'] == contents['paper/supplementary_derivations.tex']
+    assert kept['paper/tables_revision/revision_facts.tex'] == contents['paper/tables_revision/revision_facts.tex']
+    for name in FILE_SHA256:
+        assert kept['paper/' + name] == contents['paper/' + name]
+    assert all(kept[name] == contents[name] for name in kept)
+
+
+def test_current_release_rejects_lineage_binding_to_obsolete_manuscript():
+    root = Path(__file__).resolve().parents[1]
+    contents = {path.relative_to(root).as_posix(): path.read_bytes()
+                for path in (root / 'paper').rglob('*') if path.is_file()}
+    name = 'paper/figures_revision/r1_lineage.json'
+    lineage = json.loads(contents[name])
+    lineage['manuscript_inputs_sha256']['paper/appendix_aliasing.tex'] = '0' * 64
+    contents[name] = json.dumps(lineage).encode()
+    with pytest.raises(ValueError, match='Unused manuscript fragments'):
+        package.current_presentation(contents)
+
+
 @pytest.mark.parametrize("name", ["../LICENSE", "data/../LICENSE", "/LICENSE", "C:/LICENSE", "data\\x",
                                   "data//x", "./LICENSE", "data/./x", "data/x\n", ""])
 def test_noncanonical_members_are_rejected(name):
@@ -227,7 +261,9 @@ def test_current_display_lineage_changes_only_anonymous_manuscript_hash():
     assert "paper/figures_revision/r1_lineage.json" in audit["transformations"]
     authorized, permission = package.anonymous_candidate(original, [], authorized_review=True)
     assert b'Unapproved' not in authorized['README.md']
-    assert b'author authorized' in authorized['README.md']
+    assert b'10,000 resamples' in authorized['README.md']
+    assert all(text not in authorized['README.md'] for text in
+               (b'author authorized', b'Canonical author attribution', b'journal receipt', b'acceptance claim'))
     assert permission['licensing_status'] == 'author_authorized_anonymous_review_copy'
     assert authorized['LICENSE'] == result['LICENSE']
     assert set(permission['transformations']) == set(audit['transformations'])

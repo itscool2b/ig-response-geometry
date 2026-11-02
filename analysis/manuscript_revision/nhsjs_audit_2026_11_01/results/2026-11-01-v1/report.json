@@ -1,0 +1,726 @@
+{
+  "schema_version": 1,
+  "status": "retrospective descriptive reporting",
+  "bootstrap": {
+    "unit": "whole episode",
+    "draws": 10000,
+    "seed": 930011,
+    "generator": "PCG64",
+    "pairing": "same episode draw across both responses and all seven methods",
+    "ties": "exact ties remain an explicit undetermined category",
+    "interpretation": "resampling stability, not probability of a true population winner"
+  },
+  "methods": {
+    "P": {
+      "raw_mean": {
+        "episodes": 60,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 0.028038047453893176,
+              "IG_N_A1T512": 2.889300065674305,
+              "PG_Q_A1T512": 3.7665785689672378,
+              "PG_N_A1T512": 3.8664148600434074,
+              "input_difference": -2.7024150563921063,
+              "IG_Q_A0m64": 1.869791648312453,
+              "IG_N_A0m64": 2.8704560829054904
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.41899743927751953,
+              "IG_N_A1T512": 0.4656728190827606,
+              "PG_Q_A1T512": 0.449302083374984,
+              "PG_N_A1T512": 0.4657724196651559,
+              "input_difference": 0.31078077822482153,
+              "IG_Q_A0m64": 0.4758346945692107,
+              "IG_N_A0m64": 0.4605601663211455
+            },
+            "leaders": [
+              "IG_Q_A0m64"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 2037,
+          "different_unique_winners": 7963,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.2037,
+          "different_unique_winners": 0.7963,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "scaled_mean": {
+        "episodes": 60,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 9.218358090310849,
+              "IG_N_A1T512": 9.954101663393097,
+              "PG_Q_A1T512": 8.76524452034814,
+              "PG_N_A1T512": 9.556261793610734,
+              "input_difference": 8.245361819767144,
+              "IG_Q_A0m64": 9.19091552239285,
+              "IG_N_A0m64": 9.937884944515158
+            },
+            "leaders": [
+              "IG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 6.377829374251561,
+              "IG_N_A1T512": 6.677107749706489,
+              "PG_Q_A1T512": 6.158060438456442,
+              "PG_N_A1T512": 6.475181471146777,
+              "input_difference": 5.711501856102175,
+              "IG_Q_A0m64": 6.3842489992027796,
+              "IG_N_A0m64": 6.669608735290593
+            },
+            "leaders": [
+              "IG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 9002,
+          "different_unique_winners": 998,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.9002,
+          "different_unique_winners": 0.0998,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_median": {
+        "episodes": 60,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 0.42372744348285063,
+              "IG_N_A1T512": 0.44832159200927935,
+              "PG_Q_A1T512": 0.40672423626657483,
+              "PG_N_A1T512": 0.433709112439672,
+              "input_difference": 0.3797745498054924,
+              "IG_Q_A0m64": 0.42435405440042845,
+              "IG_N_A0m64": 0.44565372063127384
+            },
+            "leaders": [
+              "IG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.3989462231286135,
+              "IG_N_A1T512": 0.4226112018058022,
+              "PG_Q_A1T512": 0.37944935382906697,
+              "PG_N_A1T512": 0.4092047178088196,
+              "input_difference": 0.3631806438459174,
+              "IG_Q_A0m64": 0.39545782352161113,
+              "IG_N_A0m64": 0.422368678955605
+            },
+            "leaders": [
+              "IG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 3671,
+          "different_unique_winners": 6329,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.3671,
+          "different_unique_winners": 0.6329,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_ids": [
+        "63901c27b321cec80d6ad16c8cbf8eb3dfe8248b7cdedd9a5e0aa3244e6a64ba",
+        "4261eb38dc37df814c8de50d2bdbeb3d1dfc1e69697e5c9e847934e9a9b0f035",
+        "804e72d41bf7b1a7641ad8058c77df3684dffa8dfc7f14b851cd80fbd56f7eaf",
+        "555f8f720aee4c63adf52c64bf043f08104003234583db8930363e5bb5aa36ef",
+        "40e3c0e8c1106e046f11e41929257a8063988b1dbbfca71f5f5341ad012dcfab",
+        "d8474af49d1c1858cb6ba6cf967bd8cc75553309b23e1b5ac2666229515a3324",
+        "968fcb5ebd9934cfaf4f1a1ea6cd90150fa687383b5fc480b5b1fad7f7b4fc49",
+        "526dbd33e860a39748639480d0ded61a7b4c33a8ce61ef301813b4ec3372bccd",
+        "501996204b3933fa2b4b29163e2409269d9dcb24dae901879ce250d7d0ac37e9",
+        "7d95403717b1dfc3b4ad85a9147ecc11e02a871d003e096c0ebc7d530463d83c",
+        "07d0ab536228e57c2726ffd003ca87087451ddf4b817c8b1121c734193b3031a",
+        "d02384f9eaaaebfced15fa3cd95b8f36227433a98c48d6cc4cae62e776760ef2",
+        "48d5cba29771428e3e47ba85cc57c9ad8df3617662ac7040117ab0a202429444",
+        "4f8218d4d116122d432774b96779464d7b82a2c7c47b243051190f90f04d07c1",
+        "7dbbe31a114267f38bafcf9b3510591d100dd9864618d7dd5982a5eb82472fb1",
+        "2263b4cc4799c1abc403e87b92972c993683572aa95d0281b2ca3ee3d4745b2d",
+        "37429e56dd4a7758466761bf87b1df02911ac9f4f539353c6a21f3a2de225255",
+        "8872196d2708bd6e80814ef50153a976dfd1d14a64f2ae2a0b18ded956cc258f",
+        "738b95e18aef7797b8e0deaee4dde2909fdb39a135d5751fa298009b937d9ff9",
+        "667a185fc90f741bcd96c43f3378688198d86b0fae62e5b8ccf0244900d7b37e",
+        "f40112681ad6dc03322a231144bb797b92b8b798bb196d415ba62a619cbc31a0",
+        "b477176cee075eadd046d15e95f7f527dd086f2b82ecba1c04255d192d7e43ee",
+        "a36406b91d9b59be63ced70a3b7a924e648701d8ce10124e969363de5ff6987a",
+        "89f9acd6f2d9861cc6a2aead6e31eb4f5a1b24b6bcee95a6b53b790e7017ab27",
+        "d5f306bef6c661fe8d5035dd72e0afb285cde9620eb66553b2dfa2c2592270a5",
+        "1cf5d6e90c380e945a47379660518090efbce2f72c00905a31ea2a5440006bd5",
+        "f6e355a86f02f251fa4640b9d380d9532ce5691f7434471c4c7e070c02240779",
+        "c2cbf8ca6ce5c11c7a8cfaac89e28553c7e4f01929b22ae549b3c7dd57360e64",
+        "48d9d294be9b965eed74c168333ed9a23e10fbc5855400ecc4dfa4abd22ec146",
+        "02823f9959932583c42216fbdc64604925aeada41fdb2dfea4d7cf439499d13c",
+        "94c33835662cafddc8ae613344507c69ab477279b164ce995b454fc0f003cad2",
+        "3a52b84bc0c1b7e5abcccb0321dcc0874063c42058a1f11a502977c6948bdce9",
+        "4a68a87d1d817db12443ca30cd221a2ad56a709dba62e866c8224a1353a92c51",
+        "dba338c80018b13ef18e8b1dbe1c9e46270d08f5d0bc564e5ee69c3fcf64e6cd",
+        "cd0d9c6a35b9f7e18bbfe5f8af4f1f9cb24042b9ca142d43bd03ddee2be2cadf",
+        "d2e92b8974fa5e97bc2f0e1323f3f28ceaa962659170f83858e9e4f45cdd15c8",
+        "985612438948e569d502b43d22f9723899665dcca2cda08c5ed11043a52645d4",
+        "7f98c8f8d1f00b772efc687f96c120a407214b56fef74e078c4ca547a2902608",
+        "056f0e8760baf66d230170d91d38dc381335645acae05f732b00c42febe65ebb",
+        "3e630000026fb817acdc149eff43eeae3c0755a6b72a61ca1c391e02494320b7",
+        "8c31e54149c80ff38e6c71bf57e62facc10e06ec23ffcd816cb294661ea667a2",
+        "b692ffc88711077a18715f6247fb7e437d09f4c0e543781a1896258929d22d7e",
+        "b33bf9556730911716e04ac0282e7736c46d04ce12e1b488db65bf95f5f478b7",
+        "5eaaf55e4afc24a6339b7d44c2419ebcbce93c20f6f70e5d02c2431d5d1d19c2",
+        "38f22b1c37fd07a0381e58ee1e485023219213cc97bddc92d73ef8821fc8f787",
+        "b175744a28113be6ab41b1d0107cf5e5a1c228acafaffdd0e23c1c66b19cbdff",
+        "46062ec0aa81246e647f10661d6587f3e8b612e0602e628e7b3aab3464b0f659",
+        "31a97f5a3969e63d11e9c7e37e0426d364e5be07cbe64e5a3ebc3ebfe6111106",
+        "d1c32a81da63bf24a87a033d83e27ae31aff23eba9b52a5c22ba1cd1917b9aa7",
+        "49093d0c1dace2e86c2f2aa0ec1a9e968f8632c143d7ae43a42c24a880af637b",
+        "b96cd4c45eb8c928d421cf533673db78edb9875c2e078761dce63e627d299323",
+        "5469cab46a8c5d8fcb20003164f7eb3f10e54362a1a47608b95ebf694f275ee3",
+        "b386be80d2482342f174708c87e93b5a71212b6844eac4e962748bdcbc2b45ad",
+        "c7a90870f55b5231547e45c816a26b1bdec6b5c703e33945176c0ef7382c6810",
+        "6d00def743caa69faa4d42ee0169d474f1e65436e8ce9087f73f8a076cc9340b",
+        "46d31896d3278f32e9ecbcfaa36367d744b96fea5b6efc1ab36a0b4837bc01c4",
+        "ad9faf3e03dc096a8d809aa794f01b44f96bff7f4981cbc85fab106645d4d902",
+        "fee1c77bfb55f3c64f5050b2d9a7c60d3983881c5bdf1ae1e9e96867f4436104",
+        "078d7537d6f60ca1e4e56693caf9097fd235cd7a6e858b4f9aa7a9d8ab1daae1",
+        "262ae155915f5df825f3709eb977a88109776a15637a6ce226910a4b02b86871"
+      ]
+    },
+    "B1": {
+      "raw_mean": {
+        "episodes": 40,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": -3.0996548027357678,
+              "IG_N_A1T512": -3.7974287969137714,
+              "PG_Q_A1T512": -3.821397815438045,
+              "PG_N_A1T512": -3.772019557012907,
+              "input_difference": -0.5721899074506663,
+              "IG_Q_A0m64": -3.1024297214686927,
+              "IG_N_A0m64": -3.798773921242428
+            },
+            "leaders": [
+              "input_difference"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.34684871219101293,
+              "IG_N_A1T512": 0.3464115267112812,
+              "PG_Q_A1T512": 0.33123989354970074,
+              "PG_N_A1T512": 0.3552446139931259,
+              "input_difference": 0.007614978563459225,
+              "IG_Q_A0m64": 0.3458394812294531,
+              "IG_N_A0m64": 0.3459118790055546
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 3587,
+          "different_unique_winners": 6413,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.3587,
+          "different_unique_winners": 0.6413,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "scaled_mean": {
+        "episodes": 40,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 6.524812042795324,
+              "IG_N_A1T512": 8.135535259704838,
+              "PG_Q_A1T512": 7.488815417899501,
+              "PG_N_A1T512": 8.549092799802256,
+              "input_difference": 0.4943180185811583,
+              "IG_Q_A0m64": 6.555364545314217,
+              "IG_N_A0m64": 8.093648867307817
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 4.832569134719944,
+              "IG_N_A1T512": 5.299250306931489,
+              "PG_Q_A1T512": 5.03109797590417,
+              "PG_N_A1T512": 5.390778879338201,
+              "input_difference": 0.40703830218809145,
+              "IG_Q_A0m64": 4.837475695326821,
+              "IG_N_A0m64": 5.290325859220308
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 9848,
+          "different_unique_winners": 152,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.9848,
+          "different_unique_winners": 0.0152,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_median": {
+        "episodes": 40,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 0.5103205692988111,
+              "IG_N_A1T512": 0.5708594432012732,
+              "PG_Q_A1T512": 0.5302190207123911,
+              "PG_N_A1T512": 0.5819329653897831,
+              "input_difference": 0.01708580519707603,
+              "IG_Q_A0m64": 0.5108233639513877,
+              "IG_N_A0m64": 0.5667238740273748
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.451615913069803,
+              "IG_N_A1T512": 0.4736053051593484,
+              "PG_Q_A1T512": 0.4541808849640374,
+              "PG_N_A1T512": 0.4775265957107031,
+              "input_difference": 0.04018368839777012,
+              "IG_Q_A0m64": 0.45980785049787454,
+              "IG_N_A0m64": 0.4726057690803976
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 5492,
+          "different_unique_winners": 4508,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.5492,
+          "different_unique_winners": 0.4508,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_ids": [
+        "695b9ec6d6b8088bd77df68f77581aed74a4df2d420b0329c7b43403eb59bb8e",
+        "3fd9ae6590116863476bf1b095b7fac08858caf0fb471827c06aa9ab30921d20",
+        "9c101f2171be7a0b5c38252a93df0bacde9511ecf3b3f38ecdd33e42f7d7ab22",
+        "1306c98787e911e4e13f9f81475c1a1cd7008f0196c2533549432692b3e2fdb8",
+        "4e3a79d2606ba3b7b3f8cb791ef5b89cc77b50f5f9d49dd29e2583b2ad86e0da",
+        "a72011a2706dac4c820f4595dc001409e2685e7b812eafd1f2d1a3b669bd95be",
+        "78b557f22b4cbd97efde13331dc32554ef110a20db6c67a35144e1d6a2d3a58b",
+        "b32f2983b136d2015a711e56c2d791982968d43c36113d7c453126a93775d170",
+        "8647a8569aa7fce0556a13a94f06377fb3265c7fa969f493b105d0d873fc8575",
+        "e9221523276d16a2cc2a54d2962955f92b218ac1f23c2402703bc59d5369e971",
+        "bbb8082dfb165077d13eca14d919d5d2a14949662cc1ed484f0222d897d200e4",
+        "713201d487258a090adb3aee6e470db5735dcb4e382e91bea59eef0bb31997ec",
+        "f873e2d4f45219dbc0d8a199824c6c29f017dbe915221ede2b2750dcfc18c4e4",
+        "8a09e015dcb016ab4f44f79d09d297f89ff868c5111304a77b5647faa55c8561",
+        "58935a9a3ad1ea81257c56c3dc1071dfbd61cd3cf65909d7ef426ecf51eed29f",
+        "39d4eb7827a407abb302c7772cce162a45e3e21b260a5cfd165acb5db2059e2c",
+        "7b28825fedf8464b4ab86e684e70f91ba0378fbcdb00fca07af2610cb0c92c15",
+        "f24e4a695fc294f53ac61191a6f4a57bae33ca159f8908cd96ef3fd04639206d",
+        "c8c34e4bc45b5ebeae97a5bfa5b59d0cf79c7b6c0cdcd9d72c54ddb311fb40a1",
+        "d679de8445d0ba8c04d10d6f9b00a833a306bfcbc953df5c18c9c63faa456cc5",
+        "211e5e961c7571f76b3ec2b12fdd48994f4c1b09ffbe0f7bc6ec818d6b3f0003",
+        "a4351d97f7cb93c3d486085f44c31cdea331f8460c0605caf474ddcfe797a315",
+        "355e4dfbd93aade1f9fd09bf42ca1ed3762639b888883c8347ee2d491c6b3eb3",
+        "100138f4f026f40e1f2b3211204fe2785d4f269dc134f637c19cd61ace8e45fe",
+        "487a661b9722cc33ceb2b2690a67daf3b0c9f6fa4520a5ef0615b55a53210318",
+        "9e70e3a2a22a5ecdcc264e92afe7f29ede7125bd18fd6b659313b1eb7a21184c",
+        "d8232d50ea696edd6544be6461ea8a0de3f08e28aadf2bb0d4d49952e60bf438",
+        "8a556fc1d6d1daca6e04110d656d4446863d5887ecb575d0f52b93d06a415ed9",
+        "5291b5510f89ecd3da489e0e519c63395f0359b04aacb646b653b0a03b574260",
+        "0b9e21b7d08b3c1b23b15a33acad1c3ed22d89b5a66307ad9d8f3b49a5449d94",
+        "3fe99dbe3055e8b5ecfac9f1f9b20f2156586254df5a4d6541302d67a3f51e9f",
+        "eba3ad0661c49f183091a0ff843b744e8a5a5b9ec6bea00ffdea964f7f9ee12b",
+        "57a53b49165c3422b7dbca7d6def2ef634367dcc84a6d38e6610bca9d0bb546a",
+        "cd310728b9ed530c9841e3921799cb48bc97fbb05bdcd2b6fc18a7dd4a08b371",
+        "232eec57bc17ab249225ccf65df8d771dac12a5f51c4c697bbcf4bad33beebb1",
+        "c6d8c5132dbf8c7a5dbe2a7a465ff1054687f91e142ac53f8bd636c377328c8c",
+        "7c332786f6acd880d33b6a795d8e4d044b8f2a78dbe9feeb56fa8d3c866f23e9",
+        "d4ac63160f7070e4e820eff356400f9f5b456197bdab419ebb7089a53ad6c927",
+        "f1e08170c5b99fd6d1f069e6f7310af92d6b64a9d0296a51c8611e6dd07a4087",
+        "4af3457b6c921f9e9c88ec3fac510b1f20c3f6c4f43dc9c01db5e1a12bcc2fb7"
+      ]
+    },
+    "S": {
+      "raw_mean": {
+        "episodes": 30,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 0.5135694160356701,
+              "IG_N_A1T512": 0.5532554562300921,
+              "PG_Q_A1T512": 0.5145330148087963,
+              "PG_N_A1T512": 0.558591974708996,
+              "input_difference": 0.4413184822768804,
+              "IG_Q_A0m64": 0.5114411671012535,
+              "IG_N_A0m64": 0.5550678154140324
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.4833339839938595,
+              "IG_N_A1T512": 0.5087400558958055,
+              "PG_Q_A1T512": 0.47743334572819024,
+              "PG_N_A1T512": 0.5080706056852443,
+              "input_difference": 0.4071257315250508,
+              "IG_Q_A0m64": 0.4820481478221124,
+              "IG_N_A0m64": 0.5096018308477291
+            },
+            "leaders": [
+              "IG_N_A0m64"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 6995,
+          "different_unique_winners": 3005,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.6995,
+          "different_unique_winners": 0.3005,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "scaled_mean": {
+        "episodes": 30,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 19.612844796795812,
+              "IG_N_A1T512": 22.288318337950216,
+              "PG_Q_A1T512": 18.464478059554562,
+              "PG_N_A1T512": 22.326106205560254,
+              "input_difference": 16.558308493594925,
+              "IG_Q_A0m64": 19.31663396582105,
+              "IG_N_A0m64": 22.29410131705198
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 9.831545688188177,
+              "IG_N_A1T512": 10.491159443011961,
+              "PG_Q_A1T512": 9.542439002724523,
+              "PG_N_A1T512": 10.414567980480687,
+              "input_difference": 8.156041517541585,
+              "IG_Q_A0m64": 9.786750337891386,
+              "IG_N_A0m64": 10.499587682496763
+            },
+            "leaders": [
+              "IG_N_A0m64"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 6047,
+          "different_unique_winners": 3953,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.6047,
+          "different_unique_winners": 0.3953,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_median": {
+        "episodes": 30,
+        "draws": 10000,
+        "seed": 930011,
+        "point": {
+          "Q": {
+            "values": {
+              "IG_Q_A1T512": 0.5002172466743104,
+              "IG_N_A1T512": 0.4942160539120505,
+              "PG_Q_A1T512": 0.4586090389811406,
+              "PG_N_A1T512": 0.5073786548323738,
+              "input_difference": 0.4243151505042388,
+              "IG_Q_A0m64": 0.5007752517751989,
+              "IG_N_A0m64": 0.49563871515818675
+            },
+            "leaders": [
+              "PG_N_A1T512"
+            ]
+          },
+          "N": {
+            "values": {
+              "IG_Q_A1T512": 0.4534771055216099,
+              "IG_N_A1T512": 0.4643902751766892,
+              "PG_Q_A1T512": 0.44239431462058393,
+              "PG_N_A1T512": 0.46147940521853925,
+              "input_difference": 0.3999127983437566,
+              "IG_Q_A0m64": 0.4518618181923679,
+              "IG_N_A0m64": 0.46432489143884126
+            },
+            "leaders": [
+              "IG_N_A1T512"
+            ]
+          }
+        },
+        "bootstrap_counts": {
+          "same_unique_winner": 3713,
+          "different_unique_winners": 6287,
+          "at_least_one_tie": 0
+        },
+        "bootstrap_shares": {
+          "same_unique_winner": 0.3713,
+          "different_unique_winners": 0.6287,
+          "at_least_one_tie": 0.0
+        }
+      },
+      "episode_ids": [
+        "beda6b5ffaebe79e6ae582711c666586706ff9d20824464b6e663a388efbada6",
+        "40edb1d94a7d916266adc4b505cf7d97ed450b17eefc66f37d17e97c7823dd68",
+        "201674e3469af6903d8c93153746567f4e267adc0fd65a3e06487e6aa7b7e9a9",
+        "d9a08a27a230822540e06f56bada2a5956472bb73340a19b3f4b8d2d47ec4f28",
+        "a468c1af8d864bad3aa5b1555262baf8b70ab438770b51adc9ee711b35b81bc3",
+        "f3b28db0120e313de12cd5ee1cc5c7f6efe09d354a60c0b98ad487ce543503c1",
+        "1fa4e42f4b9c86e443edab3d1a74cb249078580123814a50adbc3fb3bc1f4f3b",
+        "d12e410d5b8f516ddbf5ac5ec935a95f2e24ea4a27ed41db4d16e5fb8b828186",
+        "49e2861d31d06ce5171035c80adb44b31b2b3f9037860152967eb1441f5b804c",
+        "926b3eea80c6317ebd45c8eba01ad6b1a63ca30190c927d2ca72e41495cd5eca",
+        "8e2fd604b8a4386bf3c3c158603c241193136a1470ea30430355bcb7f85ea652",
+        "e1b48efd0d6645bd5ad0d001feccbc61a896f43668153504ae44ca469e2e9563",
+        "7c7a33f5f9a8411cb845ed1c79ee97a4964a921476dc38650bcad3ebf419e3f7",
+        "b46a71a4c0ddaedacaadde316d52a748447932e648225fcdb8f14c685116a04c",
+        "eeceab4582250116be5ba7aeb465b937a798e66cae7eac16a604b52c9b06e449",
+        "a6501276eab736d0a7aeba929777ac745a263c2c5934798575678c4641344666",
+        "8fb7cc4678bd0fe35af1e999d84835bc522082ef4511b92514d4bf0acba90a55",
+        "a59edf6e790e26abc9242e0dc4eab79fbc205cd317af4a245bda355966d0ebf0",
+        "777f8be35d313ec44880667673587dfb3feb54d5975a893bbc2c67dd9125c832",
+        "03311a6102e29b58d247c71928f74d691899ed4627a70515479d96423bcfbe14",
+        "3918b8128b611cc2dda32d0be539a029a4439a8a37ef2f5d290ef6188b962cb2",
+        "1130418ae7d273c4c975ef762faf4b9a99079b7a294a7e90ac5431a853636909",
+        "e4bf600df19a0467928042e11df3bcf351fedb053c5b536fc42fca287dfc3181",
+        "45cb742bb5f2779f5e5eb6da664cbe0b0b0d0cae59b9ba63584a683dce851033",
+        "2686f2394cc4faa5da41e21de31686607c7d0b6a9e89156c9f75aaabbcdcce4e",
+        "c5277b1add5d43e3ee089518899452bdfd65e6e9380422e5f4d05f63ef17c826",
+        "72fb03c2be8c89e4943d19c0e2ebb6df8de2ab57163a4c7b18834d3bc2d2e128",
+        "57251fc3711f234b325ff39b3b2d05c80629e2d53e52206536a49afc5015de09",
+        "e28e04fd3efc810a100a828da5cc8918fdb50b9ee64fb728ee8d0a13e44a5a8f",
+        "261f98b0d0e1e2844b5ebe384e5800f1112de448f45548f4eb4cbc7b39b6baab"
+      ]
+    }
+  },
+  "success_intervals": [
+    {
+      "median": 0.06156237775844631,
+      "ci_lo": 0.04860153457616673,
+      "ci_hi": 0.07438412173594411,
+      "episodes": 31,
+      "calls": 62,
+      "draws": 10000,
+      "seed": 930011,
+      "direction": "insertion",
+      "success": true,
+      "ranking": "IG_Q_A1T512",
+      "positive": 58,
+      "overshoot": 13,
+      "below_minus_1": 2,
+      "minimum": -89.93671286930679,
+      "episode_ids": [
+        "100138f4f026f40e1f2b3211204fe2785d4f269dc134f637c19cd61ace8e45fe",
+        "1306c98787e911e4e13f9f81475c1a1cd7008f0196c2533549432692b3e2fdb8",
+        "211e5e961c7571f76b3ec2b12fdd48994f4c1b09ffbe0f7bc6ec818d6b3f0003",
+        "232eec57bc17ab249225ccf65df8d771dac12a5f51c4c697bbcf4bad33beebb1",
+        "39d4eb7827a407abb302c7772cce162a45e3e21b260a5cfd165acb5db2059e2c",
+        "3fd9ae6590116863476bf1b095b7fac08858caf0fb471827c06aa9ab30921d20",
+        "3fe99dbe3055e8b5ecfac9f1f9b20f2156586254df5a4d6541302d67a3f51e9f",
+        "487a661b9722cc33ceb2b2690a67daf3b0c9f6fa4520a5ef0615b55a53210318",
+        "4af3457b6c921f9e9c88ec3fac510b1f20c3f6c4f43dc9c01db5e1a12bcc2fb7",
+        "4e3a79d2606ba3b7b3f8cb791ef5b89cc77b50f5f9d49dd29e2583b2ad86e0da",
+        "5291b5510f89ecd3da489e0e519c63395f0359b04aacb646b653b0a03b574260",
+        "695b9ec6d6b8088bd77df68f77581aed74a4df2d420b0329c7b43403eb59bb8e",
+        "713201d487258a090adb3aee6e470db5735dcb4e382e91bea59eef0bb31997ec",
+        "78b557f22b4cbd97efde13331dc32554ef110a20db6c67a35144e1d6a2d3a58b",
+        "7c332786f6acd880d33b6a795d8e4d044b8f2a78dbe9feeb56fa8d3c866f23e9",
+        "8647a8569aa7fce0556a13a94f06377fb3265c7fa969f493b105d0d873fc8575",
+        "8a09e015dcb016ab4f44f79d09d297f89ff868c5111304a77b5647faa55c8561",
+        "8a556fc1d6d1daca6e04110d656d4446863d5887ecb575d0f52b93d06a415ed9",
+        "9c101f2171be7a0b5c38252a93df0bacde9511ecf3b3f38ecdd33e42f7d7ab22",
+        "9e70e3a2a22a5ecdcc264e92afe7f29ede7125bd18fd6b659313b1eb7a21184c",
+        "a4351d97f7cb93c3d486085f44c31cdea331f8460c0605caf474ddcfe797a315",
+        "b32f2983b136d2015a711e56c2d791982968d43c36113d7c453126a93775d170",
+        "bbb8082dfb165077d13eca14d919d5d2a14949662cc1ed484f0222d897d200e4",
+        "c8c34e4bc45b5ebeae97a5bfa5b59d0cf79c7b6c0cdcd9d72c54ddb311fb40a1",
+        "cd310728b9ed530c9841e3921799cb48bc97fbb05bdcd2b6fc18a7dd4a08b371",
+        "d4ac63160f7070e4e820eff356400f9f5b456197bdab419ebb7089a53ad6c927",
+        "d679de8445d0ba8c04d10d6f9b00a833a306bfcbc953df5c18c9c63faa456cc5",
+        "d8232d50ea696edd6544be6461ea8a0de3f08e28aadf2bb0d4d49952e60bf438",
+        "eba3ad0661c49f183091a0ff843b744e8a5a5b9ec6bea00ffdea964f7f9ee12b",
+        "f24e4a695fc294f53ac61191a6f4a57bae33ca159f8908cd96ef3fd04639206d",
+        "f873e2d4f45219dbc0d8a199824c6c29f017dbe915221ede2b2750dcfc18c4e4"
+      ]
+    },
+    {
+      "median": 0.09126911802838611,
+      "ci_lo": 0.06614985018209274,
+      "ci_hi": 0.10399623942829844,
+      "episodes": 9,
+      "calls": 18,
+      "draws": 10000,
+      "seed": 930011,
+      "direction": "insertion",
+      "success": false,
+      "ranking": "IG_Q_A1T512",
+      "positive": 18,
+      "overshoot": 7,
+      "below_minus_1": 0,
+      "minimum": 0.046525684213815977,
+      "episode_ids": [
+        "0b9e21b7d08b3c1b23b15a33acad1c3ed22d89b5a66307ad9d8f3b49a5449d94",
+        "355e4dfbd93aade1f9fd09bf42ca1ed3762639b888883c8347ee2d491c6b3eb3",
+        "57a53b49165c3422b7dbca7d6def2ef634367dcc84a6d38e6610bca9d0bb546a",
+        "58935a9a3ad1ea81257c56c3dc1071dfbd61cd3cf65909d7ef426ecf51eed29f",
+        "7b28825fedf8464b4ab86e684e70f91ba0378fbcdb00fca07af2610cb0c92c15",
+        "a72011a2706dac4c820f4595dc001409e2685e7b812eafd1f2d1a3b669bd95be",
+        "c6d8c5132dbf8c7a5dbe2a7a465ff1054687f91e142ac53f8bd636c377328c8c",
+        "e9221523276d16a2cc2a54d2962955f92b218ac1f23c2402703bc59d5369e971",
+        "f1e08170c5b99fd6d1f069e6f7310af92d6b64a9d0296a51c8611e6dd07a4087"
+      ]
+    },
+    {
+      "median": 0.021185308429958437,
+      "ci_lo": 0.0022972918822251782,
+      "ci_hi": 0.05001342761408114,
+      "episodes": 31,
+      "calls": 62,
+      "draws": 10000,
+      "seed": 930011,
+      "direction": "deletion",
+      "success": true,
+      "ranking": "IG_Q_A1T512",
+      "positive": 41,
+      "overshoot": 41,
+      "below_minus_1": 4,
+      "minimum": -57.65720643093393,
+      "episode_ids": [
+        "100138f4f026f40e1f2b3211204fe2785d4f269dc134f637c19cd61ace8e45fe",
+        "1306c98787e911e4e13f9f81475c1a1cd7008f0196c2533549432692b3e2fdb8",
+        "211e5e961c7571f76b3ec2b12fdd48994f4c1b09ffbe0f7bc6ec818d6b3f0003",
+        "232eec57bc17ab249225ccf65df8d771dac12a5f51c4c697bbcf4bad33beebb1",
+        "39d4eb7827a407abb302c7772cce162a45e3e21b260a5cfd165acb5db2059e2c",
+        "3fd9ae6590116863476bf1b095b7fac08858caf0fb471827c06aa9ab30921d20",
+        "3fe99dbe3055e8b5ecfac9f1f9b20f2156586254df5a4d6541302d67a3f51e9f",
+        "487a661b9722cc33ceb2b2690a67daf3b0c9f6fa4520a5ef0615b55a53210318",
+        "4af3457b6c921f9e9c88ec3fac510b1f20c3f6c4f43dc9c01db5e1a12bcc2fb7",
+        "4e3a79d2606ba3b7b3f8cb791ef5b89cc77b50f5f9d49dd29e2583b2ad86e0da",
+        "5291b5510f89ecd3da489e0e519c63395f0359b04aacb646b653b0a03b574260",
+        "695b9ec6d6b8088bd77df68f77581aed74a4df2d420b0329c7b43403eb59bb8e",
+        "713201d487258a090adb3aee6e470db5735dcb4e382e91bea59eef0bb31997ec",
+        "78b557f22b4cbd97efde13331dc32554ef110a20db6c67a35144e1d6a2d3a58b",
+        "7c332786f6acd880d33b6a795d8e4d044b8f2a78dbe9feeb56fa8d3c866f23e9",
+        "8647a8569aa7fce0556a13a94f06377fb3265c7fa969f493b105d0d873fc8575",
+        "8a09e015dcb016ab4f44f79d09d297f89ff868c5111304a77b5647faa55c8561",
+        "8a556fc1d6d1daca6e04110d656d4446863d5887ecb575d0f52b93d06a415ed9",
+        "9c101f2171be7a0b5c38252a93df0bacde9511ecf3b3f38ecdd33e42f7d7ab22",
+        "9e70e3a2a22a5ecdcc264e92afe7f29ede7125bd18fd6b659313b1eb7a21184c",
+        "a4351d97f7cb93c3d486085f44c31cdea331f8460c0605caf474ddcfe797a315",
+        "b32f2983b136d2015a711e56c2d791982968d43c36113d7c453126a93775d170",
+        "bbb8082dfb165077d13eca14d919d5d2a14949662cc1ed484f0222d897d200e4",
+        "c8c34e4bc45b5ebeae97a5bfa5b59d0cf79c7b6c0cdcd9d72c54ddb311fb40a1",
+        "cd310728b9ed530c9841e3921799cb48bc97fbb05bdcd2b6fc18a7dd4a08b371",
+        "d4ac63160f7070e4e820eff356400f9f5b456197bdab419ebb7089a53ad6c927",
+        "d679de8445d0ba8c04d10d6f9b00a833a306bfcbc953df5c18c9c63faa456cc5",
+        "d8232d50ea696edd6544be6461ea8a0de3f08e28aadf2bb0d4d49952e60bf438",
+        "eba3ad0661c49f183091a0ff843b744e8a5a5b9ec6bea00ffdea964f7f9ee12b",
+        "f24e4a695fc294f53ac61191a6f4a57bae33ca159f8908cd96ef3fd04639206d",
+        "f873e2d4f45219dbc0d8a199824c6c29f017dbe915221ede2b2750dcfc18c4e4"
+      ]
+    },
+    {
+      "median": -0.008580664123705832,
+      "ci_lo": -0.17746800212659655,
+      "ci_hi": 0.06083913788333974,
+      "episodes": 9,
+      "calls": 18,
+      "draws": 10000,
+      "seed": 930011,
+      "direction": "deletion",
+      "success": false,
+      "ranking": "IG_Q_A1T512",
+      "positive": 7,
+      "overshoot": 13,
+      "below_minus_1": 0,
+      "minimum": -0.6386367410588507,
+      "episode_ids": [
+        "0b9e21b7d08b3c1b23b15a33acad1c3ed22d89b5a66307ad9d8f3b49a5449d94",
+        "355e4dfbd93aade1f9fd09bf42ca1ed3762639b888883c8347ee2d491c6b3eb3",
+        "57a53b49165c3422b7dbca7d6def2ef634367dcc84a6d38e6610bca9d0bb546a",
+        "58935a9a3ad1ea81257c56c3dc1071dfbd61cd3cf65909d7ef426ecf51eed29f",
+        "7b28825fedf8464b4ab86e684e70f91ba0378fbcdb00fca07af2610cb0c92c15",
+        "a72011a2706dac4c820f4595dc001409e2685e7b812eafd1f2d1a3b669bd95be",
+        "c6d8c5132dbf8c7a5dbe2a7a465ff1054687f91e142ac53f8bd636c377328c8c",
+        "e9221523276d16a2cc2a54d2962955f92b218ac1f23c2402703bc59d5369e971",
+        "f1e08170c5b99fd6d1f069e6f7310af92d6b64a9d0296a51c8611e6dd07a4087"
+      ]
+    }
+  ],
+  "inputs_sha256": {
+    "analysis/manuscript_revision/nhsjs_audit_2026_11_01/report.py": "e9881b7f14ae6f785073b4b310b298c4ef13099cbca0b214795bf5e3196f9c3a",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/B1/context_rows_vision.csv": "da6ff90b7c4b9e9579f92e7907386c07659d150e18a7efbcea6fe68ef42e5647",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/B1/decisions.json": "6002981c536c8496506d0668855e002bb4e3cb235575970980591fb49111b980",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/P/context_rows_vision.csv": "2c4005108fb66e4cd551eb8b3f0150860abfc499345eafddb476f7d02bcb0bb0",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/P/decisions.json": "d1f1e9d8d5e933aaf8ad224500f16822102c6f96e5a8097565feb2ff84d49b25",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/S/context_rows_vision.csv": "5463788ec5af7f6db9882745ecf51c4097fd5fda6186161a6575b4375efd50ad",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/methods/S/decisions.json": "172b2b8b621f6346a4c0f3ec2160d0f0f5354d97780c4c0771927ed58949297b",
+    "analysis/revision_gpu/v1/results/r1-2026-10-24/analysis/shifts/B1/rows_vision.csv": "8f167d27ccf61e280158ad7a81c862801348cf734aacdf0d49a7cb2d7949c1b3"
+  }
+}

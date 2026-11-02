@@ -47,3 +47,4 @@ analysis/language_groups/** -text
 docs/nhsjs-revision/** -text
 # The archived historical IG kernel is compared bit for bit with the A0 replica.
 docs/tmlr-readiness/** -text
+scripts/nhsjs_audit_displays.py -text
